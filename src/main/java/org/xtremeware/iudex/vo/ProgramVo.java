@@ -3,54 +3,43 @@ package org.xtremeware.iudex.vo;
 
 public class ProgramVo extends ValueObject{
 
-    private Long id;
-    private String name;
+	private Long id;
+	private String name;
 
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final ProgramVo other = (ProgramVo) obj;
-        if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
-            return false;
-        }
-        if ((this.name == null) ? (other.name != null) : !this.name.equals(other.name)) {
-            return false;
-        }
-        return true;
-    }
+	@Override
+	public boolean equals(Object ob) {
+		throw new UnsupportedOperationException("Not supported yet.");
+	}
 
-    @Override
-    public int hashCode() {
-        int hash = 7;
-        hash = 59 * hash + (this.id != null ? this.id.hashCode() : 0);
-        hash = 59 * hash + (this.name != null ? this.name.hashCode() : 0);
-        return hash;
-    }
+	@Override
+	public int hashCode() {
+		throw new UnsupportedOperationException("Not supported yet.");
+	}
 
-    @Override
-    public String toString() {
-        return "ProgramVo{" + "id=" + id + ", name=" + name + '}';
-    }
+	@Override
+	public String toString() {
+		throw new UnsupportedOperationException("Not supported yet.");
+	}
 
-    public Long getId() {
-        return id;
-    }
+	@Override
+	public int compareTo(ValueObject vo) {
+		throw new UnsupportedOperationException("Not supported yet.");
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
 
 }

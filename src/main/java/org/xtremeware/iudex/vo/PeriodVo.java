@@ -7,20 +7,40 @@ public class PeriodVo extends ValueObject {
     private int semester;
 
     @Override
-    public boolean equals(Object ob) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final PeriodVo other = (PeriodVo) obj;
+        if (this.id != other.id) {
+            return false;
+        }
+        if (this.year != other.year) {
+            return false;
+        }
+        if (this.semester != other.semester) {
+            return false;
+        }
+        return true;
     }
 
     @Override
     public int hashCode() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        int hash = 7;
+        hash = 67 * hash + (int) (this.id ^ (this.id >>> 32));
+        hash = 67 * hash + this.year;
+        hash = 67 * hash + this.semester;
+        return hash;
     }
 
     @Override
     public String toString() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return "PeriodVo{" + "id=" + id + ", year=" + year + ", semester=" + semester + '}';
     }
-    
+
     public long getId() {
         return id;
     }

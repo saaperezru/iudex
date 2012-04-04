@@ -1,6 +1,6 @@
 package org.xtremeware.iudex.vo;
 
-public class ProfessorVo extends ValueObject{
+public class ProfessorVo extends ValueObject {
 
     private Long id;
     private String firstName;
@@ -103,5 +103,4 @@ public class ProfessorVo extends ValueObject{
     public void setWebsite(String website) {
         this.website = website;
     }
-	
 }

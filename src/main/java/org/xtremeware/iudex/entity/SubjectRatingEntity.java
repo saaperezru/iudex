@@ -6,30 +6,31 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import org.xtremeware.iudex.vo.SubjectRatingVo;
 
-@Entity
-public class SubjectRatingEntity implements Serializable {
+@javax.persistence.Entity
+public class SubjectRatingEntity implements Serializable , Entity<SubjectRatingVo> {
 	private static final long serialVersionUID = 1L;
 	@Id
-        @GeneratedValue(strategy = GenerationType.AUTO)
+       @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+        private SubjectEntity subject;
+        private UserEntity user;
+        private int value;
+                
+        @Override
+        public SubjectRatingVo toVo() {
+            SubjectRatingVo vo = new SubjectRatingVo();
+            
+            vo.setId(getId());
+            vo.setSubject(getSubject().getId());
+            vo.setUser(getUser().getId());
+            vo.setValue(getValue());
+            
+            return vo;
+        }
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	@Override
-	public int hashCode() {
-		int hash = 0;
-		hash += (id != null ? id.hashCode() : 0);
-		return hash;
-	}
-
-	@Override
+        @Override
 	public boolean equals(Object object) {
 		// TODO: Warning - this method won't work in the case the id fields are not set
 		if (!(object instanceof SubjectRatingEntity)) {
@@ -41,10 +42,47 @@ public class SubjectRatingEntity implements Serializable {
 		}
 		return true;
 	}
-
+        
 	@Override
-	public String toString() {
-		return "org.xtremeware.iudex.entity.SubjectRatingEntity[ id=" + id + " ]";
+	public int hashCode() {
+		int hash = 0;
+		hash += (id != null ? id.hashCode() : 0);
+		return hash;
 	}
+
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+        
+        public SubjectEntity getSubject(){
+                return this.subject;
+        }
+        
+        public void setSubject(SubjectEntity subject){
+                this.subject = subject;
+        }
+
+        public UserEntity getUser(){
+                return this.user;
+        }
+        
+        public void setUser(UserEntity user){
+                this.user = user;
+        }
+        
+        public int getValue(){
+                return this.value;
+        }
+        
+        public void setValue(int value){
+                this.value = value;
+        }
+
+
 
 }

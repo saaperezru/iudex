@@ -2,7 +2,7 @@ package org.xtremeware.iudex.vo;
 
 import java.io.Serializable;
 
-public abstract class ValueObject implements Comparable<ValueObject>, Serializable{
+public abstract class ValueObject implements Serializable{
 	
 	@Override
 	public abstract boolean equals(Object ob);
@@ -12,8 +12,5 @@ public abstract class ValueObject implements Comparable<ValueObject>, Serializab
 
 	@Override
 	public abstract String toString();
-
-	@Override
-	public abstract int compareTo(ValueObject vo);
 
 }

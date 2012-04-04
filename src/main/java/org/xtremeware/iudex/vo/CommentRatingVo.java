@@ -50,7 +50,7 @@ public class CommentRatingVo extends ValueObject {
         return commentId;
     }
 
-    public void setComment(Long commentId) {
+    public void setCommentId(Long commentId) {
         this.commentId = commentId;
     }
 

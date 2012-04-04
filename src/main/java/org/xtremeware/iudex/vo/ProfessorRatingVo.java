@@ -4,29 +4,40 @@ package org.xtremeware.iudex.vo;
 public class ProfessorRatingVo extends ValueObject{
 
 	private Long id;
-	private ProfessorVo professor;
-	private UserVo user;
+	private Long professor;
+	private Long user;
 	private int value;
 
-	@Override
-	public boolean equals(Object ob) {
-		throw new UnsupportedOperationException("Not supported yet.");
-	}
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == null) {
+                return false;
+            }
+            if (getClass() != obj.getClass()) {
+                return false;
+            }
+            final ProfessorRatingVo other = (ProfessorRatingVo) obj;
+            if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
+                return false;
+            }
+            return true;
+        }
 
-	@Override
-	public int hashCode() {
-		throw new UnsupportedOperationException("Not supported yet.");
-	}
+        @Override
+        public int hashCode() {
+            int hash = 7;
+            hash = 37 * hash + (this.id != null ? this.id.hashCode() : 0);
+            return hash;
+        }
 
-	@Override
-	public String toString() {
-		throw new UnsupportedOperationException("Not supported yet.");
-	}
+        @Override
+        public String toString() {
+            return "ProfessorRatingVo{" + "id=" + id + ", professor=" + professor + ", user=" + user + ", value=" + value + '}';
+        }
 
-	@Override
-	public int compareTo(ValueObject vo) {
-		throw new UnsupportedOperationException("Not supported yet.");
-	}
+	
+
+
 
 	public Long getId() {
 		return id;
@@ -36,19 +47,19 @@ public class ProfessorRatingVo extends ValueObject{
 		this.id = id;
 	}
 
-	public ProfessorVo getProfessor() {
+	public Long getProfessor() {
 		return professor;
 	}
 
-	public void setProfessor(ProfessorVo professor) {
+	public void setProfessor(Long professor) {
 		this.professor = professor;
 	}
 
-	public UserVo getUser() {
+	public Long getUser() {
 		return user;
 	}
 
-	public void setUser(UserVo user) {
+	public void setUser(Long user) {
 		this.user = user;
 	}
 
@@ -59,6 +70,4 @@ public class ProfessorRatingVo extends ValueObject{
 	public void setValue(int value) {
 		this.value = value;
 	}
-
-
 }

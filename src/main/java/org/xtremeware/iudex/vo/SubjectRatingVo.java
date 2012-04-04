@@ -3,30 +3,38 @@ package org.xtremeware.iudex.vo;
 public class SubjectRatingVo extends ValueObject{
 
 	private Long id;
-	private SubjectVo subject;
-	private UserVo user;
+	private Long subject;
+	private Long user;
 	private int value;
 
-	@Override
-	public boolean equals(Object ob) {
-		throw new UnsupportedOperationException("Not supported yet.");
-	}
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == null) {
+                return false;
+            }
+            if (getClass() != obj.getClass()) {
+                return false;
+            }
+            final SubjectRatingVo other = (SubjectRatingVo) obj;
+            if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
+                return false;
+            }
+            return true;
+        }
 
-	@Override
-	public int hashCode() {
-		throw new UnsupportedOperationException("Not supported yet.");
-	}
+        @Override
+        public int hashCode() {
+            int hash = 7;
+            hash = 59 * hash + (this.id != null ? this.id.hashCode() : 0);
+            return hash;
+        }
 
-	@Override
-	public String toString() {
-		throw new UnsupportedOperationException("Not supported yet.");
-	}
+        @Override
+        public String toString() {
+            return "SubjectRatingVo{" + "id=" + id + ", subject=" + subject + ", user=" + user + ", value=" + value + '}';
+        }
 
-	@Override
-	public int compareTo(ValueObject vo) {
-		throw new UnsupportedOperationException("Not supported yet.");
-	}
-
+	
 	public Long getId() {
 		return id;
 	}
@@ -35,19 +43,19 @@ public class SubjectRatingVo extends ValueObject{
 		this.id = id;
 	}
 
-	public SubjectVo getSubject() {
+	public Long getSubject() {
 		return subject;
 	}
 
-	public void setSubject(SubjectVo subject) {
+	public void setSubject(Long subject) {
 		this.subject = subject;
 	}
 
-	public UserVo getUser() {
+	public Long getUser() {
 		return user;
 	}
 
-	public void setUser(UserVo user) {
+	public void setUser(Long user) {
 		this.user = user;
 	}
 

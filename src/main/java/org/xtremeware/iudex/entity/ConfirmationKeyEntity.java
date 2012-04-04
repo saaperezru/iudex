@@ -1,50 +1,91 @@
-
 package org.xtremeware.iudex.entity;
 
 import java.io.Serializable;
-import javax.persistence.Entity;
+import java.util.Date;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Temporal;
+import org.xtremeware.iudex.vo.ConfirmationKeyVo;
 
-@Entity
-public class ConfirmationKeyEntity implements Serializable {
-	private static final long serialVersionUID = 1L;
-	@Id
-        @GeneratedValue(strategy = GenerationType.AUTO)
-	private Long id;
+@javax.persistence.Entity
+public class ConfirmationKeyEntity implements Serializable, Entity<ConfirmationKeyVo> {
 
-	public Long getId() {
-		return id;
-	}
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+    @Temporal(javax.persistence.TemporalType.DATE)
+    private Date expirationDate;
+    private String confirmationKey;
+    private UserEntity user;
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    @Override
+    public ConfirmationKeyVo toVo() {
+        ConfirmationKeyVo vo = new ConfirmationKeyVo();
+        vo.setId(getId());
+        vo.setExpirationDate(getExpirationDate());
+        vo.setConfirmationKey(getConfirmationKey());
+        vo.setUserId(getUser().getId());
+        return vo;
+    }
 
-	@Override
-	public int hashCode() {
-		int hash = 0;
-		hash += (id != null ? id.hashCode() : 0);
-		return hash;
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final ConfirmationKeyEntity other = (ConfirmationKeyEntity) obj;
+        if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
+            return false;
+        }
+        return true;
+    }
 
-	@Override
-	public boolean equals(Object object) {
-		// TODO: Warning - this method won't work in the case the id fields are not set
-		if (!(object instanceof ConfirmationKeyEntity)) {
-			return false;
-		}
-		ConfirmationKeyEntity other = (ConfirmationKeyEntity) object;
-		if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-			return false;
-		}
-		return true;
-	}
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 89 * hash + (this.id != null ? this.id.hashCode() : 0);
+        return hash;
+    }
 
-	@Override
-	public String toString() {
-		return "org.xtremeware.iudex.entity.ConfirmationKeyEntity[ id=" + id + " ]";
-	}
+    @Override
+    public String toString() {
+        return "ConfirmationKeyEntity{" + "id=" + id + ", expirationDate=" + expirationDate + ", confirmationKey=" + confirmationKey + ", user=" + user + '}';
+    }
 
+    public String getConfirmationKey() {
+        return confirmationKey;
+    }
+
+    public void setConfirmationKey(String confirmationKey) {
+        this.confirmationKey = confirmationKey;
+    }
+
+    public Date getExpirationDate() {
+        return expirationDate;
+    }
+
+    public void setExpirationDate(Date expirationDate) {
+        this.expirationDate = expirationDate;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public UserEntity getUser() {
+        return user;
+    }
+
+    public void setUser(UserEntity user) {
+        this.user = user;
+    }
 }

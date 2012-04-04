@@ -1,32 +1,30 @@
-
 package org.xtremeware.iudex.entity;
 
 import java.io.Serializable;
-import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import org.xtremeware.iudex.vo.CourseRatingVo;
 
-@Entity
-public class CourseRatingEntity implements Serializable {
+@javax.persistence.Entity
+public class CourseRatingEntity implements Serializable, Entity<CourseRatingVo> {
+
 	private static final long serialVersionUID = 1L;
 	@Id
-        @GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
+	private CourseEntity course;
+	private UserEntity user;
+	private float value;
 
 	@Override
-	public int hashCode() {
-		int hash = 0;
-		hash += (id != null ? id.hashCode() : 0);
-		return hash;
+	public CourseRatingVo toVo() {
+		CourseRatingVo vo = new CourseRatingVo();
+		vo.setId(this.getId());
+		vo.setCourseId(this.getCourse().getId());
+		vo.setUserId(this.getUser().getId());
+		vo.setValue(this.getValue());
+		return vo;
 	}
 
 	@Override
@@ -43,8 +41,46 @@ public class CourseRatingEntity implements Serializable {
 	}
 
 	@Override
-	public String toString() {
-		return "org.xtremeware.iudex.entity.CourseRatingEntity[ id=" + id + " ]";
+	public int hashCode() {
+		int hash = 0;
+		hash += (id != null ? id.hashCode() : 0);
+		return hash;
 	}
 
+	@Override
+	public String toString() {
+		return "CourseRatingEntity{" + "id=" + id + ", course=" + course + ", user=" + user + ", value=" + value + '}';
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public CourseEntity getCourse() {
+		return course;
+	}
+
+	public void setCourse(CourseEntity course) {
+		this.course = course;
+	}
+
+	public UserEntity getUser() {
+		return user;
+	}
+
+	public void setUser(UserEntity user) {
+		this.user = user;
+	}
+
+	public float getValue() {
+		return value;
+	}
+
+	public void setValue(float value) {
+		this.value = value;
+	}
 }

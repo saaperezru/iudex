@@ -2,36 +2,35 @@
 package org.xtremeware.iudex.entity;
 
 import java.io.Serializable;
-import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import org.xtremeware.iudex.vo.CourseVo;
 
-@Entity
-public class CourseEntity implements Serializable {
+@javax.persistence.Entity
+public class CourseEntity implements Serializable,Entity<CourseVo> {
 	private static final long serialVersionUID = 1L;
 	@Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	private Long professorId;
-	private Long subjectId;
-	private Long periodId;
+	private ProfessorEntity professor;
+	private SubjectEntity subject;
+	private PeriodEntity period;
 	private Double ratingAverage;
 	private Long ratingCount;
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
 	@Override
-	public int hashCode() {
-		int hash = 0;
-		hash += (id != null ? id.hashCode() : 0);
-		return hash;
+	public CourseVo toVo() {
+		CourseVo vo = new CourseVo();
+		vo.setId(this.getId());
+		vo.setPeriodId(this.getPeriod().getId());
+		vo.setProfessorId(this.getProfessor().getId());
+		vo.setRatingAverage(this.getRatingAverage());
+		vo.setRatingCount(this.getRatingCount());
+		vo.setSubjectId(this.getSubject().getId());
+
+		return vo;
+
 	}
 
 	@Override
@@ -47,9 +46,66 @@ public class CourseEntity implements Serializable {
 		return true;
 	}
 
+
+	@Override
+	public int hashCode() {
+		int hash = 0;
+		hash += (id != null ? id.hashCode() : 0);
+		return hash;
+	}
+
 	@Override
 	public String toString() {
-		return "org.xtremeware.iudex.entity.CourseEntity[ id=" + id + " ]";
+		return "CourseEntity{" + "id=" + id + ", professor=" + professor + ", subject=" + subject + ", period=" + period + ", ratingAverage=" + ratingAverage + ", ratingCount=" + ratingCount + '}';
+	}
+
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public PeriodEntity getPeriod() {
+		return period;
+	}
+
+	public void setPeriod(PeriodEntity period) {
+		this.period = period;
+	}
+
+	public ProfessorEntity getProfessor() {
+		return professor;
+	}
+
+	public void setProfessor(ProfessorEntity professor) {
+		this.professor = professor;
+	}
+
+	public Double getRatingAverage() {
+		return ratingAverage;
+	}
+
+	public void setRatingAverage(Double ratingAverage) {
+		this.ratingAverage = ratingAverage;
+	}
+
+	public Long getRatingCount() {
+		return ratingCount;
+	}
+
+	public void setRatingCount(Long ratingCount) {
+		this.ratingCount = ratingCount;
+	}
+
+	public SubjectEntity getSubject() {
+		return subject;
+	}
+
+	public void setSubject(SubjectEntity subject) {
+		this.subject = subject;
 	}
 
 }

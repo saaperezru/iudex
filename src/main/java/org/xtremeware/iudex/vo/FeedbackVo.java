@@ -24,11 +24,6 @@ public class FeedbackVo extends ValueObject{
 		throw new UnsupportedOperationException("Not supported yet.");
 	}
 
-	@Override
-	public int compareTo(ValueObject vo) {
-		throw new UnsupportedOperationException("Not supported yet.");
-	}
-
 	public String getContent() {
 		return content;
 	}

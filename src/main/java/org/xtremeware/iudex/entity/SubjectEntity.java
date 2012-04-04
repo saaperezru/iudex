@@ -1,50 +1,78 @@
-
 package org.xtremeware.iudex.entity;
 
 import java.io.Serializable;
-import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import org.xtremeware.iudex.vo.SubjectVo;
 
-@Entity
-public class SubjectEntity implements Serializable {
-	private static final long serialVersionUID = 1L;
-	@Id
-        @GeneratedValue(strategy = GenerationType.AUTO)
-	private Long id;
+@javax.persistence.Entity
+public class SubjectEntity implements Serializable, Entity<SubjectVo> {
 
-	public Long getId() {
-		return id;
-	}
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String name;
+    private String description;
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    @Override
+    public SubjectVo toVo() {
+        SubjectVo vo = new SubjectVo();
+        vo.setId(this.getId());
+        vo.setName(this.getName());
+        vo.setDescription(this.getDescription());
+        return vo;
+    }
 
-	@Override
-	public int hashCode() {
-		int hash = 0;
-		hash += (id != null ? id.hashCode() : 0);
-		return hash;
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final SubjectEntity other = (SubjectEntity) obj;
+        if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
+            return false;
+        }
+        return true;
+    }
 
-	@Override
-	public boolean equals(Object object) {
-		// TODO: Warning - this method won't work in the case the id fields are not set
-		if (!(object instanceof SubjectEntity)) {
-			return false;
-		}
-		SubjectEntity other = (SubjectEntity) object;
-		if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-			return false;
-		}
-		return true;
-	}
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 41 * hash + (this.id != null ? this.id.hashCode() : 0);
+        return hash;
+    }
 
-	@Override
-	public String toString() {
-		return "org.xtremeware.iudex.entity.SubjectEntity[ id=" + id + " ]";
-	}
+    @Override
+    public String toString() {
+        return "SubjectEntity{" + "id=" + id + ", name=" + name + ", description=" + description + '}';
+    }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }

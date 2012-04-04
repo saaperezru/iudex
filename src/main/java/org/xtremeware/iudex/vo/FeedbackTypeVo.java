@@ -6,23 +6,34 @@ public class FeedbackTypeVo extends ValueObject{
 	private String name;
 
 	@Override
-	public boolean equals(Object ob) {
-		throw new UnsupportedOperationException("Not supported yet.");
+	public boolean equals(Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		final FeedbackTypeVo other = (FeedbackTypeVo) obj;
+		if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
+			return false;
+		}
+		if ((this.name == null) ? (other.name != null) : !this.name.equals(other.name)) {
+			return false;
+		}
+		return true;
 	}
 
 	@Override
 	public int hashCode() {
-		throw new UnsupportedOperationException("Not supported yet.");
+		int hash = 3;
+		hash = 89 * hash + (this.id != null ? this.id.hashCode() : 0);
+		hash = 89 * hash + (this.name != null ? this.name.hashCode() : 0);
+		return hash;
 	}
 
 	@Override
 	public String toString() {
-		throw new UnsupportedOperationException("Not supported yet.");
-	}
-
-	@Override
-	public int compareTo(ValueObject vo) {
-		throw new UnsupportedOperationException("Not supported yet.");
+		return "FeedbackTypeVo{" + "id=" + id + ", name=" + name + '}';
 	}
 
 	public Long getId() {
@@ -40,5 +51,6 @@ public class FeedbackTypeVo extends ValueObject{
 	public void setName(String name) {
 		this.name = name;
 	}
+
 
 }

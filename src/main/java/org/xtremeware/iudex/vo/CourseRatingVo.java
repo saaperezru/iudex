@@ -4,36 +4,55 @@ package org.xtremeware.iudex.vo;
 public class CourseRatingVo extends ValueObject{
 
 	private Long id;
-	private CourseVo course;
-	private UserVo user;
+	private Long courseId;
+	private Long userId;
 	private float value;
 
 	@Override
-	public boolean equals(Object ob) {
-		throw new UnsupportedOperationException("Not supported yet.");
+	public boolean equals(Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		final CourseRatingVo other = (CourseRatingVo) obj;
+		if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
+			return false;
+		}
+		if (this.courseId != other.courseId && (this.courseId == null || !this.courseId.equals(other.courseId))) {
+			return false;
+		}
+		if (this.userId != other.userId && (this.userId == null || !this.userId.equals(other.userId))) {
+			return false;
+		}
+		if (Float.floatToIntBits(this.value) != Float.floatToIntBits(other.value)) {
+			return false;
+		}
+		return true;
 	}
 
 	@Override
 	public int hashCode() {
-		throw new UnsupportedOperationException("Not supported yet.");
+		int hash = 7;
+		hash = 59 * hash + (this.id != null ? this.id.hashCode() : 0);
+		hash = 59 * hash + (this.courseId != null ? this.courseId.hashCode() : 0);
+		hash = 59 * hash + (this.userId != null ? this.userId.hashCode() : 0);
+		hash = 59 * hash + Float.floatToIntBits(this.value);
+		return hash;
 	}
 
 	@Override
 	public String toString() {
-		throw new UnsupportedOperationException("Not supported yet.");
+		return "CourseRatingVo{" + "id=" + id + ", courseId=" + courseId + ", userId=" + userId + ", value=" + value + '}';
 	}
 
-	@Override
-	public int compareTo(ValueObject vo) {
-		throw new UnsupportedOperationException("Not supported yet.");
+	public Long getCourseId() {
+		return courseId;
 	}
 
-	public CourseVo getCourse() {
-		return course;
-	}
-
-	public void setCourse(CourseVo course) {
-		this.course = course;
+	public void setCourseId(Long courseId) {
+		this.courseId = courseId;
 	}
 
 	public Long getId() {
@@ -44,12 +63,12 @@ public class CourseRatingVo extends ValueObject{
 		this.id = id;
 	}
 
-	public UserVo getUser() {
-		return user;
+	public Long getUserId() {
+		return userId;
 	}
 
-	public void setUser(UserVo user) {
-		this.user = user;
+	public void setUserId(Long userId) {
+		this.userId = userId;
 	}
 
 	public float getValue() {
@@ -59,6 +78,7 @@ public class CourseRatingVo extends ValueObject{
 	public void setValue(float value) {
 		this.value = value;
 	}
+
 
 
 }

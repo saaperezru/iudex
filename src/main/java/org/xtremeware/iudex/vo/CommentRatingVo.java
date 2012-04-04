@@ -1,64 +1,80 @@
-
 package org.xtremeware.iudex.vo;
 
-public class CommentRatingVo extends ValueObject{
+public class CommentRatingVo extends ValueObject {
 
-	private Long id;
-	private CommentVo comment;
-	private UserVo user;
-	private int value;
+    private Long id;
+    private Long commentId;
+    private Long userId;
+    private int value;
 
-	@Override
-	public boolean equals(Object ob) {
-		throw new UnsupportedOperationException("Not supported yet.");
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final CommentRatingVo other = (CommentRatingVo) obj;
+        if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
+            return false;
+        }
+        if (this.commentId != other.commentId && (this.commentId == null || !this.commentId.equals(other.commentId))) {
+            return false;
+        }
+        if (this.userId != other.userId && (this.userId == null || !this.userId.equals(other.userId))) {
+            return false;
+        }
+        if (this.value != other.value) {
+            return false;
+        }
+        return true;
+    }
 
-	@Override
-	public int hashCode() {
-		throw new UnsupportedOperationException("Not supported yet.");
-	}
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 61 * hash + (this.id != null ? this.id.hashCode() : 0);
+        hash = 61 * hash + (this.commentId != null ? this.commentId.hashCode() : 0);
+        hash = 61 * hash + (this.userId != null ? this.userId.hashCode() : 0);
+        hash = 61 * hash + this.value;
+        return hash;
+    }
 
-	@Override
-	public String toString() {
-		throw new UnsupportedOperationException("Not supported yet.");
-	}
+    @Override
+    public String toString() {
+        return "CommentRatingVo{" + "id=" + id + ", comment=" + commentId + ", userId=" + userId + ", value=" + value + '}';
+    }
 
-	@Override
-	public int compareTo(ValueObject vo) {
-		throw new UnsupportedOperationException("Not supported yet.");
-	}
+    public Long getCommentId() {
+        return commentId;
+    }
 
-	public CommentVo getComment() {
-		return comment;
-	}
+    public void setComment(Long commentId) {
+        this.commentId = commentId;
+    }
 
-	public void setComment(CommentVo comment) {
-		this.comment = comment;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public Long getId() {
-		return id;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public Long getUserId() {
+        return userId;
+    }
 
-	public UserVo getUser() {
-		return user;
-	}
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
 
-	public void setUser(UserVo user) {
-		this.user = user;
-	}
+    public int getValue() {
+        return value;
+    }
 
-	public int getValue() {
-		return value;
-	}
-
-	public void setValue(int value) {
-		this.value = value;
-	}
-
-
+    public void setValue(int value) {
+        this.value = value;
+    }
 }

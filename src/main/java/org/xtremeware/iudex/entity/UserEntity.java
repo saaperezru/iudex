@@ -3,28 +3,41 @@ package org.xtremeware.iudex.entity;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import org.xtremeware.iudex.helper.Role;
-import org.xtremeware.iudex.vo.ProgramVo;
 import org.xtremeware.iudex.vo.UserVo;
 
-@javax.persistence.Entity
+@javax.persistence.Entity(name="User")
+@Table(name="USER_")
 public class UserEntity implements Serializable, Entity<UserVo> {
 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="ID_USER_")
     private Long id;
+    
+    @Column(name="FIRST_NAMES", length=50 ,nullable=false)
     private String firstName;
+    
+    @Column(name="LAST_NAMES", length=50 ,nullable=false)
     private String lastName;
+    
+    @Column(name="USER_NAME", length=20 ,nullable=false)
     private String userName;
+    
+    @Column(name="PASSWORD_", length=20 ,nullable=false)
     private String password;
+    
+    @Column(name="ROL", nullable=false)
     private Role rol;
+    
+    @Column(name="ACTIVE")    
     private boolean active;
+    
     //ADD ASOCIATION
-    private List<ProgramVo> programs;
+    @OneToMany(mappedBy="id")
+    private List<ProgramEntity> programs;
     
     @Override
     public UserVo toVo() {
@@ -36,7 +49,7 @@ public class UserEntity implements Serializable, Entity<UserVo> {
         vo.setPassword(this.getPassword());
         vo.setRol(this.getRol());
         ArrayList<Long> programsId = new ArrayList<Long>();
-        for (ProgramVo program : this.getPrograms()) {
+        for (ProgramEntity program : this.getPrograms()) {
             programsId.add(program.getId());
         }
         vo.setProgramsId(programsId);
@@ -110,11 +123,11 @@ public class UserEntity implements Serializable, Entity<UserVo> {
         this.password = password;
     }
     
-    public List<ProgramVo> getPrograms() {
+    public List<ProgramEntity> getPrograms() {
         return programs;
     }
     
-    public void setPrograms(List<ProgramVo> programs) {
+    public void setPrograms(List<ProgramEntity> programs) {
         this.programs = programs;
     }
     

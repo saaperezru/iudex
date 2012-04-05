@@ -1,22 +1,26 @@
 package org.xtremeware.iudex.entity;
 
 import java.io.Serializable;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import org.xtremeware.iudex.vo.PeriodVo;
 
-@javax.persistence.Entity
+@javax.persistence.Entity(name="Period")
+@Table(name="PERIOD_")
 public class PeriodEntity implements Serializable, Entity<PeriodVo> {
 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="ID_PERIOD")
     private Long id;
     
+    @Column(name="YEAR_")
     private int year;
+    
+    @Column(name="SEMESTER",nullable=false)
     private int semester;
 
+    @Override
     public PeriodVo toVo(){
         PeriodVo vo = new PeriodVo();
         

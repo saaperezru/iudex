@@ -1,21 +1,29 @@
 package org.xtremeware.iudex.entity;
 
 import java.io.Serializable;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import org.xtremeware.iudex.vo.CourseRatingVo;
 
-@javax.persistence.Entity
+@javax.persistence.Entity(name="CourseRating")
+@Table(name="COURSE_RATING")
 public class CourseRatingEntity implements Serializable, Entity<CourseRatingVo> {
 
 	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+        @Column (name="ID_COURSE_RATING")
 	private Long id;
+        
+        @ManyToOne
+        @JoinColumn(name="ID_COURSE", nullable= false)
 	private CourseEntity course;
-	private UserEntity user;
-	private float value;
+	
+        @ManyToOne
+        @JoinColumn(name="ID_USER_", nullable= false)        
+        private UserEntity user;
+	
+        @Column(name="RATING", nullable= false)
+        private float value;
 
 	@Override
 	public CourseRatingVo toVo() {

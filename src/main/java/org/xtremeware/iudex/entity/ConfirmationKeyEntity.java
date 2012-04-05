@@ -2,22 +2,28 @@ package org.xtremeware.iudex.entity;
 
 import java.io.Serializable;
 import java.util.Date;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Temporal;
+import javax.persistence.*;
 import org.xtremeware.iudex.vo.ConfirmationKeyVo;
 
-@javax.persistence.Entity
+@javax.persistence.Entity(name="ConfirmationKey")
+@Table(name="CONFIRMATION_KEY")
 public class ConfirmationKeyEntity implements Serializable, Entity<ConfirmationKeyVo> {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="ID_CONFIRMATION_KEY")
     private Long id;
+    
     @Temporal(javax.persistence.TemporalType.DATE)
+    @Column(name="EXPIRATION_DATE", nullable=false)
     private Date expirationDate;
+    
+    @Column(name="CONFIRMATION_KEY", length=20, nullable=false)
     private String confirmationKey;
+    
+    @ManyToOne
+    @JoinColumn(name="ID_USER_", nullable= false)
     private UserEntity user;
 
     @Override

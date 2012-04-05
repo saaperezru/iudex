@@ -2,25 +2,38 @@ package org.xtremeware.iudex.entity;
 
 import java.io.Serializable;
 import java.util.Date;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Temporal;
+import javax.persistence.*;
 import org.xtremeware.iudex.vo.CommentVo;
 
-@javax.persistence.Entity
+@javax.persistence.Entity(name="Comment")
+@Table(name="COMMENT_")
 public class CommentEntity implements Serializable, Entity<CommentVo> {
 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="ID_COMMENT_")
     private Long id;
+    
+    @Column(name="CONTENT", length=(2000), nullable=false)
     private String content;
+    
     @Temporal(javax.persistence.TemporalType.DATE)
+    @Column(name="DATE_COMMENT", nullable=false)
     private Date date;
+    
+    @ManyToOne
+    @JoinColumn(name="ID_USER_", nullable= false)
     private UserEntity user;
+    
+    @ManyToOne
+    @JoinColumn(name="ID_COURSE", nullable= false)
     private CourseEntity course;
+    
+    @Column(name="ANONYMOUS", nullable=false)
     private boolean anonymous;
+    
+    @Column(name="RATING", nullable= false)
     private Float rating;
 
     @Override

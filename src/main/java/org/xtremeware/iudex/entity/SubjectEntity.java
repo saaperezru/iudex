@@ -1,19 +1,24 @@
 package org.xtremeware.iudex.entity;
 
 import java.io.Serializable;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
+import javax.persistence.Column;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import org.xtremeware.iudex.vo.SubjectVo;
 
-@javax.persistence.Entity
+@javax.persistence.Entity(name="Subject")
+@Table(name="SUBJECT")
 public class SubjectEntity implements Serializable, Entity<SubjectVo> {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="ID_SUBJECT")
     private Long id;
+    
+    @Column(name="NAME")
     private String name;
+    
+    @Column(name="DESCRIPTION")
     private String description;
 
     @Override

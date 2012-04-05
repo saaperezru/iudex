@@ -2,17 +2,19 @@
 package org.xtremeware.iudex.entity;
 
 import java.io.Serializable;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import org.xtremeware.iudex.vo.FeedbackTypeVo;
 
-@javax.persistence.Entity
+@javax.persistence.Entity(name="FeedbackType")
+@Table(name="TYPE_FEEDBACK")
 public class FeedbackTypeEntity implements Serializable, Entity<FeedbackTypeVo> {
 	private static final long serialVersionUID = 1L;
 	@Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
+        @Column(name="ID_TYPE_FEEDBACK")
 	private Long id;
+        
+        @Column(name="NAME", length=20, nullable=false)
 	private String name;
 
 	@Override

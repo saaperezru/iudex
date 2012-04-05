@@ -8,6 +8,7 @@ public class ProfessorVo extends ValueObject {
     private String website;
     private String imageUrl;
     private String description;
+    private String email;
 
     @Override
     public boolean equals(Object obj) {
@@ -36,25 +37,31 @@ public class ProfessorVo extends ValueObject {
         if ((this.description == null) ? (other.description != null) : !this.description.equals(other.description)) {
             return false;
         }
+        if ((this.email == null) ? (other.email != null) : !this.email.equals(other.email)) {
+            return false;
+        }
         return true;
     }
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 97 * hash + (this.id != null ? this.id.hashCode() : 0);
-        hash = 97 * hash + (this.firstName != null ? this.firstName.hashCode() : 0);
-        hash = 97 * hash + (this.lastName != null ? this.lastName.hashCode() : 0);
-        hash = 97 * hash + (this.website != null ? this.website.hashCode() : 0);
-        hash = 97 * hash + (this.imageUrl != null ? this.imageUrl.hashCode() : 0);
-        hash = 97 * hash + (this.description != null ? this.description.hashCode() : 0);
+        int hash = 5;
+        hash = 19 * hash + (this.id != null ? this.id.hashCode() : 0);
+        hash = 19 * hash + (this.firstName != null ? this.firstName.hashCode() : 0);
+        hash = 19 * hash + (this.lastName != null ? this.lastName.hashCode() : 0);
+        hash = 19 * hash + (this.website != null ? this.website.hashCode() : 0);
+        hash = 19 * hash + (this.imageUrl != null ? this.imageUrl.hashCode() : 0);
+        hash = 19 * hash + (this.description != null ? this.description.hashCode() : 0);
+        hash = 19 * hash + (this.email != null ? this.email.hashCode() : 0);
         return hash;
     }
 
     @Override
     public String toString() {
-        return "ProfessorVo{" + "id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", website=" + website + ", imageUrl=" + imageUrl + ", description=" + description + '}';
+        return "ProfessorVo{" + "id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", website=" + website + ", imageUrl=" + imageUrl + ", description=" + description + ", email=" + email + '}';
     }
+
+
 
     public String getDescription() {
         return description;
@@ -102,5 +109,13 @@ public class ProfessorVo extends ValueObject {
 
     public void setWebsite(String website) {
         this.website = website;
+    }
+    
+    public String getEmail() {
+        return website;
+    }
+    
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

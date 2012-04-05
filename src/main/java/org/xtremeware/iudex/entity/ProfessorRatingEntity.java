@@ -2,19 +2,30 @@
 package org.xtremeware.iudex.entity;
 
 import java.io.Serializable;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import org.xtremeware.iudex.vo.ProfessorRatingVo;
 
 @javax.persistence.Entity
+@NamedQueries({
+    @NamedQuery(name="getRatingByProfessorId",query="SELECT r FROM ProfessorRating r WHERE r.professor.id = :professor"),
+    @NamedQuery(name="getRatingByProfessorIdAndUserId",query="SELECT r FROM ProfessorRating r WHERE r.professor.id = :professor AND r.user.id = :user"),
+})
 public class ProfessorRatingEntity implements Serializable , Entity<ProfessorRatingVo> {
 	private static final long serialVersionUID = 1L;
 	@Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
+        @Column(name="ID_PROFESSOR_RATING")
         private Long id;
+        
+        @ManyToOne
+        @JoinColumn(name="ID_PROFESSOR", nullable= false)
         private ProfessorEntity professor;
+        
+        @ManyToOne
+        @JoinColumn(name="ID_USER_", nullable= false)        
         private UserEntity user;
+        
+        @Column(name="RATING", nullable=false)
         private int value;
         
         @Override

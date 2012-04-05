@@ -4,7 +4,9 @@ import java.io.Serializable;
 import javax.persistence.*;
 import org.xtremeware.iudex.vo.SubjectRatingVo;
 
-@javax.persistence.Entity
+
+@javax.persistence.Entity(name="SubjectRating")
+@Table(name="SUBJECT_RATING")
 @NamedQueries({
     @NamedQuery(name = "getSubjectRatingBySubjectId",
     query = "SELECT result FROM SubjectRating result "
@@ -23,20 +25,29 @@ public class SubjectRatingEntity implements Serializable, Entity<SubjectRatingVo
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private SubjectEntity subject;
-    private UserEntity user;
-    private int value;
+       @GeneratedValue(strategy = GenerationType.IDENTITY)
+        @Column(name="ID_SUBJECT_RATING")
+	private Long id;
+        
+        @ManyToOne
+        @JoinColumn(name="ID_SUBJECT", nullable= false)
+        private SubjectEntity subject;
+        
+        @ManyToOne
+        @JoinColumn(name="ID_USER_", nullable= false)
+        private UserEntity user;
+        
+        @Column(name="RATING", nullable= false)
+        private int value;
 
     @Override
     public SubjectRatingVo toVo() {
         SubjectRatingVo vo = new SubjectRatingVo();
 
-        vo.setId(getId());
-        vo.setSubject(getSubject().getId());
-        vo.setUser(getUser().getId());
-        vo.setValue(getValue());
+        vo.setId(this.getId());
+        vo.setSubject(this.getSubject().getId());
+        vo.setUser(this.getUser().getId());
+        vo.setValue(this.getValue());
 
         return vo;
     }
@@ -46,6 +57,7 @@ public class SubjectRatingEntity implements Serializable, Entity<SubjectRatingVo
         // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof SubjectRatingEntity)) {
             return false;
+
         }
         SubjectRatingEntity other = (SubjectRatingEntity) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {

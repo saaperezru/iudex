@@ -2,21 +2,34 @@
 package org.xtremeware.iudex.entity;
 
 import java.io.Serializable;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import org.xtremeware.iudex.vo.CourseVo;
 
 @javax.persistence.Entity
+@NamedQuery(name="getProfessorBySubjectId",query="SELECT c.professor FROM Course c WHERE c.subject.id = :subject")
 public class CourseEntity implements Serializable,Entity<CourseVo> {
 	private static final long serialVersionUID = 1L;
 	@Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
+        @Column(name="ID_COURSE")
 	private Long id;
+        
+        @ManyToOne
+        @JoinColumn(name="ID_PROFESSOR", nullable= false)
 	private ProfessorEntity professor;
+        
+        @ManyToOne
+        @JoinColumn(name="ID_SUBJECT", nullable= false)
 	private SubjectEntity subject;
-	private PeriodEntity period;
+	
+        @ManyToOne
+        @JoinColumn(name="ID_PERIOD", nullable= false)
+        private PeriodEntity period;
+        
+        @Column(name="AVERAGE", nullable= false)
 	private Double ratingAverage;
+        
+        @Column(name="RATINGCOUNT", nullable=false)
 	private Long ratingCount;
 
 	@Override

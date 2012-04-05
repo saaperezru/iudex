@@ -15,13 +15,22 @@ import org.xtremeware.iudex.vo.CourseRatingVo;
 })
 public class CourseRatingEntity implements Serializable, Entity<CourseRatingVo> {
 
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private CourseEntity course;
-    private UserEntity user;
-    private float value;
+	private static final long serialVersionUID = 1L;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+        @Column (name="ID_COURSE_RATING")
+	private Long id;
+        
+        @ManyToOne
+        @JoinColumn(name="ID_COURSE", nullable= false)
+	private CourseEntity course;
+	
+        @ManyToOne
+        @JoinColumn(name="ID_USER_", nullable= false)        
+        private UserEntity user;
+	
+        @Column(name="RATING", nullable= false)
+        private float value;
 
     @Override
     public CourseRatingVo toVo() {

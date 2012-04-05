@@ -1,35 +1,35 @@
-
 package org.xtremeware.iudex.entity;
 
 import java.io.Serializable;
 import javax.persistence.*;
 import org.xtremeware.iudex.vo.CourseVo;
 
-@javax.persistence.Entity
-@NamedQuery(name="getProfessorBySubjectId",query="SELECT c.professor FROM Course c WHERE c.subject.id = :subject")
-public class CourseEntity implements Serializable,Entity<CourseVo> {
+@javax.persistence.Entity(name = "Course")
+@NamedQueries({
+	@NamedQuery(name = "getCourseByProfessorId", query = "SELECT c FROM Course c WHERE c.professor.id = :professorId"),
+	@NamedQuery(name = "getCourseBySubjectId", query = "SELECT c FROM Course c WHERE c.subject.id = :subjectId"),
+	@NamedQuery(name = "getCourseByPeriodId", query = "SELECT c FROM Course c WHERE c.period.id = :periodId"),
+	@NamedQuery(name = "getCourseByProfessorIdAndSubjectId", query = "SELECT c FROM Course c WHERE c.subject.id = :subjectId AND c.professor.id = :professorId")
+})
+public class CourseEntity implements Serializable, Entity<CourseVo> {
+
 	private static final long serialVersionUID = 1L;
 	@Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-        @Column(name="ID_COURSE")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "ID_COURSE")
 	private Long id;
-        
-        @ManyToOne
-        @JoinColumn(name="ID_PROFESSOR", nullable= false)
+	@ManyToOne
+	@JoinColumn(name = "ID_PROFESSOR", nullable = false)
 	private ProfessorEntity professor;
-        
-        @ManyToOne
-        @JoinColumn(name="ID_SUBJECT", nullable= false)
+	@ManyToOne
+	@JoinColumn(name = "ID_SUBJECT", nullable = false)
 	private SubjectEntity subject;
-	
-        @ManyToOne
-        @JoinColumn(name="ID_PERIOD", nullable= false)
-        private PeriodEntity period;
-        
-        @Column(name="AVERAGE", nullable= false)
+	@ManyToOne
+	@JoinColumn(name = "ID_PERIOD", nullable = false)
+	private PeriodEntity period;
+	@Column(name = "AVERAGE", nullable = false)
 	private Double ratingAverage;
-        
-        @Column(name="RATINGCOUNT", nullable=false)
+	@Column(name = "RATINGCOUNT", nullable = false)
 	private Long ratingCount;
 
 	@Override
@@ -59,7 +59,6 @@ public class CourseEntity implements Serializable,Entity<CourseVo> {
 		return true;
 	}
 
-
 	@Override
 	public int hashCode() {
 		int hash = 0;
@@ -71,7 +70,6 @@ public class CourseEntity implements Serializable,Entity<CourseVo> {
 	public String toString() {
 		return "CourseEntity{" + "id=" + id + ", professor=" + professor + ", subject=" + subject + ", period=" + period + ", ratingAverage=" + ratingAverage + ", ratingCount=" + ratingCount + '}';
 	}
-
 
 	public Long getId() {
 		return id;
@@ -120,5 +118,4 @@ public class CourseEntity implements Serializable,Entity<CourseVo> {
 	public void setSubject(SubjectEntity subject) {
 		this.subject = subject;
 	}
-
 }

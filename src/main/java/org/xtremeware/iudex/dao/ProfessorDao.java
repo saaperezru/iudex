@@ -47,7 +47,7 @@ public class ProfessorDao extends Dao<ProfessorEntity> {
         }
 
         try {
-            return em.createNamedQuery("getProfessorBySubjectId").setParameter("subject", subjectId).getResultList();
+            return em.createNamedQuery("getProfessorBySubjectId").setParameter("subjectId", subjectId).getResultList();
         } catch (NoResultException e) {
             return null;
         }

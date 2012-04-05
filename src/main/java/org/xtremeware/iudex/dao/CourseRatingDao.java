@@ -24,7 +24,7 @@ public class CourseRatingDao extends Dao<CourseRatingEntity> {
         if (em == null) {
             throw new IllegalArgumentException("EntityManager em cannot be null");
         }
-        return em.createQuery("getByCourseId").setParameter("courseId", courseId).getResultList();
+        return em.createQuery("getCourseRatingByCourseId").setParameter("courseId", courseId).getResultList();
     }
 
     /**
@@ -41,7 +41,7 @@ public class CourseRatingDao extends Dao<CourseRatingEntity> {
             throw new IllegalArgumentException("EntityManager em cannot be null");
         }
         try {
-            return (CourseRatingEntity) em.createQuery("getByCourseIdAndUserId").setParameter("courseId", courseId).setParameter("userId", userId).getSingleResult();
+            return (CourseRatingEntity) em.createQuery("getCourseRatingByCourseIdAndUserId").setParameter("courseId", courseId).setParameter("userId", userId).getSingleResult();
         } catch (NoResultException noResultException) {
             return null;
         }

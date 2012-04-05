@@ -2,13 +2,17 @@ package org.xtremeware.iudex.entity;
 
 import java.io.Serializable;
 import java.util.Date;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Temporal;
+import javax.persistence.*;
 import org.xtremeware.iudex.vo.CommentVo;
 
 @javax.persistence.Entity
+@NamedQueries({
+	@NamedQuery(name="getCommentsByProfessorId",query="SELECT c FROM Comment c WHERE c.course.professor.id = :professorId"),
+	@NamedQuery(name="getCommentsBySubjectId",query="SELECT c FROM Comment c WHERE c.course.subject.id = :subjectId"),
+	@NamedQuery(name="getCommentsByUserId",query="SELECT c FROM Comment c WHERE c.user.id = :userId"),
+	@NamedQuery(name="getCommentsByCourseId",query="SELECT c FROM Comment c WHERE c.course.id = :courseId"),
+
+})
 public class CommentEntity implements Serializable, Entity<CommentVo> {
 
     private static final long serialVersionUID = 1L;

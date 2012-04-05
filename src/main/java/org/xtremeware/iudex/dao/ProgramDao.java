@@ -21,6 +21,6 @@ public class ProgramDao extends Dao<ProgramEntity> {
         if (em == null) {
             throw new IllegalArgumentException("EntityManager em cannot be null");
         }
-        return em.createQuery("getByNameLike").setParameter("name", "%" + name + "%").getResultList();
+        return em.createQuery("getProgramByNameLike").setParameter("name", "%" + name + "%").getResultList();
     }
 }

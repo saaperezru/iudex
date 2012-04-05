@@ -6,10 +6,10 @@ import org.xtremeware.iudex.vo.CourseRatingVo;
 
 @javax.persistence.Entity
 @NamedQueries({
-    @NamedQuery(name = "getByCourseId",
+    @NamedQuery(name = "getCourseRatingByCourseId",
     query = "SELECT result FROM CourseRating result "
-    + "WHERE result.course.id = :CI"),
-    @NamedQuery(name = "getByCourseIdAndUserId",
+    + "WHERE result.course.id = :courseId"),
+    @NamedQuery(name = "getCourseRatingByCourseIdAndUserId",
     query = "SELECT result FROM CourseRating result "
     + "WHERE result.course.id = :courseId AND result.user.id = :userId")
 })

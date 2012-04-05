@@ -6,12 +6,16 @@ import org.xtremeware.iudex.vo.CommentRatingVo;
 
 @javax.persistence.Entity
 @NamedQueries({
-    @NamedQuery(name = "getByCommentId",
+    @NamedQuery(name = "getCommentRatingByCommentId",
     query = "SELECT result FROM CommentRating result "
     + "WHERE result.comment.id = :commentId"),
-    @NamedQuery(name = "getBySubjectIdAndUserId",
-    query = "SELECT result FROM SubjectRating result "
-    + "WHERE result.comment.id = :commentId AND result.user.id = :userId")
+    @NamedQuery(name = "getCommentRatingByCommentIdAndUserId",
+    query = "SELECT result FROM CommentRating result "
+    + "WHERE result.comment.id = :commentId AND result.user.id = :userId"),
+    @NamedQuery(name="countPositiveCommentRating",query="SELECT COUNT result FROM CommentRating result "
+                + "WHERE result.comment.id = :commentId AND result.value = 1"),
+    @NamedQuery(name="countNegativeCommentRating",query="SELECT COUNT result FROM CommentRating result "
+                + "WHERE result.comment.id = :commentId AND result.value = -1")
 })
 public class CommentRatingEntity implements Serializable, Entity<CommentRatingVo> {
 

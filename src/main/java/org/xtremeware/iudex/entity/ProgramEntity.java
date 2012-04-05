@@ -5,7 +5,7 @@ import javax.persistence.*;
 import org.xtremeware.iudex.vo.ProgramVo;
 
 @javax.persistence.Entity
-@NamedQuery(name = "getByNameLike",
+@NamedQuery(name = "getProgramByNameLike",
 query = "SELECT result FROM Program result "
 + "WHERE result.name = :name")
 public class ProgramEntity implements Serializable, Entity<ProgramVo> {

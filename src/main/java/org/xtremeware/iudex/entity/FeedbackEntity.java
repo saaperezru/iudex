@@ -5,9 +5,11 @@ import java.util.Date;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQuery;
 import org.xtremeware.iudex.vo.FeedbackVo;
 
 @javax.persistence.Entity
+@NamedQuery(name = "getByTypeId", query = "SELECT f FROM Feedback f WHERE f.type.id = :feedbackTypeId")
 public class FeedbackEntity implements Serializable, Entity<FeedbackVo> {
 
     private static final long serialVersionUID = 1L;

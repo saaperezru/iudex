@@ -9,7 +9,7 @@ import org.xtremeware.iudex.vo.ConfirmationKeyVo;
 @NamedQuery(
     name="getByConfirmationKey",
     query="SELECT result FROM ConfirmationKeyEntity result "
-                + "WHERE result.confirmationKey = :CK"
+                + "WHERE result.confirmationKey = :confirmationKey"
 )
 public class ConfirmationKeyEntity implements Serializable, Entity<ConfirmationKeyVo> {
 

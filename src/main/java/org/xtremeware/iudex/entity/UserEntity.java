@@ -11,7 +11,7 @@ import org.xtremeware.iudex.helper.Role;
 import org.xtremeware.iudex.vo.UserVo;
 
 @javax.persistence.Entity
-@NamedQuery(name="getByUsernameAndPassword",query="SELECT u FROM User u WHERE u.userName = :userName AND u.password = :password")
+@NamedQuery(name="getUserByUsernameAndPassword",query="SELECT u FROM User u WHERE u.userName = :userName AND u.password = :password")
 public class UserEntity implements Serializable, Entity<UserVo> {
 
     private static final long serialVersionUID = 1L;

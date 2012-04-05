@@ -29,7 +29,7 @@ public class ProfessorRatingDao extends Dao<ProfessorRatingEntity> {
         }
 
         try {
-            return em.createNamedQuery("getByProfessorId").setParameter("professor", professorId).getResultList();
+            return em.createNamedQuery("getRatingByProfessorId").setParameter("professor", professorId).getResultList();
         } catch (NoResultException e) {
             return null;
         }
@@ -48,7 +48,7 @@ public class ProfessorRatingDao extends Dao<ProfessorRatingEntity> {
         }
 
         try {
-            return (ProfessorRatingEntity) em.createNamedQuery("getByProfessorIdAndUserId").setParameter("professor", professorId).setParameter("user", userId).getSingleResult();
+            return (ProfessorRatingEntity) em.createNamedQuery("getRatingByProfessorIdAndUserId").setParameter("professor", professorId).setParameter("user", userId).getSingleResult();
         } catch (NoResultException e) {
             return null;
         }

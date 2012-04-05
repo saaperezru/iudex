@@ -8,7 +8,7 @@ import javax.persistence.NamedQuery;
 import org.xtremeware.iudex.vo.ProfessorVo;
 
 @javax.persistence.Entity
-@NamedQuery(name="getByNameLike",query="SELECT p FROM Professor p WHERE p.firstName = :name OR p.lastName = :name")
+@NamedQuery(name="getProfessorByNameLike",query="SELECT p FROM Professor p WHERE p.firstName = :name OR p.lastName = :name")
 public class ProfessorEntity implements Serializable, Entity<ProfessorVo> {
     
     private static final long serialVersionUID = 1L;

@@ -7,8 +7,8 @@ import org.xtremeware.iudex.vo.ProfessorRatingVo;
 
 @javax.persistence.Entity
 @NamedQueries({
-    @NamedQuery(name="getByProfessorId",query="SELECT r FROM ProfessorRating r WHERE r.professor.id = :professor"),
-    @NamedQuery(name="getByProfessorIdAndUserId",query="SELECT r FROM ProfessorRating r WHERE r.professor.id = :professor AND r.user.id = :user"),
+    @NamedQuery(name="getRatingByProfessorId",query="SELECT r FROM ProfessorRating r WHERE r.professor.id = :professor"),
+    @NamedQuery(name="getRatingByProfessorIdAndUserId",query="SELECT r FROM ProfessorRating r WHERE r.professor.id = :professor AND r.user.id = :user"),
 })
 public class ProfessorRatingEntity implements Serializable , Entity<ProfessorRatingVo> {
 	private static final long serialVersionUID = 1L;

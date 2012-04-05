@@ -8,10 +8,10 @@ import org.xtremeware.iudex.vo.SubjectRatingVo;
 @NamedQueries({
     @NamedQuery(name = "getBySubjectId",
     query = "SELECT result FROM SubjectRating result "
-    + "WHERE result.subject.id = :SI"),
+    + "WHERE result.subject.id = :subjectId"),
     @NamedQuery(name = "getBySubjectIdAndUserId",
     query = "SELECT result FROM SubjectRating result "
-    + "WHERE result.subject.id = :SI AND result.user.id = :UI")
+    + "WHERE result.subject.id = :subjectId AND result.user.id = :userId")
 })
 public class SubjectRatingEntity implements Serializable, Entity<SubjectRatingVo> {
 

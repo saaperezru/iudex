@@ -1,12 +1,18 @@
 package org.xtremeware.iudex.entity;
 
 import java.io.Serializable;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import org.xtremeware.iudex.vo.CommentRatingVo;
 
 @javax.persistence.Entity
+@NamedQueries({
+    @NamedQuery(name = "getByCommentId",
+    query = "SELECT result FROM CommentRating result "
+    + "WHERE result.comment.id = :commentId"),
+    @NamedQuery(name = "getBySubjectIdAndUserId",
+    query = "SELECT result FROM SubjectRating result "
+    + "WHERE result.comment.id = :commentId AND result.user.id = :userId")
+})
 public class CommentRatingEntity implements Serializable, Entity<CommentRatingVo> {
 
     private static final long serialVersionUID = 1L;

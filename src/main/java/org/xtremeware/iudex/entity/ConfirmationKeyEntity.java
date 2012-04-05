@@ -6,11 +6,9 @@ import javax.persistence.*;
 import org.xtremeware.iudex.vo.ConfirmationKeyVo;
 
 @javax.persistence.Entity
-@NamedQuery(
-    name="getByConfirmationKey",
-    query="SELECT result FROM ConfirmationKeyEntity result "
-                + "WHERE result.confirmationKey = :CK"
-)
+@NamedQuery(name = "getByConfirmationKey",
+query = "SELECT result FROM ConfirmationKey result "
++ "WHERE result.confirmationKey = :confirmationKey")
 public class ConfirmationKeyEntity implements Serializable, Entity<ConfirmationKeyVo> {
 
     private static final long serialVersionUID = 1L;

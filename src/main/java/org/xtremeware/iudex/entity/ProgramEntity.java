@@ -1,12 +1,13 @@
 package org.xtremeware.iudex.entity;
 
 import java.io.Serializable;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import org.xtremeware.iudex.vo.ProgramVo;
 
 @javax.persistence.Entity
+@NamedQuery(name = "getByNameLike",
+query = "SELECT result FROM Program result "
++ "WHERE result.name = :name")
 public class ProgramEntity implements Serializable, Entity<ProgramVo> {
 
     private static final long serialVersionUID = 1L;

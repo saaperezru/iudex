@@ -6,12 +6,18 @@ import org.xtremeware.iudex.vo.SubjectRatingVo;
 
 @javax.persistence.Entity
 @NamedQueries({
-    @NamedQuery(name = "getBySubjectId",
+    @NamedQuery(name = "getSubjectRatingBySubjectId",
     query = "SELECT result FROM SubjectRating result "
     + "WHERE result.subject.id = :subjectId"),
-    @NamedQuery(name = "getBySubjectIdAndUserId",
+    @NamedQuery(name = "getSubjectRatingBySubjectIdAndUserId",
     query = "SELECT result FROM SubjectRating result "
-    + "WHERE result.subject.id = :subjectId AND result.user.id = :userId")
+    + "WHERE result.subject.id = :subjectId AND result.user.id = :userId"),
+    @NamedQuery(name = "countPositiveSubjectRating",
+    query = "SELECT COUNT (result) FROM SubjectRating result "
+    + "WHERE result.subject.id = :subjectId AND result.value = 1"),
+    @NamedQuery(name = "countNegativeSubjectRating",
+    query = "SELECT COUNT (result) FROM SubjectRating result "
+    + "WHERE result.subject.id = :subjectId AND result.value = -1")
 })
 public class SubjectRatingEntity implements Serializable, Entity<SubjectRatingVo> {
 

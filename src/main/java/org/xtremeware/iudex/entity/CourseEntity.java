@@ -5,8 +5,8 @@ import java.io.Serializable;
 import javax.persistence.*;
 import org.xtremeware.iudex.vo.CourseVo;
 
-@javax.persistence.Entity(name="Course")
-@Table(name="COURSE")
+@javax.persistence.Entity
+@NamedQuery(name="getProfessorBySubjectId",query="SELECT c.professor FROM Course c WHERE c.subject.id = :subject")
 public class CourseEntity implements Serializable,Entity<CourseVo> {
 	private static final long serialVersionUID = 1L;
 	@Id

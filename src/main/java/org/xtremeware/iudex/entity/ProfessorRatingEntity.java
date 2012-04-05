@@ -5,8 +5,11 @@ import java.io.Serializable;
 import javax.persistence.*;
 import org.xtremeware.iudex.vo.ProfessorRatingVo;
 
-@javax.persistence.Entity(name="ProfessorRating")
-@Table(name="PROFESSOR_RATING")
+@javax.persistence.Entity
+@NamedQueries({
+    @NamedQuery(name="getRatingByProfessorId",query="SELECT r FROM ProfessorRating r WHERE r.professor.id = :professor"),
+    @NamedQuery(name="getRatingByProfessorIdAndUserId",query="SELECT r FROM ProfessorRating r WHERE r.professor.id = :professor AND r.user.id = :user"),
+})
 public class ProfessorRatingEntity implements Serializable , Entity<ProfessorRatingVo> {
 	private static final long serialVersionUID = 1L;
 	@Id

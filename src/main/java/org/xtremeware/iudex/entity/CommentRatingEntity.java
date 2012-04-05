@@ -11,7 +11,7 @@ public class CommentRatingEntity implements Serializable, Entity<CommentRatingVo
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private CommentEntity comment;
     private UserEntity user;

@@ -1,29 +1,31 @@
 package org.xtremeware.iudex.entity;
 
 import java.io.Serializable;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import org.xtremeware.iudex.vo.PeriodVo;
 
-@javax.persistence.Entity
+@javax.persistence.Entity(name = "Period")
+@NamedQueries({
+    @NamedQuery(name = "getByYear", query = "SELECT p FROM Period p WHERE p.year = :year"),
+    @NamedQuery(name = "getByYearAndSemester", query = "SELECT p FROM Period p WHERE p.year = :year AND p.semester = :semester")
+})
 public class PeriodEntity implements Serializable, Entity<PeriodVo> {
 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
     private int year;
     private int semester;
 
-    public PeriodVo toVo(){
+    @Override
+    public PeriodVo toVo() {
         PeriodVo vo = new PeriodVo();
-        
+
         vo.setId(id);
         vo.setSemester(semester);
         vo.setYear(year);
-        
+
         return vo;
     }
 
@@ -61,7 +63,7 @@ public class PeriodEntity implements Serializable, Entity<PeriodVo> {
     public String toString() {
         return "PeriodEntity{" + "id=" + id + ", year=" + year + ", semester=" + semester + '}';
     }
-    
+
     public Long getId() {
         return id;
     }
@@ -85,5 +87,4 @@ public class PeriodEntity implements Serializable, Entity<PeriodVo> {
     public void setYear(int year) {
         this.year = year;
     }
-    
 }

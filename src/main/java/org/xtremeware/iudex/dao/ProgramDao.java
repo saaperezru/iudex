@@ -9,11 +9,13 @@ import org.xtremeware.iudex.entity.ProgramEntity;
  * @author josebermeo
  */
 public class ProgramDao extends Dao<ProgramEntity> {
+
     /**
-     * Search a program which name contains the given parameter name 
+     * Search a program which name contains the given parameter name
+     *
      * @param em the entity manager
-     * @param name 
-     * @return Return a list of programEntity with
+     * @param name
+     * @return Return a list of programEntity objects
      */
     public List<ProgramEntity> getByNameLike(EntityManager em, String name) {
         if (em == null) {

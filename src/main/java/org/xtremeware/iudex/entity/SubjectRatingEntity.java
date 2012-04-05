@@ -2,12 +2,22 @@
 package org.xtremeware.iudex.entity;
 
 import java.io.Serializable;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import org.xtremeware.iudex.vo.SubjectRatingVo;
 
 @javax.persistence.Entity
+@NamedQueries({
+    @NamedQuery(
+        name="getBySubjectId",
+        query="SELECT result FROM SubjectRatingEntity result "+ 
+                "WHERE result.subject.id = :SI"
+        ),
+    @NamedQuery(
+        name="getBySubjectIdAndUserId", 
+        query="SELECT result FROM SubjectRatingEntity result "+
+                "WHERE result.subject.id = :SI AND result.user.id = :UI"
+        )
+})
 public class SubjectRatingEntity implements Serializable , Entity<SubjectRatingVo> {
 	private static final long serialVersionUID = 1L;
 	@Id

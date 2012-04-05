@@ -7,7 +7,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import org.xtremeware.iudex.helper.Role;
-import org.xtremeware.iudex.vo.ProgramVo;
 import org.xtremeware.iudex.vo.UserVo;
 
 @javax.persistence.Entity
@@ -24,8 +23,8 @@ public class UserEntity implements Serializable, Entity<UserVo> {
     private Role rol;
     private boolean active;
     //ADD ASOCIATION
-    private List<ProgramVo> programs;
-    
+    private List<ProgramEntity> programs;
+
     @Override
     public UserVo toVo() {
         UserVo vo = new UserVo();
@@ -36,13 +35,13 @@ public class UserEntity implements Serializable, Entity<UserVo> {
         vo.setPassword(this.getPassword());
         vo.setRol(this.getRol());
         ArrayList<Long> programsId = new ArrayList<Long>();
-        for (ProgramVo program : this.getPrograms()) {
+        for (ProgramEntity program : this.getPrograms()) {
             programsId.add(program.getId());
         }
         vo.setProgramsId(programsId);
         return vo;
     }
-    
+
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {
@@ -57,79 +56,79 @@ public class UserEntity implements Serializable, Entity<UserVo> {
         }
         return true;
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 7;
         hash = 97 * hash + (this.id != null ? this.id.hashCode() : 0);
         return hash;
     }
-    
+
     @Override
     public String toString() {
         return "UserEntity{" + "id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", userName=" + userName + ", password=" + password + ", rol=" + rol + ", active=" + active + ", programs=" + programs + '}';
     }
-    
+
     public boolean isActive() {
         return active;
     }
-    
+
     public void setActive(boolean active) {
         this.active = active;
     }
-    
+
     public String getFirstName() {
         return firstName;
     }
-    
+
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
-    
+
     public Long getId() {
         return id;
     }
-    
+
     public void setId(Long id) {
         this.id = id;
     }
-    
+
     public String getLastName() {
         return lastName;
     }
-    
+
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
-    
+
     public String getPassword() {
         return password;
     }
-    
+
     public void setPassword(String password) {
         this.password = password;
     }
-    
-    public List<ProgramVo> getPrograms() {
+
+    public List<ProgramEntity> getPrograms() {
         return programs;
     }
-    
-    public void setPrograms(List<ProgramVo> programs) {
+
+    public void setPrograms(List<ProgramEntity> programs) {
         this.programs = programs;
     }
-    
+
     public Role getRol() {
         return rol;
     }
-    
+
     public void setRol(Role rol) {
         this.rol = rol;
     }
-    
+
     public String getUserName() {
         return userName;
     }
-    
+
     public void setUserName(String userName) {
         this.userName = userName;
     }

@@ -1,12 +1,22 @@
 package org.xtremeware.iudex.entity;
 
 import java.io.Serializable;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import org.xtremeware.iudex.vo.CourseRatingVo;
 
 @javax.persistence.Entity
+@NamedQueries({
+    @NamedQuery(
+        name="getByCourseId",
+        query="SELECT result FROM CourseRatingEntity result "+
+                "WHERE result.course.id = :CI"
+        ),
+    @NamedQuery(
+        name="getByCourseIdAndUserId", 
+        query="SELECT result FROM CourseRatingEntity result "+
+                "WHERE result.course.id = :CI AND result.user.id = :UI"
+        )
+})
 public class CourseRatingEntity implements Serializable, Entity<CourseRatingVo> {
 
 	private static final long serialVersionUID = 1L;

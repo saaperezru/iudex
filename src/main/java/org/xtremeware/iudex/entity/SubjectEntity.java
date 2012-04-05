@@ -1,12 +1,13 @@
 package org.xtremeware.iudex.entity;
 
 import java.io.Serializable;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import org.xtremeware.iudex.vo.SubjectVo;
 
-@javax.persistence.Entity
+@javax.persistence.Entity(name = "Subject")
+@NamedQueries({
+    @NamedQuery(name = "getByNameLike", query = "SELECT s FROM Subject s WHERE s.name LIKE :name"),
+    @NamedQuery(name = "getByProfessorId", query = "SELECT DISTINCT c.subject FROM Course c WHERE c.professor.id = :professorId")})
 public class SubjectEntity implements Serializable, Entity<SubjectVo> {
 
     private static final long serialVersionUID = 1L;

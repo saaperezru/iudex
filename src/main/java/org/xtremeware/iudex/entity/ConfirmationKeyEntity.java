@@ -5,7 +5,7 @@ import java.util.Date;
 import javax.persistence.*;
 import org.xtremeware.iudex.vo.ConfirmationKeyVo;
 
-@javax.persistence.Entity
+@javax.persistence.Entity(name="ConfirmationKey")
 @NamedQuery(
     name="getByConfirmationKey",
     query="SELECT result FROM ConfirmationKeyEntity result "
@@ -15,7 +15,7 @@ public class ConfirmationKeyEntity implements Serializable, Entity<ConfirmationK
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date expirationDate;

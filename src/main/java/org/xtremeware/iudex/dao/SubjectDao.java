@@ -23,7 +23,7 @@ public class SubjectDao extends Dao<SubjectEntity> {
         if (em == null) {
             throw new IllegalArgumentException("EntityManager em cannot be null");
         }
-        return (List<SubjectEntity>) em.createNamedQuery("getByName", SubjectEntity.class).setParameter("name", "%" + name + "%").getResultList();
+        return em.createNamedQuery("getSubjectsByName", SubjectEntity.class).setParameter("name", "%" + name + "%").getResultList();
     }
 
     /**
@@ -37,6 +37,6 @@ public class SubjectDao extends Dao<SubjectEntity> {
         if (em == null) {
             throw new IllegalArgumentException("EntityManager em cannot be null");
         }
-        return (List<SubjectEntity>) em.createNamedQuery("getByProfessorId", SubjectEntity.class).setParameter("professorId", professorId).getResultList();
+        return em.createNamedQuery("getSubjectsByProfessorId", SubjectEntity.class).setParameter("professorId", professorId).getResultList();
     }
 }

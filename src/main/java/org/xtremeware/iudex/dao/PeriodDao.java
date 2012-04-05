@@ -25,7 +25,7 @@ public class PeriodDao extends Dao<PeriodEntity> {
         if (em == null) {
             throw new IllegalArgumentException("EntityManager em cannot be null");
         }
-        return (List<PeriodEntity>) em.createNamedQuery("getByYear", PeriodEntity.class).setParameter("year", year).getResultList();
+        return em.createNamedQuery("getPeriodsByYear", PeriodEntity.class).setParameter("year", year).getResultList();
     }
 
     /**
@@ -41,7 +41,7 @@ public class PeriodDao extends Dao<PeriodEntity> {
             throw new IllegalArgumentException("EntityManager em cannot be null");
         }
         try {
-            return (PeriodEntity) em.createNamedQuery("getByYearAndSemester", PeriodEntity.class).setParameter("year", year).setParameter("semester", semester).getSingleResult();
+            return em.createNamedQuery("getPeriodByYearAndSemester", PeriodEntity.class).setParameter("year", year).setParameter("semester", semester).getSingleResult();
         } catch (NoResultException ex) {
             return null;
         }

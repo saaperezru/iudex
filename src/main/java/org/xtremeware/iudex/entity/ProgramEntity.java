@@ -4,16 +4,17 @@ import java.io.Serializable;
 import javax.persistence.*;
 import org.xtremeware.iudex.vo.ProgramVo;
 
-@javax.persistence.Entity
-@NamedQuery(name = "getProgramByNameLike",
-query = "SELECT result FROM Program result "
-+ "WHERE result.name = :name")
+@javax.persistence.Entity(name="Program")
+@Table(name="PROGRAM")
 public class ProgramEntity implements Serializable, Entity<ProgramVo> {
 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="ID_PROGRAM")
     private Long id;
+    
+    @Column(name="NAME",length=50,nullable=false)
     private String name;
 
     @Override

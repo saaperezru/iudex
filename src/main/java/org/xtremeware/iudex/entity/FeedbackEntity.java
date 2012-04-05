@@ -2,24 +2,31 @@ package org.xtremeware.iudex.entity;
 
 import java.io.Serializable;
 import java.util.Date;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.NamedQuery;
+import javax.persistence.*;
 import org.xtremeware.iudex.vo.FeedbackVo;
 
-@javax.persistence.Entity
-@NamedQuery(name = "getByTypeId", query = "SELECT f FROM Feedback f WHERE f.type.id = :feedbackTypeId")
+@javax.persistence.Entity(name="Feedback")
+@Table(name="FEEDBACK")
 public class FeedbackEntity implements Serializable, Entity<FeedbackVo> {
 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="ID_FEEDBACK")
     private Long id;
+    
+    @ManyToOne
+    @JoinColumn(name="ID_TYPE_FEEDBACK", nullable= false)
     private FeedbackTypeEntity type;
+    
+    @Lob @Column(name="CONTENT", nullable=false)
     private String content;
+    
+    @Temporal(javax.persistence.TemporalType.DATE)
+    @Column(name="DATE_FEEDBACK", nullable= false)
     private Date date;
 
+    @Override
     public FeedbackVo toVo() {
         FeedbackVo vo = new FeedbackVo();
 

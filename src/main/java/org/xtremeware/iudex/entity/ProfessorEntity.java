@@ -1,23 +1,36 @@
 package org.xtremeware.iudex.entity;
 
 import java.io.Serializable;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import org.xtremeware.iudex.vo.ProfessorVo;
 
-@javax.persistence.Entity
+@javax.persistence.Entity(name="Professor")
+@Table(name="PROFESSOR")
 public class ProfessorEntity implements Serializable, Entity<ProfessorVo> {
     
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="ID_PROFESSOR")
     private Long id;
+    
+    @Column(name="FIRST_NAMES", length=50 ,nullable=false)
     private String firstName;
+    
+    @Column(name="LAST_NAMES", length=50 ,nullable=false)
     private String lastName;
+    
+    @Column(name="URL_IMAGE", length=255 ,nullable=false)
     private String website;
+    
+    @Column(name="URL_WEB", length=255 ,nullable=false)
     private String imageUrl;
+    
+    @Column(name="DESCRIPTION", length=255 ,nullable=false)
     private String description;
+    
+    @Column(name="E_MAIL", length=50 ,nullable=false)
+    private String email;
     
     @Override
     public ProfessorVo toVo() {
@@ -28,6 +41,7 @@ public class ProfessorEntity implements Serializable, Entity<ProfessorVo> {
         vo.setWebsite(this.getWebsite());
         vo.setImageUrl(this.getImageUrl());
         vo.setDescription(this.getDescription());
+        vo.setEmail(this.getEmail());
         return vo;
     }
     
@@ -52,11 +66,12 @@ public class ProfessorEntity implements Serializable, Entity<ProfessorVo> {
         hash = 23 * hash + (this.id != null ? this.id.hashCode() : 0);
         return hash;
     }
-    
+
     @Override
     public String toString() {
-        return "ProfessorEntity{" + "id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", website=" + website + ", imageUrl=" + imageUrl + ", description=" + description + '}';
+        return "ProfessorEntity{" + "id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", website=" + website + ", imageUrl=" + imageUrl + ", description=" + description + ", email=" + email + '}';
     }
+    
     
     public String getDescription() {
         return description;
@@ -104,5 +119,13 @@ public class ProfessorEntity implements Serializable, Entity<ProfessorVo> {
     
     public void setWebsite(String website) {
         this.website = website;
+    }
+    
+    public String getEmail() {
+        return email;
+    }
+    
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

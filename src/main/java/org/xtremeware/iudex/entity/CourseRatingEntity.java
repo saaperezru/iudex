@@ -6,22 +6,31 @@ import org.xtremeware.iudex.vo.CourseRatingVo;
 
 @javax.persistence.Entity
 @NamedQueries({
-    @NamedQuery(name = "getCourseRatingByCourseId",
+    @NamedQuery(name = "getByCourseId",
     query = "SELECT result FROM CourseRating result "
-    + "WHERE result.course.id = :courseId"),
-    @NamedQuery(name = "getCourseRatingByCourseIdAndUserId",
+    + "WHERE result.course.id = :CI"),
+    @NamedQuery(name = "getByCourseIdAndUserId",
     query = "SELECT result FROM CourseRating result "
     + "WHERE result.course.id = :courseId AND result.user.id = :userId")
 })
 public class CourseRatingEntity implements Serializable, Entity<CourseRatingVo> {
 
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private CourseEntity course;
-    private UserEntity user;
-    private float value;
+	private static final long serialVersionUID = 1L;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+        @Column (name="ID_COURSE_RATING")
+	private Long id;
+        
+        @ManyToOne
+        @JoinColumn(name="ID_COURSE", nullable= false)
+	private CourseEntity course;
+	
+        @ManyToOne
+        @JoinColumn(name="ID_USER_", nullable= false)        
+        private UserEntity user;
+	
+        @Column(name="RATING", nullable= false)
+        private float value;
 
     @Override
     public CourseRatingVo toVo() {

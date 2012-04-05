@@ -6,21 +6,30 @@ import javax.persistence.*;
 import org.xtremeware.iudex.vo.CourseVo;
 
 @javax.persistence.Entity
-@NamedQueries({
-	@NamedQuery(name = "getCourseByProfessorId",query = "SELECT c FROM Course c WHERE c.professor.id = :professorId"),
-	@NamedQuery(name = "getCourseBySubjectId",query = "SELECT c FROM Course c WHERE c.subject.id = :subjectId"),
-	@NamedQuery(name = "getCourseByPeriodId",query = "SELECT c FROM Course c WHERE c.period.id = :periodId"),
-	@NamedQuery(name = "getCourseByProfessorIdAndSubjectId",query = "SELECT c FROM Course c WHERE c.subject.id = :subjectId AND c.professor.id = :professorId")
-})
+@NamedQuery(name="getProfessorBySubjectId",query="SELECT c.professor FROM Course c WHERE c.subject.id = :subject")
 public class CourseEntity implements Serializable,Entity<CourseVo> {
 	private static final long serialVersionUID = 1L;
 	@Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
+        @Column(name="ID_COURSE")
 	private Long id;
+        
+        @ManyToOne
+        @JoinColumn(name="ID_PROFESSOR", nullable= false)
 	private ProfessorEntity professor;
+        
+        @ManyToOne
+        @JoinColumn(name="ID_SUBJECT", nullable= false)
 	private SubjectEntity subject;
-	private PeriodEntity period;
+	
+        @ManyToOne
+        @JoinColumn(name="ID_PERIOD", nullable= false)
+        private PeriodEntity period;
+        
+        @Column(name="AVERAGE", nullable= false)
 	private Double ratingAverage;
+        
+        @Column(name="RATINGCOUNT", nullable=false)
 	private Long ratingCount;
 
 	@Override

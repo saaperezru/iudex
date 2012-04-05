@@ -3,7 +3,6 @@ package org.xtremeware.iudex.dao;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
-import javax.persistence.Query;
 import org.xtremeware.iudex.entity.SubjectRatingEntity;
 import org.xtremeware.iudex.vo.RatingSummaryVo;
 
@@ -24,7 +23,7 @@ public class SubjectRatingsDao extends Dao<SubjectRatingEntity> {
         if (em == null) {
             throw new IllegalArgumentException("EntityManager em cannot be null");
         }
-        return em.createQuery("getBySubjectId").setParameter("subjectId", subjectId).getResultList();
+        return em.createQuery("getSubjectRatingBySubjectId").setParameter("subjectId", subjectId).getResultList();
     }
 
     /**
@@ -41,7 +40,7 @@ public class SubjectRatingsDao extends Dao<SubjectRatingEntity> {
             throw new IllegalArgumentException("EntityManager em cannot be null");
         }
         try {
-            return (SubjectRatingEntity) em.createQuery("getBySubjectIdAndUserId").setParameter("subjectId", subjectId).setParameter("userId", userId).getSingleResult();
+            return (SubjectRatingEntity) em.createQuery("getSubjectRatingBySubjectIdAndUserId").setParameter("subjectId", subjectId).setParameter("userId", userId).getSingleResult();
         } catch (NoResultException noResultException) {
             return null;
         }
@@ -60,18 +59,14 @@ public class SubjectRatingsDao extends Dao<SubjectRatingEntity> {
         }
         RatingSummaryVo rsv = new RatingSummaryVo();
 
-        Query q = em.createQuery("SELECT COUNT result FROM SubjectRating result "
-                + "WHERE result.subject.id = :subjectId AND result.value = 1").setParameter("subjectId", subjectId);
         try {
-            rsv.setPositive(((Integer) q.getSingleResult()).intValue());
+            rsv.setPositive(((Integer) em.createQuery("countPositiveSubjectRating").setParameter("subjectId", subjectId).getSingleResult()).intValue());
         } catch (NoResultException noResultException) {
             return null;
         }
 
-        q = em.createQuery("SELECT COUNT result FROM SubjectRating result "
-                + "WHERE result.subject.id = :subjectId AND result.value = -1").setParameter("subjectId", subjectId);
         try {
-            rsv.setNegative(((Integer) q.getSingleResult()).intValue());
+            rsv.setNegative(((Integer) em.createQuery("countNegativeSubjectRating").setParameter("subjectId", subjectId).getSingleResult()).intValue());
         } catch (NoResultException noResultException) {
             return null;
         }

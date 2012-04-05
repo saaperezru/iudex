@@ -5,26 +5,35 @@ import java.util.Date;
 import javax.persistence.*;
 import org.xtremeware.iudex.vo.CommentVo;
 
-@javax.persistence.Entity
-@NamedQueries({
-	@NamedQuery(name="getCommentsByProfessorId",query="SELECT c FROM Comment c WHERE c.course.professor.id = :professorId"),
-	@NamedQuery(name="getCommentsBySubjectId",query="SELECT c FROM Comment c WHERE c.course.subject.id = :subjectId"),
-	@NamedQuery(name="getCommentsByUserId",query="SELECT c FROM Comment c WHERE c.user.id = :userId"),
-	@NamedQuery(name="getCommentsByCourseId",query="SELECT c FROM Comment c WHERE c.course.id = :courseId"),
-
-})
+@javax.persistence.Entity(name="Comment")
+@Table(name="COMMENT_")
 public class CommentEntity implements Serializable, Entity<CommentVo> {
 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="ID_COMMENT_")
     private Long id;
+    
+    @Column(name="CONTENT", length=(2000), nullable=false)
     private String content;
+    
     @Temporal(javax.persistence.TemporalType.DATE)
+    @Column(name="DATE_COMMENT", nullable=false)
     private Date date;
+    
+    @ManyToOne
+    @JoinColumn(name="ID_USER_", nullable= false)
     private UserEntity user;
+    
+    @ManyToOne
+    @JoinColumn(name="ID_COURSE", nullable= false)
     private CourseEntity course;
+    
+    @Column(name="ANONYMOUS", nullable=false)
     private boolean anonymous;
+    
+    @Column(name="RATING", nullable= false)
     private Float rating;
 
     @Override

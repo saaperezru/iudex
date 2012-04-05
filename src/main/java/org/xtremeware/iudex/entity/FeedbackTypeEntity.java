@@ -12,7 +12,9 @@ public class FeedbackTypeEntity implements Serializable, Entity<FeedbackTypeVo> 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID_TYPE_FEEDBACK")
     private Long id;
+    @Column(name = "NAME", length = 20, nullable = false)
     private String name;
 
     @Override

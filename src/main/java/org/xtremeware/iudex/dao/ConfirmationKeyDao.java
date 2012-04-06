@@ -8,7 +8,7 @@ import org.xtremeware.iudex.entity.ConfirmationKeyEntity;
  *
  * @author josebermeo
  */
-public class ConfimationKeyDao extends Dao<ConfirmationKeyEntity> {
+public class ConfirmationKeyDao extends Dao<ConfirmationKeyEntity> {
 
     /**
      * Returns a ConfirmationKey entity which key matched with the given string.

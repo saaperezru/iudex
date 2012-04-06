@@ -10,7 +10,7 @@ import org.xtremeware.iudex.vo.RatingSummaryVo;
  *
  * @author josebermeo
  */
-public class SubjectRatingsDao extends Dao<SubjectRatingEntity> {
+public class SubjectRatingDao extends Dao<SubjectRatingEntity> {
 
     /**
      * Returns a list of SubjectRatings entities given the subject

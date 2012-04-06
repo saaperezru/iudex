@@ -1,7 +1,7 @@
 package org.xtremeware.iudex.businesslogic.service;
 
 import javax.persistence.EntityManager;
-import org.xtremeware.businesslogic.InvalidVoException;
+import org.xtremeware.iudex.businesslogic.InvalidVoException;
 import org.xtremeware.iudex.dao.AbstractDaoFactory;
 import org.xtremeware.iudex.dao.Dao;
 import org.xtremeware.iudex.entity.Entity;

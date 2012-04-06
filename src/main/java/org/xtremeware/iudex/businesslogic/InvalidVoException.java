@@ -1,4 +1,4 @@
-package org.xtremeware.businesslogic;
+package org.xtremeware.iudex.businesslogic;
 
 /**
  *

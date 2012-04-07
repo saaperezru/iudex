@@ -5,7 +5,6 @@ import javax.persistence.*;
 import org.xtremeware.iudex.vo.SubjectRatingVo;
 
 @javax.persistence.Entity(name = "SubjectRating")
-@Table(name = "SUBJECT_RATING")
 @NamedQueries({
 	@NamedQuery(name = "getSubjectRatingBySubjectId",
 	query = "SELECT result FROM SubjectRating result "
@@ -20,6 +19,7 @@ import org.xtremeware.iudex.vo.SubjectRatingVo;
 	query = "SELECT COUNT (result) FROM SubjectRating result "
 	+ "WHERE result.subject.id = :subjectId AND result.value = -1")
 })
+@Table(name = "SUBJECT_RATING")
 public class SubjectRatingEntity implements Serializable, Entity<SubjectRatingVo> {
 
 	private static final long serialVersionUID = 1L;

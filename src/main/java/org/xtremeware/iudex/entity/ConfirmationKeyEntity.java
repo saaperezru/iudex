@@ -14,16 +14,18 @@ public class ConfirmationKeyEntity implements Serializable, Entity<ConfirmationK
 
 	private static final long serialVersionUID = 1L;
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "ID_CONFIRMATION_KEY")
+	@Column(name = "ID_USER_")
 	private Long id;
-	@Temporal(javax.persistence.TemporalType.DATE)
+	
+        @Temporal(javax.persistence.TemporalType.DATE)
 	@Column(name = "EXPIRATION_DATE", nullable = false)
 	private Date expirationDate;
-	@Column(name = "CONFIRMATION_KEY", length = 20, nullable = false)
+	
+        @Column(name = "CONFIRMATION_KEY", length = 20, nullable = false)
 	private String confirmationKey;
-	@ManyToOne
-	@JoinColumn(name = "ID_USER_", nullable = false)
+	
+        @OneToOne
+	@JoinColumn(name="ID_USER_", referencedColumnName="ID_USER_")
 	private UserEntity user;
 
 	@Override

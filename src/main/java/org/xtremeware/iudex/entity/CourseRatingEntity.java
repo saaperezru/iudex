@@ -13,6 +13,7 @@ import org.xtremeware.iudex.vo.CourseRatingVo;
 	query = "SELECT result FROM CourseRating result "
 	+ "WHERE result.course.id = :courseId AND result.user.id = :userId")
 })
+@Table(name="COURSE_RATING")
 public class CourseRatingEntity implements Serializable, Entity<CourseRatingVo> {
 
 	private static final long serialVersionUID = 1L;

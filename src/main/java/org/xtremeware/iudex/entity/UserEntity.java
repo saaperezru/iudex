@@ -17,21 +17,33 @@ public class UserEntity implements Serializable, Entity<UserVo> {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID_USER_")
 	private Long id;
-	@Column(name = "FIRST_NAMES", length = 50, nullable = false)
+	
+        @Column(name = "FIRST_NAMES", length = 50, nullable = false)
 	private String firstName;
-	@Column(name = "LAST_NAMES", length = 50, nullable = false)
+	
+        @Column(name = "LAST_NAMES", length = 50, nullable = false)
 	private String lastName;
-	@Column(name = "USER_NAME", length = 20, nullable = false)
+	
+        @Column(name = "USER_NAME", length = 20, nullable = false)
 	private String userName;
-	@Column(name = "PASSWORD_", length = 20, nullable = false)
+	
+        @Column(name = "PASSWORD_", length = 20, nullable = false)
 	private String password;
-	@Column(name = "ROL", nullable = false)
+	
+        @Column(name = "ROL", nullable = false)
 	private Role rol;
-	@Column(name = "ACTIVE")
+	
+        @Column(name = "ACTIVE")
 	private boolean active;
 	//ADD ASOCIATION
-	@OneToMany(mappedBy = "id")
+	
+        @OneToMany(mappedBy = "id")
 	private List<ProgramEntity> programs;
+        
+        @OneToOne(mappedBy = "UserEntity")
+        private ConfirmationKeyEntity confirmationKey;
+        
+        
 
 	@Override
 	public UserVo toVo() {
@@ -140,4 +152,14 @@ public class UserEntity implements Serializable, Entity<UserVo> {
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
+
+        public ConfirmationKeyEntity getConfirmationKey() {
+            return confirmationKey;
+        }
+
+        public void setConfirmationKey(ConfirmationKeyEntity confirmationKey) {
+            this.confirmationKey = confirmationKey;
+        }
+
+        
 }

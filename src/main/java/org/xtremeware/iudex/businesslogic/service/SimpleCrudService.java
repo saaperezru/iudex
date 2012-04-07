@@ -41,7 +41,7 @@ public abstract class SimpleCrudService<E extends ValueObject, F extends Entity<
         getDao().remove(em, id);
     }
 
-    public abstract void validateVo(EntityManager em,E vo) throws InvalidVoException;
+    public abstract void validateVo(EntityManager em, E vo) throws InvalidVoException;
 
     public abstract F voToEntity(EntityManager em,E vo) throws InvalidVoException,ExternalServiceConnectionException;
 }

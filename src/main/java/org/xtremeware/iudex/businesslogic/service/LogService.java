@@ -67,7 +67,7 @@ public class LogService {
 
     /**
      * Logs a message with fatal level
-     * 
+     *
      * @param message the message to log
      */
     public void fatal(Object message) {
@@ -86,7 +86,7 @@ public class LogService {
 
     /**
      * Logs a message with info level
-     * 
+     *
      * @param message the message to log
      */
     public void info(Object message) {
@@ -105,7 +105,7 @@ public class LogService {
 
     /**
      * Logs a message with warn level
-     * 
+     *
      * @param message the message to log
      */
     public void warn(Object message) {

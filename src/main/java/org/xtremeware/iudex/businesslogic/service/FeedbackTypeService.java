@@ -84,9 +84,10 @@ public class FeedbackTypeService extends SimpleCrudService<FeedbackTypeVo, Feedb
      * @return A list of all different FeedbackTypeVo
      */
     public List<FeedbackTypeVo> list(EntityManager em) {
-        List<FeedbackTypeEntity> feedbackTypeEntitys = ((FeedbackTypeDao)this.getDao()).getAll(em);
-        if(feedbackTypeEntitys.isEmpty())
+        List<FeedbackTypeEntity> feedbackTypeEntitys = ((FeedbackTypeDao) this.getDao()).getAll(em);
+        if (feedbackTypeEntitys.isEmpty()) {
             return null;
+        }
         ArrayList<FeedbackTypeVo> arrayList = new ArrayList<FeedbackTypeVo>();
         for (FeedbackTypeEntity feedbackTypeEntity : feedbackTypeEntitys) {
             arrayList.add(feedbackTypeEntity.toVo());

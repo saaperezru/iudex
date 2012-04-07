@@ -64,7 +64,8 @@ public class CourseRatingsService extends SimpleCrudService<CourseRatingVo, Cour
     }
 
     /**
-     * Returns a CourseRatingEntity using the information in the provided CourseRatingVo.
+     * Returns a CourseRatingEntity using the information in the provided
+     * CourseRatingVo.
      *
      * @param em EntityManager
      * @param vo CourseRatingVo to be transformed

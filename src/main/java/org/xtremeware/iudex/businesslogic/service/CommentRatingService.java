@@ -18,30 +18,33 @@ import org.xtremeware.iudex.vo.RatingSummaryVo;
  * @author josebermeo
  */
 public class CommentRatingService extends SimpleCrudService<CommentRatingVo, CommentRatingEntity> {
+
     /**
      * CommentRatingService constructor
-     * 
-     * @param daoFactory 
+     *
+     * @param daoFactory
      */
     public CommentRatingService(AbstractDaoFactory daoFactory) {
         super(daoFactory);
     }
+
     /**
      * returns the CommentRatingDao to be used.
-     * 
-     * @return 
+     *
+     * @return
      */
     @Override
     protected Dao<CommentRatingEntity> getDao() {
         return this.getDaoFactory().getCommentRatingDao();
     }
+
     /**
      * Validate the provided CommentRatingVo, if the CommentRatingVo is not
      * correct the methods throws an exception
-     * 
+     *
      * @param em EntityManager
      * @param vo CommentRatingVo
-     * @throws InvalidVoException 
+     * @throws InvalidVoException
      */
     @Override
     public void validateVo(EntityManager em, CommentRatingVo vo) throws InvalidVoException {
@@ -64,51 +67,56 @@ public class CommentRatingService extends SimpleCrudService<CommentRatingVo, Com
             throw new InvalidVoException("int Value in the provided CommentRatingVo must be less than or equal to 1 and greater than or equal to -1");
         }
     }
+
     /**
-     * Returns a CommentRatingEntity using the information in the provided CommentRatingVo.
-     * 
+     * Returns a CommentRatingEntity using the information in the provided
+     * CommentRatingVo.
+     *
      * @param em EntityManager
      * @param vo CommentRatingVo
      * @return CommentRatingEntity
-     * @throws InvalidVoException 
+     * @throws InvalidVoException
      */
     @Override
     public CommentRatingEntity voToEntity(EntityManager em, CommentRatingVo vo) throws InvalidVoException {
-        
+
         validateVo(em, vo);
-        
+
         CommentRatingEntity commentRatingEntity = new CommentRatingEntity();
         commentRatingEntity.setId(vo.getId());
         commentRatingEntity.setValue(vo.getValue());
-        
+
         commentRatingEntity.setUser(this.getDaoFactory().getUserDao().getById(em, vo.getUserId()));
         commentRatingEntity.setComment(this.getDaoFactory().getCommentDao().getById(em, vo.getCommentId()));
-        
+
         return commentRatingEntity;
     }
+
     /**
-     * Returns a CommentRatingVo associated with the provided userId and courseId
-     * 
+     * Returns a CommentRatingVo associated with the provided userId and
+     * courseId
+     *
      * @param em EntityManager
      * @param commentId comment identifier
      * @param userId user identifier
      * @return CommentRatingVo
      */
     public CommentRatingVo getByCommentIdAndUserId(EntityManager em, long commentId, long userId) {
-        CommentRatingEntity commentRatingEntity = ((CommentRatingDao)this.getDao()).getByCommentIdAndUserId(em, commentId, userId);
-        if(commentRatingEntity == null){
+        CommentRatingEntity commentRatingEntity = ((CommentRatingDao) this.getDao()).getByCommentIdAndUserId(em, commentId, userId);
+        if (commentRatingEntity == null) {
             return null;
         }
         return commentRatingEntity.toVo();
     }
+
     /**
-     * Returns a summary of the rating, given a comment. 
-     * 
+     * Returns a summary of the rating, given a comment.
+     *
      * @param em EntityManager
      * @param commentId comment identifier
      * @return RatingSummaryVo
      */
     public RatingSummaryVo getByCommentId(EntityManager em, long commentId) {
-        return ((CommentRatingDao)this.getDao()).getSummary(em, commentId);
+        return ((CommentRatingDao) this.getDao()).getSummary(em, commentId);
     }
 }

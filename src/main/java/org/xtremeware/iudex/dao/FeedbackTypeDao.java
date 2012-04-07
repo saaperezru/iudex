@@ -30,8 +30,8 @@ public class FeedbackTypeDao extends Dao<FeedbackTypeEntity> {
             return null;
         }
     }
-    
-    public List<FeedbackTypeEntity> getAll(EntityManager em){
+
+    public List<FeedbackTypeEntity> getAll(EntityManager em) {
         if (em == null) {
             throw new IllegalArgumentException("EntityManager em cannot be null");
         }

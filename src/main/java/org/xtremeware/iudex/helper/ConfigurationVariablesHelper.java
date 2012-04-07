@@ -4,12 +4,16 @@
  */
 package org.xtremeware.iudex.helper;
 
+import org.apache.commons.configuration.PropertiesConfiguration;
+
 /**
  *
- * @author tuareg
+ * @author saaperezru
  */
 public class ConfigurationVariablesHelper {
-	
+
+	private static ConfigurationVariablesHelper instance;
+	private PropertiesConfiguration config;
 	public static final String MIN_USER_LENGTH = "user.minUserNameLength";
 	public static final String MAX_USERNAME_LENGTH = "user.maxUserNameLength";
 	public static final String MAX_USER_PASSWORD_LENGTH = "user.minUserPasswordLength";
@@ -22,23 +26,48 @@ public class ConfigurationVariablesHelper {
 	public static final String RECAPTCHA_PUBLIC_KEY = "security.reCaptchaPublicKey";
 	public static final String MAILING_SMTP_SERVER = "mailing.smtpServer";
 	public static final String MAILING_SENDER_EMAIL_ADDRESS = "mailing.senderEMailAddress";
+	public static final String MAILING_SMTP_USER = "mailing.smtpServerUser";
+	public static final String MAILING_SMTP_PASSWORD = "mailing.smtpServerPassowrd";
+	public static final String MAILING_SMTP_PORT = "mailing.smtpServerPort";
 	public static final String PERIOD_MIN_YEAR = "period.minYear";
 	public static final String PERIOD_MAX_YEAR = "period.maxYear";
 	public static final String PERIOD_MAX_SEMESTER = "period.maxSemester";
 	public static final String PERIOD_MIN_SEMESTER = "period.minSemester";
 	public static final String ACCOUNT_MAX_DAY_TERM = "user.maxDaysTerm";
+	public static final String ANTISAMY_POLICY_FILE = "security.antiSamyPolicyFile";
 
-	
-	public ConfigurationVariablesHelper(String configurationFilePath){
-		
+	private ConfigurationVariablesHelper(String configurationFilePath) throws ExternalServiceConnectionException {
+		try {
+			config = new PropertiesConfiguration(configurationFilePath);
+		} catch (Exception ex) {
+			throw new ExternalServiceConnectionException("The specified configuration file for the COnfigurationVariablesHelper does not exists");
+		}
+
 	}
 
-	public String getVariable(String variableName) {
-		throw new UnsupportedOperationException("Not supported yet.");
+	private static ConfigurationVariablesHelper getInstance() throws ExternalServiceConnectionException {
+		while (instance == null) {
+			instance = new ConfigurationVariablesHelper(Config.getInstance().getConfigurationVariablesPath());
+		}
+		return instance;
+	}
+
+	public static String getVariable(String variableName) throws ExternalServiceConnectionException {
+		return getInstance().getConfig().getString(variableName);
 
 	}
 
-	public void setVariable(String variableName, String value){
-		throw new UnsupportedOperationException("Not supported yet.");
+	public static void setVariable(String variableName, String value) throws ExternalServiceConnectionException {
+		getInstance().getConfig().setProperty(variableName, value);
 	}
+
+	private PropertiesConfiguration getConfig() {
+		return config;
+	}
+
+	private void setConfig(PropertiesConfiguration config) {
+		this.config = config;
+	}
+
+
 }

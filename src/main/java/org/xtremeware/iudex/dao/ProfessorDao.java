@@ -22,7 +22,7 @@ public class ProfessorDao extends Dao<ProfessorEntity> {
      * @param name Professor's Firstname or lastname
      * @return List of professors whose firstname or lastname are equal to the specified
      */
-    List<ProfessorEntity> getByNameLike(EntityManager em, String name) {
+    public List<ProfessorEntity> getByNameLike(EntityManager em, String name) {
         if (em == null) {
             throw new IllegalArgumentException("EntityManager em cannot be null");
         }
@@ -40,7 +40,7 @@ public class ProfessorDao extends Dao<ProfessorEntity> {
      * @param subjectId The ID of the required subject
      * @return A list of professors that impart the subject
      */
-    List<ProfessorEntity> getBySubjectId(EntityManager em, long subjectId) {
+    public List<ProfessorEntity> getBySubjectId(EntityManager em, long subjectId) {
 
         if (em == null) {
             throw new IllegalArgumentException("EntityManager em cannot be null");

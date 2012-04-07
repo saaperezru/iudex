@@ -75,6 +75,19 @@ public class CommentDao extends Dao<CommentEntity> {
             throw new IllegalArgumentException("EntityManager em cannot be null");
         }
         return em.createNamedQuery("getCommentsByCourseId").setParameter("courseId", courseId).getResultList();
-
+    }
+    
+    /**
+     * Returns the number of comments submitted by a user on the current date
+     * 
+     * @param em entity manager
+     * @param userId id of the user
+     * @return number of comments submitted on the current day
+     */
+    public int getUserCommentsCounter(EntityManager em, long userId){
+        if (em == null) {
+            throw new IllegalArgumentException("EntityManager em cannot be null");
+        }
+        return ((Integer) em.createNamedQuery("getUserCommentsCounter").setParameter("userId", userId).getSingleResult()).intValue();
     }
 }

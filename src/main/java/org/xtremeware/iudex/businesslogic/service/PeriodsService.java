@@ -10,6 +10,7 @@ import javax.persistence.EntityManager;
 import org.xtremeware.iudex.businesslogic.InvalidVoException;
 import org.xtremeware.iudex.dao.AbstractDaoFactory;
 import org.xtremeware.iudex.dao.Dao;
+import org.xtremeware.iudex.dao.PeriodDao;
 import org.xtremeware.iudex.entity.PeriodEntity;
 import org.xtremeware.iudex.vo.PeriodVo;
 
@@ -35,7 +36,7 @@ public class PeriodsService extends SimpleCrudService<PeriodVo, PeriodEntity> {
      * @return all the periods submitted
      */
     public List<PeriodVo> list(EntityManager em) {
-        List<PeriodEntity> entities = getDaoFactory().getPeriodDao().getAll(em);
+        List<PeriodEntity> entities = ((PeriodDao)getDao()).getAll(em);
 
         if (entities.isEmpty()) {
             return null;

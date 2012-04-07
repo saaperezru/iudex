@@ -5,6 +5,7 @@ import org.xtremeware.iudex.businesslogic.InvalidVoException;
 import org.xtremeware.iudex.dao.AbstractDaoFactory;
 import org.xtremeware.iudex.dao.Dao;
 import org.xtremeware.iudex.entity.Entity;
+import org.xtremeware.iudex.helper.ExternalServiceConnectionException;
 import org.xtremeware.iudex.vo.ValueObject;
 
 /**
@@ -21,9 +22,9 @@ public abstract class SimpleCrudService<E extends ValueObject, F extends Entity<
 
     protected abstract Dao<F> getDao();
 
-    public E update(EntityManager em, E vo) throws InvalidVoException {
-        validateVo(vo);
-        return getDao().merge(em, voToEntity(vo)).toVo();
+    public E update(EntityManager em, E vo) throws InvalidVoException, ExternalServiceConnectionException {
+        validateVo(em,vo);
+        return getDao().merge(em, voToEntity(em,vo)).toVo();
 
     }
 
@@ -31,16 +32,16 @@ public abstract class SimpleCrudService<E extends ValueObject, F extends Entity<
         return getDao().getById(em, id).toVo();
     }
 
-    public E create(EntityManager em, E vo) throws InvalidVoException {
-        validateVo(vo);
-        return getDao().persist(em, voToEntity(vo)).toVo();
+    public E create(EntityManager em, E vo) throws InvalidVoException, ExternalServiceConnectionException {
+        validateVo(em,vo);
+        return getDao().persist(em, voToEntity(em,vo)).toVo();
     }
 
     public void remove(EntityManager em, long id) {
         getDao().remove(em, id);
     }
 
-    public abstract void validateVo(E vo) throws InvalidVoException;
+    public abstract void validateVo(EntityManager em,E vo) throws InvalidVoException;
 
-    public abstract F voToEntity(E vo);
+    public abstract F voToEntity(EntityManager em,E vo) throws InvalidVoException,ExternalServiceConnectionException;
 }

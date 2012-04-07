@@ -14,6 +14,19 @@ import org.xtremeware.iudex.entity.PeriodEntity;
 public class PeriodDao extends Dao<PeriodEntity> {
 
     /**
+     * Returns the list of all periods entities
+     * 
+     * @param em the entity manager
+     * @return a list with all the periods
+     */
+    public List<PeriodEntity> getAll(EntityManager em) {
+        if (em == null) {
+            throw new IllegalArgumentException("EntityManager em cannot be null");
+        }
+        return em.createNamedQuery("getAllPeriods", PeriodEntity.class).getResultList();
+    }
+
+    /**
      * Returns a list of period entities which year is equal to the year
      * argument
      *

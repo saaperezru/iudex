@@ -12,37 +12,38 @@ import org.xtremeware.iudex.entity.ProfessorRatingEntity;
 import org.xtremeware.iudex.vo.RatingSummaryVo;
 
 /**
- *
+ * DAO for the ProfessorRating entities. Implements additionally some useful finders
+ * by professor and user
+ * 
  * @author juan
  */
 public class ProfessorRatingDao extends Dao<ProfessorRatingEntity> {
 
     /**
      * Professors ratings finder according to a specified professor
+     *
      * @param em the entity manager
      * @param professorId Professor's ID
      * @return A list with all ratings associated to the specified professor
      */
-    List<ProfessorRatingEntity> getByProfessorId(EntityManager em, long professorId) {
+    public List<ProfessorRatingEntity> getByProfessorId(EntityManager em, long professorId) {
         if (em == null) {
             throw new IllegalArgumentException("EntityManager em cannot be null");
         }
 
-        try {
-            return em.createNamedQuery("getRatingByProfessorId").setParameter("professor", professorId).getResultList();
-        } catch (NoResultException e) {
-            return null;
-        }
+        return em.createNamedQuery("getRatingByProfessorId").setParameter("professor", professorId).getResultList();
+
     }
 
     /**
      * Professor ratings finder according to a professor and a student
+     *
      * @param em the entity manager
      * @param professorId Professor's ID
      * @param userId Student's ID
      * @return The rating a student has subbmited to a professor
      */
-    ProfessorRatingEntity getByProfessorIdAndUserId(EntityManager em, long professorId, long userId) {
+    public ProfessorRatingEntity getByProfessorIdAndUserId(EntityManager em, long professorId, long userId) {
         if (em == null) {
             throw new IllegalArgumentException("EntityManager em cannot be null");
         }
@@ -57,11 +58,13 @@ public class ProfessorRatingDao extends Dao<ProfessorRatingEntity> {
 
     /**
      * Proffesor rating summary calculator
+     *
      * @param em the entity manager
      * @param professorId Professor's ID
-     * @return A value object containing the number of times the specified professor has obtained possitive and negative ratings
+     * @return A value object containing the number of times the specified
+     * professor has obtained possitive and negative ratings
      */
-    RatingSummaryVo getSummary(EntityManager em, long professorId) {
+    public RatingSummaryVo getSummary(EntityManager em, long professorId) {
         if (em == null) {
             throw new IllegalArgumentException("EntityManager em cannot be null");
         }
@@ -69,10 +72,20 @@ public class ProfessorRatingDao extends Dao<ProfessorRatingEntity> {
         RatingSummaryVo result = new RatingSummaryVo();
 
         Query q = em.createQuery("SELECT COUNT r FROM ProfessorRating r WHERE r.value = 1");
-        result.setPositive(((Integer) q.getSingleResult()).intValue());
+
+        try {
+            result.setPositive(((Integer) q.getSingleResult()).intValue());
+        } catch (NoResultException e) {
+            return null;
+        }
 
         q = em.createQuery("SELECT COUNT r FROM ProfessorRating r WHERE r.value = -1");
-        result.setNegative(((Integer) q.getSingleResult()).intValue());
+
+        try {
+            result.setNegative(((Integer) q.getSingleResult()).intValue());
+        } catch (NoResultException e) {
+            return null;
+        }
 
         return result;
     }

@@ -6,7 +6,10 @@ import javax.persistence.*;
 import org.xtremeware.iudex.vo.FeedbackVo;
 
 @javax.persistence.Entity(name = "Feedback")
-@NamedQuery(name = "getByTypeId", query = "SELECT f FROM Feedback f WHERE f.type.id = :feedbackTypeId")
+@NamedQueries({
+@NamedQuery(name = "getByTypeId", query = "SELECT f FROM Feedback f WHERE f.type.id = :feedbackTypeId"),
+@NamedQuery(name = "getFeedbackByContentLike", query = "SELECT f FROM Feedback f WHERE f.content = :query")
+})
 @Table(name = "FEEDBACK")
 public class FeedbackEntity implements Serializable, Entity<FeedbackVo> {
 
@@ -30,7 +33,7 @@ public class FeedbackEntity implements Serializable, Entity<FeedbackVo> {
 		FeedbackVo vo = new FeedbackVo();
 
 		vo.setId(id);
-		vo.setType(type.toVo());
+		vo.setFeedbackTypeId(type.getId());
 		vo.setContent(content);
 		vo.setDate(date);
 

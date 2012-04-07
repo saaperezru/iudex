@@ -22,8 +22,8 @@ public abstract class SimpleCrudService<E extends ValueObject, F extends Entity<
     protected abstract Dao<F> getDao();
 
     public E update(EntityManager em, E vo) throws InvalidVoException {
-        validateVo(vo);
-        return getDao().merge(em, voToEntity(vo)).toVo();
+        validateVo(em, vo);
+        return getDao().merge(em, voToEntity(em, vo)).toVo();
 
     }
 
@@ -32,15 +32,15 @@ public abstract class SimpleCrudService<E extends ValueObject, F extends Entity<
     }
 
     public E create(EntityManager em, E vo) throws InvalidVoException {
-        validateVo(vo);
-        return getDao().persist(em, voToEntity(vo)).toVo();
+        validateVo(em, vo);
+        return getDao().persist(em, voToEntity(em, vo)).toVo();
     }
 
     public void remove(EntityManager em, long id) {
         getDao().remove(em, id);
     }
 
-    public abstract void validateVo(E vo) throws InvalidVoException;
+    public abstract void validateVo(EntityManager em, E vo) throws InvalidVoException;
 
-    public abstract F voToEntity(E vo);
+    public abstract F voToEntity(EntityManager em, E vo)throws InvalidVoException;
 }

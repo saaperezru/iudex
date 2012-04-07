@@ -62,32 +62,64 @@ public class UserEntity implements Serializable, Entity<UserVo> {
 		return vo;
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		final UserEntity other = (UserEntity) obj;
-		if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
-			return false;
-		}
-		return true;
-	}
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == null) {
+                return false;
+            }
+            if (getClass() != obj.getClass()) {
+                return false;
+            }
+            final UserEntity other = (UserEntity) obj;
+            if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
+                return false;
+            }
+            if ((this.firstName == null) ? (other.firstName != null) : !this.firstName.equals(other.firstName)) {
+                return false;
+            }
+            if ((this.lastName == null) ? (other.lastName != null) : !this.lastName.equals(other.lastName)) {
+                return false;
+            }
+            if ((this.userName == null) ? (other.userName != null) : !this.userName.equals(other.userName)) {
+                return false;
+            }
+            if ((this.password == null) ? (other.password != null) : !this.password.equals(other.password)) {
+                return false;
+            }
+            if (this.rol != other.rol) {
+                return false;
+            }
+            if (this.active != other.active) {
+                return false;
+            }
+            if (this.programs != other.programs && (this.programs == null || !this.programs.equals(other.programs))) {
+                return false;
+            }
+            if (this.confirmationKey != other.confirmationKey && (this.confirmationKey == null || !this.confirmationKey.equals(other.confirmationKey))) {
+                return false;
+            }
+            return true;
+        }
 
-	@Override
-	public int hashCode() {
-		int hash = 7;
-		hash = 97 * hash + (this.id != null ? this.id.hashCode() : 0);
-		return hash;
-	}
+        @Override
+        public int hashCode() {
+            int hash = 5;
+            hash = 19 * hash + (this.id != null ? this.id.hashCode() : 0);
+            hash = 19 * hash + (this.firstName != null ? this.firstName.hashCode() : 0);
+            hash = 19 * hash + (this.lastName != null ? this.lastName.hashCode() : 0);
+            hash = 19 * hash + (this.userName != null ? this.userName.hashCode() : 0);
+            hash = 19 * hash + (this.password != null ? this.password.hashCode() : 0);
+            hash = 19 * hash + (this.rol != null ? this.rol.hashCode() : 0);
+            hash = 19 * hash + (this.active ? 1 : 0);
+            hash = 19 * hash + (this.programs != null ? this.programs.hashCode() : 0);
+            hash = 19 * hash + (this.confirmationKey != null ? this.confirmationKey.hashCode() : 0);
+            return hash;
+        }
 
-	@Override
-	public String toString() {
-		return "UserEntity{" + "id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", userName=" + userName + ", password=" + password + ", rol=" + rol + ", active=" + active + ", programs=" + programs + '}';
-	}
+        @Override
+        public String toString() {
+            return "UserEntity{" + "id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", userName=" + userName + ", password=" + password + ", rol=" + rol + ", active=" + active + ", programs=" + programs + ", confirmationKey=" + confirmationKey + '}';
+        }
 
 	public boolean isActive() {
 		return active;

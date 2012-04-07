@@ -7,7 +7,8 @@ import org.xtremeware.iudex.vo.PeriodVo;
 @javax.persistence.Entity(name = "Period")
 @NamedQueries({
     @NamedQuery(name = "getPeriodsByYear", query = "SELECT p FROM Period p WHERE p.year = :year"),
-    @NamedQuery(name = "getPeriodByYearAndSemester", query = "SELECT p FROM Period p WHERE p.year = :year AND p.semester = :semester")
+    @NamedQuery(name = "getPeriodByYearAndSemester", query = "SELECT p FROM Period p WHERE p.year = :year AND p.semester = :semester"),
+    @NamedQuery(name = "getAllPeriods", query = "SELECT p FROM Period p")
 })
 @Table(name = "PERIOD_")
 public class PeriodEntity implements Serializable, Entity<PeriodVo> {

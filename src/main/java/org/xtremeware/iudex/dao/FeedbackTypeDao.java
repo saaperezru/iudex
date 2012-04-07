@@ -1,5 +1,6 @@
 package org.xtremeware.iudex.dao;
 
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import org.xtremeware.iudex.entity.FeedbackTypeEntity;
@@ -28,5 +29,12 @@ public class FeedbackTypeDao extends Dao<FeedbackTypeEntity> {
         } catch (NoResultException ex) {
             return null;
         }
+    }
+    
+    public List<FeedbackTypeEntity> getAll(EntityManager em){
+        if (em == null) {
+            throw new IllegalArgumentException("EntityManager em cannot be null");
+        }
+        return em.createNamedQuery("getAllFeedbackType").getResultList();
     }
 }

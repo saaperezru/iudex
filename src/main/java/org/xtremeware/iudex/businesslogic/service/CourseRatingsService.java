@@ -14,25 +14,43 @@ import org.xtremeware.iudex.vo.CourseRatingVo;
  */
 public class CourseRatingsService extends SimpleCrudService<CourseRatingVo, CourseRatingEntity> {
 
+    /**
+     * CourseRatingsService constructor
+     *
+     * @param daoFactory
+     */
     public CourseRatingsService(AbstractDaoFactory daoFactory) {
         super(daoFactory);
     }
 
+    /**
+     * returns the CourseRatingDao to be used.
+     *
+     * @return CourseRatingDao
+     */
     @Override
     protected Dao<CourseRatingEntity> getDao() {
         return getDaoFactory().getCourseRatingDao();
     }
 
+    /**
+     * Validate the provided CourseRatingVo, if the CourseRatingVo is not
+     * correct the methods throws an exception
+     *
+     * @param em EntityManager
+     * @param vo CourseRatingVo to validate
+     * @throws InvalidVoException
+     */
     @Override
     public void validateVo(EntityManager em, CourseRatingVo vo) throws InvalidVoException {
         if (vo == null) {
             throw new InvalidVoException("Null CourseRatingVo");
         }
         if (vo.getCourseId() == null) {
-            throw new InvalidVoException("Null uourseId in the provided CourseRatingVo");
+            throw new InvalidVoException("Null courseId in the provided CourseRatingVo");
         }
         if (getDaoFactory().getCourseDao().getById(em, vo.getCourseId()) == null) {
-            throw new InvalidVoException("No such course associeted associated with CourseRatingVo.courseId");
+            throw new InvalidVoException("No such course  associated with CourseRatingVo.courseId");
         }
         if (vo.getUserId() == null) {
             throw new InvalidVoException("Null userId in the provided CourseRatingVo");
@@ -45,11 +63,19 @@ public class CourseRatingsService extends SimpleCrudService<CourseRatingVo, Cour
         }
     }
 
+    /**
+     * Returns a CourseRatingEntity using the information in the provided CourseRatingVo.
+     *
+     * @param em EntityManager
+     * @param vo CourseRatingVo to be transformed
+     * @return CourseRatingEntity
+     * @throws InvalidVoException
+     */
     @Override
-    public CourseRatingEntity voToEntity(EntityManager em, CourseRatingVo vo) throws InvalidVoException{
-        
+    public CourseRatingEntity voToEntity(EntityManager em, CourseRatingVo vo) throws InvalidVoException {
+
         validateVo(em, vo);
-        
+
         CourseRatingEntity courseRatingEntity = new CourseRatingEntity();
         courseRatingEntity.setId(vo.getId());
         courseRatingEntity.setValue(vo.getValue());
@@ -61,7 +87,15 @@ public class CourseRatingsService extends SimpleCrudService<CourseRatingVo, Cour
         return courseRatingEntity;
     }
 
-    public CourseRatingVo getByCourseIdAndUserId(EntityManager em, Long courseId, Long userId) {
+    /**
+     * Returns a CourseRatingVo associated with the provided userId and courseId
+     *
+     * @param em EntityManager
+     * @param courseId course identifier
+     * @param userId user identifier
+     * @return CourseRatingVo
+     */
+    public CourseRatingVo getByCourseIdAndUserId(EntityManager em, long courseId, long userId) {
         CourseRatingEntity courseRatingEntity = ((CourseRatingDao) this.getDao()).getByCourseIdAndUserId(em, courseId, userId);
         if (courseRatingEntity == null) {
             return null;

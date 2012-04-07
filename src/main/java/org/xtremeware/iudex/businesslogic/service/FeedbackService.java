@@ -16,15 +16,33 @@ import org.xtremeware.iudex.vo.FeedbackVo;
  */
 public class FeedbackService extends SimpleCrudService<FeedbackVo, FeedbackEntity> {
 
+    /**
+     * FeedbackService constructor
+     *
+     * @param daoFactory
+     */
     public FeedbackService(AbstractDaoFactory daoFactory) {
         super(daoFactory);
     }
 
+    /**
+     * returns the FeedbackDao to be used.
+     *
+     * @return FeedbackDao
+     */
     @Override
     protected Dao<FeedbackEntity> getDao() {
         return getDaoFactory().getFeedbackDao();
     }
 
+    /**
+     * Validate the provided FeedbackVo, if the FeedbackVo is not correct the
+     * methods throws an exception
+     *
+     * @param em EntityManager
+     * @param vo FeedbackVo
+     * @throws InvalidVoException
+     */
     @Override
     public void validateVo(EntityManager em, FeedbackVo vo) throws InvalidVoException {
         if (vo == null) {
@@ -47,9 +65,18 @@ public class FeedbackService extends SimpleCrudService<FeedbackVo, FeedbackEntit
         }
     }
 
+    /**
+     * Returns a FeedbackEntity using the information in the provided
+     * FeedbackVo.
+     *
+     * @param em EntityManager
+     * @param vo FeedbackVo
+     * @return FeedbackEntity
+     * @throws InvalidVoException
+     */
     @Override
     public FeedbackEntity voToEntity(EntityManager em, FeedbackVo vo) throws InvalidVoException {
-        
+
         validateVo(em, vo);
 
         FeedbackEntity feedbackEntity = new FeedbackEntity();
@@ -62,7 +89,17 @@ public class FeedbackService extends SimpleCrudService<FeedbackVo, FeedbackEntit
         return feedbackEntity;
     }
 
+    /**
+     * Returns a list of FeedbackVo according with the search query
+     *
+     * @param em EntityManager
+     * @param query String with the search parameter
+     * @return A list of FeedbackVo
+     */
     public List<FeedbackVo> search(EntityManager em, String query) {
+        if (query == null) {
+            throw new IllegalArgumentException("Null query for a Feedback comment search");
+        }
         List<FeedbackEntity> feedbackEntitys = ((FeedbackDao) this.getDao()).getByContentLike(em, query);
         if (feedbackEntitys.isEmpty()) {
             return null;

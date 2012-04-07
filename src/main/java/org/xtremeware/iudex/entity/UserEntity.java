@@ -29,7 +29,6 @@ public class UserEntity implements Serializable, Entity<UserVo> {
 	private Role rol;
 	@Column(name = "ACTIVE")
 	private boolean active;
-	//ADD ASOCIATION
 	@OneToMany(mappedBy = "id")
 	private List<ProgramEntity> programs;
 

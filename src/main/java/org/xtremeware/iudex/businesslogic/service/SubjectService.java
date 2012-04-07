@@ -8,6 +8,8 @@ import org.xtremeware.iudex.dao.AbstractDaoFactory;
 import org.xtremeware.iudex.dao.Dao;
 import org.xtremeware.iudex.dao.SubjectDao;
 import org.xtremeware.iudex.entity.SubjectEntity;
+import org.xtremeware.iudex.helper.ExternalServiceConnectionException;
+import org.xtremeware.iudex.helper.SecurityHelper;
 import org.xtremeware.iudex.vo.SubjectVo;
 
 /**
@@ -71,14 +73,14 @@ public class SubjectService extends SimpleCrudService<SubjectVo, SubjectEntity> 
      * @throws InvalidVoException
      */
     @Override
-    public SubjectEntity voToEntity(EntityManager em, SubjectVo vo) throws InvalidVoException {
+    public SubjectEntity voToEntity(EntityManager em, SubjectVo vo) throws InvalidVoException, ExternalServiceConnectionException {
 
         validateVo(em, vo);
 
         SubjectEntity subjectEntity = new SubjectEntity();
         subjectEntity.setId(vo.getId());
-        subjectEntity.setName(vo.getName());
-        subjectEntity.setDescription(vo.getDescription());
+        subjectEntity.setName(SecurityHelper.sanitizeHTML(vo.getName()));
+        subjectEntity.setDescription(SecurityHelper.sanitizeHTML(vo.getDescription()));
 
         return subjectEntity;
     }

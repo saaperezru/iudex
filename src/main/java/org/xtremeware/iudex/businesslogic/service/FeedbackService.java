@@ -8,6 +8,8 @@ import org.xtremeware.iudex.dao.AbstractDaoFactory;
 import org.xtremeware.iudex.dao.Dao;
 import org.xtremeware.iudex.dao.FeedbackDao;
 import org.xtremeware.iudex.entity.FeedbackEntity;
+import org.xtremeware.iudex.helper.ExternalServiceConnectionException;
+import org.xtremeware.iudex.helper.SecurityHelper;
 import org.xtremeware.iudex.vo.FeedbackVo;
 
 /**
@@ -75,12 +77,12 @@ public class FeedbackService extends SimpleCrudService<FeedbackVo, FeedbackEntit
      * @throws InvalidVoException
      */
     @Override
-    public FeedbackEntity voToEntity(EntityManager em, FeedbackVo vo) throws InvalidVoException {
+    public FeedbackEntity voToEntity(EntityManager em, FeedbackVo vo) throws InvalidVoException, ExternalServiceConnectionException {
 
         validateVo(em, vo);
 
         FeedbackEntity feedbackEntity = new FeedbackEntity();
-        feedbackEntity.setContent(vo.getContent());
+        feedbackEntity.setContent(SecurityHelper.sanitizeHTML(vo.getContent()));
         feedbackEntity.setDate(vo.getDate());
         feedbackEntity.setId(vo.getId());
 

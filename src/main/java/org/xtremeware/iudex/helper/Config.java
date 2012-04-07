@@ -5,6 +5,7 @@
 package org.xtremeware.iudex.helper;
 
 import org.xtremeware.iudex.dao.AbstractDaoFactory;
+import org.xtremeware.iudex.dao.MySqlDaoFactory;
 import org.xtremeware.iudex.vo.MailingConfigVo;
 
 /**
@@ -12,20 +13,20 @@ import org.xtremeware.iudex.vo.MailingConfigVo;
  * @author saaperezru
  */
 public class Config {
+
 	private String persistenceUnit;
 	private AbstractDaoFactory daoFactory;
 	private String configurationVariablesPath;
 	private static Config instance;
 
-	private Config(String persistenceUnit, AbstractDaoFactory daoFactory, String configurationVariablesPath, MailingConfigVo mailingConfig){
+	private Config(String persistenceUnit, AbstractDaoFactory daoFactory, String configurationVariablesPath ) {
 		this.daoFactory = daoFactory;
 		this.configurationVariablesPath = configurationVariablesPath;
-
 	}
 
-	public static Config getInstance(){
-		while(instance == null){
-			instance = new Config("persistenceUnit",null , null,null);
+	public static Config getInstance() {
+		while (instance == null) {
+			instance = new Config("persistenceUnit", new MySqlDaoFactory(), "iudex.properties");
 		}
 		return instance;
 	}
@@ -53,6 +54,4 @@ public class Config {
 	public void setPersistenceUnit(String persistenceUnit) {
 		this.persistenceUnit = persistenceUnit;
 	}
-
-
 }

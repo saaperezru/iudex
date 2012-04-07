@@ -12,6 +12,8 @@ import org.xtremeware.iudex.dao.AbstractDaoFactory;
 import org.xtremeware.iudex.dao.Dao;
 import org.xtremeware.iudex.dao.FeedbackTypeDao;
 import org.xtremeware.iudex.entity.FeedbackTypeEntity;
+import org.xtremeware.iudex.helper.ExternalServiceConnectionException;
+import org.xtremeware.iudex.helper.SecurityHelper;
 import org.xtremeware.iudex.vo.FeedbackTypeVo;
 
 /**
@@ -67,12 +69,12 @@ public class FeedbackTypeService extends SimpleCrudService<FeedbackTypeVo, Feedb
      * @throws InvalidVoException
      */
     @Override
-    public FeedbackTypeEntity voToEntity(EntityManager em, FeedbackTypeVo vo) throws InvalidVoException {
+    public FeedbackTypeEntity voToEntity(EntityManager em, FeedbackTypeVo vo) throws InvalidVoException, ExternalServiceConnectionException {
 
         validateVo(em, vo);
         FeedbackTypeEntity feedbackTypeEntity = new FeedbackTypeEntity();
         feedbackTypeEntity.setId(vo.getId());
-        feedbackTypeEntity.setName(vo.getName());
+        feedbackTypeEntity.setName(SecurityHelper.sanitizeHTML(vo.getName()));
 
         return feedbackTypeEntity;
     }

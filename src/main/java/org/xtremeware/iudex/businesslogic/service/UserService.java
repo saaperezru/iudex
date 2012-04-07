@@ -6,6 +6,8 @@ import org.xtremeware.iudex.businesslogic.InvalidVoException;
 import org.xtremeware.iudex.dao.AbstractDaoFactory;
 import org.xtremeware.iudex.entity.ProgramEntity;
 import org.xtremeware.iudex.entity.UserEntity;
+import org.xtremeware.iudex.helper.ExternalServiceConnectionException;
+import org.xtremeware.iudex.helper.SecurityHelper;
 import org.xtremeware.iudex.vo.UserVo;
 
 /**
@@ -46,15 +48,15 @@ public class UserService extends CrudService<UserVo> {
         if(vo.getRol() == null)
             throw new InvalidVoException("Rol cannot be null");
     }
-    public UserEntity voToEntity(EntityManager em, UserVo vo) throws InvalidVoException{
+    public UserEntity voToEntity(EntityManager em, UserVo vo) throws InvalidVoException, ExternalServiceConnectionException{
         
         validateVo(em, vo);
         
         UserEntity userEntity = new UserEntity();
         userEntity.setId(vo.getId());
-        userEntity.setFirstName(vo.getFirstName());
-        userEntity.setLastName(vo.getLastName());
-        userEntity.setUserName(vo.getUserName());
+        userEntity.setFirstName(SecurityHelper.sanitizeHTML(vo.getFirstName()));
+        userEntity.setLastName(SecurityHelper.sanitizeHTML(vo.getLastName()));
+        userEntity.setUserName(SecurityHelper.sanitizeHTML(vo.getUserName()));
         userEntity.setPassword(vo.getPassword());
         userEntity.setRol(vo.getRol());
         userEntity.setActive(vo.isActive());
@@ -81,7 +83,7 @@ public class UserService extends CrudService<UserVo> {
     public UserVo getById(EntityManager em, Long id){
         return this.getDaoFactory().getUserDao().getById(em, id).toVo();
     } 
-    public void update(EntityManager em, UserVo object) throws InvalidVoException{
+    public void update(EntityManager em, UserVo object) throws InvalidVoException, ExternalServiceConnectionException{
         this.getDaoFactory().getUserDao().merge(em, this.voToEntity(em, object));
     }
     public void remove(EntityManager em, UserVo user){

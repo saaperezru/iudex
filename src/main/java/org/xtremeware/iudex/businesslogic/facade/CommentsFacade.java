@@ -84,7 +84,12 @@ public class CommentsFacade extends AbstractFacade {
 					UserVo vo = getServiceFactory().createUsersService().getById(em, c.getUserId());
 					UserVoVwSmall uservo = new UserVoVwSmall(courseId, vo.getFirstName() + " " + vo.getLastName(), vo.getUserName());
 				}
-				result.add(new CommentVoVwFull(c, users.get(c.getId())));
+				if (c.isAnonymous()) {
+					result.add(new CommentVoVwFull(c, null));
+				} else {
+
+					result.add(new CommentVoVwFull(c, users.get(c.getId())));
+				}
 			}
 
 		} catch (Exception e) {

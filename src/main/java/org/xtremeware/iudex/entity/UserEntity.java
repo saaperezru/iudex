@@ -27,7 +27,7 @@ public class UserEntity implements Serializable, Entity<UserVo> {
         @Column(name = "USER_NAME", length = 20, nullable = false)
 	private String userName;
 	
-        @Column(name = "PASSWORD_", length = 20, nullable = false)
+        @Column(name = "PASSWORD_", length = 64, nullable = false)
 	private String password;
 	
         @Column(name = "ROL", nullable = false)

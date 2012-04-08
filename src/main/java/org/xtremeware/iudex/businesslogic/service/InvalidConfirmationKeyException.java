@@ -10,9 +10,6 @@ package org.xtremeware.iudex.businesslogic.service;
  */
 public class InvalidConfirmationKeyException extends Exception {
 
-    public InvalidConfirmationKeyException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
-    }
 
     public InvalidConfirmationKeyException(Throwable cause) {
         super(cause);

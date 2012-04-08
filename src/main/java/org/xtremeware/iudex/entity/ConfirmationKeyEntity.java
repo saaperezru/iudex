@@ -21,7 +21,7 @@ public class ConfirmationKeyEntity implements Serializable, Entity<ConfirmationK
 	@Column(name = "EXPIRATION_DATE", nullable = false)
 	private Date expirationDate;
 	
-        @Column(name = "CONFIRMATION_KEY", length = 20, nullable = false)
+        @Column(name = "CONFIRMATION_KEY", length = 64, nullable = false)
 	private String confirmationKey;
 	
         @OneToOne

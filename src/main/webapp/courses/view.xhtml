@@ -14,9 +14,9 @@
             <div style="float: left; padding-left: 25px;">
                 <dl>
                     <dt>Profesor</dt>
-                    <dd><h:outputText value=""/></dd>
+                    <dd><h:outputText value=""/><my:thumbs type="professor" identitifer="1" /></dd>
                     <dt>Materia</dt>
-                    <dd><h:outputText value=""/></dd>
+                    <dd><h:outputText value=""/><my:thumbs type="subject" identitifer="1" /></dd>
                     <dt>Calificación general del curso</dt>
                     <dd><h:outputText value=""  >
                             <f:convertNumber type="number" maxFractionDigits="1" />
@@ -43,7 +43,7 @@
                 </h:inputTextarea>
                 <div>
                     <div style="float: left;">
-                        Calificación del curso: <h:inputText id="rating" value="" size="5">
+                        Calificación del curso: <h:inputText id="commentRating" value="" size="5">
                             <f:convertNumber type="number" maxFractionDigits="1" />
                         </h:inputText>
                         &nbsp;&nbsp;&nbsp;
@@ -74,11 +74,13 @@
                                 <h:outputText value="">
                                     <f:convertDateTime type="both" pattern="dd/MM/yyyy hh:mm:ss aa"/>
                                 </h:outputText>
+                                <br/>
+                                <my:thumbs type="comment" identitifer="1" />
                             </div>
                         </div>
                         <div class="clear"/>
                     </div>
-<div class="comment">
+                    <div class="comment">
                         <div style="float: left; width: 85%;">
                             <div style="padding: 10px">
                                 <p><b>Nombre: </b>Nunc ac tellus sed diam fringilla convallis. Etiam eu ipsum a massa venenatis gravida. Donec nec enim est, eu vulputate orci. Suspendisse potenti. Ut a risus in sem vulputate sollicitudin. Suspendisse at diam leo. Sed vel dui sed diam vehicula pharetra a nec justo. Duis enim magna, vestibulum et pellentesque ut, dictum sit amet turpis.</p>
@@ -93,11 +95,13 @@
                                 <h:outputText value="">
                                     <f:convertDateTime type="both" pattern="dd/MM/yyyy hh:mm:ss aa"/>
                                 </h:outputText>
+                                <br/>
+                                <my:thumbs type="comment" identitifer="1" />
                             </div>
                         </div>
                         <div class="clear"/>
                     </div>
-    <div class="comment">
+                    <div class="comment">
                         <div style="float: left; width: 85%;">
                             <div style="padding: 10px">
                                 <p><b>Nombre: </b>Nunc ac tellus sed diam fringilla convallis. Etiam eu ipsum a massa venenatis gravida. Donec nec enim est, eu vulputate orci. Suspendisse potenti. Ut a risus in sem vulputate sollicitudin. Suspendisse at diam leo. Sed vel dui sed diam vehicula pharetra a nec justo. Duis enim magna, vestibulum et pellentesque ut, dictum sit amet turpis.</p>
@@ -112,6 +116,8 @@
                                 <h:outputText value="">
                                     <f:convertDateTime type="both" pattern="dd/MM/yyyy hh:mm:ss aa"/>
                                 </h:outputText>
+                                <br/>
+                                <my:thumbs type="comment" identitifer="1" />
                             </div>
                         </div>
                         <div class="clear"/>

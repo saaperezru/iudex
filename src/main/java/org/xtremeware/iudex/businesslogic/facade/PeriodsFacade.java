@@ -15,7 +15,7 @@ public class PeriodsFacade extends AbstractFacade {
 		super(serviceFactory, emFactory);
 	}
 
-	public void removePeriod(long id) {
+	public void removePeriod(long id) throws Exception {
 		EntityManager em = null;
 		EntityTransaction tx = null;
 		try {
@@ -29,6 +29,7 @@ public class PeriodsFacade extends AbstractFacade {
 				tx.rollback();
 			}
 			getServiceFactory().createLogService().error(e.getMessage(), e);
+			throw e;
 		} finally {
 			if (em != null) {
 				em.clear();
@@ -75,7 +76,7 @@ public class PeriodsFacade extends AbstractFacade {
 		return createdVo;
 	}
 
-	public List<PeriodVo> listPeriods() {
+	public List<PeriodVo> listPeriods() throws Exception {
 		List<PeriodVo> list = new ArrayList<PeriodVo>();
 		EntityManager em = null;
 		EntityTransaction tx = null;
@@ -85,6 +86,7 @@ public class PeriodsFacade extends AbstractFacade {
 
 		} catch (Exception e) {
 			getServiceFactory().createLogService().error(e.getMessage(), e);
+			throw e;
 		} finally {
 			if (em != null) {
 				em.clear();

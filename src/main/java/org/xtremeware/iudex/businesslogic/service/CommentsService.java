@@ -12,6 +12,7 @@ import org.xtremeware.iudex.dao.AbstractDaoFactory;
 import org.xtremeware.iudex.dao.CommentDao;
 import org.xtremeware.iudex.dao.Dao;
 import org.xtremeware.iudex.entity.CommentEntity;
+import org.xtremeware.iudex.entity.CommentRatingEntity;
 import org.xtremeware.iudex.helper.ConfigurationVariablesHelper;
 import org.xtremeware.iudex.helper.ExternalServiceConnectionException;
 import org.xtremeware.iudex.vo.CommentVo;
@@ -162,11 +163,22 @@ public class CommentsService extends CrudService<CommentVo> {
 
 	}
 
+        /**
+         * Remove the comment and all the CommentRatings associated  to him
+         * 
+         * @param em entity manager
+         * @param id id of the comment
+         */
 	public void remove(EntityManager em, long id) {
-		getDao().remove(em, id);
+             List<CommentRatingEntity> ratings = getDaoFactory().getCommentRatingDao().getByCommentId(em, id);
+                
+             for (CommentRatingEntity rating : ratings){
+                  getDaoFactory().getCommentRatingDao().remove(em,rating.getId());
+             }
+             getDao().remove(em, id);
 	}
 
 	public CommentVo getById(EntityManager em, long id) {
-		return getDao().getById(em, id).toVo();
+                return getDao().getById(em, id).toVo();
 	}
 }

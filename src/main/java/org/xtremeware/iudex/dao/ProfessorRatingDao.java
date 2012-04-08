@@ -55,6 +55,22 @@ public class ProfessorRatingDao extends Dao<ProfessorRatingEntity> {
         }
 
     }
+    
+    /**
+     * Professors ratings finder according to a specified user
+     *
+     * @param em the entity manager
+     * @param userId user's ID
+     * @return A list with all ratings associated to the specified user
+     */
+    public List<ProfessorRatingEntity> getByUserId(EntityManager em, long userId) {
+        if (em == null) {
+            throw new IllegalArgumentException("EntityManager em cannot be null");
+        }
+
+        return em.createNamedQuery("getRatingByUserId").setParameter("user", userId).getResultList();
+
+    }   
 
     /**
      * Proffesor rating summary calculator

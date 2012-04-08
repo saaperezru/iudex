@@ -9,7 +9,9 @@ import org.xtremeware.iudex.businesslogic.InvalidVoException;
 import org.xtremeware.iudex.dao.AbstractDaoFactory;
 import org.xtremeware.iudex.dao.Dao;
 import org.xtremeware.iudex.dao.ProfessorDao;
+import org.xtremeware.iudex.entity.CourseEntity;
 import org.xtremeware.iudex.entity.ProfessorEntity;
+import org.xtremeware.iudex.entity.ProfessorRatingEntity;
 import org.xtremeware.iudex.helper.*;
 import org.xtremeware.iudex.vo.ProfessorVo;
 
@@ -97,4 +99,32 @@ public class ProfessorsService extends SimpleCrudService<ProfessorVo, ProfessorE
 		entity.setWebsite(vo.getWebsite());
 		return entity;
 	}
+        
+      /**
+        * Remove the professor and all the professorRatings and courses associated  to him.
+        * 
+        * @param em entity manager
+        * @param id id of the professor
+        */    
+        @Override
+        public void remove(EntityManager em, long id) {
+                List<ProfessorRatingEntity> professorRatings = getDaoFactory().getProfessorRatingDao().getByProfessorId(em, id);
+                    for (ProfessorRatingEntity rating : professorRatings){
+                        getDaoFactory().getProfessorRatingDao().remove(em,rating.getId());
+                    }
+
+                
+             /**
+              * This is a bad implementation, but due to few time, it had to be implemented,
+              * it will be changed for the next release.
+              */
+                List<CourseEntity> courses = getDaoFactory().getCourseDao().getByProfessorId(em, id);
+                
+                CoursesService courseService = Config.getInstance().getServiceFactory().createCoursesService();
+                for (CourseEntity course : courses){
+                        courseService.remove(em, course.getId());    
+                } 
+
+                getDao().remove(em, id);
+        }        
 }

@@ -12,6 +12,9 @@ import org.xtremeware.iudex.vo.SubjectRatingVo;
 	@NamedQuery(name = "getSubjectRatingBySubjectIdAndUserId",
 	query = "SELECT result FROM SubjectRating result "
 	+ "WHERE result.subject.id = :subjectId AND result.user.id = :userId"),
+        @NamedQuery(name = "getSubjectRatingByUserId",
+	query = "SELECT result FROM SubjectRating result "
+	+ "WHERE result.user.id = :user"),
 	@NamedQuery(name = "countPositiveSubjectRating",
 	query = "SELECT COUNT (result) FROM SubjectRating result "
 	+ "WHERE result.subject.id = :subjectId AND result.value = 1"),

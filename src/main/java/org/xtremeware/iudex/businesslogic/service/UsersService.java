@@ -1,11 +1,18 @@
 package org.xtremeware.iudex.businesslogic.service;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.List;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.businesslogic.InvalidVoException;
 import org.xtremeware.iudex.dao.AbstractDaoFactory;
+import org.xtremeware.iudex.entity.*;
+
+import org.xtremeware.iudex.entity.ConfirmationKeyEntity;
 import org.xtremeware.iudex.entity.ProgramEntity;
 import org.xtremeware.iudex.entity.UserEntity;
+import org.xtremeware.iudex.helper.Config;
 import org.xtremeware.iudex.helper.ConfigurationVariablesHelper;
 import org.xtremeware.iudex.helper.ExternalServiceConnectionException;
 import org.xtremeware.iudex.helper.SecurityHelper;
@@ -50,7 +57,7 @@ public class UsersService extends CrudService<UserVo> {
 		if (vo.getPassword() == null) {
 			throw new InvalidVoException("Null password in the provided UserVo");
 		}
-		if (vo.getPassword().length() > MAX_USER_PASSWORD_LENGTH|| vo.getUserName().length() < MIN_USER_PASSWORD_LENGTH) {
+		if (vo.getPassword().length() > MAX_USER_PASSWORD_LENGTH || vo.getUserName().length() < MIN_USER_PASSWORD_LENGTH) {
 			throw new InvalidVoException("Invalid password length in the provided UserVo");
 		}
 		if (vo.getProgramsId() == null) {
@@ -95,25 +102,113 @@ public class UsersService extends CrudService<UserVo> {
 
 	}
 
-	public UserVo create(EntityManager em, UserVo user) {
-		return null;
+	public UserVo create(EntityManager em, UserVo user) throws InvalidVoException, ExternalServiceConnectionException {
+		validateVo(em, user);
+		UserEntity userEntity = voToEntity(em, user);
+		//It is not possible to create users that are already active
+		userEntity.setActive(false);
+		//Create confirmation key
+		ConfirmationKeyEntity confirmationKeyEntity = new ConfirmationKeyEntity();
+		confirmationKeyEntity.setConfirmationKey(SecurityHelper.generateConfirmationKey());
+		//Set expiration date for one day after creation
+		Calendar expiration = new GregorianCalendar();
+		expiration.add(Calendar.DAY_OF_MONTH, 1);
+		confirmationKeyEntity.setExpirationDate(expiration.getTime());
+
+		//Associate confirmation key with user
+		confirmationKeyEntity.setUser(userEntity);
+		userEntity.setConfirmationKey(confirmationKeyEntity);
+
+		//persist confirmation key
+		confirmationKeyEntity = getDaoFactory().getConfirmationKeyDao().persist(em, confirmationKeyEntity);
+		// persist user
+		userEntity.setConfirmationKey(confirmationKeyEntity);
+		return getDaoFactory().getUserDao().persist(em, userEntity).toVo();
 	}
 
-	public UserVo authenticate(EntityManager em, String userName, String password) {
-		return null;
+	public UserVo authenticate(EntityManager em, String userName, String password) throws InactiveUserException {
+		UserEntity user = getDaoFactory().getUserDao().getByUsernameAndPassword(em, userName, password);
+		if (user == null) {
+			return null;
+		} else {
+			if (!user.isActive()) {
+				throw new InactiveUserException("The user" + user.getUserName() + " is still inactive.");
+			} else {
+				return user.toVo();
+			}
+		}
 	}
 
-	public void activateAccount(EntityManager em, String confirmationKey) {
+	public void activateAccount(EntityManager em, long userId, String confirmationKey) {
+		UserEntity user = getDaoFactory().getUserDao().getById(em, userId);
+		if (user.isActive() || user.getConfirmationKey() == null) {
+			//There is nothing to do, user is already active
+		} else {
+			if (user.getConfirmationKey().getConfirmationKey().equals(confirmationKey)) {
+				user.setActive(true);
+			}
+		}
+
 	}
 
 	public UserVo getById(EntityManager em, Long id) {
 		return this.getDaoFactory().getUserDao().getById(em, id).toVo();
 	}
 
-	public void update(EntityManager em, UserVo object) throws InvalidVoException, ExternalServiceConnectionException {
-		this.getDaoFactory().getUserDao().merge(em, this.voToEntity(em, object));
+	public void update(EntityManager em, UserVo user) throws InvalidVoException, ExternalServiceConnectionException {
+		validateVo(em, user);
+		this.getDaoFactory().getUserDao().merge(em, this.voToEntity(em, user));
 	}
 
-	public void remove(EntityManager em, UserVo user) {
+	/**
+	 * Remove the user and all the objects associated to him These elements
+	 * are - CONFIRMATION_KEY - PROFESSOR_RATING - COURSE_RATING -
+	 * SUBJECT_RATING - COMMENT_RATING - COMMENT - COMMENT_RATINGS
+	 * associated to the comments made by the uses
+	 *
+	 * @param em EntityManager
+	 * @param id User ID
+	 */
+	public void remove(EntityManager em, Long id) {
+
+		ConfirmationKeyEntity confirmationkey = getDaoFactory().getConfirmationKeyDao().getById(em, id);
+		if (confirmationkey != null) {
+			getDaoFactory().getConfirmationKeyDao().remove(em, confirmationkey.getId());
+		}
+
+		List<ProfessorRatingEntity> professorRatings = getDaoFactory().getProfessorRatingDao().getByUserId(em, id);
+		for (ProfessorRatingEntity rating : professorRatings) {
+			getDaoFactory().getProfessorRatingDao().remove(em, rating.getId());
+		}
+
+		List<CourseRatingEntity> courseRatings = getDaoFactory().getCourseRatingDao().getByUserId(em, id);
+		for (CourseRatingEntity rating : courseRatings) {
+			getDaoFactory().getCourseRatingDao().remove(em, rating.getId());
+		}
+
+		List<SubjectRatingEntity> subjectRatings = getDaoFactory().getSubjectRatingDao().getByUserId(em, id);
+		for (SubjectRatingEntity rating : subjectRatings) {
+			getDaoFactory().getSubjectRatingDao().remove(em, rating.getId());
+		}
+
+		List<CommentRatingEntity> commentRatings = getDaoFactory().getCommentRatingDao().getByUserId(em, id);
+		for (CommentRatingEntity rating : commentRatings) {
+			getDaoFactory().getCommentRatingDao().remove(em, rating.getId());
+		}
+
+		/**
+		 * This is a bad implementation, but due to few time, it had to
+		 * be implemented, it will be changed for the next release.
+		 */
+		List<CommentEntity> comments = getDaoFactory().getCommentDao().getByUserId(em, id);
+
+		CommentsService commentService = Config.getInstance().getServiceFactory().createCommentsService();
+		for (CommentEntity comment : comments) {
+			commentService.remove(em, comment.getId());
+		}
+
+		getDaoFactory().getUserDao().remove(em, id);
+
+
 	}
 }

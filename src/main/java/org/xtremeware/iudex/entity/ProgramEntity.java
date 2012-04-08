@@ -16,7 +16,7 @@ public class ProgramEntity implements Serializable, Entity<ProgramVo> {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID_PROGRAM")
 	private Long id;
-	@Column(name = "NAME", length = 50, nullable = false)
+	@Column(name = "NAME", length = 50, nullable = false, unique=true)
 	private String name;
 
 	@Override

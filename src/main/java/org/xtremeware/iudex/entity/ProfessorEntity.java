@@ -6,7 +6,7 @@ import org.xtremeware.iudex.vo.ProfessorVo;
 
 @javax.persistence.Entity(name = "Professor")
 @NamedQueries({
-	@NamedQuery(name="getProfessorByNameLike",query="SELECT p FROM Professor p WHERE p.firstName = :name OR p.lastName = :name")
+	@NamedQuery(name="getProfessorByNameLike",query="SELECT p FROM Professor p WHERE p.firstName LIKE :name OR p.lastName LIKE :name")
 })
 @Table(name = "PROFESSOR")
 public class ProfessorEntity implements Serializable, Entity<ProfessorVo> {
@@ -20,13 +20,13 @@ public class ProfessorEntity implements Serializable, Entity<ProfessorVo> {
 	private String firstName;
 	@Column(name = "LAST_NAMES", length = 50, nullable = false)
 	private String lastName;
-	@Column(name = "URL_IMAGE", length = 255, nullable = false)
+	@Column(name = "URL_IMAGE", length = 255)
 	private String website;
-	@Column(name = "URL_WEB", length = 255, nullable = false)
+	@Column(name = "URL_WEB", length = 255)
 	private String imageUrl;
-	@Column(name = "DESCRIPTION", length = 2000, nullable = false)
+	@Column(name = "DESCRIPTION", length = 2000)
 	private String description;
-	@Column(name = "E_MAIL", length = 50, nullable = false)
+	@Column(name = "E_MAIL", length = 50)
 	private String email;
 
 	@Override

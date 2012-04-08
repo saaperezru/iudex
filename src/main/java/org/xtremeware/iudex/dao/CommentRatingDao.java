@@ -49,6 +49,19 @@ public class CommentRatingDao extends Dao<CommentRatingEntity> {
         }
     }
    /**
+     * Returns a list of CommentRating entities given the user
+     * 
+     * @param em the entity manager
+     * @param userId user id
+     * @return list of CommentRatingEntity
+     */
+    public List<CommentRatingEntity> getByUserId(EntityManager em, Long userId) {
+        if (em == null) {
+            throw new IllegalArgumentException("EntityManager em cannot be null");
+        }
+        return em.createQuery("getCommentRatingByUserId").setParameter("userId", userId).getResultList();
+    }
+   /**
      * Returns a summary of the ratings given a comment. 
      * 
      * @param em the entity manager

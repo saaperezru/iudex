@@ -4,6 +4,9 @@
  */
 package org.xtremeware.iudex.helper;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.xtremeware.iudex.businesslogic.service.ServiceFactory;
 import org.xtremeware.iudex.dao.AbstractDaoFactory;
 import org.xtremeware.iudex.dao.MySqlDaoFactory;
 import org.xtremeware.iudex.vo.MailingConfigVo;
@@ -14,44 +17,44 @@ import org.xtremeware.iudex.vo.MailingConfigVo;
  */
 public class Config {
 
+	public final static String CONFIGURATION_VARIABLES_PATH = "iudex.properties";
+
 	private String persistenceUnit;
 	private AbstractDaoFactory daoFactory;
-	private String configurationVariablesPath;
 	private static Config instance;
+	private ServiceFactory serviceFactory;
 
-	private Config(String persistenceUnit, AbstractDaoFactory daoFactory, String configurationVariablesPath ) {
+	private Config(String persistenceUnit, AbstractDaoFactory daoFactory) throws ExternalServiceConnectionException {
 		this.daoFactory = daoFactory;
-		this.configurationVariablesPath = configurationVariablesPath;
+		MailingConfigVo mailingConf = new MailingConfigVo();
+		mailingConf.setSender(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAILING_SENDER_EMAIL_ADDRESS));
+		mailingConf.setSmtpPassword(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAILING_SMTP_PASSWORD));
+		mailingConf.setSmtpServer(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAILING_SMTP_SERVER));
+		mailingConf.setSmtpServerPort(Integer.parseInt(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAILING_SMTP_PORT)));
+		mailingConf.setSmtpUser(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAILING_SMTP_USER));
+		this.serviceFactory = new ServiceFactory(daoFactory, mailingConf);
 	}
 
 	public static Config getInstance() {
 		while (instance == null) {
-			instance = new Config("persistenceUnit", new MySqlDaoFactory(), "iudex.properties");
+			try {
+				instance = new Config("persistenceUnit", new MySqlDaoFactory());
+			} catch (ExternalServiceConnectionException ex) {
+				System.out.println("[FATAL ERROR] Configuration Variables file could not be found, this is a ");
+			}
 		}
 		return instance;
-	}
-
-	public String getConfigurationVariablesPath() {
-		return configurationVariablesPath;
-	}
-
-	public void setConfigurationVariablesPath(String configurationVariablesPath) {
-		this.configurationVariablesPath = configurationVariablesPath;
 	}
 
 	public AbstractDaoFactory getDaoFactory() {
 		return daoFactory;
 	}
 
-	public void setDaoFactory(AbstractDaoFactory daoFactory) {
-		this.daoFactory = daoFactory;
-	}
-
 	public String getPersistenceUnit() {
 		return persistenceUnit;
 	}
 
-	public void setPersistenceUnit(String persistenceUnit) {
-		this.persistenceUnit = persistenceUnit;
+	public ServiceFactory getServiceFactory() {
+		return serviceFactory;
 	}
 }

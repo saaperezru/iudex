@@ -76,7 +76,6 @@ public class PeriodsService extends SimpleCrudService<PeriodVo, PeriodEntity> {
         } else if (vo.getYear() < 0) {
             throw new InvalidVoException("int Year in the provided PeriodVo must be possitive");
         }
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     /**

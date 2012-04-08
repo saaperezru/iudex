@@ -10,9 +10,7 @@ package org.xtremeware.iudex.businesslogic.service;
  */
 public class InactiveUserException extends Exception{
 
-    public InactiveUserException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
-    }
+  
 
     public InactiveUserException(Throwable cause) {
         super(cause);

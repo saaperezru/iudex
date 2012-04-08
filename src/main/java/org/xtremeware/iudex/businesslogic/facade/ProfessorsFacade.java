@@ -167,4 +167,23 @@ public class ProfessorsFacade extends AbstractFacade {
 		}
 		return voVw;
 	}
+
+	public RatingSummaryVo getProfessorRatingSummary(long professorId) throws Exception{
+		EntityManager em = null;
+		RatingSummaryVo summary = null;
+		try {
+			em = getEntityManagerFactory().createEntityManager();
+			summary = getServiceFactory().createProfessorRatingsService().getSummary(em, professorId);
+
+		} catch (Exception e) {
+			getServiceFactory().createLogService().error(e.getMessage(), e);
+			throw e;
+		} finally {
+			if (em != null) {
+				em.clear();
+				em.close();
+			}
+		}
+		return summary;
+	}
 }

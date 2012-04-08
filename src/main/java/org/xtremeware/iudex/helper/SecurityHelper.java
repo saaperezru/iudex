@@ -7,6 +7,7 @@ package org.xtremeware.iudex.helper;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
@@ -73,16 +74,31 @@ public class SecurityHelper {
 		return hash;
 	}
 
-	public static boolean verifyCaptcha(HttpServletRequest request) {
+	public static boolean verifyCaptcha(HttpServletRequest request) throws ExternalServiceConnectionException {
 		String remoteAddr = request.getRemoteAddr();
 		ReCaptchaImpl reCaptcha = new ReCaptchaImpl();
-		reCaptcha.setPrivateKey("your_private_key");
+		reCaptcha.setPrivateKey(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.RECAPTCHA_PRIVATE_KEY));
 
 		String challenge = request.getParameter("recaptcha_challenge_field");
 		String uresponse = request.getParameter("recaptcha_response_field");
 		ReCaptchaResponse reCaptchaResponse = reCaptcha.checkAnswer(remoteAddr, challenge, uresponse);
 
 		return (reCaptchaResponse.isValid());
+	}
+
+	public static String generateConfirmationKey() throws ExternalServiceConnectionException{
+		SecureRandom random;
+		try {
+			random = SecureRandom.getInstance("SHA1PRNG");
+		} catch (NoSuchAlgorithmException ex) {
+			throw new ExternalServiceConnectionException("There was a problem allocating the SecureRandom instance");
+		}
+		random.setSeed(random.generateSeed(20));
+		byte bytes[] = new byte[20];
+		random.nextBytes(bytes);
+      		return hashPassword((bytes.toString()));
+
+		
 	}
 
 	public AntiSamy getAntiSamy() {

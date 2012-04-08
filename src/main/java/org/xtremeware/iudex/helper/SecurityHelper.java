@@ -46,7 +46,7 @@ public class SecurityHelper {
 			CleanResults cr = getInstance().getAntiSamy().scan(input, getInstance().getPolicy());
 			result = cr.getCleanHTML();
 		} catch (Exception ex) {
-			log(Level.SEVERE, null, ex);
+			Config.getInstance().getServiceFactory().createLogService().error(ex.getMessage(), ex);
 			throw new ExternalServiceConnectionException("There was a problem while sanitizing.");
 		}
 		return result;
@@ -68,7 +68,7 @@ public class SecurityHelper {
 			hash = sb.toString();
 		} catch (NoSuchAlgorithmException ex) {
 			///Es casi imposible que pase esto
-			Logger.getLogger(SecurityHelper.class.getName()).log(Level.SEVERE, null, ex);
+			Config.getInstance().getServiceFactory().createLogService().error(ex.getMessage(), ex);
 		}
 		return hash;
 	}

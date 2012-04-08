@@ -47,7 +47,7 @@ public class ConfigurationVariablesHelper {
 
 	private static ConfigurationVariablesHelper getInstance() throws ExternalServiceConnectionException {
 		while (instance == null) {
-			instance = new ConfigurationVariablesHelper(Config.getInstance().getConfigurationVariablesPath());
+			instance = new ConfigurationVariablesHelper(Config.CONFIGURATION_VARIABLES_PATH);
 		}
 		return instance;
 	}

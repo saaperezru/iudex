@@ -182,10 +182,10 @@ dd {
     margin-bottom: 2px;
 }
 
-.subject {
+.subject, .professor {
     margin-bottom: 10px;
 }
 
-.subject h1 {
+.subject h1, .professor h1 {
     padding-left: 10px;
 }

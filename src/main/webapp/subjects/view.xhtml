@@ -6,27 +6,21 @@
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:my="http://java.sun.com/jsf/composite/iudex">
     <f:metadata>
-        <f:event type="preRenderView" listener="#{viewProfessor.preRenderView()}" />
+        <f:event type="preRenderView" listener="#{viewSubject.preRenderView()}" />
     </f:metadata>
     <ui:define name="content">
         <div class="panel">
-            <div style="float: left; width: 100px; height: 130px; border: solid 1px #cccccc;"></div>
-            <div style="float: left; padding-left: 25px;">
-                <dl>
-                    <dt>Profesor</dt>
-                    <dd><h:outputText value=""/></dd>
-                    <dt>Página web</dt>
-                    <dd><h:outputLink value="" /></dd>
-                    <dt>Correo electrónico</dt>
-                    <dd><h:outputText value=""/></dd>
-                </dl>
-                <h:outputText value=""/>
-            </div>
-            <div class="clear"/>
+            <dl>
+                <dt>Materia</dt>
+                <dd><h:outputText value=""/></dd>
+                <dt>Código</dt>
+                <dd><h:outputLink value="" /></dd>
+            </dl>
+            <h:outputText value=""/>
         </div>
         <br/>
         <div>
-            <div class="subject">
+            <div class="professor">
                 <h1>Nunc ac tellus</h1>
                 <div class="comment">
                     <div style="float: left; width: 85%;">
@@ -86,7 +80,7 @@
                     <div class="clear"/>
                 </div>
             </div>
-            <div class="subject">
+            <div class="professor">
                 <h1>Nunc ac tellus</h1>
                 <div class="comment">
                     <div style="float: left; width: 85%;">

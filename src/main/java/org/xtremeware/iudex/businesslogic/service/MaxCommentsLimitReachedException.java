@@ -10,4 +10,8 @@ public class MaxCommentsLimitReachedException extends Exception {
 		super("User " + user.toString() + "reached the maximum number of allowed comments per day, when making a comment in course " + course.toString());
 	}
 
+	MaxCommentsLimitReachedException(String message) {
+		super(message);
+	}
+
 }

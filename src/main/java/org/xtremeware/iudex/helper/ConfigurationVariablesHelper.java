@@ -14,7 +14,7 @@ public class ConfigurationVariablesHelper {
 
 	private static ConfigurationVariablesHelper instance;
 	private PropertiesConfiguration config;
-	public static final String MIN_USER_LENGTH = "user.minUserNameLength";
+	public static final String MIN_USERNAME_LENGTH = "user.minUserNameLength";
 	public static final String MAX_USERNAME_LENGTH = "user.maxUserNameLength";
 	public static final String MAX_USER_PASSWORD_LENGTH = "user.minUserPasswordLength";
 	public static final String MIN_USER_PASSWORD_LENGTH = "user.minUserPasswordLength";

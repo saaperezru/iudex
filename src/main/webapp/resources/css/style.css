@@ -53,7 +53,7 @@ ul, ol {list-style:none}
 .img-box2 p.extra a {color:#fff}
 .img-box2 .inner {padding:0 49px 28px 15px}
 .img-box2.extra .inner {padding-bottom:51px}
-p {margin-bottom:20px;line-height:1.54em}
+p {/*margin-bottom:20px;*/line-height:1.54em}
 .p0 { margin:0}
 .p1 {margin-bottom:30px}
 .address {width:303px;line-height:1.69em}
@@ -90,7 +90,7 @@ h4 {font-size:1.54em;line-height:1.2em;color:#fff;padding:14px 0 8px 0;font-weig
 /* HEADER */
 #header {/*height:552px;background:url(../resources/images/header-bg.jpg) no-repeat left bottom;*/position:relative}
 #header .row-1 {height:105px}
-#header .row-1 .fleft {padding:5px 0 0 24px}
+#header .row-1 .fleft {padding:5px 0 0 40px}
 #header .row-1 .fright {padding: 10px 50px 0 0}
 #header .row-1 .fright ul li {float:left;font-size:17px;line-height:1.2em;padding-left:32px}
 #header .row-1 .fright ul li a {color:#7b7b7b;text-decoration:none}
@@ -100,7 +100,7 @@ h4 {font-size:1.54em;line-height:1.2em;color:#fff;padding:14px 0 8px 0;font-weig
 #header .row-2 b {margin-bottom:18px;display:block}
 #header .row-2 a {margin-right:-2px}
 /* CONTENT */
-#content {margin-top:50px;position:relative}
+#content {/*margin-top:50px;*/position:relative}
 #content .row-1 .inside {padding:0 0 40px 40px}
 #content .row-2 .inside {padding:32px 0 40px 0}
 #content .row-2 h3 {padding-left:42px}
@@ -153,7 +153,7 @@ h4 {font-size:1.54em;line-height:1.2em;color:#fff;padding:14px 0 8px 0;font-weig
     border: solid 1px #cccccc;
 }
 
-input[type=text], input[type=password], select {
+input[type=text], input[type=password], select, textarea {
     padding: 3px 6px;
     border-radius: 5px;
     border: solid 1px #cccccc;
@@ -164,6 +164,20 @@ input[type=submit], input[type=buton]{
     padding: 3px 7px;
 }
 
-label:after {
+label:not(.no-dots):after, dt:after {
     content: ":";
+}
+
+dt {
+    font-weight: bold;
+}
+
+dd {
+    padding-left: 20px;
+}
+
+.comment {
+    background-color: white;
+    border: solid 1px #cccccc;
+    margin-bottom: 2px;
 }

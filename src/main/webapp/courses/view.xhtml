@@ -1,0 +1,124 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="./../templates/template.xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:my="http://java.sun.com/jsf/composite/iudex">
+    <f:metadata>
+        <f:event type="preRenderView" listener="#{viewCourse.preRenderView()}" />
+    </f:metadata>
+    <ui:define name="content">
+        <div class="panel">
+            <div style="float: left; width: 100px; height: 130px; border: solid 1px #cccccc;"></div>
+            <div style="float: left; padding-left: 25px;">
+                <dl>
+                    <dt>Profesor</dt>
+                    <dd><h:outputText value=""/></dd>
+                    <dt>Materia</dt>
+                    <dd><h:outputText value=""/></dd>
+                    <dt>Calificación general del curso</dt>
+                    <dd><h:outputText value=""  >
+                            <f:convertNumber type="number" maxFractionDigits="1" />
+                        </h:outputText></dd>
+                    <dt>Mi calificación para el curso</dt>
+                    <dd><h:inputText id="rating" value="" size="5">
+                            <f:convertNumber type="number" maxFractionDigits="1" />
+                        </h:inputText>
+                        &nbsp;<h:commandButton value="Calificar"/></dd>
+                </dl>
+            </div>
+            <div class="clear"/>
+        </div>
+        <br/>
+        <div>
+            <div class="panel">
+                <div>
+                    <div style="float: left;">¿Qué opinas sobre el curso?</div>
+                    <div style="float: right;">#/2000</div>
+                    <div class="clear"/>
+                </div>
+                <h:inputTextarea id="comment" style="width: 97%; height: 60px;margin: 5px auto; display: block;">
+                    <f:validateLength maximum="2000" />
+                </h:inputTextarea>
+                <div>
+                    <div style="float: left;">
+                        Calificación del curso: <h:inputText id="rating" value="" size="5">
+                            <f:convertNumber type="number" maxFractionDigits="1" />
+                        </h:inputText>
+                        &nbsp;&nbsp;&nbsp;
+                        <h:selectBooleanCheckbox id="anonymous" value="false" /><label for="anonymous" class="no-dots" >&nbsp;Anónimo</label>
+                    </div><div style="float: right;">
+                        <h:commandButton value="Comentar" />
+                    </div>
+                    <div class="clear"/>
+                </div>
+            </div>
+            <br/>
+            <div>
+                <p style="text-align: right;">Ordenar por: <h:selectOneListbox id="sort"></h:selectOneListbox></p>
+                <br/>
+                <div>
+                    <div class="comment">
+                        <div style="float: left; width: 85%;">
+                            <div style="padding: 10px">
+                                <p><b>Nombre: </b>Nunc ac tellus sed diam fringilla convallis. Etiam eu ipsum a massa venenatis gravida. Donec nec enim est, eu vulputate orci. Suspendisse potenti. Ut a risus in sem vulputate sollicitudin. Suspendisse at diam leo. Sed vel dui sed diam vehicula pharetra a nec justo. Duis enim magna, vestibulum et pellentesque ut, dictum sit amet turpis.</p>
+                                <p><b>Calificación del curso:</b>    <h:outputText value=""  >
+                                        <f:convertNumber type="number" maxFractionDigits="1" />
+                                    </h:outputText></p>
+                            </div>
+                        </div>
+                        <div style="float: right;width: 15%;">
+                            <div style="padding: 10px">
+                                01/01/2012 01:01:01 a.m.
+                                <h:outputText value="">
+                                    <f:convertDateTime type="both" pattern="dd/MM/yyyy hh:mm:ss aa"/>
+                                </h:outputText>
+                            </div>
+                        </div>
+                        <div class="clear"/>
+                    </div>
+<div class="comment">
+                        <div style="float: left; width: 85%;">
+                            <div style="padding: 10px">
+                                <p><b>Nombre: </b>Nunc ac tellus sed diam fringilla convallis. Etiam eu ipsum a massa venenatis gravida. Donec nec enim est, eu vulputate orci. Suspendisse potenti. Ut a risus in sem vulputate sollicitudin. Suspendisse at diam leo. Sed vel dui sed diam vehicula pharetra a nec justo. Duis enim magna, vestibulum et pellentesque ut, dictum sit amet turpis.</p>
+                                <p><b>Calificación del curso:</b>    <h:outputText value=""  >
+                                        <f:convertNumber type="number" maxFractionDigits="1" />
+                                    </h:outputText></p>
+                            </div>
+                        </div>
+                        <div style="float: right;width: 15%;">
+                            <div style="padding: 10px">
+                                01/01/2012 01:01:01 a.m.
+                                <h:outputText value="">
+                                    <f:convertDateTime type="both" pattern="dd/MM/yyyy hh:mm:ss aa"/>
+                                </h:outputText>
+                            </div>
+                        </div>
+                        <div class="clear"/>
+                    </div>
+    <div class="comment">
+                        <div style="float: left; width: 85%;">
+                            <div style="padding: 10px">
+                                <p><b>Nombre: </b>Nunc ac tellus sed diam fringilla convallis. Etiam eu ipsum a massa venenatis gravida. Donec nec enim est, eu vulputate orci. Suspendisse potenti. Ut a risus in sem vulputate sollicitudin. Suspendisse at diam leo. Sed vel dui sed diam vehicula pharetra a nec justo. Duis enim magna, vestibulum et pellentesque ut, dictum sit amet turpis.</p>
+                                <p><b>Calificación del curso:</b>    <h:outputText value=""  >
+                                        <f:convertNumber type="number" maxFractionDigits="1" />
+                                    </h:outputText></p>
+                            </div>
+                        </div>
+                        <div style="float: right;width: 15%;">
+                            <div style="padding: 10px">
+                                01/01/2012 01:01:01 a.m.
+                                <h:outputText value="">
+                                    <f:convertDateTime type="both" pattern="dd/MM/yyyy hh:mm:ss aa"/>
+                                </h:outputText>
+                            </div>
+                        </div>
+                        <div class="clear"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ui:define>
+
+</ui:composition>

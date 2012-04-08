@@ -181,3 +181,11 @@ dd {
     border: solid 1px #cccccc;
     margin-bottom: 2px;
 }
+
+.subject {
+    margin-bottom: 10px;
+}
+
+.subject h1 {
+    padding-left: 10px;
+}

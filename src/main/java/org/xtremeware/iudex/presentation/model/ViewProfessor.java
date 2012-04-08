@@ -11,7 +11,7 @@ import javax.faces.bean.RequestScoped;
  */
 @ManagedBean
 @RequestScoped
-public class ViewCourse {
+public class ViewProfessor {
 
     @ManagedProperty(value = "#{param['id']}")
     private long id;

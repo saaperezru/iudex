@@ -11,21 +11,21 @@ import org.xtremeware.iudex.vo.MailingConfigVo;
  */
 public class ServiceFactory {
 
-	public UsersService usersService;
-	public ProfessorsService professorsService;
-	public SubjectsService subjectsService;
-	public FeedbacksService feedbacksService;
-	public CommentsService commentsService;
-	public CoursesService coursesService;
-	public SubjectRatingsService subjectRatingsService;
-	public ProfessorRatingsService professorRatingsService;
-	public CommentRatingsService commentRatingService;
-	public CourseRatingsService courseRatingsService;
-	public MailingService mailingService;
-	public PeriodsService periodsService;
-	public ProgramsService programsService;
-	public FeedbackTypesService feedbackTypesService;
-	public LogService logService;
+	private UsersService usersService;
+	private ProfessorsService professorsService;
+	private SubjectsService subjectsService;
+	private FeedbacksService feedbacksService;
+	private CommentsService commentsService;
+	private CoursesService coursesService;
+	private SubjectRatingsService subjectRatingsService;
+	private ProfessorRatingsService professorRatingsService;
+	private CommentRatingsService commentRatingService;
+	private CourseRatingsService courseRatingsService;
+	private MailingService mailingService;
+	private PeriodsService periodsService;
+	private ProgramsService programsService;
+	private FeedbackTypesService feedbackTypesService;
+	private LogService logService;
 
 	public ServiceFactory(AbstractDaoFactory daoFactory, MailingConfigVo mailingConfig) throws ExternalServiceConnectionException {
 		usersService = new UsersService(daoFactory);

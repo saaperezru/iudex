@@ -7,7 +7,6 @@ import javax.persistence.EntityTransaction;
 import org.xtremeware.iudex.businesslogic.InvalidVoException;
 import org.xtremeware.iudex.businesslogic.service.ServiceFactory;
 import org.xtremeware.iudex.presentation.vovw.CourseVoVwFull;
-import org.xtremeware.iudex.presentation.vovw.ProfessorVoVwFull;
 import org.xtremeware.iudex.presentation.vovw.ProfessorVoVwSmall;
 import org.xtremeware.iudex.presentation.vovw.SubjectVoVwSmall;
 import org.xtremeware.iudex.vo.*;
@@ -213,5 +212,39 @@ public class CoursesFacade extends AbstractFacade {
 			}
 		}
 		return rating;
+	}
+
+	public List<CourseVoVwFull> getSimilarCourses(String professorName, String subjectName, Long periodId) {
+		EntityManager em = null;
+		List<CourseVoVwFull> list = new ArrayList<CourseVoVwFull>();
+		HashMap<Long, ProfessorVoVwSmall> professorsVoVws = new HashMap<Long, ProfessorVoVwSmall>();
+		HashMap<Long, SubjectVoVwSmall> subjectsVoVws = new HashMap<Long, SubjectVoVwSmall>();
+		try {
+			em = getEntityManagerFactory().createEntityManager();
+			List<CourseVo> similarCourses = getServiceFactory().createCoursesService().getSimilarCourses(em, professorName, subjectName, periodId);
+			for (CourseVo c : similarCourses) {
+				if (!professorsVoVws.containsKey(c.getProfessorId())) {
+					RatingSummaryVo rating = getServiceFactory().createProfessorRatingsService().getSummary(em, c.getProfessorId());
+					ProfessorVo p = getServiceFactory().createProfessorsService().getById(em, c.getProfessorId());
+					professorsVoVws.put(p.getId(), new ProfessorVoVwSmall(p.getId(), p.getFirstName() + " " + p.getLastName(), rating));
+				}
+				if (!subjectsVoVws.containsKey(c.getSubjectId())) {
+					RatingSummaryVo rating = getServiceFactory().createSubjectRatingsService().getSummary(em,c.getSubjectId()) ;
+					SubjectVo s = getServiceFactory().createSubjectsService().getById(em, c.getSubjectId());
+					subjectsVoVws.put(s.getId(), new SubjectVoVwSmall(s.getId(), s.getName(), rating));
+				}
+				list.add(new CourseVoVwFull(c, subjectsVoVws.get(c.getSubjectId()), professorsVoVws.get(c.getProfessorId())));
+
+			}
+
+		} catch (Exception e) {
+			getServiceFactory().createLogService().error(e.getMessage(), e);
+		} finally {
+			if (em != null) {
+				em.clear();
+				em.close();
+			}
+		}
+		return list;
 	}
 }

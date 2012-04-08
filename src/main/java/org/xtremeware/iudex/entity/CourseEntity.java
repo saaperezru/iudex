@@ -10,9 +10,11 @@ import org.xtremeware.iudex.vo.CourseVo;
 	@NamedQuery(name = "getCourseBySubjectId", query = "SELECT c FROM Course c WHERE c.subject.id = :subjectId"),
 	@NamedQuery(name = "getCourseByPeriodId", query = "SELECT c FROM Course c WHERE c.period.id = :periodId"),
 	@NamedQuery(name = "getCourseByProfessorIdAndSubjectId", query = "SELECT c FROM Course c WHERE c.subject.id = :subjectId AND c.professor.id = :professorId"),
-        @NamedQuery(name = "getProfessorBySubjectId", query = "SELECT c.professor FROM Course c WHERE c.subject.id = :subjectId")
+	@NamedQuery(name = "getProfessorBySubjectId", query = "SELECT c.professor FROM Course c WHERE c.subject.id = :subjectId"),
+	@NamedQuery(name = "getCoursesByProfessorNameLikeAndSubjectNameLike", query = "SELECT c FROM Course c WHERE c.subject.name LIKE :subjectName AND (c.professor.firstName LIKE :professorName OR c.professor.lastName LIKE :professorName) AND c.period.id = :periodId"),
+	@NamedQuery(name = "getCoursesByProfessorNameLikeAndSubjectNameLikeAndPeriodId", query = "SELECT c FROM Course c WHERE c.subject.name LIKE :subjectName AND (c.professor.firstName LIKE :professorName OR c.professor.lastName LIKE :professorName) AND c.period.id = :periodId")
 })
-@Table(name="COURSE")
+@Table(name = "COURSE")
 public class CourseEntity implements Serializable, Entity<CourseVo> {
 
 	private static final long serialVersionUID = 1L;

@@ -14,9 +14,9 @@ import org.xtremeware.iudex.helper.ExternalServiceConnectionException;
 import org.xtremeware.iudex.helper.SecurityHelper;
 import org.xtremeware.iudex.vo.ProgramVo;
 
-public class ProgramService extends SimpleCrudService<ProgramVo, ProgramEntity> {
+public class ProgramsService extends SimpleCrudService<ProgramVo, ProgramEntity> {
 
-	public ProgramService(AbstractDaoFactory daoFactory) {
+	public ProgramsService(AbstractDaoFactory daoFactory) {
 		super(daoFactory);
 	}
 

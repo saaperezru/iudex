@@ -13,9 +13,9 @@ import org.xtremeware.iudex.entity.UserEntity;
 import org.xtremeware.iudex.vo.RatingSummaryVo;
 import org.xtremeware.iudex.vo.SubjectRatingVo;
 
-public class SubjectRatingService extends SimpleCrudService<SubjectRatingVo, SubjectRatingEntity> {
+public class SubjectRatingsService extends SimpleCrudService<SubjectRatingVo, SubjectRatingEntity> {
 
-	public SubjectRatingService(AbstractDaoFactory daoFactory) {
+	public SubjectRatingsService(AbstractDaoFactory daoFactory) {
 		super(daoFactory);
 	}
 

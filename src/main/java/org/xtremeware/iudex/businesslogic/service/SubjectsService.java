@@ -16,14 +16,14 @@ import org.xtremeware.iudex.vo.SubjectVo;
  *
  * @author josebermeo
  */
-public class SubjectService extends SimpleCrudService<SubjectVo, SubjectEntity> {
+public class SubjectsService extends SimpleCrudService<SubjectVo, SubjectEntity> {
 
     /**
-     * SubjectService constructor
+     * SubjectsService constructor
      *
      * @param daoFactory
      */
-    public SubjectService(AbstractDaoFactory daoFactory) {
+    public SubjectsService(AbstractDaoFactory daoFactory) {
         super(daoFactory);
     }
 

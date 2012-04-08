@@ -20,14 +20,14 @@ import org.xtremeware.iudex.vo.FeedbackTypeVo;
  *
  * @author josebermeo
  */
-public class FeedbackTypeService extends SimpleCrudService<FeedbackTypeVo, FeedbackTypeEntity> {
+public class FeedbackTypesService extends SimpleCrudService<FeedbackTypeVo, FeedbackTypeEntity> {
 
     /**
-     * FeedbackTypeService constructor
+     * FeedbackTypesService constructor
      *
      * @param daoFactory
      */
-    public FeedbackTypeService(AbstractDaoFactory daoFactory) {
+    public FeedbackTypesService(AbstractDaoFactory daoFactory) {
         super(daoFactory);
     }
 

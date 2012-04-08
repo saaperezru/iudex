@@ -17,14 +17,14 @@ import org.xtremeware.iudex.vo.RatingSummaryVo;
  *
  * @author josebermeo
  */
-public class CommentRatingService extends SimpleCrudService<CommentRatingVo, CommentRatingEntity> {
+public class CommentRatingsService extends SimpleCrudService<CommentRatingVo, CommentRatingEntity> {
 
     /**
-     * CommentRatingService constructor
+     * CommentRatingsService constructor
      *
      * @param daoFactory
      */
-    public CommentRatingService(AbstractDaoFactory daoFactory) {
+    public CommentRatingsService(AbstractDaoFactory daoFactory) {
         super(daoFactory);
     }
 

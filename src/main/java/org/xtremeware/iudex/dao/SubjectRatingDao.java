@@ -47,6 +47,20 @@ public class SubjectRatingDao extends Dao<SubjectRatingEntity> {
     }
 
     /**
+     * Returns a list of SubjectRatings entities given the user
+     *
+     * @param em the entity manager
+     * @param userId user id
+     * @return list of SubjectRatingEntity
+     */
+    public List<SubjectRatingEntity> getByUserId(EntityManager em, Long userId) {
+        if (em == null) {
+            throw new IllegalArgumentException("EntityManager em cannot be null");
+        }
+        return em.createQuery("getUserRatingBySubjectId").setParameter("userId", userId).getResultList();
+    }    
+    
+    /**
      * Returns a summary of the ratings given a subject.
      *
      * @param em the entity manager

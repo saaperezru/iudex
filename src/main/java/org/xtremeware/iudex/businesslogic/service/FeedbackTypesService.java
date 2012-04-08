@@ -11,6 +11,7 @@ import org.xtremeware.iudex.businesslogic.InvalidVoException;
 import org.xtremeware.iudex.dao.AbstractDaoFactory;
 import org.xtremeware.iudex.dao.Dao;
 import org.xtremeware.iudex.dao.FeedbackTypeDao;
+import org.xtremeware.iudex.entity.FeedbackEntity;
 import org.xtremeware.iudex.entity.FeedbackTypeEntity;
 import org.xtremeware.iudex.helper.ExternalServiceConnectionException;
 import org.xtremeware.iudex.helper.SecurityHelper;
@@ -95,5 +96,21 @@ public class FeedbackTypesService extends SimpleCrudService<FeedbackTypeVo, Feed
             arrayList.add(feedbackTypeEntity.toVo());
         }
         return arrayList;
+    }
+    
+  /**
+    * Remove the FeedBack Type and all the Feedback Comments associated  to it.
+    * 
+    * @param em entity manager
+    * @param id id of the FeedBackType
+    */    
+    @Override
+    public void remove(EntityManager em, long id) {
+            List<FeedbackEntity> feedBacks = getDaoFactory().getFeedbackDao().getByTypeId(em, id);
+                for (FeedbackEntity feedBack : feedBacks){
+                    getDaoFactory().getFeedbackDao().remove(em,feedBack.getId());
+                }
+
+            getDao().remove(em, id);
     }
 }

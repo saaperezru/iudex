@@ -46,4 +46,20 @@ public class CourseRatingDao extends Dao<CourseRatingEntity> {
             return null;
         }
     }
+    
+    /**
+     * Returns a list of CourseRating entities which has the same indicated
+     * user.
+     *
+     * @param em the entity manager
+     * @param userId id of the user
+     * @return a list of CourseRating entities with a course identified by
+     * userId
+     */
+    public List<CourseRatingEntity> getByUserId(EntityManager em, Long userId) {
+        if (em == null) {
+            throw new IllegalArgumentException("EntityManager em cannot be null");
+        }
+        return em.createQuery("getCourseRatingByUserId").setParameter("userId", userId).getResultList();
+    }
 }

@@ -11,7 +11,9 @@ import org.xtremeware.iudex.businesslogic.InvalidVoException;
 import org.xtremeware.iudex.dao.AbstractDaoFactory;
 import org.xtremeware.iudex.dao.Dao;
 import org.xtremeware.iudex.dao.PeriodDao;
+import org.xtremeware.iudex.entity.CourseEntity;
 import org.xtremeware.iudex.entity.PeriodEntity;
+import org.xtremeware.iudex.helper.Config;
 import org.xtremeware.iudex.vo.PeriodVo;
 
 /**
@@ -101,4 +103,27 @@ public class PeriodsService extends SimpleCrudService<PeriodVo, PeriodEntity> {
         return entity;
 
     }
+    
+      /**
+        * Remove the period and all the courses associated  to it.
+        * 
+        * @param em entity manager
+        * @param id id of the period
+        */    
+        @Override
+        public void remove(EntityManager em, long id) {
+            
+          /**
+            * This is a bad implementation, but due to few time, it had to be implemented,
+            * it will be changed for the next release.
+            */
+            List<CourseEntity> courses = getDaoFactory().getCourseDao().getByPeriodId(em, id);
+
+            CoursesService courseService = Config.getInstance().getServiceFactory().createCoursesService();
+            for (CourseEntity course : courses){
+                    courseService.remove(em, course.getId());    
+            } 
+
+            getDao().remove(em, id);
+        }
 }

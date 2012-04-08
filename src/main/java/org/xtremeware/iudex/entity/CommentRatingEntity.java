@@ -12,6 +12,9 @@ import org.xtremeware.iudex.vo.CommentRatingVo;
 	@NamedQuery(name = "getCommentRatingByCommentIdAndUserId",
 	query = "SELECT result FROM CommentRating result "
 	+ "WHERE result.comment.id = :commentId AND result.user.id = :userId"),
+        @NamedQuery(name = "getCommentRatingByUserId",
+	query = "SELECT result FROM CommentRating result "
+	+ "WHERE result.user.id = :userId"),
 	@NamedQuery(name = "countPositiveCommentRating", query = "SELECT COUNT result FROM CommentRating result "
 	+ "WHERE result.comment.id = :commentId AND result.value = 1"),
 	@NamedQuery(name = "countNegativeCommentRating", query = "SELECT COUNT result FROM CommentRating result "

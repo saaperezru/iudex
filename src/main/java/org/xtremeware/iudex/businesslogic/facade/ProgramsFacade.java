@@ -106,10 +106,10 @@ public class ProgramsFacade extends AbstractFacade {
         List<ProgramVo> list = null;
         try {
             em = getEntityManagerFactory().createEntityManager();
-            tx = em.getTransaction();
-            tx.begin();
+            
+            
             list = getServiceFactory().createProgramsService().getByNameLike(em, "gra");
-            tx.commit();
+            
         } catch (Exception e) {
             if (em != null && tx != null) {
                 tx.rollback();

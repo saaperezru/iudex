@@ -6,6 +6,7 @@ package org.xtremeware.iudex.helper;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.persistence.Persistence;
 import org.xtremeware.iudex.businesslogic.facade.FacadeFactory;
 import org.xtremeware.iudex.businesslogic.service.ServiceFactory;
 import org.xtremeware.iudex.dao.AbstractDaoFactory;
@@ -35,7 +36,7 @@ public class Config {
 		mailingConf.setSmtpServerPort(Integer.parseInt(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAILING_SMTP_PORT)));
 		mailingConf.setSmtpUser(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAILING_SMTP_USER));
 		this.serviceFactory = new ServiceFactory(daoFactory, mailingConf);
-                // TODO: initialize facadeFactory
+                facadeFactory = new FacadeFactory(serviceFactory, Persistence.createEntityManagerFactory(persistenceUnit));
 	}
 
 	public static Config getInstance() {

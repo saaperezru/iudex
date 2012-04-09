@@ -28,11 +28,6 @@
             <version>2.5.1</version>
         </dependency>
         <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-core</artifactId>
-            <version>4.1.1.Final</version>
-        </dependency>
-        <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>5.1.19</version>
@@ -93,6 +88,21 @@
             <version>1.4.5</version>
         </dependency>
         <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-entitymanager</artifactId>
+            <version>4.1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.sql</groupId>
+            <artifactId>jdbc-stdext</artifactId>
+            <version>2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.transaction</groupId>
+            <artifactId>jta</artifactId>
+            <version>1.0.1B</version>
+        </dependency>
+        <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-web-api</artifactId>
             <version>6.0</version>
@@ -150,5 +160,11 @@
         </plugins>
     </build>
     <repositories>
+        <repository>
+            <url>http://repo1.maven.org/maven2/</url>
+            <id>hibernate-persistence</id>
+            <layout>default</layout>
+            <name>Repository for library Library[hibernate-persistence]</name>
+        </repository>
     </repositories>
 </project>

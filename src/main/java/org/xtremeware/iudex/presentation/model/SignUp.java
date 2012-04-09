@@ -27,7 +27,7 @@ public class SignUp {
     private String firstName;
     private String lastName;
     private SelectItem program;
-    @ManagedProperty(value="#{authCheck}")
+    @ManagedProperty(value = "#{authCheck}")
     private AuthCheck authCheck;
 
     public String getLastName() {
@@ -91,7 +91,9 @@ public class SignUp {
         user.setFirstName(getFirstName());
         user.setLastName(getLastName());
         List<Long> programsList = new ArrayList<Long>();
-        programsList.add((Long)program.getValue());
+        if (program != null) {
+            programsList.add((Long) program.getValue());
+        }
         user.setProgramsId(programsList);
         try {
             usersFacade.addUser(user);

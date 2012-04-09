@@ -40,7 +40,7 @@ public class UserEntity implements Serializable, Entity<UserVo> {
         @OneToMany(mappedBy = "id")
 	private List<ProgramEntity> programs;
         
-        @OneToOne(mappedBy = "UserEntity")
+        @OneToOne(mappedBy = "user")
         private ConfirmationKeyEntity confirmationKey;
         
         

@@ -30,6 +30,9 @@ public class ProgramsService extends SimpleCrudService<ProgramVo, ProgramEntity>
 		if (em == null) {
 			throw new IllegalArgumentException("EntityManager em cannot be null");
 		}
+                if (vo == null) {
+                    throw new InvalidVoException("Null ProgramVo");
+                }
 		if (vo.getName() == null) {
 			throw new InvalidVoException("String message in the provided ProgramVo cannot be null");
 		}

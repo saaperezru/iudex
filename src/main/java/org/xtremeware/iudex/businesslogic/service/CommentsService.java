@@ -80,6 +80,12 @@ public class CommentsService extends CrudService<CommentVo> {
 	 * @throws InvalidVoException in case the business rules are violated
 	 */
 	public void validateVo(EntityManager em, CommentVo vo) throws InvalidVoException {
+                if (em == null) {
+			throw new IllegalArgumentException("EntityManager em cannot be null");
+		}
+		if (vo == null) {
+			throw new InvalidVoException("Null CommentVo");
+		}
 		if (vo.getContent() == null) {
 			throw new InvalidVoException("String Content in the provided CommentVo cannot be null");
 		} else if (vo.getCourseId() == null) {

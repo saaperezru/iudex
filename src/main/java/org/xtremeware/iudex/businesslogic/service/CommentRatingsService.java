@@ -49,6 +49,9 @@ public class CommentRatingsService extends SimpleCrudService<CommentRatingVo, Co
 	 */
 	@Override
 	public void validateVo(EntityManager em, CommentRatingVo vo) throws InvalidVoException {
+                if (em == null) {
+			throw new IllegalArgumentException("EntityManager em cannot be null");
+		}
 		if (vo == null) {
 			throw new InvalidVoException("Null CommentRatingVo");
 		}

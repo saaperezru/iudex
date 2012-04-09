@@ -21,7 +21,7 @@
       <property name="hibernate.connection.username" value="iudex"/>
       <property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver"/>
       <property name="hibernate.connection.password" value="IPT9piWX1E"/>
-      <property name="hibernate.connection.url" value="jdbc:mysql://localhost:3306/IUDEX"/>
+      <property name="hibernate.connection.url" value="jdbc:mysql://mysql-iudex.j.rsnx.ru:3306/IUDEX"/>
       <property name="hibernate.cache.provider_class" value="org.hibernate.cache.NoCacheProvider"/>
       <property name="hibernate.hbm2ddl.auto" value="update"/>
     </properties>

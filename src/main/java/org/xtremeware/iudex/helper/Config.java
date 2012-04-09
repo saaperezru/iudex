@@ -18,7 +18,7 @@ import org.xtremeware.iudex.vo.MailingConfigVo;
  */
 public class Config {
 
-	public final static String CONFIGURATION_VARIABLES_PATH = "iudex.properties";
+	public final static String CONFIGURATION_VARIABLES_PATH = "/../lib/iudex.properties";
 
 	private String persistenceUnit;
 	private AbstractDaoFactory daoFactory;

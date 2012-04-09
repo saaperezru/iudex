@@ -38,7 +38,7 @@ public class ConfigurationVariablesHelper {
 
 	private ConfigurationVariablesHelper(String configurationFilePath) throws ExternalServiceConnectionException {
 		try {
-			config = new PropertiesConfiguration(configurationFilePath);
+			config = new PropertiesConfiguration(getClass().getResource(configurationFilePath));
 		} catch (Exception ex) {
 			throw new ExternalServiceConnectionException("The specified configuration file for the COnfigurationVariablesHelper does not exists");
 		}

@@ -42,7 +42,7 @@ public class Config {
 	public static Config getInstance() {
 		while (instance == null) {
 			try {
-				instance = new Config("persistenceUnit", new MySqlDaoFactory());
+				instance = new Config("org.xtremeware.iudex_local", new MySqlDaoFactory());
 			} catch (ExternalServiceConnectionException ex) {
 				System.out.println("[FATAL ERROR] Configuration Variables file could not be found, this is a ");
 			}

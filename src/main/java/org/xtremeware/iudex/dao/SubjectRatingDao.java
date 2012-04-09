@@ -23,7 +23,7 @@ public class SubjectRatingDao extends Dao<SubjectRatingEntity> {
         if (em == null) {
             throw new IllegalArgumentException("EntityManager em cannot be null");
         }
-        return em.createQuery("getSubjectRatingBySubjectId").setParameter("subjectId", subjectId).getResultList();
+        return em.createNamedQuery("getSubjectRatingBySubjectId").setParameter("subjectId", subjectId).getResultList();
     }
 
     /**
@@ -40,7 +40,7 @@ public class SubjectRatingDao extends Dao<SubjectRatingEntity> {
             throw new IllegalArgumentException("EntityManager em cannot be null");
         }
         try {
-            return (SubjectRatingEntity) em.createQuery("getSubjectRatingBySubjectIdAndUserId").setParameter("subjectId", subjectId).setParameter("userId", userId).getSingleResult();
+            return (SubjectRatingEntity) em.createNamedQuery("getSubjectRatingBySubjectIdAndUserId").setParameter("subjectId", subjectId).setParameter("userId", userId).getSingleResult();
         } catch (NoResultException noResultException) {
             return null;
         }
@@ -57,7 +57,7 @@ public class SubjectRatingDao extends Dao<SubjectRatingEntity> {
         if (em == null) {
             throw new IllegalArgumentException("EntityManager em cannot be null");
         }
-        return em.createQuery("getUserRatingBySubjectId").setParameter("userId", userId).getResultList();
+        return em.createNamedQuery("getUserRatingBySubjectId").setParameter("userId", userId).getResultList();
     }    
     
     /**
@@ -74,13 +74,13 @@ public class SubjectRatingDao extends Dao<SubjectRatingEntity> {
         RatingSummaryVo rsv = new RatingSummaryVo();
 
         try {
-            rsv.setPositive(((Integer) em.createQuery("countPositiveSubjectRating").setParameter("subjectId", subjectId).getSingleResult()).intValue());
+            rsv.setPositive(((Long) em.createNamedQuery("countPositiveSubjectRating").setParameter("subjectId", subjectId).getSingleResult()).intValue());
         } catch (NoResultException noResultException) {
             return null;
         }
 
         try {
-            rsv.setNegative(((Integer) em.createQuery("countNegativeSubjectRating").setParameter("subjectId", subjectId).getSingleResult()).intValue());
+            rsv.setNegative(((Long) em.createNamedQuery("countNegativeSubjectRating").setParameter("subjectId", subjectId).getSingleResult()).intValue());
         } catch (NoResultException noResultException) {
             return null;
         }

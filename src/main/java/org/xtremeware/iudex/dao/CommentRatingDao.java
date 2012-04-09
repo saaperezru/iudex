@@ -28,7 +28,7 @@ public class CommentRatingDao extends Dao<CommentRatingEntity> {
         if (em == null) {
             throw new IllegalArgumentException("EntityManager em cannot be null");
         }
-        return em.createQuery("getCommentRatingByCommentId").setParameter("commentId", commentId).getResultList();
+        return em.createNamedQuery("getCommentRatingByCommentId").setParameter("commentId", commentId).getResultList();
     }
     /**
      * Returns a rating given by a user, identified by userId, to a comment, identified by commentId.
@@ -43,7 +43,7 @@ public class CommentRatingDao extends Dao<CommentRatingEntity> {
             throw new IllegalArgumentException("EntityManager em cannot be null");
         }
         try{
-            return (CommentRatingEntity) em.createQuery("getCommentRatingByCommentIdAndUserId").setParameter("commentId", commentId).setParameter("userId", userId).getSingleResult();
+            return (CommentRatingEntity) em.createNamedQuery("getCommentRatingByCommentIdAndUserId").setParameter("commentId", commentId).setParameter("userId", userId).getSingleResult();
         } catch (NoResultException noResultException) {
             return null;
         }
@@ -59,7 +59,7 @@ public class CommentRatingDao extends Dao<CommentRatingEntity> {
         if (em == null) {
             throw new IllegalArgumentException("EntityManager em cannot be null");
         }
-        return em.createQuery("getCommentRatingByUserId").setParameter("userId", userId).getResultList();
+        return em.createNamedQuery("getCommentRatingByUserId").setParameter("userId", userId).getResultList();
     }
    /**
      * Returns a summary of the ratings given a comment. 
@@ -74,14 +74,14 @@ public class CommentRatingDao extends Dao<CommentRatingEntity> {
         }
         RatingSummaryVo rsv = new RatingSummaryVo();
 
-        Query q = em.createQuery("countPositiveCommentRating").setParameter("commentId", commentId);
+        Query q = em.createNamedQuery("countPositiveCommentRating").setParameter("commentId", commentId);
         try{
             rsv.setPositive(((Integer) q.getSingleResult()).intValue());
         } catch (NoResultException noResultException) {
             return null;
         }
 
-        q = em.createQuery("countNegativeCommentRating").setParameter("commentId", commentId);
+        q = em.createNamedQuery("countNegativeCommentRating").setParameter("commentId", commentId);
         try{
             rsv.setNegative(((Integer) q.getSingleResult()).intValue());
         } catch (NoResultException noResultException) {

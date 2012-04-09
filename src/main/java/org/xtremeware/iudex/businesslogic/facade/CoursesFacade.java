@@ -229,12 +229,42 @@ public class CoursesFacade extends AbstractFacade {
 					professorsVoVws.put(p.getId(), new ProfessorVoVwSmall(p.getId(), p.getFirstName() + " " + p.getLastName(), rating));
 				}
 				if (!subjectsVoVws.containsKey(c.getSubjectId())) {
-					RatingSummaryVo rating = getServiceFactory().createSubjectRatingsService().getSummary(em,c.getSubjectId()) ;
+					RatingSummaryVo rating = getServiceFactory().createSubjectRatingsService().getSummary(em, c.getSubjectId());
 					SubjectVo s = getServiceFactory().createSubjectsService().getById(em, c.getSubjectId());
 					subjectsVoVws.put(s.getId(), new SubjectVoVwSmall(s.getId(), s.getName(), rating));
 				}
 				list.add(new CourseVoVwFull(c, subjectsVoVws.get(c.getSubjectId()), professorsVoVws.get(c.getProfessorId())));
 
+			}
+
+		} catch (Exception e) {
+			getServiceFactory().createLogService().error(e.getMessage(), e);
+		} finally {
+			if (em != null) {
+				em.clear();
+				em.close();
+			}
+		}
+		return list;
+	}
+
+	public List<CourseVoVwFull> getBySubjectId(long subjectId) {
+		EntityManager em = null;
+		List<CourseVoVwFull> list = new ArrayList<CourseVoVwFull>();
+		HashMap<Long, ProfessorVoVwSmall> professorsVoVws = new HashMap<Long, ProfessorVoVwSmall>();
+		try {
+			em = getEntityManagerFactory().createEntityManager();
+			List<CourseVo> courses = getServiceFactory().createCoursesService().getBySubjectId(em, subjectId);
+			RatingSummaryVo subjectRating = getServiceFactory().createSubjectRatingsService().getSummary(em, subjectId);
+			SubjectVo s = getServiceFactory().createSubjectsService().getById(em, subjectId);
+			SubjectVoVwSmall subject = new SubjectVoVwSmall(s.getId(), s.getName(), subjectRating);
+			for (CourseVo c : courses) {
+				if (!professorsVoVws.containsKey(c.getProfessorId())) {
+					RatingSummaryVo rating = getServiceFactory().createProfessorRatingsService().getSummary(em, c.getProfessorId());
+					ProfessorVo p = getServiceFactory().createProfessorsService().getById(em, c.getProfessorId());
+					professorsVoVws.put(p.getId(), new ProfessorVoVwSmall(p.getId(), p.getFirstName() + " " + p.getLastName(), rating));
+				}
+				list.add(new CourseVoVwFull(c, subject, professorsVoVws.get(c.getProfessorId())));
 			}
 
 		} catch (Exception e) {

@@ -21,6 +21,10 @@ public class CourseVoVwFull {
 		return "CourseVoVwFull{" + vo.toString() + "subjectVo=" + subjectVo.toString() + ", professorVo=" + professorVo.toString() + '}';
 	}
 
+	public Long getId() {
+		return vo.getId();
+	}
+
 	public ProfessorVoVwSmall getProfessor() {
 		return professorVo;
 	}

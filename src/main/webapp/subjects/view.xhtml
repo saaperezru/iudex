@@ -4,7 +4,8 @@
                 template="./../templates/template.xhtml"
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:h="http://java.sun.com/jsf/html"
-                xmlns:my="http://java.sun.com/jsf/composite/iudex">
+                xmlns:my="http://java.sun.com/jsf/composite/iudex"
+		xmlns:c="http://java.sun.com/jsp/jstl/core">
     <f:metadata>
         <f:event type="preRenderView" listener="#{viewSubject.preRenderView()}" />
     </f:metadata>
@@ -12,29 +13,30 @@
         <div class="panel">
             <dl>
                 <dt>Materia</dt>
-                <dd><h:outputText value=""/><my:thumbs type="subject" identitifer="1" /></dd>
+                <dd><h:outputText value="#{viewSubject.subject.name}"/><my:thumbs type="subject" identitifer="1" /></dd>
                 <dt>Código</dt>
                 <dd><h:outputLink value="" /></dd>
             </dl>
-            <h:outputText value=""/>
+            <h:outputText value="#{viewSubject.subject.id}"/>
         </div>
         <br/>
-        <div>
-            <div class="professor">
-                <h1>Nunc ac tellus</h1>
+
+	<ui:repeat value="#{viewSubject.courses}" var="course">
+		<div class="professor">
+		<h1>#{course.course.professor.fullName}</h1>
+		<ui:repeat value="#{course.comments}" var="comment">
                 <div class="comment">
                     <div style="float: left; width: 85%;">
                         <div style="padding: 10px">
-                            <p><b>Nombre: </b>Nunc ac tellus sed diam fringilla convallis. Etiam eu ipsum a massa venenatis gravida. Donec nec enim est, eu vulputate orci. Suspendisse potenti. Ut a risus in sem vulputate sollicitudin. Suspendisse at diam leo. Sed vel dui sed diam vehicula pharetra a nec justo. Duis enim magna, vestibulum et pellentesque ut, dictum sit amet turpis.</p>
-                            <p><b>Calificación del curso:</b>    <h:outputText value=""  >
+				<p><b>Nombre: </b> #{comment.content}</p>
+                            <p><b>Calificación del curso:</b>    <h:outputText value="#{comment.rating}"  >
                                     <f:convertNumber type="number" maxFractionDigits="1" />
                                 </h:outputText></p>
                         </div>
                     </div>
                     <div style="float: right;width: 15%;">
                         <div style="padding: 10px">
-                            01/01/2012 01:01:01 a.m.
-                            <h:outputText value="">
+				<h:outputText value="#{comment.date}">
                                 <f:convertDateTime type="both" pattern="dd/MM/yyyy hh:mm:ss aa"/>
                             </h:outputText>
                             <br/>
@@ -43,116 +45,10 @@
                     </div>
                     <div class="clear"/>
                 </div>
-                <div class="comment">
-                    <div style="float: left; width: 85%;">
-                        <div style="padding: 10px">
-                            <p><b>Nombre: </b>Nunc ac tellus sed diam fringilla convallis. Etiam eu ipsum a massa venenatis gravida. Donec nec enim est, eu vulputate orci. Suspendisse potenti. Ut a risus in sem vulputate sollicitudin. Suspendisse at diam leo. Sed vel dui sed diam vehicula pharetra a nec justo. Duis enim magna, vestibulum et pellentesque ut, dictum sit amet turpis.</p>
-                            <p><b>Calificación del curso:</b>    <h:outputText value=""  >
-                                    <f:convertNumber type="number" maxFractionDigits="1" />
-                                </h:outputText></p>
-                        </div>
-                    </div>
-                    <div style="float: right;width: 15%;">
-                        <div style="padding: 10px">
-                            01/01/2012 01:01:01 a.m.
-                            <h:outputText value="">
-                                <f:convertDateTime type="both" pattern="dd/MM/yyyy hh:mm:ss aa"/>
-                            </h:outputText>
-                            <br/>
-                            <my:thumbs type="comment" identitifer="1" />
-                        </div>
-                    </div>
-                    <div class="clear"/>
-                </div>
-                <div class="comment">
-                    <div style="float: left; width: 85%;">
-                        <div style="padding: 10px">
-                            <p><b>Nombre: </b>Nunc ac tellus sed diam fringilla convallis. Etiam eu ipsum a massa venenatis gravida. Donec nec enim est, eu vulputate orci. Suspendisse potenti. Ut a risus in sem vulputate sollicitudin. Suspendisse at diam leo. Sed vel dui sed diam vehicula pharetra a nec justo. Duis enim magna, vestibulum et pellentesque ut, dictum sit amet turpis.</p>
-                            <p><b>Calificación del curso:</b>    <h:outputText value=""  >
-                                    <f:convertNumber type="number" maxFractionDigits="1" />
-                                </h:outputText></p>
-                        </div>
-                    </div>
-                    <div style="float: right;width: 15%;">
-                        <div style="padding: 10px">
-                            01/01/2012 01:01:01 a.m.
-                            <h:outputText value="">
-                                <f:convertDateTime type="both" pattern="dd/MM/yyyy hh:mm:ss aa"/>
-                            </h:outputText>
-                            <br/>
-                            <my:thumbs type="comment" identitifer="1" />
-                        </div>
-                    </div>
-                    <div class="clear"/>
-                </div>
+    </ui:repeat>
             </div>
-            <div class="professor">
-                <h1>Nunc ac tellus</h1>
-                <div class="comment">
-                    <div style="float: left; width: 85%;">
-                        <div style="padding: 10px">
-                            <p><b>Nombre: </b>Nunc ac tellus sed diam fringilla convallis. Etiam eu ipsum a massa venenatis gravida. Donec nec enim est, eu vulputate orci. Suspendisse potenti. Ut a risus in sem vulputate sollicitudin. Suspendisse at diam leo. Sed vel dui sed diam vehicula pharetra a nec justo. Duis enim magna, vestibulum et pellentesque ut, dictum sit amet turpis.</p>
-                            <p><b>Calificación del curso:</b>    <h:outputText value=""  >
-                                    <f:convertNumber type="number" maxFractionDigits="1" />
-                                </h:outputText></p>
-                        </div>
-                    </div>
-                    <div style="float: right;width: 15%;">
-                        <div style="padding: 10px">
-                            01/01/2012 01:01:01 a.m.
-                            <h:outputText value="">
-                                <f:convertDateTime type="both" pattern="dd/MM/yyyy hh:mm:ss aa"/>
-                            </h:outputText>
-                            <br/>
-                            <my:thumbs type="comment" identitifer="1" />
-                        </div>
-                    </div>
-                    <div class="clear"/>
-                </div>
-                <div class="comment">
-                    <div style="float: left; width: 85%;">
-                        <div style="padding: 10px">
-                            <p><b>Nombre: </b>Nunc ac tellus sed diam fringilla convallis. Etiam eu ipsum a massa venenatis gravida. Donec nec enim est, eu vulputate orci. Suspendisse potenti. Ut a risus in sem vulputate sollicitudin. Suspendisse at diam leo. Sed vel dui sed diam vehicula pharetra a nec justo. Duis enim magna, vestibulum et pellentesque ut, dictum sit amet turpis.</p>
-                            <p><b>Calificación del curso:</b>    <h:outputText value=""  >
-                                    <f:convertNumber type="number" maxFractionDigits="1" />
-                                </h:outputText></p>
-                        </div>
-                    </div>
-                    <div style="float: right;width: 15%;">
-                        <div style="padding: 10px">
-                            01/01/2012 01:01:01 a.m.
-                            <h:outputText value="">
-                                <f:convertDateTime type="both" pattern="dd/MM/yyyy hh:mm:ss aa"/>
-                            </h:outputText>
-                            <br/>
-                            <my:thumbs type="comment" identitifer="1" />
-                        </div>
-                    </div>
-                    <div class="clear"/>
-                </div>
-                <div class="comment">
-                    <div style="float: left; width: 85%;">
-                        <div style="padding: 10px">
-                            <p><b>Nombre: </b>Nunc ac tellus sed diam fringilla convallis. Etiam eu ipsum a massa venenatis gravida. Donec nec enim est, eu vulputate orci. Suspendisse potenti. Ut a risus in sem vulputate sollicitudin. Suspendisse at diam leo. Sed vel dui sed diam vehicula pharetra a nec justo. Duis enim magna, vestibulum et pellentesque ut, dictum sit amet turpis.</p>
-                            <p><b>Calificación del curso:</b>    <h:outputText value=""  >
-                                    <f:convertNumber type="number" maxFractionDigits="1" />
-                                </h:outputText></p>
-                        </div>
-                    </div>
-                    <div style="float: right;width: 15%;">
-                        <div style="padding: 10px">
-                            01/01/2012 01:01:01 a.m.
-                            <h:outputText value="">
-                                <f:convertDateTime type="both" pattern="dd/MM/yyyy hh:mm:ss aa"/>
-                            </h:outputText>
-                            <br/>
-                            <my:thumbs type="comment" identitifer="1" />
-                        </div>
-                    </div>
-                    <div class="clear"/>
-                </div>
-            </div>
-        </div>
+    
+  </ui:repeat>
     </ui:define>
 
 </ui:composition>

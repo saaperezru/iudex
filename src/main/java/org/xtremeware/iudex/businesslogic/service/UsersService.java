@@ -78,7 +78,7 @@ public class UsersService extends CrudService<UserVo> {
                 throw new InvalidVoException("An element in programsId cannot be found");
             }
         }
-        if (vo.getRol() == null) {
+        if (vo.getRole() == null) {
             throw new InvalidVoException("Rol cannot be null");
         }
     }
@@ -93,7 +93,7 @@ public class UsersService extends CrudService<UserVo> {
         userEntity.setLastName(SecurityHelper.sanitizeHTML(vo.getLastName()));
         userEntity.setUserName(SecurityHelper.sanitizeHTML(vo.getUserName()));
         userEntity.setPassword(vo.getPassword());
-        userEntity.setRol(vo.getRol());
+        userEntity.setRol(vo.getRole());
         userEntity.setActive(vo.isActive());
 
         ArrayList<ProgramEntity> arrayList = new ArrayList<ProgramEntity>();
@@ -107,10 +107,11 @@ public class UsersService extends CrudService<UserVo> {
     }
 
     public UserVo create(EntityManager em, UserVo user) throws InvalidVoException, ExternalServiceConnectionException {
-        validateVo(em, user);
         UserEntity userEntity = voToEntity(em, user);
         //It is not possible to create users that are already active
         userEntity.setActive(false);
+        //Hash password
+        userEntity.setPassword(SecurityHelper.hashPassword(userEntity.getPassword()));
         //Create confirmation key
         ConfirmationKeyEntity confirmationKeyEntity = new ConfirmationKeyEntity();
         confirmationKeyEntity.setConfirmationKey(SecurityHelper.generateConfirmationKey());
@@ -119,42 +120,44 @@ public class UsersService extends CrudService<UserVo> {
         expiration.add(Calendar.DAY_OF_MONTH, 1);
         confirmationKeyEntity.setExpirationDate(expiration.getTime());
 
-		//Associate confirmation key with user
-		userEntity.setConfirmationKey(confirmationKeyEntity);
-                confirmationKeyEntity.setUser(userEntity);
+        //Associate confirmation key with user
+        userEntity.setConfirmationKey(confirmationKeyEntity);
+        confirmationKeyEntity.setUser(userEntity);
 
-                userEntity = getDaoFactory().getUserDao().persist(em, userEntity);
-                confirmationKeyEntity.setId(userEntity.getId());
-                
-		//persist confirmation key
-		confirmationKeyEntity = getDaoFactory().getConfirmationKeyDao().persist(em, confirmationKeyEntity);
-                
-		return userEntity.toVo();
-	}
+        userEntity = getDaoFactory().getUserDao().persist(em, userEntity);
+        confirmationKeyEntity.setId(userEntity.getId());
+
+        //persist confirmation key
+        getDaoFactory().getConfirmationKeyDao().persist(em, confirmationKeyEntity);
+
+        return userEntity.toVo();
+    }
 
     public UserVo authenticate(EntityManager em, String userName, String password) throws InactiveUserException {
+        password = SecurityHelper.hashPassword(password);
         UserEntity user = getDaoFactory().getUserDao().getByUsernameAndPassword(em, userName, password);
         if (user == null) {
             return null;
         } else {
             if (!user.isActive()) {
-                throw new InactiveUserException("The user" + user.getUserName() + " is still inactive.");
+                throw new InactiveUserException("The user " + user.getUserName() + " is still inactive.");
             } else {
                 return user.toVo();
             }
         }
     }
 
-    public void activateAccount(EntityManager em, long userId, String confirmationKey) {
-        UserEntity user = getDaoFactory().getUserDao().getById(em, userId);
-        if (user.isActive() || user.getConfirmationKey() == null) {
-            //There is nothing to do, user is already active
-        } else {
-            if (user.getConfirmationKey().getConfirmationKey().equals(confirmationKey)) {
-                user.setActive(true);
+    public UserVo activateAccount(EntityManager em, String confirmationKey) {
+        ConfirmationKeyEntity confirmationKeyEntity = getDaoFactory().getConfirmationKeyDao().getByConfirmationKey(em, confirmationKey);
+        if (confirmationKeyEntity != null) {
+            UserEntity userEntity = confirmationKeyEntity.getUser();
+            if (!userEntity.isActive()) {
+                userEntity.setActive(true);
+                em.remove(confirmationKeyEntity);
+                return userEntity.toVo();
             }
         }
-
+        return null;
     }
 
     public UserVo getById(EntityManager em, Long id) {
@@ -162,8 +165,9 @@ public class UsersService extends CrudService<UserVo> {
     }
 
     public void update(EntityManager em, UserVo user) throws InvalidVoException, ExternalServiceConnectionException {
-        validateVo(em, user);
-        this.getDaoFactory().getUserDao().merge(em, this.voToEntity(em, user));
+        UserEntity userEntity = voToEntity(em, user);
+        userEntity.setPassword(SecurityHelper.hashPassword(userEntity.getPassword()));
+        this.getDaoFactory().getUserDao().merge(em, userEntity);
     }
 
     /**
@@ -213,10 +217,10 @@ public class UsersService extends CrudService<UserVo> {
             commentService.remove(em, comment.getId());
         }
 
-		getDaoFactory().getUserDao().remove(em, id);
-	}
-        
-        public ConfirmationKeyVo getConfirmationKeyByUserId(EntityManager em, long id) {
-            return getDaoFactory().getUserDao().getById(em, id).getConfirmationKey().toVo();
-        }
+        getDaoFactory().getUserDao().remove(em, id);
+    }
+
+    public ConfirmationKeyVo getConfirmationKeyByUserId(EntityManager em, long id) {
+        return getDaoFactory().getUserDao().getById(em, id).getConfirmationKey().toVo();
+    }
 }

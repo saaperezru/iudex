@@ -27,7 +27,7 @@ public class SecurityHelper {
 
 	private SecurityHelper(String policyFile) throws ExternalServiceConnectionException {
 		try {
-			policy = Policy.getInstance(policyFile);
+			policy = Policy.getInstance(getClass().getResourceAsStream(policyFile));
 			antiSamy = new AntiSamy(policy);
 		} catch (PolicyException ex) {
 			throw new ExternalServiceConnectionException("The specified ANTISAMY policy file for the SecuirtyHelper cannot be accessed");

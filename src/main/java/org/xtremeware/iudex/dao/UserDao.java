@@ -31,7 +31,7 @@ public class UserDao extends Dao<UserEntity> {
         }
         
         try{
-            return (UserEntity) em.createNamedQuery("getUserByUsernameAndPassword").setParameter("userName", username).setParameter("userName", password).getSingleResult();
+            return (UserEntity) em.createNamedQuery("getUserByUsernameAndPassword").setParameter("userName", username).setParameter("password", password).getSingleResult();
         }catch(NoResultException e){
             return null;
         }

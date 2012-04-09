@@ -14,63 +14,75 @@
             </div>
         </div>
         <div style="float: right; width: 30%; line-height: 25px;">
-            <div class="panel">
-                <h:form id="loginForm">
-                   <div class="message">
-                        <h:messages for="loginForm" />
+            <c:choose>
+                <c:when test="#{!authCheck.loggedIn}">
+                    <div class="panel">
+                        <h:form id="loginForm">
+                            <div class="message">
+                                <h:messages for="loginForm" />
+                            </div>
+                            <table style="width: 100%;">
+                                <tr>
+                                    <td><label for="userName">Usuario</label></td>
+                                    <td><h:inputText id="userName" value="#{login.userName}" style="width: 90%"/></td>
+                                </tr>
+                                <tr>
+                                    <td><label for="password">Clave</label></td>
+                                    <td><h:inputSecret id="password" value="#{login.password}" style="width: 90%"/></td>
+                                </tr>
+                            </table>
+                            <p style="text-align: right; margin-bottom: 0;">
+                                <h:commandButton action="#{authCheck.login}" value="Acceder" />
+                            </p>
+                        </h:form>
                     </div>
-                    <table style="width: 100%;">
-                        <tr>
-                            <td><label for="userName">Usuario</label></td>
-                            <td><h:inputText id="userName" value="#{login.userName}" style="width: 90%"/></td>
-                        </tr>
-                        <tr>
-                            <td><label for="password">Clave</label></td>
-                            <td><h:inputSecret id="password" value="#{login.password}" style="width: 90%"/></td>
-                        </tr>
-                    </table>
-                    <p style="text-align: right; margin-bottom: 0;">
-                        <h:commandButton action="#{authCheck.login()}" value="Acceder" />
-                    </p>
-                </h:form>
-            </div>
-            <br/>
-            <div class="panel">
-                <h:form id="signUpForm">
-                    <h2 style="text-align: center;">¿No tienes cuenta? Regístrate</h2>
-                    <div class="message">
-                        <h:messages />
+                    <br/>
+                    <div class="panel">
+                        <h:form id="signUpForm">
+                            <h2 style="text-align: center;">¿No tienes cuenta? Regístrate</h2>
+                            <div class="message">
+                                <h:messages />
+                            </div>
+                            <table style="width: 100%;">
+                                <tr>
+                                    <td><label for="userName">Usuario</label></td>
+                                    <td><h:inputText id="userName" value="#{signUp.userName}" style="width: 90%;" /></td>
+                                </tr>
+                                <tr>
+                                    <td><label for="password">Clave</label></td>
+                                    <td><h:inputSecret id="password" value="#{signUp.password}" style="width: 90%;" /></td>
+                                </tr>
+                                <tr>
+                                    <td><label for="name">Nombres</label></td>
+                                    <td><h:inputText id="name" value="#{signUp.firstName}" style="width: 90%;"/></td>
+                                </tr>
+                                <tr>
+                                    <td><label for="lastName">Apellidos</label></td>
+                                    <td><h:inputText id="lastName" value="#{signUp.lastName}" style="width: 90%;"/></td>
+                                </tr>
+                                <tr>
+                                    <td><label for="program">Carrera</label></td>
+                                    <td><h:selectOneMenu id="program" value="#{signUp.programId}" style="width: 100%;" >
+                                            <f:selectItem itemLabel="" />
+                                            <f:selectItems value="#{signUp.programs}" />
+                                        </h:selectOneMenu></td>
+                                </tr>
+                            </table>
+                            <p style="text-align: right; margin-bottom: 0;">
+                                <h:commandButton action="#{signUp.signUp}" value="Registrarse" />
+                            </p>
+                        </h:form>            
                     </div>
-                    <table style="width: 100%;">
-                        <tr>
-                            <td><label for="userName">Usuario</label></td>
-                            <td><h:inputText id="userName" value="#{signUp.userName}" style="width: 90%;" /></td>
-                        </tr>
-                        <tr>
-                            <td><label for="password">Clave</label></td>
-                            <td><h:inputSecret id="password" value="#{signUp.password}" style="width: 90%;" /></td>
-                        </tr>
-                        <tr>
-                            <td><label for="name">Nombres</label></td>
-                            <td><h:inputText id="name" value="#{signUp.firstName}" style="width: 90%;"/></td>
-                        </tr>
-                        <tr>
-                            <td><label for="lastName">Apellidos</label></td>
-                            <td><h:inputText id="lastName" value="#{signUp.lastName}" style="width: 90%;"/></td>
-                        </tr>
-                        <tr>
-                            <td><label for="program">Carrera</label></td>
-                            <td><h:selectOneMenu id="program" value="#{signUp.programId}" style="width: 100%;" >
-                                    <f:selectItem itemLabel="" />
-                                    <f:selectItems value="#{signUp.programs}" />
-                                </h:selectOneMenu></td>
-                        </tr>
-                    </table>
-                    <p style="text-align: right; margin-bottom: 0;">
-                        <h:commandButton action="#{signUp.signUp}" value="Registrarse" />
-                    </p>
-                </h:form>            
-            </div>
+                </c:when>
+                <c:otherwise>
+                    <h:form>
+                        <p style="text-align: right;">
+                            <h:commandButton action="#{authCheck.logout}" value="Cerrar sesión" />
+                        </p>
+                        <br/>
+                    </h:form>
+                </c:otherwise>
+            </c:choose>
         </div>
 
     </ui:define>

@@ -4,11 +4,9 @@
  */
 package org.xtremeware.iudex.presentation.model;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Map;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
@@ -25,37 +23,44 @@ import org.xtremeware.iudex.vo.UserVo;
 public class AuthCheck {
 
     private static final String USER_SESSION_KEY = "user";
-    @ManagedProperty(value = "#login")
-    private Login login;
-    
+    private static final String ROLE_SESSION_KEY = "role";
+
     public boolean check(String roles) {
         String[] rolesArray = roles.split(",");
-        String userRol = "";
-        for (String rol : rolesArray) {
-            if (userRol.equals(rol)) {
+        String userRole = FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(ROLE_SESSION_KEY).toString();
+        for (String role : rolesArray) {
+            if (userRole.equals(role)) {
                 return true;
             }
         }
         return false;
     }
-    
+
     public boolean isLoggedIn() {
         return FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(USER_SESSION_KEY) != null;
     }
-    
-    public void login() {
-         UsersFacade usersFacade = Config.getInstance().getFacadeFactory().getUsersFacade();
-         UserVo userVo = null;
+
+    public String login() {
+        FacesContext fc = FacesContext.getCurrentInstance();
+        Map<String, String> params = fc.getExternalContext().getRequestParameterMap();
+        String userName = params.get("loginForm:userName");
+        String password = params.get("loginForm:password");
+        UsersFacade usersFacade = Config.getInstance().getFacadeFactory().getUsersFacade();
         try {
-            userVo = usersFacade.logIn(login.getUserName(), login.getPassword());
-            ((HttpSession)FacesContext.getCurrentInstance().getExternalContext().getSession(true)).setAttribute(USER_SESSION_KEY, userVo);
+            UserVo userVo = usersFacade.logIn(userName, password);
+            if (userVo != null) {
+                HttpSession session = (HttpSession) fc.getExternalContext().getSession(true);
+                session.setAttribute(USER_SESSION_KEY, userVo);
+                session.setAttribute(ROLE_SESSION_KEY, userVo.getRole());
+                return "success";
+            }
         } catch (Exception ex) {
-            FacesMessage facesMessage = new FacesMessage(ex.getMessage());
-            FacesContext.getCurrentInstance().addMessage("loginform", facesMessage);
+            FacesContext.getCurrentInstance().addMessage("loginForm", new FacesMessage(ex.getMessage()));
         }
+        return "failure";
     }
-    
-    public void logout(){
-        
+
+    public void logout() {
+        ((HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true)).invalidate();
     }
 }

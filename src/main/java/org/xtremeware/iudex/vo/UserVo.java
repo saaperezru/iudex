@@ -117,7 +117,7 @@ public class UserVo extends ValueObject {
         this.programsId = programsId;
     }
 
-    public Role getRol() {
+    public Role getRole() {
         return rol;
     }
 

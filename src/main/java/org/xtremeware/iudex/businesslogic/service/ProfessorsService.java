@@ -50,6 +50,9 @@ public class ProfessorsService extends SimpleCrudService<ProfessorVo, ProfessorE
 		if (em == null) {
 			throw new IllegalArgumentException("EntityManager em cannot be null");
 		}
+                if (vo == null) {
+                    throw new InvalidVoException("Null ProfessorVo");
+                }
 		if (vo.getFirstName() == null) {
 			throw new InvalidVoException("String firstName in the provided ProgramVo cannot be null");
 		}

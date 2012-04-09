@@ -43,6 +43,9 @@ public class CourseRatingsService extends SimpleCrudService<CourseRatingVo, Cour
      */
     @Override
     public void validateVo(EntityManager em, CourseRatingVo vo) throws InvalidVoException {
+        if (em == null) {
+            throw new IllegalArgumentException("EntityManager em cannot be null");
+        }
         if (vo == null) {
             throw new InvalidVoException("Null CourseRatingVo");
         }

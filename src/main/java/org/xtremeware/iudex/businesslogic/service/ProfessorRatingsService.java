@@ -29,6 +29,9 @@ public class ProfessorRatingsService extends SimpleCrudService<ProfessorRatingVo
 		if (em == null) {
 			throw new IllegalArgumentException("EntityManager em cannot be null");
 		}
+                if (vo == null) {
+                    throw new InvalidVoException("Null ProfessorRatingVo");
+                }
 		if (vo.getValue() > 1 || vo.getValue() < -1) {
 			throw new InvalidVoException("int Value in the provided ProfessorRatingVo must be less than 1 and greater than -1");
 		}

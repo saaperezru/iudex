@@ -73,6 +73,12 @@ public class PeriodsService extends SimpleCrudService<PeriodVo, PeriodEntity> {
      */
     @Override
     public void validateVo(EntityManager em, PeriodVo vo) throws InvalidVoException {
+        if (em == null) {
+            throw new IllegalArgumentException("EntityManager em cannot be null");
+	}
+        if (vo == null) {
+            throw new InvalidVoException("Null PeriodVo");
+        }
         if (vo.getSemester() < 1 || vo.getSemester() > 3) {
             throw new InvalidVoException("int Semester in the provided PeriodVo must be greater than 1 and less than 3");
         } else if (vo.getYear() < 0) {

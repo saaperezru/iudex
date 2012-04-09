@@ -24,6 +24,9 @@ public class CoursesService extends SimpleCrudService<CourseVo, CourseEntity> {
 		if (em == null) {
 			throw new IllegalArgumentException("EntityManager em cannot be null");
 		}
+                if (course == null) {
+			throw new InvalidVoException("Null CourseVo");
+		}
 		if (course.getPeriodId() == null) {
 			throw new InvalidVoException("Long periodId in the provided CourseVo cannot be null");
 		}

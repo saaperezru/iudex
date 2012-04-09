@@ -15,19 +15,22 @@
         </div>
         <div style="float: right; width: 30%; line-height: 25px;">
             <div class="panel">
-                <h:form>
+                <h:form id="loginForm">
+                   <div class="message">
+                        <h:messages for="loginForm" />
+                    </div>
                     <table style="width: 100%;">
                         <tr>
                             <td><label for="userName">Usuario</label></td>
-                            <td><h:inputText id="userName" style="width: 90%"/></td>
+                            <td><h:inputText id="userName" value="#{login.userName}" style="width: 90%"/></td>
                         </tr>
                         <tr>
                             <td><label for="password">Clave</label></td>
-                            <td><h:inputSecret id="password" style="width: 90%"/></td>
+                            <td><h:inputSecret id="password" value="#{login.password}" style="width: 90%"/></td>
                         </tr>
                     </table>
                     <p style="text-align: right; margin-bottom: 0;">
-                        <h:commandButton value="Acceder" />
+                        <h:commandButton action="#{authCheck.login()}" value="Acceder" />
                     </p>
                 </h:form>
             </div>

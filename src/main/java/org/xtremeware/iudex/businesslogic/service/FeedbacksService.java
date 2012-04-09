@@ -47,6 +47,9 @@ public class FeedbacksService extends SimpleCrudService<FeedbackVo, FeedbackEnti
      */
     @Override
     public void validateVo(EntityManager em, FeedbackVo vo) throws InvalidVoException {
+        if (em == null) {
+            throw new IllegalArgumentException("EntityManager em cannot be null");
+	}
         if (vo == null) {
             throw new InvalidVoException("Null FeedbackVo");
         }

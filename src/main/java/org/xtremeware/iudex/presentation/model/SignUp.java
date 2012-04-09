@@ -10,8 +10,11 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import org.xtremeware.iudex.businesslogic.InvalidVoException;
+import org.xtremeware.iudex.businesslogic.facade.ProgramsFacade;
 import org.xtremeware.iudex.businesslogic.facade.UsersFacade;
 import org.xtremeware.iudex.helper.Config;
+import org.xtremeware.iudex.helper.Role;
+import org.xtremeware.iudex.vo.ProgramVo;
 import org.xtremeware.iudex.vo.UserVo;
 
 /**
@@ -26,7 +29,8 @@ public class SignUp {
     private String password;
     private String firstName;
     private String lastName;
-    private SelectItem program;
+    private Long programId;
+    private List<SelectItem> programs;
     @ManagedProperty(value = "#{authCheck}")
     private AuthCheck authCheck;
 
@@ -54,12 +58,12 @@ public class SignUp {
         this.password = password;
     }
 
-    public SelectItem getProgram() {
-        return program;
+    public Long getProgramId() {
+        return programId;
     }
 
-    public void setProgram(SelectItem program) {
-        this.program = program;
+    public void setProgramId(Long programId) {
+        this.programId = programId;
     }
 
     public String getUserName() {
@@ -78,7 +82,26 @@ public class SignUp {
         this.authCheck = authCheck;
     }
 
+    public List<SelectItem> getPrograms() {
+        if (programs == null) {
+            programs = new ArrayList<SelectItem>();
+            ProgramsFacade programsFacade = Config.getInstance().getFacadeFactory().getProgramsFacade();
+            List<ProgramVo> programsList = programsFacade.listPrograms();
+            if (programsList != null) {
+                for (ProgramVo vo : programsList) {
+                    programs.add(new SelectItem(vo.getId(), vo.getName()));
+                }
+            }
+        }
+        return programs;
+    }
+
+    public void setPrograms(List<SelectItem> programs) {
+        this.programs = programs;
+    }
+
     public String signUp() throws IOException {
+
         FacesContext fc = FacesContext.getCurrentInstance();
         if (authCheck.isLoggedIn()) {
             fc.getExternalContext().responseSendError(401, "");
@@ -91,15 +114,16 @@ public class SignUp {
         user.setFirstName(getFirstName());
         user.setLastName(getLastName());
         List<Long> programsList = new ArrayList<Long>();
-        if (program != null) {
-            programsList.add((Long) program.getValue());
+        if (programId != null) {
+            programsList.add(programId);
         }
         user.setProgramsId(programsList);
+        user.setRol(Role.STUDENT);
         try {
             usersFacade.addUser(user);
             return "success";
         } catch (InvalidVoException ex) {
-            fc.addMessage("signUpForm", new FacesMessage(ex.getLocalizedMessage()));
+            fc.addMessage("signUpForm", new FacesMessage(ex.getMessage()));
             return "failure";
         }
     }

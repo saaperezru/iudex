@@ -6,10 +6,6 @@
                 xmlns:c="http://java.sun.com/jsp/jstl/core"
                 xmlns:f="http://java.sun.com/jsf/core">
 
-    <f:metadata>
-        <f:event type="preRenderView" listener="#{home.preRenderView()}"/>
-    </f:metadata>
-
     <ui:define name="content">
         <div style="float: left; width: 68%; background-image: url(resources/images/bg-1.jpg); background-repeat: no-repeat; height: 438px;border-radius: 10px;">
             <div style="padding: 120px 30px; color: white;">
@@ -40,7 +36,7 @@
                 <h:form id="signUpForm">
                     <h2 style="text-align: center;">¿No tienes cuenta? Regístrate</h2>
                     <div class="message">
-                        <h:messages for="signUpForm" />
+                        <h:messages />
                     </div>
                     <table style="width: 100%;">
                         <tr>
@@ -61,13 +57,14 @@
                         </tr>
                         <tr>
                             <td><label for="program">Carrera</label></td>
-                            <td><h:selectOneMenu id="program" value="#{signUp.program}" style="width: 100%;" >
-                                    <f:selectItems value="#{home.programs}" />
+                            <td><h:selectOneMenu id="program" value="#{signUp.programId}" style="width: 100%;" >
+                                    <f:selectItem itemLabel="" />
+                                    <f:selectItems value="#{signUp.programs}" />
                                 </h:selectOneMenu></td>
                         </tr>
                     </table>
                     <p style="text-align: right; margin-bottom: 0;">
-                        <h:commandButton action="#{signUp.signUp()}" value="Registrarse" />
+                        <h:commandButton action="#{signUp.signUp}" value="Registrarse" />
                     </p>
                 </h:form>            
             </div>

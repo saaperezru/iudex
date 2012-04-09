@@ -27,7 +27,7 @@ public class ConfigurationVariablesHelper {
 	public static final String MAILING_SMTP_SERVER = "mailing.smtpServer";
 	public static final String MAILING_SENDER_EMAIL_ADDRESS = "mailing.senderEMailAddress";
 	public static final String MAILING_SMTP_USER = "mailing.smtpServerUser";
-	public static final String MAILING_SMTP_PASSWORD = "mailing.smtpServerPassowrd";
+	public static final String MAILING_SMTP_PASSWORD = "mailing.smtpServerPassword";
 	public static final String MAILING_SMTP_PORT = "mailing.smtpServerPort";
 	public static final String PERIOD_MIN_YEAR = "period.minYear";
 	public static final String PERIOD_MAX_YEAR = "period.maxYear";

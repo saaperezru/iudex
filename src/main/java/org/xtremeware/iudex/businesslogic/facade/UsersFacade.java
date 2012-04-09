@@ -54,8 +54,12 @@ public class UsersFacade extends AbstractFacade {
 		EntityTransaction tx = null;
 		try {
 			em = getEntityManagerFactory().createEntityManager();
+                        tx = em.getTransaction();
+                        tx.begin();
 			vo = getServiceFactory().createUsersService().create(em, vo);
-
+                        // TODO: The confirmation email message should be configurable
+                        getServiceFactory().createMailingService().sendMessage("<a href='http://iudex.j.rsnx.ru/confirm.xhtml?key=" + getServiceFactory().createUsersService().getConfirmationKeyByUserId(em, vo.getId()).getConfirmationKey() + "'>Confirmar registro</a>", "Confirmar registro", vo.getUserName() + "@unal.edu.co");
+                        tx.commit();
 		} catch (InvalidVoException ex) {
 			throw ex;
 		} catch (Exception e) {

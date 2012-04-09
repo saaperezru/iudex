@@ -15,94 +15,112 @@ import org.xtremeware.iudex.vo.SubjectVo;
 
 public class ProgramsFacade extends AbstractFacade {
 
-	public ProgramsFacade(ServiceFactory serviceFactory, EntityManagerFactory emFactory) {
-		super(serviceFactory, emFactory);
-	}
-
-	public void removeProgram(long id) throws Exception {
-		EntityManager em = null;
-		EntityTransaction tx = null;
-		try {
-			em = getEntityManagerFactory().createEntityManager();
-			tx = em.getTransaction();
-			tx.begin();
-			getServiceFactory().createProgramsService().remove(em, id);
-			tx.commit();
-		} catch (Exception e) {
-			if (em != null && tx != null) {
-				tx.rollback();
-			}
-			getServiceFactory().createLogService().error(e.getMessage(), e);
-			throw e;
-		} finally {
-			if (em != null) {
-				em.clear();
-				em.close();
-			}
-		}
-	}
-
-	/**
-	 * Persist a new Program with the specified name
-	 *
-	 * @param em entity manager
-	 * @param name 
-	 * @return Returns null if there is a problem while persisting (logs all
-	 * errors) and throws an exception if data isn't valid.
-	 */
-	public ProgramVo addProgram(String name) throws InvalidVoException {
-		ProgramVo createdVo = null;
-		ProgramVo vo = new ProgramVo();
-		vo.setName(name);
-		EntityManager em = null;
-		EntityTransaction tx = null;
-		try {
-			em = getEntityManagerFactory().createEntityManager();
-			tx = em.getTransaction();
-			tx.begin();
-			createdVo = getServiceFactory().createProgramsService().create(em, vo);
-			tx.commit();
-		} catch (InvalidVoException e) {
-			throw e;
-		} catch (Exception e) {
-			if (em != null && tx != null) {
-				tx.rollback();
-			}
-			getServiceFactory().createLogService().error(e.getMessage(), e);
-		} finally {
-			if (em != null) {
-				em.clear();
-				em.close();
-			}
-		}
-		return createdVo;
-	}
-
-	public Map<Long, String> getProgramsAutocomplete(String name) throws Exception {
-		EntityManager em = null;
-		Map<Long, String> map = new HashMap<Long, String>();
-		try {
-			em = getEntityManagerFactory().createEntityManager();
-			List<ProgramVo> programs = getServiceFactory().createProgramsService().getByNameLike(em, name);
-			for (ProgramVo p : programs) {
-				map.put(p.getId(), p.getName());
-			}
-
-		} catch (Exception e) {
-			getServiceFactory().createLogService().error(e.getMessage(), e);
-			throw e;
-		} finally {
-			if (em != null) {
-				em.clear();
-				em.close();
-			}
-		}
-		return map;
-	}
-
-    public List<ProgramVo> listPrograms() {
-        // TODO: Implement ProgramsFactory.listPrograms();
-        throw new UnsupportedOperationException("Not yet implemented");
+    public ProgramsFacade(ServiceFactory serviceFactory, EntityManagerFactory emFactory) {
+        super(serviceFactory, emFactory);
     }
 
+    public void removeProgram(long id) throws Exception {
+        EntityManager em = null;
+        EntityTransaction tx = null;
+        try {
+            em = getEntityManagerFactory().createEntityManager();
+            tx = em.getTransaction();
+            tx.begin();
+            getServiceFactory().createProgramsService().remove(em, id);
+            tx.commit();
+        } catch (Exception e) {
+            if (em != null && tx != null) {
+                tx.rollback();
+            }
+            getServiceFactory().createLogService().error(e.getMessage(), e);
+            throw e;
+        } finally {
+            if (em != null) {
+                em.clear();
+                em.close();
+            }
+        }
+    }
+
+    /**
+     * Persist a new Program with the specified name
+     *
+     * @param em entity manager
+     * @param name
+     * @return Returns null if there is a problem while persisting (logs all
+     * errors) and throws an exception if data isn't valid.
+     */
+    public ProgramVo addProgram(String name) throws InvalidVoException {
+        ProgramVo createdVo = null;
+        ProgramVo vo = new ProgramVo();
+        vo.setName(name);
+        EntityManager em = null;
+        EntityTransaction tx = null;
+        try {
+            em = getEntityManagerFactory().createEntityManager();
+            tx = em.getTransaction();
+            tx.begin();
+            createdVo = getServiceFactory().createProgramsService().create(em, vo);
+            tx.commit();
+        } catch (InvalidVoException e) {
+            throw e;
+        } catch (Exception e) {
+            if (em != null && tx != null) {
+                tx.rollback();
+            }
+            getServiceFactory().createLogService().error(e.getMessage(), e);
+        } finally {
+            if (em != null) {
+                em.clear();
+                em.close();
+            }
+        }
+        return createdVo;
+    }
+
+    public Map<Long, String> getProgramsAutocomplete(String name) throws Exception {
+        EntityManager em = null;
+        Map<Long, String> map = new HashMap<Long, String>();
+        try {
+            em = getEntityManagerFactory().createEntityManager();
+            List<ProgramVo> programs = getServiceFactory().createProgramsService().getByNameLike(em, name);
+            for (ProgramVo p : programs) {
+                map.put(p.getId(), p.getName());
+            }
+
+        } catch (Exception e) {
+            getServiceFactory().createLogService().error(e.getMessage(), e);
+            throw e;
+        } finally {
+            if (em != null) {
+                em.clear();
+                em.close();
+            }
+        }
+        return map;
+    }
+
+    public List<ProgramVo> listPrograms() {
+        EntityManager em = null;
+        EntityTransaction tx = null;
+        List<ProgramVo> list = null;
+        try {
+            em = getEntityManagerFactory().createEntityManager();
+            tx = em.getTransaction();
+            tx.begin();
+            list = getServiceFactory().createProgramsService().getByNameLike(em, "gra");
+            tx.commit();
+        } catch (Exception e) {
+            if (em != null && tx != null) {
+                tx.rollback();
+            }
+            getServiceFactory().createLogService().error(e.getMessage(), e);
+        } finally {
+            if (em != null) {
+                em.clear();
+                em.close();
+            }
+        }
+        return list;
+    }
 }

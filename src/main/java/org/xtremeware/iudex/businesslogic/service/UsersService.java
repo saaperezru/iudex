@@ -16,6 +16,7 @@ import org.xtremeware.iudex.helper.Config;
 import org.xtremeware.iudex.helper.ConfigurationVariablesHelper;
 import org.xtremeware.iudex.helper.ExternalServiceConnectionException;
 import org.xtremeware.iudex.helper.SecurityHelper;
+import org.xtremeware.iudex.vo.ConfirmationKeyVo;
 import org.xtremeware.iudex.vo.UserVo;
 
 /**
@@ -116,14 +117,16 @@ public class UsersService extends CrudService<UserVo> {
 		confirmationKeyEntity.setExpirationDate(expiration.getTime());
 
 		//Associate confirmation key with user
-		confirmationKeyEntity.setUser(userEntity);
 		userEntity.setConfirmationKey(confirmationKeyEntity);
+                confirmationKeyEntity.setUser(userEntity);
 
+                userEntity = getDaoFactory().getUserDao().persist(em, userEntity);
+                confirmationKeyEntity.setId(userEntity.getId());
+                
 		//persist confirmation key
 		confirmationKeyEntity = getDaoFactory().getConfirmationKeyDao().persist(em, confirmationKeyEntity);
-		// persist user
-		userEntity.setConfirmationKey(confirmationKeyEntity);
-		return getDaoFactory().getUserDao().persist(em, userEntity).toVo();
+                
+		return userEntity.toVo();
 	}
 
 	public UserVo authenticate(EntityManager em, String userName, String password) throws InactiveUserException {
@@ -208,7 +211,9 @@ public class UsersService extends CrudService<UserVo> {
 		}
 
 		getDaoFactory().getUserDao().remove(em, id);
-
-
 	}
+        
+        public ConfirmationKeyVo getConfirmationKeyByUserId(EntityManager em, long id) {
+            return getDaoFactory().getUserDao().getById(em, id).getConfirmationKey().toVo();
+        }
 }

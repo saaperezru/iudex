@@ -22,7 +22,7 @@ public class ConfirmationKeyDao extends Dao<ConfirmationKeyEntity> {
             throw new IllegalArgumentException("EntityManager em cannot be null");
         }
         try {
-            return (ConfirmationKeyEntity) em.createQuery("getByConfirmationKey").setParameter("confirmationKey", confirmationKey).getSingleResult();
+            return (ConfirmationKeyEntity) em.createNamedQuery("getByConfirmationKey").setParameter("confirmationKey", confirmationKey).getSingleResult();
         } catch (NoResultException noResultException) {
             return null;
         }

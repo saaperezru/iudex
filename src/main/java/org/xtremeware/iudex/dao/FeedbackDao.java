@@ -25,7 +25,7 @@ public class FeedbackDao extends Dao<FeedbackEntity> {
         if (em == null) {
             throw new IllegalArgumentException("EntityManager em cannot be null");
         }
-        return em.createQuery("getByTypeId").setParameter("feedbackTypeId", feedbackTypeId).getResultList();
+        return em.createNamedQuery("getByTypeId").setParameter("feedbackTypeId", feedbackTypeId).getResultList();
     }
 
     public List<FeedbackEntity> getByContentLike(EntityManager em, String query) {

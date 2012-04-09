@@ -52,10 +52,9 @@ public class UsersFacade extends AbstractFacade {
 	public UserVo addUser(UserVo vo) throws InvalidVoException {
 		EntityManager em = null;
 		EntityTransaction tx = null;
-		UserVo user = null;
 		try {
 			em = getEntityManagerFactory().createEntityManager();
-			user = getServiceFactory().createUsersService().create(em, user);
+			vo = getServiceFactory().createUsersService().create(em, vo);
 
 		} catch (InvalidVoException ex) {
 			throw ex;
@@ -70,7 +69,7 @@ public class UsersFacade extends AbstractFacade {
 				em.close();
 			}
 		}
-		return user;
+		return vo;
 	}
 
 	/**

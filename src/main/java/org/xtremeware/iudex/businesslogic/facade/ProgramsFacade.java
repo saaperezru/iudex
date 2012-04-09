@@ -100,4 +100,9 @@ public class ProgramsFacade extends AbstractFacade {
 		return map;
 	}
 
+    public List<ProgramVo> listPrograms() {
+        // TODO: Implement ProgramsFactory.listPrograms();
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
+
 }

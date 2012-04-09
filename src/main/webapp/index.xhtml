@@ -3,7 +3,12 @@
 <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
                 template="./templates/template.xhtml"
                 xmlns:h="http://java.sun.com/jsf/html"
-                xmlns:c="http://java.sun.com/jsp/jstl/core">
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+                xmlns:f="http://java.sun.com/jsf/core">
+
+    <f:metadata>
+        <f:event type="preRenderView" listener="#{home.preRenderView()}"/>
+    </f:metadata>
 
     <ui:define name="content">
         <div style="float: left; width: 68%; background-image: url(resources/images/bg-1.jpg); background-repeat: no-repeat; height: 438px;border-radius: 10px;">
@@ -32,32 +37,37 @@
             </div>
             <br/>
             <div class="panel">
-                <h:form>
+                <h:form id="signUpForm">
                     <h2 style="text-align: center;">¿No tienes cuenta? Regístrate</h2>
+                    <div class="message">
+                        <h:messages for="signUpForm" />
+                    </div>
                     <table style="width: 100%;">
                         <tr>
                             <td><label for="userName">Usuario</label></td>
-                            <td><h:inputText id="userName" style="width: 90%;"/></td>
+                            <td><h:inputText id="userName" value="#{signUp.userName}" style="width: 90%;" /></td>
                         </tr>
                         <tr>
                             <td><label for="password">Clave</label></td>
-                            <td><h:inputSecret id="password" style="width: 90%;" /></td>
+                            <td><h:inputSecret id="password" value="#{signUp.password}" style="width: 90%;" /></td>
                         </tr>
                         <tr>
                             <td><label for="name">Nombres</label></td>
-                            <td><h:inputText id="name"  style="width: 90%;"/></td>
+                            <td><h:inputText id="name" value="#{signUp.firstName}" style="width: 90%;"/></td>
                         </tr>
                         <tr>
                             <td><label for="lastName">Apellidos</label></td>
-                            <td><h:inputText id="lastName"  style="width: 90%;"/></td>
+                            <td><h:inputText id="lastName" value="#{signUp.lastName}" style="width: 90%;"/></td>
                         </tr>
                         <tr>
                             <td><label for="program">Carrera</label></td>
-                            <td><h:selectOneListbox id="program" style="width: 100%;" /></td>
+                            <td><h:selectOneMenu id="program" value="#{signUp.program}" style="width: 100%;" >
+                                    <f:selectItems value="#{home.programs}" />
+                                </h:selectOneMenu></td>
                         </tr>
                     </table>
                     <p style="text-align: right; margin-bottom: 0;">
-                        <h:commandButton value="Registrarse" />
+                        <h:commandButton action="#{signUp.signUp()}" value="Registrarse" />
                     </p>
                 </h:form>            
             </div>

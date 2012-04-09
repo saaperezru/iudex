@@ -4,5 +4,16 @@
               xmlns="http://java.sun.com/xml/ns/javaee" 
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
               xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd">
-                  
+    <navigation-rule>
+        <navigation-case>
+            <from-action>signUp.signUp</from-action>
+            <from-outcome>success</from-outcome>
+            <to-view-id>registrationComplete.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-action>signUp.signUp</from-action>
+            <from-outcome>failure</from-outcome>
+            <to-view-id>index.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
 </faces-config>

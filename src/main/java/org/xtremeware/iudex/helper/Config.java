@@ -6,6 +6,7 @@ package org.xtremeware.iudex.helper;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.xtremeware.iudex.businesslogic.facade.FacadeFactory;
 import org.xtremeware.iudex.businesslogic.service.ServiceFactory;
 import org.xtremeware.iudex.dao.AbstractDaoFactory;
 import org.xtremeware.iudex.dao.MySqlDaoFactory;
@@ -23,6 +24,7 @@ public class Config {
 	private AbstractDaoFactory daoFactory;
 	private static Config instance;
 	private ServiceFactory serviceFactory;
+        private FacadeFactory facadeFactory;
 
 	private Config(String persistenceUnit, AbstractDaoFactory daoFactory) throws ExternalServiceConnectionException {
 		this.daoFactory = daoFactory;
@@ -33,6 +35,7 @@ public class Config {
 		mailingConf.setSmtpServerPort(Integer.parseInt(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAILING_SMTP_PORT)));
 		mailingConf.setSmtpUser(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAILING_SMTP_USER));
 		this.serviceFactory = new ServiceFactory(daoFactory, mailingConf);
+                // TODO: initialize facadeFactory
 	}
 
 	public static Config getInstance() {
@@ -57,4 +60,8 @@ public class Config {
 	public ServiceFactory getServiceFactory() {
 		return serviceFactory;
 	}
+        
+        public FacadeFactory getFacadeFactory() {
+        	return facadeFactory;
+        }
 }

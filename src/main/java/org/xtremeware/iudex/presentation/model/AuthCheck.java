@@ -6,6 +6,8 @@ package org.xtremeware.iudex.presentation.model;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
+import org.xtremeware.iudex.presentation.vovw.UserVoVwSmall;
 
 /**
  *
@@ -15,6 +17,8 @@ import javax.faces.bean.SessionScoped;
 @SessionScoped
 public class AuthCheck {
 
+    private static final String USER_SESSION_KEY = "user";
+    
     public boolean check(String roles) {
         String[] rolesArray = roles.split(",");
         String userRol = "";
@@ -24,6 +28,10 @@ public class AuthCheck {
             }
         }
         return false;
+    }
+    
+    public boolean isLoggedIn() {
+        return FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(USER_SESSION_KEY) != null;
     }
     
     public void login(){

@@ -11,7 +11,7 @@ import org.xtremeware.iudex.vo.CommentVo;
     @NamedQuery(name = "getCommentsBySubjectId", query = "SELECT c FROM Comment c WHERE c.course.subject.id = :subjectId"),
     @NamedQuery(name = "getCommentsByUserId", query = "SELECT c FROM Comment c WHERE c.user.id = :userId"),
     @NamedQuery(name = "getCommentsByCourseId", query = "SELECT c FROM Comment c WHERE c.course.id = :courseId"),
-    @NamedQuery(name = "getUserCommentsCounter", query = "SELECT COUNT c FROM Comment c WHERE c.date = CURRENT_DATE AND c.user.id = :userId")
+    @NamedQuery(name = "getUserCommentsCounter", query = "SELECT COUNT(c) FROM Comment c WHERE c.date = CURRENT_DATE AND c.user.id = :userId")
 })
 @Table(name = "COMMENT_")
 public class CommentEntity implements Serializable, Entity<CommentVo> {

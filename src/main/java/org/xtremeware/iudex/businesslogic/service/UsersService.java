@@ -42,22 +42,22 @@ public class UsersService extends CrudService<UserVo> {
 		if (vo == null) {
 			throw new InvalidVoException("Null UserVo");
 		}
-		if (vo.getFirstName() == null) {
+		if (vo.getFirstName() == null || vo.getFirstName().isEmpty()) {
 			throw new InvalidVoException("Null firstName in the provided UserVo");
 		}
-		if (vo.getLastName() == null) {
+		if (vo.getLastName() == null || vo.getLastName().isEmpty()) {
 			throw new InvalidVoException("Null lastName in the provided UserVo");
 		}
-		if (vo.getUserName() == null) {
+		if (vo.getUserName() == null || vo.getUserName().isEmpty()) {
 			throw new InvalidVoException("Null userName in the provided UserVo");
 		}
 		if (vo.getUserName().length() > MAX_USERNAME_LENGTH || vo.getUserName().length() < MIN_USERNAME_LENGTH) {
 			throw new InvalidVoException("Invalid userName length in the provided UserVo");
 		}
-		if (vo.getPassword() == null) {
+		if (vo.getPassword() == null || vo.getPassword().isEmpty()) {
 			throw new InvalidVoException("Null password in the provided UserVo");
 		}
-		if (vo.getPassword().length() > MAX_USER_PASSWORD_LENGTH || vo.getUserName().length() < MIN_USER_PASSWORD_LENGTH) {
+		if (vo.getPassword().length() > MAX_USER_PASSWORD_LENGTH || vo.getPassword().length() < MIN_USER_PASSWORD_LENGTH) {
 			throw new InvalidVoException("Invalid password length in the provided UserVo");
 		}
 		if (vo.getProgramsId() == null) {

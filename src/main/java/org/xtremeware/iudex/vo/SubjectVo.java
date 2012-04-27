@@ -1,7 +1,6 @@
-
 package org.xtremeware.iudex.vo;
 
-public class SubjectVo extends ValueObject{
+public class SubjectVo implements ValueObject {
 
     private Long id;
     private String name;
@@ -65,5 +64,4 @@ public class SubjectVo extends ValueObject{
     public void setName(String name) {
         this.name = name;
     }
-    
 }

@@ -1,6 +1,6 @@
 package org.xtremeware.iudex.vo;
 
-public class PeriodVo extends ValueObject {
+public class PeriodVo implements ValueObject {
 
     private long id;
     private int year;

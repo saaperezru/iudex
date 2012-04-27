@@ -1,6 +1,6 @@
 package org.xtremeware.iudex.vo;
 
-public class ProfessorVo extends ValueObject {
+public class ProfessorVo implements ValueObject {
 
     private Long id;
     private String firstName;
@@ -61,8 +61,6 @@ public class ProfessorVo extends ValueObject {
         return "ProfessorVo{" + "id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", website=" + website + ", imageUrl=" + imageUrl + ", description=" + description + ", email=" + email + '}';
     }
 
-
-
     public String getDescription() {
         return description;
     }
@@ -110,11 +108,11 @@ public class ProfessorVo extends ValueObject {
     public void setWebsite(String website) {
         this.website = website;
     }
-    
+
     public String getEmail() {
         return website;
     }
-    
+
     public void setEmail(String email) {
         this.email = email;
     }

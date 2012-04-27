@@ -31,7 +31,7 @@ public class ProfessorRatingEntity implements Serializable, Entity<ProfessorRati
 		ProfessorRatingVo vo = new ProfessorRatingVo();
 
 		vo.setId(getId());
-		vo.setProfessor(getProfessor().getId());
+		vo.setEvaluetedObjectId(getProfessor().getId());
 		vo.setUser(getUser().getId());
 		vo.setValue(getValue());
 

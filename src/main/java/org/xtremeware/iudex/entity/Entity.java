@@ -1,6 +1,8 @@
 package org.xtremeware.iudex.entity;
 
-public interface Entity<E> {
+import org.xtremeware.iudex.vo.ValueObject;
+
+public interface Entity<E extends ValueObject> {
 
 	public E toVo();
 	

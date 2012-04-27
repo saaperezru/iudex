@@ -35,7 +35,7 @@ public class SubjectRatingsService extends SimpleCrudService<SubjectRatingVo, Su
 		if (vo.getValue() > 1 || vo.getValue() < -1) {
 			throw new InvalidVoException("int Value in the provided SubjectRatingVo must be less than 1 and greater than -1");
 		}
-		if (vo.getSubject() == null) {
+		if (vo.getEvaluetedObjectId() == null) {
 			throw new InvalidVoException("Long subjectId in the provided SubjectRatingVo cannot be null");
 		}
 		if (vo.getUser() == null) {

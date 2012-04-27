@@ -1,6 +1,6 @@
 package org.xtremeware.iudex.vo;
 
-public class RatingSummaryVo extends ValueObject {
+public class RatingSummaryVo implements ValueObject {
 
     private int positive;
     private int negative;

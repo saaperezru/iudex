@@ -41,17 +41,18 @@ public class UserEntity implements Serializable, Entity<UserVo> {
     @Override
     public UserVo toVo() {
         UserVo vo = new UserVo();
-        vo.setId(this.getId());
-        vo.setFirstName(this.getFirstName());
-        vo.setLastName(this.getLastName());
-        vo.setUserName(this.getUserName());
-        vo.setPassword(this.getPassword());
-        vo.setRol(this.getRol());
+        vo.setId(getId());
+        vo.setFirstName(getFirstName());
+        vo.setLastName(getLastName());
+        vo.setUserName(getUserName());
+        vo.setPassword(getPassword());
+        vo.setRol(getRol());
         ArrayList<Long> programsId = new ArrayList<Long>();
-        for (ProgramEntity program : this.getPrograms()) {
+        for (ProgramEntity program : getPrograms()) {
             programsId.add(program.getId());
         }
         vo.setProgramsId(programsId);
+        vo.setActive(isActive());
         return vo;
     }
 

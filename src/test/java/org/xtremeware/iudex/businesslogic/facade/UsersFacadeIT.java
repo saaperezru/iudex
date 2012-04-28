@@ -1,8 +1,10 @@
 package org.xtremeware.iudex.businesslogic.facade;
 
-import static org.junit.Assert.assertNotNull;
-import org.junit.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import org.junit.Test;
 import org.xtremeware.iudex.helper.Config;
+import org.xtremeware.iudex.vo.UserVo;
 
 /**
  *
@@ -13,42 +15,19 @@ public class UsersFacadeIT {
     public UsersFacadeIT() {
     }
 
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-    
-    @Before
-    public void setUp() {
-    }
-    
-    @After
-    public void tearDown() {
-    }
-    
+    /**
+     * Test of activateUser method, of class UsersFacade.
+     */
     @Test
-    public void test() throws Exception{
-        assertNotNull(Config.getInstance().getFacadeFactory().getUsersFacade().logIn("test", "123456789"));
+    public void testActivateUser() throws Exception {
+        String confirmationKey = "1d141671f909bb21d3658372a7dbb87af521bc8d8a92088fbdada64604bf1cf1";
+        UsersFacade usersFacade = Config.getInstance().getFacadeFactory().getUsersFacade();
+        UserVo user = usersFacade.activateUser(confirmationKey);
+        assertEquals(true, user.isActive());
+        user = usersFacade.activateUser(confirmationKey);
+        assertNull(user);
     }
 
-//    /**
-//     * Test of activateUser method, of class UsersFacade.
-//     */
-//    @Test
-//    public void testActivateUser() throws Exception {
-//        System.out.println("activateUser");
-//        String confirmationKey = "";
-//        UsersFacade instance = null;
-//        UserVo expResult = null;
-//        UserVo result = instance.activateUser(confirmationKey);
-//        assertEquals(expResult, result);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-//
 //    /**
 //     * Test of addUser method, of class UsersFacade.
 //     */

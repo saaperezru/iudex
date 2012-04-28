@@ -2,6 +2,7 @@ package org.xtremeware.iudex.businesslogic.facade;
 
 import static org.junit.Assert.*;
 import org.junit.Test;
+import org.xtremeware.iudex.businesslogic.service.InactiveUserException;
 import org.xtremeware.iudex.helper.Config;
 import org.xtremeware.iudex.vo.UserVo;
 
@@ -49,6 +50,17 @@ public class UsersFacadeIT {
         password = "Invalid!";
         user = usersFacade.logIn(userName, password);
         assertNull(user);
+    }
+    
+    /**
+     * Test of a login attempt with an inactive account
+     */
+    @Test(expected=InactiveUserException.class)
+    public void test_BL_3_3() throws Exception {
+        String userName = "student3";
+        String password = "123456789";
+        UsersFacade usersFacade = Config.getInstance().getFacadeFactory().getUsersFacade();
+        usersFacade.logIn(userName, password);
     }
     
     /**

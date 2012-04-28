@@ -1,51 +1,50 @@
 package org.xtremeware.iudex.dao;
 
-import org.xtremeware.iudex.dao.jpa.JpaCommentDao;
-import org.xtremeware.iudex.dao.jpa.JpaCommentRatingDao;
-import org.xtremeware.iudex.dao.jpa.JpaConfirmationKeyDao;
-import org.xtremeware.iudex.dao.jpa.JpaCourseDao;
-import org.xtremeware.iudex.dao.jpa.JpaCourseRatingDao;
-import org.xtremeware.iudex.dao.jpa.JpaFeedbackDao;
-import org.xtremeware.iudex.dao.jpa.JpaFeedbackTypeDao;
-import org.xtremeware.iudex.dao.jpa.JpaPeriodDao;
-import org.xtremeware.iudex.dao.jpa.JpaProfessorDao;
-import org.xtremeware.iudex.dao.jpa.JpaProfessorRatingDao;
-import org.xtremeware.iudex.dao.jpa.JpaProgramDao;
-import org.xtremeware.iudex.dao.jpa.JpaSubjectDao;
-import org.xtremeware.iudex.dao.jpa.JpaSubjectRatingDao;
-import org.xtremeware.iudex.dao.jpa.JpaUserDao;
+import org.xtremeware.iudex.da.DataAccessAdapter;
+import org.xtremeware.iudex.dao.jpa.JpaDaoFactory;
 
 /**
  *
  * @author healarconr
  */
-public interface AbstractDaoFactory {
+public abstract class AbstractDaoFactory {
 
-    public JpaCommentDao getCommentDao();
+    public static String JPA = "JPA";
+    
+    public static AbstractDaoFactory getDaoFactory(DataAccessAdapter da) {
+        AbstractDaoFactory daoFactory = null;
 
-    public JpaCommentRatingDao getCommentRatingDao();
+        if (da.getType() == AbstractDaoFactory.JPA) {
+            daoFactory = JpaDaoFactory.getInstance();
+        }
+        return daoFactory;
+    }
 
-    public JpaConfirmationKeyDao getConfirmationKeyDao();
+    public abstract CommentDao getCommentDao();
 
-    public JpaCourseDao getCourseDao();
+    public abstract CommentRatingDao getCommentRatingDao();
 
-    public JpaCourseRatingDao getCourseRatingDao();
+    public abstract ConfirmationKeyDao getConfirmationKeyDao();
 
-    public JpaFeedbackDao getFeedbackDao();
+    public abstract CourseDao getCourseDao();
 
-    public JpaFeedbackTypeDao getFeedbackTypeDao();
+    public abstract CourseRatingDao getCourseRatingDao();
 
-    public JpaPeriodDao getPeriodDao();
+    public abstract FeedbackDao getFeedbackDao();
 
-    public JpaProfessorDao getProfessorDao();
+    public abstract FeedbackTypeDao getFeedbackTypeDao();
 
-    public JpaProfessorRatingDao getProfessorRatingDao();
+    public abstract PeriodDao getPeriodDao();
 
-    public JpaProgramDao getProgramDao();
+    public abstract ProfessorDao getProfessorDao();
 
-    public JpaSubjectDao getSubjectDao();
+    public abstract ProfessorRatingDao getProfessorRatingDao();
 
-    public JpaSubjectRatingDao getSubjectRatingDao();
+    public abstract ProgramDao getProgramDao();
 
-    public JpaUserDao getUserDao();
+    public abstract SubjectDao getSubjectDao();
+
+    public abstract SubjectRatingDao getSubjectRatingDao();
+
+    public abstract UserDao getUserDao();
 }

@@ -13,7 +13,6 @@ public class JpaDataAccessFactory implements AbstractDataAccessFactory {
         EMFactory = Persistence.createEntityManagerFactory(persistenceUnit);
     }
 
-    @Override
     public DataAccessAdapter createDataAccess() {
         return new JpaDataAccess(EMFactory.createEntityManager());
     }

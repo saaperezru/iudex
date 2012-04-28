@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.xtremeware.iudex.dao.jpa;
 
 import java.util.ArrayList;
@@ -14,7 +10,7 @@ import org.xtremeware.iudex.entity.UserEntity;
 import org.xtremeware.iudex.vo.UserVo;
 
 /**
- * DAO for the User Entities. Implements additionally some useful finders by
+ * JPADAO for the UserVo. Implements additionally some useful finders by
  * username and password
  *
  * @author juan

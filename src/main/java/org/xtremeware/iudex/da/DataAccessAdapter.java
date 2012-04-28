@@ -1,5 +1,6 @@
 package org.xtremeware.iudex.da;
 
+
 public abstract class DataAccessAdapter<E> {
 
     E dataAccess;
@@ -28,4 +29,6 @@ public abstract class DataAccessAdapter<E> {
     public abstract void rollback() throws DataAccessException;
 
     public abstract void close() throws DataAccessException;
+
+    public abstract String getType();
 }

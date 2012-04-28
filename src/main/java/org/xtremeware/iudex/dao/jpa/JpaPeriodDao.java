@@ -1,64 +1,90 @@
 package org.xtremeware.iudex.dao.jpa;
 
-import org.xtremeware.iudex.dao.jpa.JpaCrudDao;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import org.xtremeware.iudex.da.DataAccessAdapter;
+import org.xtremeware.iudex.dao.PeriodDao;
 import org.xtremeware.iudex.entity.PeriodEntity;
+import org.xtremeware.iudex.vo.PeriodVo;
 
 /**
- * DAO for the period entities. Implements additionally some useful finders by
+ * JPADAO for the periodVo. Implements additionally some useful finders by
  * year or by year and semester
  *
  * @author healarconr
  */
-public class JpaPeriodDao extends JpaCrudDao<PeriodEntity> {
+public class JpaPeriodDao extends JpaCrudDao<PeriodVo, PeriodEntity> implements PeriodDao<EntityManager>{
 
     /**
      * Returns the list of all periods entities
      * 
-     * @param em the entity manager
+     * @param em the DataAccessAdapter
      * @return a list with all the periods
      */
-    public List<PeriodEntity> getAll(EntityManager em) {
-        if (em == null) {
-            throw new IllegalArgumentException("EntityManager em cannot be null");
-        }
-        return em.createNamedQuery("getAllPeriods", PeriodEntity.class).getResultList();
+    @Override
+    public List<PeriodVo> getAll(DataAccessAdapter<EntityManager> em) {
+        checkDataAccessAdapter(em);
+        List<PeriodEntity> list = em.getDataAccess().createNamedQuery("getAllPeriods", PeriodEntity.class).getResultList();
+        return entitiesToVos(list);
+        
     }
 
     /**
-     * Returns a list of period entities which year is equal to the year
+     * Returns a list of periods which year is equal to the year
      * argument
      *
-     * @param em the entity manager
+     * @param em the DataAccessAdapter
      * @param year the year
      * @return a list of matched period entities
      */
-    public List<PeriodEntity> getByYear(EntityManager em, int year) {
-        if (em == null) {
-            throw new IllegalArgumentException("EntityManager em cannot be null");
-        }
-        return em.createNamedQuery("getPeriodsByYear", PeriodEntity.class).setParameter("year", year).getResultList();
+    @Override
+    public List<PeriodVo> getByYear(DataAccessAdapter<EntityManager> em, int year) {
+        checkDataAccessAdapter(em);
+        List<PeriodEntity> list = em.getDataAccess().createNamedQuery("getPeriodsByYear", PeriodEntity.class).setParameter("year", year).getResultList();
+        return entitiesToVos(list);
     }
 
     /**
-     * Returns a period entity which year and semester match the given arguments
+     * Returns a period which year and semester match the given arguments
      *
      * @param em the entity manager
      * @param year the year
      * @param semester the semester
      * @return the matched period entity or null if there is no such entity
      */
-    public PeriodEntity getByYearAndSemester(EntityManager em, int year, int semester) {
-        if (em == null) {
-            throw new IllegalArgumentException("EntityManager em cannot be null");
-        }
+    @Override
+    public PeriodVo getByYearAndSemester(DataAccessAdapter<EntityManager> em, int year, int semester) {
+        checkDataAccessAdapter(em);
         try {
-            return em.createNamedQuery("getPeriodByYearAndSemester", PeriodEntity.class).setParameter("year", year).setParameter("semester", semester).getSingleResult();
+            return em.getDataAccess().createNamedQuery("getPeriodByYearAndSemester", PeriodEntity.class).setParameter("year", year).setParameter("semester", semester).getSingleResult().toVo();
         } catch (NoResultException ex) {
             return null;
         }
+    }
 
+    @Override
+    protected PeriodEntity voToEntity(DataAccessAdapter<EntityManager> em, PeriodVo vo) {
+        PeriodEntity entity = new PeriodEntity();
+
+        entity.setId(vo.getId());
+        entity.setSemester(vo.getSemester());
+        entity.setYear(vo.getYear());
+
+        return entity;
+    }
+
+    @Override
+    protected Class getEntityClass() {
+        return PeriodEntity.class;
+    }
+    
+    private List<PeriodVo> entitiesToVos(List<PeriodEntity> list) {
+        ArrayList<PeriodVo> arrayList = new ArrayList<PeriodVo>();
+        for (PeriodEntity entity : list) {
+            arrayList.add(entity.toVo());
+        }
+        return arrayList;
     }
 }

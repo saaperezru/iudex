@@ -1,6 +1,8 @@
 package org.xtremeware.iudex.da;
 
+
 import javax.persistence.EntityManager;
+import org.xtremeware.iudex.dao.AbstractDaoFactory;
 
 public class JpaDataAccess extends DataAccessAdapter<EntityManager> {
 
@@ -38,5 +40,10 @@ public class JpaDataAccess extends DataAccessAdapter<EntityManager> {
 		checkDataAccessNotNull();
 		dataAccess.clear();
 		dataAccess.close();
+	}
+
+	@Override
+	public String getType() {
+		return AbstractDaoFactory.JPA;
 	}
 }

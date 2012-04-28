@@ -6,7 +6,8 @@ import org.xtremeware.iudex.vo.ProfessorVo;
 
 @javax.persistence.Entity(name = "Professor")
 @NamedQueries({
-	@NamedQuery(name="getProfessorByNameLike",query="SELECT p FROM Professor p WHERE p.firstName LIKE :name OR p.lastName LIKE :name")
+	@NamedQuery(name="getProfessorByNameLike",query="SELECT p FROM Professor p WHERE p.firstName LIKE :name OR p.lastName LIKE :name"),
+        @NamedQuery(name = "getProfessorBySubjectId", query = "SELECT DISTINCT c.professor FROM Course c WHERE c.subject.id = :subjectId")
 })
 @Table(name = "PROFESSOR")
 public class ProfessorEntity implements Serializable, Entity<ProfessorVo> {

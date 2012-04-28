@@ -1,109 +1,121 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.xtremeware.iudex.dao.jpa;
 
-import org.xtremeware.iudex.dao.jpa.JpaCrudDao;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
-import javax.persistence.Query;
+import org.xtremeware.iudex.da.DataAccessAdapter;
+import org.xtremeware.iudex.dao.ProfessorRatingDao;
+import org.xtremeware.iudex.entity.ProfessorEntity;
 import org.xtremeware.iudex.entity.ProfessorRatingEntity;
+import org.xtremeware.iudex.entity.UserEntity;
+import org.xtremeware.iudex.vo.ProfessorRatingVo;
 import org.xtremeware.iudex.vo.RatingSummaryVo;
 
 /**
- * DAO for the ProfessorRating entities. Implements additionally some useful finders
- * by professor and user
- * 
+ * DAO for the ProfessorRatingVo. Implements additionally some useful
+ * finders by professor and user
+ *
  * @author juan
  */
-public class JpaProfessorRatingDao extends JpaCrudDao<ProfessorRatingEntity> {
+public class JpaProfessorRatingDao extends JpaCrudDao< ProfessorRatingVo, ProfessorRatingEntity> implements ProfessorRatingDao<EntityManager> {
 
     /**
      * Professors ratings finder according to a specified professor
      *
-     * @param em the entity manager
+     * @param em the DataAccessAdapter
      * @param professorId Professor's ID
      * @return A list with all ratings associated to the specified professor
      */
-    public List<ProfessorRatingEntity> getByProfessorId(EntityManager em, long professorId) {
-        if (em == null) {
-            throw new IllegalArgumentException("EntityManager em cannot be null");
-        }
-
-        return em.createNamedQuery("getRatingByProfessorId").setParameter("professor", professorId).getResultList();
-
+    @Override
+    public List<ProfessorRatingVo> getByProfessorId(DataAccessAdapter<EntityManager> em, long professorId) {
+        checkDataAccessAdapter(em);
+        List<ProfessorRatingEntity> list = em.getDataAccess().createNamedQuery("getRatingByProfessorId", ProfessorRatingEntity.class).setParameter("professor", professorId).getResultList();
+        return entitiesToVos(list);
     }
 
     /**
      * Professor ratings finder according to a professor and a student
      *
-     * @param em the entity manager
+     * @param em the DataAccessAdapter
      * @param professorId Professor's ID
      * @param userId Student's ID
-     * @return The rating a student has subbmited to a professor
+     * @return The rating a student has submitted to a professor
      */
-    public ProfessorRatingEntity getByProfessorIdAndUserId(EntityManager em, long professorId, long userId) {
-        if (em == null) {
-            throw new IllegalArgumentException("EntityManager em cannot be null");
-        }
-
+    @Override
+    public ProfessorRatingVo getByProfessorIdAndUserId(DataAccessAdapter<EntityManager> em, long professorId, long userId) {
+        checkDataAccessAdapter(em);
         try {
-            return (ProfessorRatingEntity) em.createNamedQuery("getRatingByProfessorIdAndUserId").setParameter("professor", professorId).setParameter("user", userId).getSingleResult();
+            return em.getDataAccess().createNamedQuery("getRatingByProfessorIdAndUserId", ProfessorRatingEntity.class).setParameter("professor", professorId).setParameter("user", userId).getSingleResult().toVo();
         } catch (NoResultException e) {
             return null;
         }
 
     }
-    
+
     /**
      * Professors ratings finder according to a specified user
      *
-     * @param em the entity manager
+     * @param em the DataAccessAdapter
      * @param userId user's ID
      * @return A list with all ratings associated to the specified user
      */
-    public List<ProfessorRatingEntity> getByUserId(EntityManager em, long userId) {
-        if (em == null) {
-            throw new IllegalArgumentException("EntityManager em cannot be null");
-        }
-
-        return em.createNamedQuery("getRatingByUserId").setParameter("user", userId).getResultList();
-
-    }   
+    @Override
+    public List<ProfessorRatingVo> getByUserId(DataAccessAdapter<EntityManager> em, long userId) {
+        checkDataAccessAdapter(em);
+        List<ProfessorRatingEntity> list = em.getDataAccess().createNamedQuery("getRatingByUserId", ProfessorRatingEntity.class).setParameter("user", userId).getResultList();
+        return entitiesToVos(list);
+    }
 
     /**
-     * Proffesor rating summary calculator
+     * Professor rating summary calculator
      *
-     * @param em the entity manager
+     * @param em the DataAccessAdapter
      * @param professorId Professor's ID
      * @return A value object containing the number of times the specified
-     * professor has obtained possitive and negative ratings
+     * professor has obtained positive and negative ratings
      */
-    public RatingSummaryVo getSummary(EntityManager em, long professorId) {
-        if (em == null) {
-            throw new IllegalArgumentException("EntityManager em cannot be null");
-        }
+    @Override
+    public RatingSummaryVo getSummary(DataAccessAdapter<EntityManager> em, long professorId) {
+        checkDataAccessAdapter(em);
 
-        RatingSummaryVo result = new RatingSummaryVo();
-
-        Query q = em.createQuery("SELECT COUNT(r) FROM ProfessorRating r WHERE r.value = 1");
+        RatingSummaryVo rsv = new RatingSummaryVo();
 
         try {
-            result.setPositive(((Integer) q.getSingleResult()).intValue());
-        } catch (NoResultException e) {
+            rsv.setPositive(em.getDataAccess().createNamedQuery("countPositiveProfessorRating", Long.class).setParameter("professorId", professorId).getSingleResult().intValue());
+        } catch (NoResultException noResultException) {
             return null;
         }
 
-        q = em.createQuery("SELECT COUNT(r) FROM ProfessorRating r WHERE r.value = -1");
-
         try {
-            result.setNegative(((Integer) q.getSingleResult()).intValue());
-        } catch (NoResultException e) {
+            rsv.setNegative(em.getDataAccess().createNamedQuery("countNegativeProfessorRating", Long.class).setParameter("professorId", professorId).getSingleResult().intValue());
+        } catch (NoResultException noResultException) {
             return null;
         }
 
-        return result;
+        return rsv;
+    }
+
+    @Override
+    protected ProfessorRatingEntity voToEntity(DataAccessAdapter<EntityManager> em, ProfessorRatingVo vo) {
+        ProfessorRatingEntity entity = new ProfessorRatingEntity();
+        entity.setId(vo.getId());
+        entity.setProfessor(em.getDataAccess().getReference(ProfessorEntity.class, vo.getEvaluetedObjectId()));
+        entity.setUser(em.getDataAccess().getReference(UserEntity.class, vo.getUser()));
+        entity.setValue(vo.getValue());
+        return entity;
+    }
+
+    private List<ProfessorRatingVo> entitiesToVos(List<ProfessorRatingEntity> list) {
+        ArrayList<ProfessorRatingVo> arrayList = new ArrayList<ProfessorRatingVo>();
+        for (ProfessorRatingEntity entity : list) {
+            arrayList.add(entity.toVo());
+        }
+        return arrayList;
+    }
+
+    @Override
+    protected Class getEntityClass() {
+        return ProfessorRatingEntity.class;
     }
 }

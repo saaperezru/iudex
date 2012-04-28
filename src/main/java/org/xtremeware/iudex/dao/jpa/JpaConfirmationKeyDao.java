@@ -1,29 +1,60 @@
 package org.xtremeware.iudex.dao.jpa;
 
-import org.xtremeware.iudex.dao.jpa.JpaCrudDao;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import org.xtremeware.iudex.da.DataAccessAdapter;
+import org.xtremeware.iudex.dao.ConfirmationKeyDao;
 import org.xtremeware.iudex.entity.ConfirmationKeyEntity;
+import org.xtremeware.iudex.entity.UserEntity;
+import org.xtremeware.iudex.vo.ConfirmationKeyVo;
 
 /**
- *
+ * JpaDao for the ConfirmationKey value objects. Implements additionally some useful finders by
+ * associated confirmation key.
+ * 
  * @author josebermeo
  */
-public class JpaConfirmationKeyDao extends JpaCrudDao<ConfirmationKeyEntity> {
+public class JpaConfirmationKeyDao extends JpaCrudDao<ConfirmationKeyVo,ConfirmationKeyEntity> implements ConfirmationKeyDao<EntityManager> {
 
     /**
-     * Returns a ConfirmationKey entity which key matched with the given string.
-     *
-     * @param em the entity manager
-     * @param confirmationKey key reference for the search
-     * @return the ConfirmationKey entity wit the given key
+     * Returns a ConfirmationKey entity using the information in the provided
+     * ConfirmationKey value object.
+     * 
+     * @param em the data access adapter
+     * @param vo the ConfirmationKey value object
+     * @return the ConfirmationKey entity
      */
-    public ConfirmationKeyEntity getByConfirmationKey(EntityManager em, String confirmationKey) {
-        if (em == null) {
-            throw new IllegalArgumentException("EntityManager em cannot be null");
-        }
+    @Override
+    protected ConfirmationKeyEntity voToEntity(DataAccessAdapter<EntityManager> em, ConfirmationKeyVo vo) {
+        
+        ConfirmationKeyEntity confirmationKeyEntity = new ConfirmationKeyEntity();
+        
+        confirmationKeyEntity.setId(vo.getId());
+        confirmationKeyEntity.setConfirmationKey(vo.getConfirmationKey());
+        confirmationKeyEntity.setExpirationDate(vo.getExpirationDate());
+        
+        confirmationKeyEntity.setUser(em.getDataAccess().getReference(UserEntity.class, vo.getUserId()));
+        
+        return confirmationKeyEntity;
+    }
+
+    @Override
+    protected Class getEntityClass() {
+        return ConfirmationKeyEntity.class;
+    }
+    
+    /**
+     * Returns a ConfirmationKeyVo which key matched with the given string.
+     * 
+     * @param em the data access adapter
+     * @param confirmationKey key reference for the search
+     * @return the ConfirmationKeyVo with the given key
+     */
+    @Override
+    public ConfirmationKeyVo getByConfirmationKey(DataAccessAdapter<EntityManager> em, String confirmationKey) {
+        checkDataAccessAdapter(em);
         try {
-            return (ConfirmationKeyEntity) em.createNamedQuery("getByConfirmationKey").setParameter("confirmationKey", confirmationKey).getSingleResult();
+            return ((ConfirmationKeyEntity) em.getDataAccess().createNamedQuery("getByConfirmationKey").setParameter("confirmationKey", confirmationKey).getSingleResult()).toVo();
         } catch (NoResultException noResultException) {
             return null;
         }

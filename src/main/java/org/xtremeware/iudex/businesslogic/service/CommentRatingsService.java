@@ -9,7 +9,6 @@ import org.xtremeware.iudex.businesslogic.InvalidVoException;
 import org.xtremeware.iudex.dao.AbstractDaoFactory;
 import org.xtremeware.iudex.dao.jpa.JpaCommentRatingDao;
 import org.xtremeware.iudex.dao.jpa.JpaCrudDao;
-import org.xtremeware.iudex.dao.jpa.JpaSubjectRatingDao;
 import org.xtremeware.iudex.entity.CommentRatingEntity;
 import org.xtremeware.iudex.vo.CommentRatingVo;
 import org.xtremeware.iudex.vo.RatingSummaryVo;
@@ -35,7 +34,7 @@ public class CommentRatingsService extends SimpleCrudService<CommentRatingVo, Co
 	 * @return
 	 */
 	@Override
-	protected JpaCrudDao<CommentRatingEntity> getDao() {
+	protected JpaCrudDao<CommentRatingVo,CommentRatingEntity> getDao() {
 		return this.getDaoFactory().getCommentRatingDao();
 	}
 
@@ -70,30 +69,6 @@ public class CommentRatingsService extends SimpleCrudService<CommentRatingVo, Co
 		if (vo.getValue() < -1 || vo.getValue() > 1) {
 			throw new InvalidVoException("int Value in the provided CommentRatingVo must be less than or equal to 1 and greater than or equal to -1");
 		}
-	}
-
-	/**
-	 * Returns a CommentRatingEntity using the information in the provided
-	 * CommentRatingVo.
-	 *
-	 * @param em EntityManager
-	 * @param vo CommentRatingVo
-	 * @return CommentRatingEntity
-	 * @throws InvalidVoException
-	 */
-	@Override
-	public CommentRatingEntity voToEntity(EntityManager em, CommentRatingVo vo) throws InvalidVoException {
-
-		validateVo(em, vo);
-
-		CommentRatingEntity commentRatingEntity = new CommentRatingEntity();
-		commentRatingEntity.setId(vo.getId());
-		commentRatingEntity.setValue(vo.getValue());
-
-		commentRatingEntity.setUser(this.getDaoFactory().getUserDao().getById(em, vo.getUserId()));
-		commentRatingEntity.setComment(this.getDaoFactory().getCommentDao().getById(em, vo.getCommentId()));
-
-		return commentRatingEntity;
 	}
 
 	/**

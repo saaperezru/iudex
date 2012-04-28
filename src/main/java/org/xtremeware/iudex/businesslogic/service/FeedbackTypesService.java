@@ -61,26 +61,6 @@ public class FeedbackTypesService extends SimpleCrudService<FeedbackTypeVo, Feed
     }
 
     /**
-     * Returns a FeedbackTypeEntity using the information in the provided
-     * FeedbackTypeVo.
-     *
-     * @param em EntityManager
-     * @param vo FeedbackTypeVo
-     * @return FeedbackTypeEntity
-     * @throws InvalidVoException
-     */
-    @Override
-    public FeedbackTypeEntity voToEntity(EntityManager em, FeedbackTypeVo vo) throws InvalidVoException, ExternalServiceConnectionException {
-
-        validateVo(em, vo);
-        FeedbackTypeEntity feedbackTypeEntity = new FeedbackTypeEntity();
-        feedbackTypeEntity.setId(vo.getId());
-        feedbackTypeEntity.setName(SecurityHelper.sanitizeHTML(vo.getName()));
-
-        return feedbackTypeEntity;
-    }
-
-    /**
      * return a list of all different FeedbackTypeVo
      *
      * @param em EntityManager

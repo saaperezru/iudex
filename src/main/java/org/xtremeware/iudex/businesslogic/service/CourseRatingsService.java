@@ -67,31 +67,6 @@ public class CourseRatingsService extends SimpleCrudService<CourseRatingVo, Cour
     }
 
     /**
-     * Returns a CourseRatingEntity using the information in the provided
-     * CourseRatingVo.
-     *
-     * @param em EntityManager
-     * @param vo CourseRatingVo to be transformed
-     * @return CourseRatingEntity
-     * @throws InvalidVoException
-     */
-    @Override
-    public CourseRatingEntity voToEntity(EntityManager em, CourseRatingVo vo) throws InvalidVoException {
-
-        validateVo(em, vo);
-
-        CourseRatingEntity courseRatingEntity = new CourseRatingEntity();
-        courseRatingEntity.setId(vo.getId());
-        courseRatingEntity.setValue(vo.getValue());
-
-        courseRatingEntity.setCourse(getDaoFactory().getCourseDao().getById(em, vo.getCourseId()));
-
-        courseRatingEntity.setUser(getDaoFactory().getUserDao().getById(em, vo.getUserId()));
-
-        return courseRatingEntity;
-    }
-
-    /**
      * Returns a CourseRatingVo associated with the provided userId and courseId
      *
      * @param em EntityManager

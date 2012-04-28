@@ -71,30 +71,6 @@ public class FeedbacksService extends SimpleCrudService<FeedbackVo, FeedbackEnti
     }
 
     /**
-     * Returns a FeedbackEntity using the information in the provided
-     * FeedbackVo.
-     *
-     * @param em EntityManager
-     * @param vo FeedbackVo
-     * @return FeedbackEntity
-     * @throws InvalidVoException
-     */
-    @Override
-    public FeedbackEntity voToEntity(EntityManager em, FeedbackVo vo) throws InvalidVoException, ExternalServiceConnectionException {
-
-        validateVo(em, vo);
-
-        FeedbackEntity feedbackEntity = new FeedbackEntity();
-        feedbackEntity.setContent(SecurityHelper.sanitizeHTML(vo.getContent()));
-        feedbackEntity.setDate(vo.getDate());
-        feedbackEntity.setId(vo.getId());
-
-        feedbackEntity.setType(getDaoFactory().getFeedbackTypeDao().getById(em, vo.getFeedbackTypeId()));
-
-        return feedbackEntity;
-    }
-
-    /**
      * Returns a list of FeedbackVo according with the search query
      *
      * @param em EntityManager

@@ -1,38 +1,73 @@
 package org.xtremeware.iudex.dao.jpa;
 
-import org.xtremeware.iudex.dao.jpa.JpaCrudDao;
 import java.util.List;
 import javax.persistence.EntityManager;
+import org.xtremeware.iudex.da.DataAccessAdapter;
+import org.xtremeware.iudex.dao.FeedbackDao;
 import org.xtremeware.iudex.entity.FeedbackEntity;
+import org.xtremeware.iudex.entity.FeedbackTypeEntity;
+import org.xtremeware.iudex.vo.FeedbackVo;
 
 /**
- * DAO for the Feedback entities. Implements additionally a useful finder by
+ * JpaDao for the Feedback value objects. Implements additionally a useful finder by
  * Feedback type.
  *
  * @author saaperezru
  */
-public class JpaFeedbackDao extends JpaCrudDao<FeedbackEntity> {
+public class JpaFeedbackDao extends JpaCrudDao<FeedbackVo,FeedbackEntity> implements FeedbackDao<EntityManager> {
 
+    /**
+     * Returns a Feedback entity using the information in the provided
+     * Feedback value object.
+     * 
+     * @param em the data access adapter
+     * @param vo the Feedback value object
+     * @return the Feedback entity
+     */
+    @Override
+    protected FeedbackEntity voToEntity(DataAccessAdapter<EntityManager> em, FeedbackVo vo) {
+        FeedbackEntity feedbackEntity = new FeedbackEntity();
+        
+        feedbackEntity.setId(vo.getId());
+        feedbackEntity.setDate(vo.getDate());
+        feedbackEntity.setContent(vo.getContent());
+
+        feedbackEntity.setType(em.getDataAccess().getReference(FeedbackTypeEntity.class, vo.getFeedbackTypeId()));
+
+        return feedbackEntity;
+    }
+
+    @Override
+    protected Class getEntityClass() {
+        return FeedbackEntity.class;
+    }
+    
     /**
      * Returns a list of Feedback with a type corresponding to the specified
      * feedbackTypeId
-     *
-     * @param em EntityManager with which the entities will be searched
+     * 
+     * @param em the data access adapter
      * @param feedbackTypeId Feedback type identifier to look for in feedback
-     * entities.
-     * @return The list of found feedbacks.
+     * entities
+     * @return The list of found feedbacks
      */
-    public List<FeedbackEntity> getByTypeId(EntityManager em, long feedbackTypeId) {
-        if (em == null) {
-            throw new IllegalArgumentException("EntityManager em cannot be null");
-        }
-        return em.createNamedQuery("getByTypeId").setParameter("feedbackTypeId", feedbackTypeId).getResultList();
+    @Override
+    public List<FeedbackVo> getByTypeId(DataAccessAdapter<EntityManager> em, long feedbackTypeId) {
+        checkDataAccessAdapter(em);
+        return entitiesToVos(em.getDataAccess().createNamedQuery("getByTypeId").setParameter("feedbackTypeId", feedbackTypeId).getResultList());
     }
 
-    public List<FeedbackEntity> getByContentLike(EntityManager em, String query) {
-        if (em == null) {
-            throw new IllegalArgumentException("EntityManager em cannot be null");
-        }
-        return em.createNamedQuery("getFeedbackByContentLike").setParameter("query", "%"+query+"%").getResultList();
+    /**
+     * Returns a list of Feedback with a type corresponding to the specified
+     * content
+     * 
+     * @param em the da the data access adapterta access adapter
+     * @param query the content of the feedback
+     * @return The list of found feedbacks
+     */
+    @Override
+    public List<FeedbackVo> getByContentLike(DataAccessAdapter<EntityManager> em, String query) {
+        checkDataAccessAdapter(em);
+        return entitiesToVos(em.getDataAccess().createNamedQuery("getFeedbackByContentLike").setParameter("query", "%"+query+"%").getResultList());
     }
 }

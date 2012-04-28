@@ -16,10 +16,10 @@ public class UsersFacadeIT {
     }
 
     /**
-     * Test of activateUser method, of class UsersFacade.
+     * Test of a successful user activation
      */
     @Test
-    public void testActivateUser() throws Exception {
+    public void test_BL_10_1() throws Exception {
         String confirmationKey = "1d141671f909bb21d3658372a7dbb87af521bc8d8a92088fbdada64604bf1cf1";
         UsersFacade usersFacade = Config.getInstance().getFacadeFactory().getUsersFacade();
         UserVo user = usersFacade.activateUser(confirmationKey);

@@ -1,7 +1,6 @@
 package org.xtremeware.iudex.businesslogic.facade;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 import org.junit.Test;
 import org.xtremeware.iudex.helper.Config;
 import org.xtremeware.iudex.vo.UserVo;
@@ -15,6 +14,18 @@ public class UsersFacadeIT {
     public UsersFacadeIT() {
     }
 
+    /**
+     * Test of a successful login
+     */
+    @Test
+    public void test_BL_3_1() throws Exception {
+        String userName = "student1";
+        String password = "123456789";
+        UsersFacade usersFacade = Config.getInstance().getFacadeFactory().getUsersFacade();
+        UserVo user = usersFacade.logIn(userName, password);
+        assertNotNull(user);
+    }
+    
     /**
      * Test of a successful user activation
      */

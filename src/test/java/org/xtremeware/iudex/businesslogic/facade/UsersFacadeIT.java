@@ -27,7 +27,18 @@ public class UsersFacadeIT {
         user = usersFacade.activateUser(confirmationKey);
         assertNull(user);
     }
-
+    
+    /**
+     * Test of an invalid confirmation key
+     */
+    @Test
+    public void test_BL_10_2() throws Exception {
+        String confirmationKey = "Invalid!";
+        UsersFacade usersFacade = Config.getInstance().getFacadeFactory().getUsersFacade();
+        UserVo user = usersFacade.activateUser(confirmationKey);
+        assertNull(user);
+    }
+    
 //    /**
 //     * Test of addUser method, of class UsersFacade.
 //     */

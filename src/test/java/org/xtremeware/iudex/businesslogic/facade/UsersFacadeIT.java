@@ -27,6 +27,31 @@ public class UsersFacadeIT {
     }
     
     /**
+     * Test of an invalid login
+     */
+    @Test
+    public void test_BL_3_2() throws Exception {
+        String userName;
+        String password;
+        UsersFacade usersFacade = Config.getInstance().getFacadeFactory().getUsersFacade();
+        // Wrong username, right password
+        userName = "Invalid!";
+        password = "123456789";
+        UserVo user = usersFacade.logIn(userName, password);
+        assertNull(user);
+        // Right username, wrong password
+        userName = "student1";
+        password = "Invalid!";
+        user = usersFacade.logIn(userName, password);
+        assertNull(user);
+        // Wrong username, wrong password
+        userName = "Invalid!";
+        password = "Invalid!";
+        user = usersFacade.logIn(userName, password);
+        assertNull(user);
+    }
+    
+    /**
      * Test of a successful user activation
      */
     @Test

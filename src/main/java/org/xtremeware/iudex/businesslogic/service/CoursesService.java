@@ -107,19 +107,6 @@ public class CoursesService extends SimpleCrudService<CourseVo, CourseEntity> {
 	}
 
 	@Override
-	public CourseEntity voToEntity(EntityManager em, CourseVo vo) throws InvalidVoException, ExternalServiceConnectionException {
-		validateVo(em, vo);
-		CourseEntity course = new CourseEntity();
-		course.setId(vo.getId());
-		course.setPeriod(getDaoFactory().getPeriodDao().getById(em, vo.getPeriodId()));
-		course.setProfessor(getDaoFactory().getProfessorDao().getById(em, vo.getProfessorId()));
-		course.setSubject(getDaoFactory().getSubjectDao().getById(em, vo.getSubjectId()));
-		course.setRatingAverage(vo.getRatingAverage());
-		course.setRatingCount(vo.getRatingCount());
-		return course;
-	}
-
-	@Override
 	protected JpaCrudDao<CourseEntity> getDao() {
 		return getDaoFactory().getCourseDao();
 	}

@@ -1,66 +1,93 @@
 package org.xtremeware.iudex.dao.jpa;
 
-import org.xtremeware.iudex.dao.jpa.JpaCrudDao;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import org.xtremeware.iudex.da.DataAccessAdapter;
+import org.xtremeware.iudex.dao.CourseRatingDao;
+import org.xtremeware.iudex.entity.CourseEntity;
 import org.xtremeware.iudex.entity.CourseRatingEntity;
+import org.xtremeware.iudex.entity.UserEntity;
+import org.xtremeware.iudex.vo.CourseRatingVo;
 
 /**
+ * JpaDao for CourseRating value objects. Implements additionally some useful
+ * finders by associated course id, user id.
  *
  * @author josebermeo
  */
-public class JpaCourseRatingDao extends JpaCrudDao<CourseRatingEntity> {
+public class JpaCourseRatingDao extends JpaCrudDao<CourseRatingVo, CourseRatingEntity> implements CourseRatingDao<EntityManager> {
 
     /**
-     * Returns a list of CourseRating entities which has the same indicated
-     * course.
-     *
-     * @param em the entity manager
-     * @param courseId id of the course
-     * @return a list of CourseRating entities with a course identified by
-     * courseId
+     * Returns a CourseRating entity using the information in the provided
+     * CourseRating value object.
+     * 
+     * @param em the data access adapter
+     * @param vo the CourseRating value object
+     * @return the CourseRating entity
      */
-    public List<CourseRatingEntity> getByCourseId(EntityManager em, Long courseId) {
-        if (em == null) {
-            throw new IllegalArgumentException("EntityManager em cannot be null");
-        }
-        return em.createNamedQuery("getCourseRatingByCourseId").setParameter("courseId", courseId).getResultList();
+    @Override
+    protected CourseRatingEntity voToEntity(DataAccessAdapter<EntityManager> em, CourseRatingVo vo) {
+        CourseRatingEntity courseRatingEntity = new CourseRatingEntity();
+        
+        courseRatingEntity.setId(vo.getId());
+        courseRatingEntity.setValue(vo.getValue());
+
+        courseRatingEntity.setCourse(em.getDataAccess().getReference(CourseEntity.class, vo.getCourseId()));
+        courseRatingEntity.setUser(em.getDataAccess().getReference(UserEntity.class, vo.getUserId()));
+
+        return courseRatingEntity;
+    }
+
+    @Override
+    protected Class getEntityClass() {
+        return CourseRatingEntity.class;
     }
 
     /**
-     * Returns a CourseRating entity which have the given course and user mapped
-     * by the respective Ids.
+     * Returns a list of CourseRating value objects which has the same indicated
+     * course.
      *
-     * @param em the entity manager
+     * @param em the data access adapter
      * @param courseId id of the course
-     * @param userId id of the user
+     * @return a list of CourseRatingVo with a course identified by courseId
+     */
+    @Override
+    public List<CourseRatingVo> getByCourseId(DataAccessAdapter<EntityManager> em, Long courseId) {
+        checkDataAccessAdapter(em);
+        return entitiesToVos(em.getDataAccess().createNamedQuery("getCourseRatingByCourseId").setParameter("courseId", courseId).getResultList());
+    }
+
+    /**
+     * Returns a CourseRating value object which have the given course and user
+     * mapped by the respective Ids.
+     *
+     * @param em the data access adapter
+     * @param courseId id of the user
+     * @param userId
      * @return CourseRatingEntity with the indicated user and course
      */
-    public CourseRatingEntity getByCourseIdAndUserId(EntityManager em, Long courseId, Long userId) {
-        if (em == null) {
-            throw new IllegalArgumentException("EntityManager em cannot be null");
-        }
+    @Override
+    public CourseRatingVo getByCourseIdAndUserId(DataAccessAdapter<EntityManager> em, Long courseId, Long userId) {
+        checkDataAccessAdapter(em);
         try {
-            return (CourseRatingEntity) em.createNamedQuery("getCourseRatingByCourseIdAndUserId").setParameter("courseId", courseId).setParameter("userId", userId).getSingleResult();
+            return ((CourseRatingEntity) em.getDataAccess().createNamedQuery("getCourseRatingByCourseIdAndUserId").setParameter("courseId", courseId).setParameter("userId", userId).getSingleResult()).toVo();
         } catch (NoResultException noResultException) {
             return null;
         }
     }
     
     /**
-     * Returns a list of CourseRating entities which has the same indicated
+     * Returns a list of CourseRating value objects which has the same indicated
      * user.
-     *
-     * @param em the entity manager
+     * @param em the data access adapter
      * @param userId id of the user
-     * @return a list of CourseRating entities with a course identified by
+     * @return a list of CourseRating value abjects with a course identified by
      * userId
      */
-    public List<CourseRatingEntity> getByUserId(EntityManager em, Long userId) {
-        if (em == null) {
-            throw new IllegalArgumentException("EntityManager em cannot be null");
-        }
-        return em.createNamedQuery("getCourseRatingByUserId").setParameter("userId", userId).getResultList();
+    @Override
+    public List<CourseRatingVo> getByUserId(DataAccessAdapter<EntityManager> em, Long userId) {
+        checkDataAccessAdapter(em);
+        return entitiesToVos(em.getDataAccess().createNamedQuery("getCourseRatingByUserId").setParameter("userId", userId).getResultList());
     }
 }

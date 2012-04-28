@@ -1,112 +1,135 @@
 package org.xtremeware.iudex.dao.jpa;
 
-import org.xtremeware.iudex.dao.jpa.JpaCrudDao;
 import java.util.List;
 import javax.persistence.EntityManager;
+import org.xtremeware.iudex.da.DataAccessAdapter;
+import org.xtremeware.iudex.dao.CourseDao;
 import org.xtremeware.iudex.entity.CourseEntity;
+import org.xtremeware.iudex.entity.PeriodEntity;
+import org.xtremeware.iudex.entity.ProfessorEntity;
+import org.xtremeware.iudex.entity.SubjectEntity;
+import org.xtremeware.iudex.vo.CourseVo;
 
 /**
- * DAO for the Course entities. Implements additionally some useful finders by
- * associated professor id, subject id and period id.
+ * JpaDao for the Course value objects. Implements additionally some useful
+ * finders by associated professor id, subject id and period id.
  *
  * @author saaperezru
  */
-public class JpaCourseDao extends JpaCrudDao<CourseEntity> {
+public class JpaCourseDao extends JpaCrudDao<CourseVo, CourseEntity> implements CourseDao<EntityManager> {
 
-	/**
-	 * Returns a list of Courses associated with the professor identified by
-	 * the given id
-	 *
-	 * @param em EntityManager with which the entities will be searched
-	 * @param professorId Professor identifier to look for in courses
-	 * entities.
-	 * @return The list of found courses.
-	 */
-	public List<CourseEntity> getByProfessorId(EntityManager em, long professorId) {
-		if (em == null) {
-			throw new IllegalArgumentException("EntityManager em cannot be null");
-		}
-		return em.createNamedQuery("getCourseByProfessorId").setParameter("professorId", professorId).getResultList();
+    /**
+     * Returns a Course entity using the information in the provided
+     * Course value object.
+     * 
+     * @param em the data access adapter
+     * @param vo the Course value object
+     * @return the Course entity
+     */
+    @Override
+    protected CourseEntity voToEntity(DataAccessAdapter<EntityManager> em, CourseVo vo) {
+        CourseEntity courseEntity = new CourseEntity();
+        
+        courseEntity.setId(vo.getId());
+        courseEntity.setRatingAverage(vo.getRatingAverage());
+        courseEntity.setRatingCount(vo.getRatingCount());
+        
+        courseEntity.setPeriod(em.getDataAccess().getReference(PeriodEntity.class, vo.getPeriodId()));
+        courseEntity.setProfessor(em.getDataAccess().getReference(ProfessorEntity.class, vo.getProfessorId()));
+        courseEntity.setSubject(em.getDataAccess().getReference(SubjectEntity.class, vo.getSubjectId()));
+        
+        return courseEntity;
+    }
 
-	}
+    @Override
+    protected Class getEntityClass() {
+        return CourseEntity.class;
+    }
 
-	/**
-	 * Returns a list of Courses associated with the subject identified by
-	 * the given id
-	 *
-	 * @param em EntityManager with which the entities will be searched
-	 * @param subjectId Subject identifier to look for in courses entities.
-	 * @return The list of found courses.
-	 */
-	public List<CourseEntity> getBySubjectId(EntityManager em, long subjectId) {
-		if (em == null) {
-			throw new IllegalArgumentException("EntityManager em cannot be null");
-		}
-		return em.createNamedQuery("getCourseBySubjectId").setParameter("subjectId", subjectId).getResultList();
+    /**
+     * Returns a list of Courses associated with the professor identified by the
+     * given id
+     *
+     * @param em the data access adapter
+     * @param professorId Professor identifier to look for in courses entities
+     * @return The list of found courses
+     */
+    @Override
+    public List<CourseVo> getByProfessorId(DataAccessAdapter<EntityManager> em, long professorId) {
+        checkDataAccessAdapter(em);
+        return entitiesToVos(em.getDataAccess().createNamedQuery("getCourseByProfessorId").setParameter("professorId", professorId).getResultList());
+    }
 
-	}
+    /**
+     * Returns a list of Courses associated with the subject identified by the
+     * given id
+     *
+     * @param em the data access adapter
+     * @param subjectId Subject identifier to look for in courses entities
+     * @return The list of found courses
+     */
+    @Override
+    public List<CourseVo> getBySubjectId(DataAccessAdapter<EntityManager> em, long subjectId) {
+        checkDataAccessAdapter(em);
+        return entitiesToVos(em.getDataAccess().createNamedQuery("getCourseBySubjectId").setParameter("subjectId", subjectId).getResultList());
+    }
 
-	/**
-	 * Returns a list of Courses associated with the period identified by
-	 * the given id
-	 *
-	 * @param em EntityManager with which the entities will be searched
-	 * @param periodId Period identifier to look for in courses entities.
-	 * @return The list of found courses.
-	 */
-	public List<CourseEntity> getByPeriodId(EntityManager em, long periodId) {
-		if (em == null) {
-			throw new IllegalArgumentException("EntityManager em cannot be null");
-		}
-		return em.createNamedQuery("getCourseByPeriodId").setParameter("periodId", periodId).getResultList();
+    /**
+     * Returns a list of Courses associated with the period identified by the
+     * given id
+     *
+     * @param em the data access adapter
+     * @param periodId Period identifier to look for in courses entities
+     * @return The list of found courses
+     */
+    @Override
+    public List<CourseVo> getByPeriodId(DataAccessAdapter<EntityManager> em, long periodId) {
+        checkDataAccessAdapter(em);
+        return entitiesToVos(em.getDataAccess().createNamedQuery("getCourseByPeriodId").setParameter("periodId", periodId).getResultList());
+    }
 
-	}
+    /**
+     * Returns a list of Courses associated with the professor and subject
+     * identified by the given ids
+     *
+     * @param em the data access adapter
+     * @param professorId Professor identifier to look for in courses entities
+     * @param subjectId Subject identifier to look for in courses entities
+     * @return The list of found courses
+     */
+    @Override
+    public List<CourseVo> getByProfessorIdAndSubjectId(DataAccessAdapter<EntityManager> em, long professorId, long subjectId) {
+        checkDataAccessAdapter(em);
+        return entitiesToVos(em.getDataAccess().createNamedQuery("getCourseByProfessorIdAndSubjectId").setParameter("professorId", professorId).setParameter("subjectId", subjectId).getResultList());
+    }
 
-	/**
-	 * Returns a list of Courses associated with the professor and subject
-	 * identified by the given ids
-	 *
-	 * @param em EntityManager with which the entities will be searched
-	 * @param professorId Professor identifier to look for in courses
-	 * entities.
-	 * @param subjectId Subject identifier to look for in courses entities.
-	 * @return The list of found courses.
-	 */
-	public List<CourseEntity> getByProfessorIdAndSubjectId(EntityManager em, long professorId, long subjectId) {
-		if (em == null) {
-			throw new IllegalArgumentException("EntityManager em cannot be null");
-		}
-		return em.createNamedQuery("getCourseByProfessorIdAndSubjectId").setParameter("professorId", professorId).setParameter("subjectId", subjectId).getResultList();
+    /**
+     * Returns a list of Courses associated with professors and subjects whose
+     * names are like the ones provided in
+     * <code>subjectName</code> and
+     * <code>professorName</code>, and whose period corresponds to the one
+     * identified by the id
+     * <code>periodId</code>.
+     *
+     * @param em the data access adapter
+     * @param professorName If null will search for any professor
+     * @param subjectName If null will search for any subject
+     * @param periodId If null will search for any period
+     * @return The list of courses related to professors and subjects with names
+     * like the ones provided.
+     */
+    @Override
+    public List<CourseVo> getCoursesByProfessorNameLikeAndSubjectNameLike(DataAccessAdapter<EntityManager> em, String professorName, String subjectName, Long periodId) {
+        checkDataAccessAdapter(em);
 
-	}
+        String professor = (professorName == null) ? "%" : "%" + professorName + "%";
+        String subject = (subjectName == null) ? "%" : "%" + subjectName + "%";
+        if (periodId == null) {
 
-	/**
-	 * Returns a list of Courses associated with professors and subjects
-	 * whose names are like the ones provided in
-	 * <code>subjectName</code> and
-	 * <code>professorName</code>, and whose period corresponds to the one
-	 * identified by the id <code>periodId</code>. 
-	 *
-	 * @param em EntityManager with which the entities will be searched
-	 * @param professorName If null will search for any professor
-	 * @param subjectName If null will search for any subject
-	 * @param periodId If null will search for any period
-	 * @return The list of courses related to professors and subjects with
-	 * names like the ones provided.
-	 */
-	public List<CourseEntity> getCoursesByProfessorNameLikeAndSubjectNameLike(EntityManager em, String professorName, String subjectName, Long periodId) {
-		if (em == null) {
-			throw new IllegalArgumentException("EntityManager em cannot be null");
-		}
-		String professor = (professorName == null) ? "%" : "%" + professorName + "%";
-		String subject = (subjectName == null) ? "%" : "%" + subjectName + "%";
-		if (periodId == null) {
+            return entitiesToVos(em.getDataAccess().createNamedQuery("getCoursesByProfessorNameLikeAndSubjectNameLike").setParameter("professorName", professor).setParameter("subjectName", subject).getResultList());
+        } else {
 
-			return em.createNamedQuery("getCoursesByProfessorNameLikeAndSubjectNameLike").setParameter("professorName", professor).setParameter("subjectName", subject).getResultList();
-		} else {
-
-			return em.createNamedQuery("getCoursesByProfessorNameLikeAndSubjectNameLikeAndPeriodId").setParameter("professorName", professor).setParameter("subjectName", subject).setParameter("periodId", periodId).getResultList();
-		}
-
-	}
+            return entitiesToVos(em.getDataAccess().createNamedQuery("getCoursesByProfessorNameLikeAndSubjectNameLikeAndPeriodId").setParameter("professorName", professor).setParameter("subjectName", subject).setParameter("periodId", periodId).getResultList());
+        }
+    }
 }

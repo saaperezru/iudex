@@ -17,12 +17,12 @@
     <class>org.xtremeware.iudex.entity.SubjectRatingEntity</class>
     <class>org.xtremeware.iudex.entity.UserEntity</class>
     <properties>
-      <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/IUDEX"/>
-      <property name="javax.persistence.jdbc.password" value="IPT9piWX1E"/>
-      <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
-      <property name="javax.persistence.jdbc.user" value="iudex"/>
+      <property name="javax.persistence.jdbc.url" value="jdbc:h2:mem:test;INIT=RUNSCRIPT FROM &apos;src/test/init.sql&apos;"/>
+      <property name="javax.persistence.jdbc.password" value=""/>
+      <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
+      <property name="javax.persistence.jdbc.user" value="sa"/>
       <property name="hibernate.cache.provider_class" value="org.hibernate.cache.NoCacheProvider"/>
-      <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>
+      <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
     </properties>
   </persistence-unit>
 </persistence>

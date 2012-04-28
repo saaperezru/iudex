@@ -5,8 +5,8 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.businesslogic.InvalidVoException;
 import org.xtremeware.iudex.dao.AbstractDaoFactory;
-import org.xtremeware.iudex.dao.Dao;
-import org.xtremeware.iudex.dao.SubjectDao;
+import org.xtremeware.iudex.dao.jpa.JpaCrudDao;
+import org.xtremeware.iudex.dao.jpa.JpaSubjectDao;
 import org.xtremeware.iudex.entity.CourseEntity;
 import org.xtremeware.iudex.entity.SubjectEntity;
 import org.xtremeware.iudex.entity.SubjectRatingEntity;
@@ -31,12 +31,12 @@ public class SubjectsService extends SimpleCrudService<SubjectVo, SubjectEntity>
     }
 
     /**
-     * returns the SubjectDao to be used.
+     * returns the JpaSubjectDao to be used.
      *
      * @return
      */
     @Override
-    protected Dao<SubjectEntity> getDao() {
+    protected JpaCrudDao<SubjectEntity> getDao() {
         return getDaoFactory().getSubjectDao();
     }
     
@@ -127,7 +127,7 @@ public class SubjectsService extends SimpleCrudService<SubjectVo, SubjectEntity>
         if (query == null) {
             throw new IllegalArgumentException("Null query for a subject search");
         }
-        List<SubjectEntity> subjectEntitys = ((SubjectDao) this.getDao()).getByName(em, query);
+        List<SubjectEntity> subjectEntitys = ((JpaSubjectDao) this.getDao()).getByName(em, query);
         if (subjectEntitys.isEmpty()) {
             return null;
         }
@@ -149,7 +149,7 @@ public class SubjectsService extends SimpleCrudService<SubjectVo, SubjectEntity>
         if (name == null) {
             throw new IllegalArgumentException("Null name for a subject search");
         }
-        List<SubjectEntity> subjectEntitys = ((SubjectDao) this.getDao()).getByName(em, name);
+        List<SubjectEntity> subjectEntitys = ((JpaSubjectDao) this.getDao()).getByName(em, name);
         if (subjectEntitys.isEmpty()) {
             return null;
         }

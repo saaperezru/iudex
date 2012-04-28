@@ -9,8 +9,8 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.businesslogic.InvalidVoException;
 import org.xtremeware.iudex.dao.AbstractDaoFactory;
-import org.xtremeware.iudex.dao.Dao;
-import org.xtremeware.iudex.dao.FeedbackTypeDao;
+import org.xtremeware.iudex.dao.jpa.JpaCrudDao;
+import org.xtremeware.iudex.dao.jpa.JpaFeedbackTypeDao;
 import org.xtremeware.iudex.entity.FeedbackEntity;
 import org.xtremeware.iudex.entity.FeedbackTypeEntity;
 import org.xtremeware.iudex.helper.ExternalServiceConnectionException;
@@ -33,12 +33,12 @@ public class FeedbackTypesService extends SimpleCrudService<FeedbackTypeVo, Feed
     }
 
     /**
-     * returns the FeedbackTypeDao to be used.
+     * returns the JpaFeedbackTypeDao to be used.
      *
      * @return
      */
     @Override
-    protected Dao<FeedbackTypeEntity> getDao() {
+    protected JpaCrudDao<FeedbackTypeEntity> getDao() {
         return this.getDaoFactory().getFeedbackTypeDao();
     }
 
@@ -87,7 +87,7 @@ public class FeedbackTypesService extends SimpleCrudService<FeedbackTypeVo, Feed
      * @return A list of all different FeedbackTypeVo
      */
     public List<FeedbackTypeVo> list(EntityManager em) {
-        List<FeedbackTypeEntity> feedbackTypeEntitys = ((FeedbackTypeDao) this.getDao()).getAll(em);
+        List<FeedbackTypeEntity> feedbackTypeEntitys = ((JpaFeedbackTypeDao) this.getDao()).getAll(em);
         if (feedbackTypeEntitys.isEmpty()) {
             return null;
         }

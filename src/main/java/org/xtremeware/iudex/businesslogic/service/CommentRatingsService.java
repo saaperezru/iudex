@@ -7,9 +7,9 @@ package org.xtremeware.iudex.businesslogic.service;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.businesslogic.InvalidVoException;
 import org.xtremeware.iudex.dao.AbstractDaoFactory;
-import org.xtremeware.iudex.dao.CommentRatingDao;
-import org.xtremeware.iudex.dao.Dao;
-import org.xtremeware.iudex.dao.SubjectRatingDao;
+import org.xtremeware.iudex.dao.jpa.JpaCommentRatingDao;
+import org.xtremeware.iudex.dao.jpa.JpaCrudDao;
+import org.xtremeware.iudex.dao.jpa.JpaSubjectRatingDao;
 import org.xtremeware.iudex.entity.CommentRatingEntity;
 import org.xtremeware.iudex.vo.CommentRatingVo;
 import org.xtremeware.iudex.vo.RatingSummaryVo;
@@ -30,12 +30,12 @@ public class CommentRatingsService extends SimpleCrudService<CommentRatingVo, Co
 	}
 
 	/**
-	 * returns the CommentRatingDao to be used.
+	 * returns the JpaCommentRatingDao to be used.
 	 *
 	 * @return
 	 */
 	@Override
-	protected Dao<CommentRatingEntity> getDao() {
+	protected JpaCrudDao<CommentRatingEntity> getDao() {
 		return this.getDaoFactory().getCommentRatingDao();
 	}
 
@@ -106,7 +106,7 @@ public class CommentRatingsService extends SimpleCrudService<CommentRatingVo, Co
 	 * @return CommentRatingVo
 	 */
 	public CommentRatingVo getByCommentIdAndUserId(EntityManager em, long commentId, long userId) {
-		CommentRatingEntity commentRatingEntity = ((CommentRatingDao) this.getDao()).getByCommentIdAndUserId(em, commentId, userId);
+		CommentRatingEntity commentRatingEntity = ((JpaCommentRatingDao) this.getDao()).getByCommentIdAndUserId(em, commentId, userId);
 		if (commentRatingEntity == null) {
 			return null;
 		}
@@ -121,7 +121,7 @@ public class CommentRatingsService extends SimpleCrudService<CommentRatingVo, Co
 	 * @return RatingSummaryVo
 	 */
 	public RatingSummaryVo getByCommentId(EntityManager em, long commentId) {
-		return ((CommentRatingDao) this.getDao()).getSummary(em, commentId);
+		return ((JpaCommentRatingDao) this.getDao()).getSummary(em, commentId);
 	}
 
 	/**
@@ -133,6 +133,6 @@ public class CommentRatingsService extends SimpleCrudService<CommentRatingVo, Co
 	 * the ratings corresponding to the specified comment
 	 */
 	public RatingSummaryVo getSummary(EntityManager em, long commentId) {
-		return ((CommentRatingDao) getDao()).getSummary(em, commentId);
+		return ((JpaCommentRatingDao) getDao()).getSummary(em, commentId);
 	}
 }

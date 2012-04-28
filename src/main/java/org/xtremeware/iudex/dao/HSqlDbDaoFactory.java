@@ -1,5 +1,20 @@
 package org.xtremeware.iudex.dao;
 
+import org.xtremeware.iudex.dao.jpa.JpaCommentDao;
+import org.xtremeware.iudex.dao.jpa.JpaCommentRatingDao;
+import org.xtremeware.iudex.dao.jpa.JpaConfirmationKeyDao;
+import org.xtremeware.iudex.dao.jpa.JpaCourseDao;
+import org.xtremeware.iudex.dao.jpa.JpaCourseRatingDao;
+import org.xtremeware.iudex.dao.jpa.JpaFeedbackDao;
+import org.xtremeware.iudex.dao.jpa.JpaFeedbackTypeDao;
+import org.xtremeware.iudex.dao.jpa.JpaPeriodDao;
+import org.xtremeware.iudex.dao.jpa.JpaProfessorDao;
+import org.xtremeware.iudex.dao.jpa.JpaProfessorRatingDao;
+import org.xtremeware.iudex.dao.jpa.JpaProgramDao;
+import org.xtremeware.iudex.dao.jpa.JpaSubjectDao;
+import org.xtremeware.iudex.dao.jpa.JpaSubjectRatingDao;
+import org.xtremeware.iudex.dao.jpa.JpaUserDao;
+
 /**
  * DAO factory for an HSQLDB persistence unit
  * 
@@ -7,129 +22,129 @@ package org.xtremeware.iudex.dao;
  */
 public class HSqlDbDaoFactory implements AbstractDaoFactory {
     
-    private CommentDao commentDao;
-    private CommentRatingDao commentRatingDao;
-    private ConfirmationKeyDao confirmationKeyDao;
-    private CourseDao courseDao;
-    private CourseRatingDao courseRatingDao;
-    private FeedbackDao feedbackDao;
-    private FeedbackTypeDao feedbackTypeDao;
-    private PeriodDao periodDao;
-    private ProfessorDao professorDao;
-    private ProfessorRatingDao professorRatingDao;
-    private ProgramDao programDao;
-    private SubjectDao subjectDao;
-    private SubjectRatingDao subjectRatingDao;
-    private UserDao userDao;
+    private JpaCommentDao commentDao;
+    private JpaCommentRatingDao commentRatingDao;
+    private JpaConfirmationKeyDao confirmationKeyDao;
+    private JpaCourseDao courseDao;
+    private JpaCourseRatingDao courseRatingDao;
+    private JpaFeedbackDao feedbackDao;
+    private JpaFeedbackTypeDao feedbackTypeDao;
+    private JpaPeriodDao periodDao;
+    private JpaProfessorDao professorDao;
+    private JpaProfessorRatingDao professorRatingDao;
+    private JpaProgramDao programDao;
+    private JpaSubjectDao subjectDao;
+    private JpaSubjectRatingDao subjectRatingDao;
+    private JpaUserDao userDao;
     
     @Override
-    public CommentDao getCommentDao() {
+    public JpaCommentDao getCommentDao() {
         if (commentDao == null) {
-            commentDao = new CommentDao();
+            commentDao = new JpaCommentDao();
         }
         return commentDao;
     }
     
     @Override
-    public CommentRatingDao getCommentRatingDao() {
+    public JpaCommentRatingDao getCommentRatingDao() {
         if (commentRatingDao == null) {
-            commentRatingDao = new CommentRatingDao();
+            commentRatingDao = new JpaCommentRatingDao();
         }
         return commentRatingDao;
     }
     
     @Override
-    public ConfirmationKeyDao getConfirmationKeyDao() {
+    public JpaConfirmationKeyDao getConfirmationKeyDao() {
         if (confirmationKeyDao == null) {
-            confirmationKeyDao = new ConfirmationKeyDao();
+            confirmationKeyDao = new JpaConfirmationKeyDao();
         }
         return confirmationKeyDao;
     }
     
     @Override
-    public CourseDao getCourseDao() {
+    public JpaCourseDao getCourseDao() {
         if (courseDao == null) {
-            courseDao = new CourseDao();
+            courseDao = new JpaCourseDao();
         }
         return courseDao;
     }
     
     @Override
-    public CourseRatingDao getCourseRatingDao() {
+    public JpaCourseRatingDao getCourseRatingDao() {
         if (courseRatingDao == null) {
-            courseRatingDao = new CourseRatingDao();
+            courseRatingDao = new JpaCourseRatingDao();
         }
         return courseRatingDao;
     }
     
     @Override
-    public FeedbackDao getFeedbackDao() {
+    public JpaFeedbackDao getFeedbackDao() {
         if (feedbackDao == null) {
-            feedbackDao = new FeedbackDao();
+            feedbackDao = new JpaFeedbackDao();
         }
         return feedbackDao;
     }
     
     @Override
-    public FeedbackTypeDao getFeedbackTypeDao() {
+    public JpaFeedbackTypeDao getFeedbackTypeDao() {
         if (feedbackTypeDao == null) {
-            feedbackTypeDao = new FeedbackTypeDao();
+            feedbackTypeDao = new JpaFeedbackTypeDao();
         }
         return feedbackTypeDao;
     }
     
     @Override
-    public PeriodDao getPeriodDao() {
+    public JpaPeriodDao getPeriodDao() {
         if (periodDao == null) {
-            periodDao = new PeriodDao();
+            periodDao = new JpaPeriodDao();
         }
         return periodDao;
     }
     
     @Override
-    public ProfessorDao getProfessorDao() {
+    public JpaProfessorDao getProfessorDao() {
         if (professorDao == null) {
-            professorDao = new ProfessorDao();
+            professorDao = new JpaProfessorDao();
         }
         return professorDao;
     }
     
     @Override
-    public ProfessorRatingDao getProfessorRatingDao() {
+    public JpaProfessorRatingDao getProfessorRatingDao() {
         if (professorRatingDao == null) {
-            professorRatingDao = new ProfessorRatingDao();
+            professorRatingDao = new JpaProfessorRatingDao();
         }
         return professorRatingDao;
     }
     
     @Override
-    public ProgramDao getProgramDao() {
+    public JpaProgramDao getProgramDao() {
         if (programDao == null) {
-            programDao = new ProgramDao();
+            programDao = new JpaProgramDao();
         }
         return programDao;
     }
     
     @Override
-    public SubjectDao getSubjectDao() {
+    public JpaSubjectDao getSubjectDao() {
         if (subjectDao == null) {
-            subjectDao = new SubjectDao();
+            subjectDao = new JpaSubjectDao();
         }
         return subjectDao;
     }
     
     @Override
-    public SubjectRatingDao getSubjectRatingDao() {
+    public JpaSubjectRatingDao getSubjectRatingDao() {
         if (subjectRatingDao == null) {
-            subjectRatingDao = new SubjectRatingDao();
+            subjectRatingDao = new JpaSubjectRatingDao();
         }
         return subjectRatingDao;
     }
     
     @Override
-    public UserDao getUserDao() {
+    public JpaUserDao getUserDao() {
         if (userDao == null) {
-            userDao = new UserDao();
+            userDao = new JpaUserDao();
         }
         return userDao;
     }

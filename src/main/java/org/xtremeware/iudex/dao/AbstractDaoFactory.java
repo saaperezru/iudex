@@ -1,36 +1,51 @@
 package org.xtremeware.iudex.dao;
 
+import org.xtremeware.iudex.dao.jpa.JpaCommentDao;
+import org.xtremeware.iudex.dao.jpa.JpaCommentRatingDao;
+import org.xtremeware.iudex.dao.jpa.JpaConfirmationKeyDao;
+import org.xtremeware.iudex.dao.jpa.JpaCourseDao;
+import org.xtremeware.iudex.dao.jpa.JpaCourseRatingDao;
+import org.xtremeware.iudex.dao.jpa.JpaFeedbackDao;
+import org.xtremeware.iudex.dao.jpa.JpaFeedbackTypeDao;
+import org.xtremeware.iudex.dao.jpa.JpaPeriodDao;
+import org.xtremeware.iudex.dao.jpa.JpaProfessorDao;
+import org.xtremeware.iudex.dao.jpa.JpaProfessorRatingDao;
+import org.xtremeware.iudex.dao.jpa.JpaProgramDao;
+import org.xtremeware.iudex.dao.jpa.JpaSubjectDao;
+import org.xtremeware.iudex.dao.jpa.JpaSubjectRatingDao;
+import org.xtremeware.iudex.dao.jpa.JpaUserDao;
+
 /**
  *
  * @author healarconr
  */
 public interface AbstractDaoFactory {
 
-    public CommentDao getCommentDao();
+    public JpaCommentDao getCommentDao();
 
-    public CommentRatingDao getCommentRatingDao();
+    public JpaCommentRatingDao getCommentRatingDao();
 
-    public ConfirmationKeyDao getConfirmationKeyDao();
+    public JpaConfirmationKeyDao getConfirmationKeyDao();
 
-    public CourseDao getCourseDao();
+    public JpaCourseDao getCourseDao();
 
-    public CourseRatingDao getCourseRatingDao();
+    public JpaCourseRatingDao getCourseRatingDao();
 
-    public FeedbackDao getFeedbackDao();
+    public JpaFeedbackDao getFeedbackDao();
 
-    public FeedbackTypeDao getFeedbackTypeDao();
+    public JpaFeedbackTypeDao getFeedbackTypeDao();
 
-    public PeriodDao getPeriodDao();
+    public JpaPeriodDao getPeriodDao();
 
-    public ProfessorDao getProfessorDao();
+    public JpaProfessorDao getProfessorDao();
 
-    public ProfessorRatingDao getProfessorRatingDao();
+    public JpaProfessorRatingDao getProfessorRatingDao();
 
-    public ProgramDao getProgramDao();
+    public JpaProgramDao getProgramDao();
 
-    public SubjectDao getSubjectDao();
+    public JpaSubjectDao getSubjectDao();
 
-    public SubjectRatingDao getSubjectRatingDao();
+    public JpaSubjectRatingDao getSubjectRatingDao();
 
-    public UserDao getUserDao();
+    public JpaUserDao getUserDao();
 }

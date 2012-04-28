@@ -7,8 +7,8 @@ import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.businesslogic.InvalidVoException;
 import org.xtremeware.iudex.dao.AbstractDaoFactory;
-import org.xtremeware.iudex.dao.Dao;
-import org.xtremeware.iudex.dao.ProgramDao;
+import org.xtremeware.iudex.dao.jpa.JpaCrudDao;
+import org.xtremeware.iudex.dao.jpa.JpaProgramDao;
 import org.xtremeware.iudex.entity.ProgramEntity;
 import org.xtremeware.iudex.helper.ExternalServiceConnectionException;
 import org.xtremeware.iudex.helper.SecurityHelper;
@@ -21,7 +21,7 @@ public class ProgramsService extends SimpleCrudService<ProgramVo, ProgramEntity>
 	}
 
 	@Override
-	protected Dao<ProgramEntity> getDao() {
+	protected JpaCrudDao<ProgramEntity> getDao() {
 		return getDaoFactory().getProgramDao();
 	}
 
@@ -61,7 +61,7 @@ public class ProgramsService extends SimpleCrudService<ProgramVo, ProgramEntity>
 	 */
 	public List<ProgramVo> getByNameLike(EntityManager em, String name) {
 		ArrayList<ProgramVo> list = new ArrayList<ProgramVo>();
-		for (ProgramEntity entity : ((ProgramDao) getDao()).getByNameLike(em, name)) {
+		for (ProgramEntity entity : ((JpaProgramDao) getDao()).getByNameLike(em, name)) {
 			list.add(entity.toVo());
 		}
 		return list;

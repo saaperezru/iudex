@@ -5,8 +5,8 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.businesslogic.InvalidVoException;
 import org.xtremeware.iudex.dao.AbstractDaoFactory;
-import org.xtremeware.iudex.dao.Dao;
-import org.xtremeware.iudex.dao.SubjectRatingDao;
+import org.xtremeware.iudex.dao.jpa.JpaCrudDao;
+import org.xtremeware.iudex.dao.jpa.JpaSubjectRatingDao;
 import org.xtremeware.iudex.entity.SubjectEntity;
 import org.xtremeware.iudex.entity.SubjectRatingEntity;
 import org.xtremeware.iudex.entity.UserEntity;
@@ -20,7 +20,7 @@ public class SubjectRatingsService extends SimpleCrudService<SubjectRatingVo, Su
 	}
 
 	@Override
-	protected Dao<SubjectRatingEntity> getDao() {
+	protected JpaCrudDao<SubjectRatingEntity> getDao() {
 		return getDaoFactory().getSubjectRatingDao();
 	}
 
@@ -75,7 +75,7 @@ public class SubjectRatingsService extends SimpleCrudService<SubjectRatingVo, Su
 	 */
 	public List<SubjectRatingVo> getBySubjectId(EntityManager em, long subjectId) {
 		List<SubjectRatingVo> list = new ArrayList<SubjectRatingVo>();
-		for (SubjectRatingEntity rating : ((SubjectRatingDao) getDao()).getBySubjectId(em, subjectId)) {
+		for (SubjectRatingEntity rating : ((JpaSubjectRatingDao) getDao()).getBySubjectId(em, subjectId)) {
 			list.add(rating.toVo());
 		}
 		return list;
@@ -94,7 +94,7 @@ public class SubjectRatingsService extends SimpleCrudService<SubjectRatingVo, Su
 	 * subject
 	 */
 	public SubjectRatingVo getBySubjectIdAndUserId(EntityManager em, long subjectId, long userId) {
-		return ((SubjectRatingDao) getDao()).getBySubjectIdAndUserId(em, subjectId, userId).toVo();
+		return ((JpaSubjectRatingDao) getDao()).getBySubjectIdAndUserId(em, subjectId, userId).toVo();
 	}
 
 	/**
@@ -106,6 +106,6 @@ public class SubjectRatingsService extends SimpleCrudService<SubjectRatingVo, Su
 	 * the ratings corresponding to the specified subject
 	 */
 	public RatingSummaryVo getSummary(EntityManager em, long subjectId) {
-		return ((SubjectRatingDao) getDao()).getSummary(em, subjectId);
+		return ((JpaSubjectRatingDao) getDao()).getSummary(em, subjectId);
 	}
 }

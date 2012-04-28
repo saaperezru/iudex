@@ -5,8 +5,8 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.businesslogic.InvalidVoException;
 import org.xtremeware.iudex.dao.AbstractDaoFactory;
-import org.xtremeware.iudex.dao.Dao;
-import org.xtremeware.iudex.dao.ProfessorRatingDao;
+import org.xtremeware.iudex.dao.jpa.JpaCrudDao;
+import org.xtremeware.iudex.dao.jpa.JpaProfessorRatingDao;
 import org.xtremeware.iudex.entity.ProfessorEntity;
 import org.xtremeware.iudex.entity.ProfessorRatingEntity;
 import org.xtremeware.iudex.entity.UserEntity;
@@ -20,7 +20,7 @@ public class ProfessorRatingsService extends SimpleCrudService<ProfessorRatingVo
 	}
 
 	@Override
-	protected Dao<ProfessorRatingEntity> getDao() {
+	protected JpaCrudDao<ProfessorRatingEntity> getDao() {
 		return getDaoFactory().getProfessorRatingDao();
 	}
 
@@ -74,7 +74,7 @@ public class ProfessorRatingsService extends SimpleCrudService<ProfessorRatingVo
 	 */
 	public List<ProfessorRatingVo> getByProfessorId(EntityManager em, long professorId) {
 		ArrayList<ProfessorRatingVo> list = new ArrayList<ProfessorRatingVo>();
-		for (ProfessorRatingEntity entity : ((ProfessorRatingDao) getDao()).getByProfessorId(em, professorId)) {
+		for (ProfessorRatingEntity entity : ((JpaProfessorRatingDao) getDao()).getByProfessorId(em, professorId)) {
 			list.add(entity.toVo());
 		}
 		return list;
@@ -93,7 +93,7 @@ public class ProfessorRatingsService extends SimpleCrudService<ProfessorRatingVo
 	 * and user ids
 	 */
 	public ProfessorRatingVo getByProfessorIdAndUserId(EntityManager em, long professorId, long userId) {
-		return ((ProfessorRatingDao) getDao()).getByProfessorIdAndUserId(em, professorId, userId).toVo();
+		return ((JpaProfessorRatingDao) getDao()).getByProfessorIdAndUserId(em, professorId, userId).toVo();
 	}
 
 	/**
@@ -105,7 +105,7 @@ public class ProfessorRatingsService extends SimpleCrudService<ProfessorRatingVo
 	 * professor has obtained positive and negative ratings
 	 */
 	public RatingSummaryVo getSummary(EntityManager em, long professorId) {
-		return ((ProfessorRatingDao) getDao()).getSummary(em, professorId);
+		return ((JpaProfessorRatingDao) getDao()).getSummary(em, professorId);
 
 	}
 }

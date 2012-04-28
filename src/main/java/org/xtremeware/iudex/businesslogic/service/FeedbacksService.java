@@ -5,8 +5,8 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.businesslogic.InvalidVoException;
 import org.xtremeware.iudex.dao.AbstractDaoFactory;
-import org.xtremeware.iudex.dao.Dao;
-import org.xtremeware.iudex.dao.FeedbackDao;
+import org.xtremeware.iudex.dao.jpa.JpaCrudDao;
+import org.xtremeware.iudex.dao.jpa.JpaFeedbackDao;
 import org.xtremeware.iudex.entity.FeedbackEntity;
 import org.xtremeware.iudex.helper.ExternalServiceConnectionException;
 import org.xtremeware.iudex.helper.SecurityHelper;
@@ -28,12 +28,12 @@ public class FeedbacksService extends SimpleCrudService<FeedbackVo, FeedbackEnti
     }
 
     /**
-     * returns the FeedbackDao to be used.
+     * returns the JpaFeedbackDao to be used.
      *
-     * @return FeedbackDao
+     * @return JpaFeedbackDao
      */
     @Override
-    protected Dao<FeedbackEntity> getDao() {
+    protected JpaCrudDao<FeedbackEntity> getDao() {
         return getDaoFactory().getFeedbackDao();
     }
 
@@ -105,7 +105,7 @@ public class FeedbacksService extends SimpleCrudService<FeedbackVo, FeedbackEnti
         if (query == null) {
             throw new IllegalArgumentException("Null query for a Feedback comment search");
         }
-        List<FeedbackEntity> feedbackEntitys = ((FeedbackDao) this.getDao()).getByContentLike(em, query);
+        List<FeedbackEntity> feedbackEntitys = ((JpaFeedbackDao) this.getDao()).getByContentLike(em, query);
         if (feedbackEntitys.isEmpty()) {
             return null;
         }

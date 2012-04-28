@@ -1,42 +1,16 @@
 package org.xtremeware.iudex.dao;
 
 import java.util.List;
-import javax.persistence.EntityManager;
-import org.xtremeware.iudex.entity.SubjectEntity;
+import org.xtremeware.iudex.da.DataAccessAdapter;
+import org.xtremeware.iudex.vo.SubjectVo;
 
 /**
- * DAO for subject entities. Implements additionally some useful finders by name
- * or by professor id
  *
- * @author healarconr
+ * @author josebermeo
  */
-public class SubjectDao extends Dao<SubjectEntity> {
+public interface SubjectDao<E> extends CrudDao<SubjectVo, E> {
 
-    /**
-     * Returns a list of subject entities which name contains the argument name
-     *
-     * @param em the entity manager
-     * @param name the subject's name
-     * @return a list of matched subject entities
-     */
-    public List<SubjectEntity> getByName(EntityManager em, String name) {
-        if (em == null) {
-            throw new IllegalArgumentException("EntityManager em cannot be null");
-        }
-        return em.createNamedQuery("getSubjectsByName", SubjectEntity.class).setParameter("name", "%" + name + "%").getResultList();
-    }
+    public List<SubjectVo> getByName(DataAccessAdapter<E> em, String name);
 
-    /**
-     * Returns a list of subject entities associated with a specific professor
-     *
-     * @param em the entity manager
-     * @param professorId the professor's id
-     * @return a list of matched subject entities
-     */
-    public List<SubjectEntity> getByProfessorId(EntityManager em, long professorId) {
-        if (em == null) {
-            throw new IllegalArgumentException("EntityManager em cannot be null");
-        }
-        return em.createNamedQuery("getSubjectsByProfessorId", SubjectEntity.class).setParameter("professorId", professorId).getResultList();
-    }
+    public List<SubjectVo> getByProfessorId(DataAccessAdapter<E> em, long professorId);
 }

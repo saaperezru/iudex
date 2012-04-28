@@ -3,7 +3,7 @@ package org.xtremeware.iudex.businesslogic.service;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.businesslogic.InvalidVoException;
 import org.xtremeware.iudex.dao.AbstractDaoFactory;
-import org.xtremeware.iudex.dao.Dao;
+import org.xtremeware.iudex.dao.jpa.JpaCrudDao;
 import org.xtremeware.iudex.entity.Entity;
 import org.xtremeware.iudex.helper.ExternalServiceConnectionException;
 import org.xtremeware.iudex.vo.ValueObject;
@@ -14,13 +14,13 @@ import org.xtremeware.iudex.vo.ValueObject;
  */
 public abstract class SimpleCrudService<E extends ValueObject, F extends Entity<E>> extends CrudService<E> {
 
-    protected Dao<F> dao;
+    protected JpaCrudDao<F> dao;
 
     public SimpleCrudService(AbstractDaoFactory daoFactory) {
         super(daoFactory);
     }
 
-    protected abstract Dao<F> getDao();
+    protected abstract JpaCrudDao<F> getDao();
 
     public E update(EntityManager em, E vo) throws InvalidVoException, ExternalServiceConnectionException {
         validateVo(em,vo);

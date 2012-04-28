@@ -112,12 +112,4 @@ public class JpaCommentDao extends JpaCrudDao<CommentVo,CommentEntity> implement
     protected Class getEntityClass() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    
-    private List<CommentVo> entitiesToVos(List<CommentEntity> list) {
-        ArrayList<CommentVo> arrayList = new ArrayList<CommentVo>();
-        for (CommentEntity entity : list) {
-            arrayList.add(entity.toVo());
-        }
-        return arrayList;
-    }
 }

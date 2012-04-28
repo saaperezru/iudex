@@ -54,13 +54,6 @@ public class JpaSubjectDao extends JpaCrudDao<SubjectVo, SubjectEntity> implemen
         return subjectEntity;
     }
 
-    private List<SubjectVo> entitiesToVos(List<SubjectEntity> list){
-        ArrayList<SubjectVo> arrayList = new ArrayList<SubjectVo>();
-        for (SubjectEntity entity : list) {
-            arrayList.add(entity.toVo());
-        }
-        return arrayList;
-    }
     
     @Override
     protected Class getEntityClass() {

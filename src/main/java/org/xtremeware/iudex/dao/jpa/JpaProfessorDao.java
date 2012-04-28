@@ -62,12 +62,4 @@ public class JpaProfessorDao extends JpaCrudDao<ProfessorVo, ProfessorEntity> im
     protected Class getEntityClass() {
         return ProfessorEntity.class;
     }
-
-    private List<ProfessorVo> entitiesToVos(List<ProfessorEntity> list) {
-        ArrayList<ProfessorVo> arrayList = new ArrayList<ProfessorVo>();
-        for (ProfessorEntity entity : list) {
-            arrayList.add(entity.toVo());
-        }
-        return arrayList;
-    }
 }

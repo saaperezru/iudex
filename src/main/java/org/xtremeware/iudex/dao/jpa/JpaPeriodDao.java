@@ -79,12 +79,4 @@ public class JpaPeriodDao extends JpaCrudDao<PeriodVo, PeriodEntity> implements 
     protected Class getEntityClass() {
         return PeriodEntity.class;
     }
-    
-    private List<PeriodVo> entitiesToVos(List<PeriodEntity> list) {
-        ArrayList<PeriodVo> arrayList = new ArrayList<PeriodVo>();
-        for (PeriodEntity entity : list) {
-            arrayList.add(entity.toVo());
-        }
-        return arrayList;
-    }
 }

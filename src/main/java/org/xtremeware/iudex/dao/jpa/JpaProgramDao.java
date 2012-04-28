@@ -37,14 +37,6 @@ public class JpaProgramDao extends JpaCrudDao< ProgramVo, ProgramEntity> impleme
         return entity;
     }
     
-    private List<ProgramVo> entitiesToVos(List<ProgramEntity> list){
-        ArrayList<ProgramVo> arrayList = new ArrayList<ProgramVo>();
-        for (ProgramEntity entity : list) {
-            arrayList.add(entity.toVo());
-        }
-        return arrayList;
-    }
-
     @Override
     protected Class getEntityClass() {
         return ProgramEntity.class;

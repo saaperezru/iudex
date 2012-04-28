@@ -1,5 +1,7 @@
 package org.xtremeware.iudex.dao.jpa;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import org.xtremeware.iudex.da.DataAccessAdapter;
@@ -7,7 +9,7 @@ import org.xtremeware.iudex.dao.CrudDao;
 import org.xtremeware.iudex.entity.Entity;
 import org.xtremeware.iudex.vo.ValueObject;
 
-public abstract class JpaCrudDao<E extends ValueObject, F extends Entity> implements CrudDao<E, EntityManager> {
+public abstract class JpaCrudDao<E extends ValueObject, F extends Entity<E>> implements CrudDao<E, EntityManager> {
 
     /**
      * Returns the same received ValueObject after being persisted in the
@@ -85,6 +87,14 @@ public abstract class JpaCrudDao<E extends ValueObject, F extends Entity> implem
         if (em.getDataAccess() == null) {
             throw new IllegalArgumentException("DataAccess cannot be null");
         }
+    }
+    
+    protected List<E> entitiesToVos(List<F> list){
+        ArrayList<E> arrayList = new ArrayList<E>();
+        for (F entity : list) {
+            arrayList.add(entity.toVo());
+        }
+        return arrayList;
     }
 
     protected abstract F voToEntity(DataAccessAdapter<EntityManager> em, E vo);

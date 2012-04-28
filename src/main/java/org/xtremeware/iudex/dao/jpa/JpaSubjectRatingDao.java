@@ -103,14 +103,6 @@ public class JpaSubjectRatingDao extends JpaCrudDao<SubjectRatingVo, SubjectRati
         entity.setValue(vo.getValue());
         return entity;
     }
-    
-    private List<SubjectRatingVo> entitiesToVos(List<SubjectRatingEntity> list){
-        ArrayList<SubjectRatingVo> arrayList = new ArrayList<SubjectRatingVo>();
-        for (SubjectRatingEntity entity : list) {
-            arrayList.add(entity.toVo());
-        }
-        return arrayList;
-    }
 
     @Override
     protected Class getEntityClass() {

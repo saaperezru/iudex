@@ -13,7 +13,7 @@ import org.xtremeware.iudex.vo.CourseRatingVo;
  *
  * @author josebermeo
  */
-public class CourseRatingsService extends SimpleCrudService<CourseRatingVo, CourseRatingEntity> {
+public class CourseRatingsService extends SimpleCrudService<CourseRatingVo> {
 
     /**
      * CourseRatingsService constructor

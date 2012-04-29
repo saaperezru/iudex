@@ -7,6 +7,7 @@ package org.xtremeware.iudex.businesslogic.service;
 import java.util.List;
 import org.xtremeware.iudex.businesslogic.InvalidVoException;
 import org.xtremeware.iudex.da.DataAccessAdapter;
+import org.xtremeware.iudex.da.DataAccessException;
 import org.xtremeware.iudex.dao.AbstractDaoFactory;
 import org.xtremeware.iudex.dao.CrudDao;
 import org.xtremeware.iudex.dao.jpa.JpaPeriodDao;
@@ -35,7 +36,7 @@ public class PeriodsService extends SimpleCrudService<PeriodVo> {
      * 
      * @return all the periods submitted
      */
-    public List<PeriodVo> list(DataAccessAdapter em) {
+    public List<PeriodVo> list(DataAccessAdapter em) throws DataAccessException {
         return ((JpaPeriodDao)getDao()).getAll(em);
     }
 
@@ -79,7 +80,7 @@ public class PeriodsService extends SimpleCrudService<PeriodVo> {
         * @param id id of the period
         */    
         @Override
-        public void remove(DataAccessAdapter em, long id) {
+        public void remove(DataAccessAdapter em, long id) throws DataAccessException {
             
           /**
             * This is a bad implementation, but due to few time, it had to be implemented,

@@ -16,7 +16,7 @@ import org.xtremeware.iudex.vo.FeedbackVo;
  *
  * @author josebermeo
  */
-public class FeedbacksService extends SimpleCrudService<FeedbackVo, FeedbackEntity> {
+public class FeedbacksService extends SimpleCrudService<FeedbackVo> {
 
     /**
      * FeedbacksService constructor

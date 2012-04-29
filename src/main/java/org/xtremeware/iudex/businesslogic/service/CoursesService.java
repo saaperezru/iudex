@@ -13,7 +13,7 @@ import org.xtremeware.iudex.entity.CourseRatingEntity;
 import org.xtremeware.iudex.helper.Config;
 import org.xtremeware.iudex.vo.CourseVo;
 
-public class CoursesService extends SimpleCrudService<CourseVo, CourseEntity> {
+public class CoursesService extends SimpleCrudService<CourseVo> {
 
     public CoursesService(AbstractDaoFactory daoFactory) {
         super(daoFactory);

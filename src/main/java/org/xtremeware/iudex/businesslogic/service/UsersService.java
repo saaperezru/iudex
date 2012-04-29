@@ -6,6 +6,8 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.businesslogic.InvalidVoException;
+import org.xtremeware.iudex.da.DataAccessAdapter;
+import org.xtremeware.iudex.da.DataAccessException;
 import org.xtremeware.iudex.dao.AbstractDaoFactory;
 import org.xtremeware.iudex.entity.*;
 
@@ -39,7 +41,7 @@ public class UsersService extends CrudService<UserVo> {
 
     }
 
-    public void validateVo(EntityManager em, UserVo vo) throws InvalidVoException {
+    public void validateVo(DataAccessAdapter em, UserVo vo) throws InvalidVoException, DataAccessException {
         if (em == null) {
             throw new IllegalArgumentException("EntityManager em cannot be null");
         }
@@ -83,7 +85,7 @@ public class UsersService extends CrudService<UserVo> {
         }
     }
 
-    public UserEntity voToEntity(EntityManager em, UserVo vo) throws InvalidVoException, ExternalServiceConnectionException {
+    public UserEntity voToEntity(DataAccessAdapter em, UserVo vo) throws InvalidVoException, ExternalServiceConnectionException, DataAccessException {
 
         validateVo(em, vo);
 
@@ -97,16 +99,16 @@ public class UsersService extends CrudService<UserVo> {
         userEntity.setActive(vo.isActive());
 
         ArrayList<ProgramEntity> arrayList = new ArrayList<ProgramEntity>();
-        for (Long programId : vo.getProgramsId()) {
-            arrayList.add(this.getDaoFactory().getProgramDao().getById(em, programId));
-        }
+//        for (Long programId : vo.getProgramsId()) {
+//            arrayList.add(this.getDaoFactory().getProgramDao().getById(em, programId));
+//        }
 
         userEntity.setPrograms(arrayList);
         return userEntity;
 
     }
 
-    public UserVo create(EntityManager em, UserVo user) throws InvalidVoException, ExternalServiceConnectionException {
+    public UserVo create(DataAccessAdapter em, UserVo user) throws InvalidVoException, ExternalServiceConnectionException, DataAccessException {
         UserEntity userEntity = voToEntity(em, user);
         //It is not possible to create users that are already active
         userEntity.setActive(false);
@@ -124,31 +126,31 @@ public class UsersService extends CrudService<UserVo> {
         userEntity.setConfirmationKey(confirmationKeyEntity);
         confirmationKeyEntity.setUser(userEntity);
 
-        userEntity = getDaoFactory().getUserDao().persist(em, userEntity);
+        userEntity = (UserEntity) getDaoFactory().getUserDao().persist(em, user);
         confirmationKeyEntity.setId(userEntity.getId());
 
         //persist confirmation key
-        getDaoFactory().getConfirmationKeyDao().persist(em, confirmationKeyEntity);
+        getDaoFactory().getConfirmationKeyDao().persist(em, confirmationKeyEntity.toVo());
 
         return userEntity.toVo();
     }
 
-    public UserVo authenticate(EntityManager em, String userName, String password) throws InactiveUserException {
+    public UserVo authenticate(DataAccessAdapter em, String userName, String password) throws InactiveUserException, DataAccessException {
         password = SecurityHelper.hashPassword(password);
-        UserEntity user = getDaoFactory().getUserDao().getByUsernameAndPassword(em, userName, password);
+        UserVo user = getDaoFactory().getUserDao().getByUsernameAndPassword(em, userName, password);
         if (user == null) {
             return null;
         } else {
             if (!user.isActive()) {
                 throw new InactiveUserException("The user " + user.getUserName() + " is still inactive.");
             } else {
-                return user.toVo();
+                return user;
             }
         }
     }
 
-    public UserVo activateAccount(EntityManager em, String confirmationKey) {
-        ConfirmationKeyEntity confirmationKeyEntity = getDaoFactory().getConfirmationKeyDao().getByConfirmationKey(em, confirmationKey);
+    public UserVo activateAccount(DataAccessAdapter em, String confirmationKey) {
+        ConfirmationKeyVo confirmationKeyEntity = getDaoFactory().getConfirmationKeyDao().getByConfirmationKey(em, confirmationKey);
         if (confirmationKeyEntity != null) {
             UserEntity userEntity = confirmationKeyEntity.getUser();
             if (!userEntity.isActive()) {

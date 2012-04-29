@@ -1,9 +1,9 @@
 package org.xtremeware.iudex.businesslogic.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import org.xtremeware.iudex.businesslogic.InvalidVoException;
 import org.xtremeware.iudex.da.DataAccessAdapter;
+import org.xtremeware.iudex.da.DataAccessException;
 import org.xtremeware.iudex.dao.AbstractDaoFactory;
 import org.xtremeware.iudex.dao.CrudDao;
 import org.xtremeware.iudex.dao.jpa.JpaSubjectRatingDao;
@@ -24,7 +24,7 @@ public class SubjectRatingsService extends SimpleCrudService<SubjectRatingVo> {
     }
 
     @Override
-    public void validateVo(DataAccessAdapter em, SubjectRatingVo vo) throws InvalidVoException {
+    public void validateVo(DataAccessAdapter em, SubjectRatingVo vo) throws InvalidVoException, DataAccessException {
         if (em == null) {
             throw new IllegalArgumentException("EntityManager em cannot be null");
         }
@@ -61,7 +61,7 @@ public class SubjectRatingsService extends SimpleCrudService<SubjectRatingVo> {
      * @return list of SubjectRatingVo instances associated with the specified
      * subject
      */
-    public List<SubjectRatingVo> getBySubjectId(DataAccessAdapter em, long subjectId) {
+    public List<SubjectRatingVo> getBySubjectId(DataAccessAdapter em, long subjectId) throws DataAccessException {
         return ((JpaSubjectRatingDao) getDao()).getBySubjectId(em, subjectId);
     }
 
@@ -75,7 +75,7 @@ public class SubjectRatingsService extends SimpleCrudService<SubjectRatingVo> {
      * @return a SubjectRatingEntity associated with the specified user and
      * subject
      */
-    public SubjectRatingVo getBySubjectIdAndUserId(DataAccessAdapter em, long subjectId, long userId) {
+    public SubjectRatingVo getBySubjectIdAndUserId(DataAccessAdapter em, long subjectId, long userId) throws DataAccessException {
         return ((JpaSubjectRatingDao) getDao()).getBySubjectIdAndUserId(em, subjectId, userId);
     }
 
@@ -87,7 +87,7 @@ public class SubjectRatingsService extends SimpleCrudService<SubjectRatingVo> {
      * @return a RatingSummaryVo object with the information associated with the
      * ratings corresponding to the specified subject
      */
-    public RatingSummaryVo getSummary(DataAccessAdapter em, long subjectId) {
+    public RatingSummaryVo getSummary(DataAccessAdapter em, long subjectId) throws DataAccessException {
         return ((JpaSubjectRatingDao) getDao()).getSummary(em, subjectId);
     }
 }

@@ -3,6 +3,7 @@ package org.xtremeware.iudex.businesslogic.service;
 import java.util.List;
 import org.xtremeware.iudex.businesslogic.InvalidVoException;
 import org.xtremeware.iudex.da.DataAccessAdapter;
+import org.xtremeware.iudex.da.DataAccessException;
 import org.xtremeware.iudex.dao.AbstractDaoFactory;
 import org.xtremeware.iudex.dao.CrudDao;
 import org.xtremeware.iudex.dao.jpa.JpaSubjectDao;
@@ -75,7 +76,7 @@ public class SubjectsService extends SimpleCrudService<SubjectVo> {
      * @param id id of the subject
      */
     @Override
-    public void remove(DataAccessAdapter em, long id) {
+    public void remove(DataAccessAdapter em, long id) throws DataAccessException {
         List<SubjectRatingVo> subjectRatings = getDaoFactory().getSubjectRatingDao().getBySubjectId(em, id);
 
         for (SubjectRatingVo rating : subjectRatings) {
@@ -103,7 +104,7 @@ public class SubjectsService extends SimpleCrudService<SubjectVo> {
      * @param query String with the search parameter
      * @return A list of SubjectVo
      */
-    public List<SubjectVo> search(DataAccessAdapter em, String query) {
+    public List<SubjectVo> search(DataAccessAdapter em, String query) throws DataAccessException {
         if (query == null) {
             throw new IllegalArgumentException("Null query for a subject search");
         }
@@ -117,7 +118,7 @@ public class SubjectsService extends SimpleCrudService<SubjectVo> {
      * @param name String with the name of the SubjectVo
      * @return A list if SubjectVo
      */
-    public List<SubjectVo> getByNameLike(DataAccessAdapter em, String name) {
+    public List<SubjectVo> getByNameLike(DataAccessAdapter em, String name) throws DataAccessException {
         if (name == null) {
             throw new IllegalArgumentException("Null name for a subject search");
         }

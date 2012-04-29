@@ -1,12 +1,11 @@
 package org.xtremeware.iudex.businesslogic.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import org.xtremeware.iudex.businesslogic.InvalidVoException;
 import org.xtremeware.iudex.da.DataAccessAdapter;
+import org.xtremeware.iudex.da.DataAccessException;
 import org.xtremeware.iudex.dao.AbstractDaoFactory;
 import org.xtremeware.iudex.dao.CrudDao;
-import org.xtremeware.iudex.dao.jpa.JpaCrudDao;
 import org.xtremeware.iudex.dao.jpa.JpaProfessorDao;
 import org.xtremeware.iudex.helper.*;
 import org.xtremeware.iudex.vo.CourseVo;
@@ -22,11 +21,11 @@ public class ProfessorsService extends SimpleCrudService<ProfessorVo> {
         MAX_PROFESSOR_NAME_LENGTH = Integer.parseInt(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAX_PROFESSOR_NAME_LENGTH));
     }
 
-    public List<ProfessorVo> getByNameLike(DataAccessAdapter em, String name) {
+    public List<ProfessorVo> getByNameLike(DataAccessAdapter em, String name) throws DataAccessException {
         return ((JpaProfessorDao) getDao()).getByName(em, name);
     }
 
-    public List<ProfessorVo> getBySubjectId(DataAccessAdapter em, long subjectId) {
+    public List<ProfessorVo> getBySubjectId(DataAccessAdapter em, long subjectId) throws DataAccessException {
         return ((JpaProfessorDao) getDao()).getBySubjectId(em, subjectId);
     }
 
@@ -86,7 +85,7 @@ public class ProfessorsService extends SimpleCrudService<ProfessorVo> {
      * @param id id of the professor
      */
     @Override
-    public void remove(DataAccessAdapter em, long id) {
+    public void remove(DataAccessAdapter em, long id) throws DataAccessException {
         List<ProfessorRatingVo> professorRatings = getDaoFactory().getProfessorRatingDao().getByProfessorId(em, id);
 
         for (ProfessorRatingVo rating : professorRatings) {

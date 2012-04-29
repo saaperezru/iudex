@@ -3,6 +3,7 @@ package org.xtremeware.iudex.businesslogic.service;
 import java.util.List;
 import org.xtremeware.iudex.businesslogic.InvalidVoException;
 import org.xtremeware.iudex.da.DataAccessAdapter;
+import org.xtremeware.iudex.da.DataAccessException;
 import org.xtremeware.iudex.dao.AbstractDaoFactory;
 import org.xtremeware.iudex.dao.CrudDao;
 import org.xtremeware.iudex.dao.jpa.JpaProfessorRatingDao;
@@ -23,7 +24,7 @@ public class ProfessorRatingsService extends SimpleCrudService<ProfessorRatingVo
     }
 
     @Override
-    public void validateVo(DataAccessAdapter em, ProfessorRatingVo vo) throws InvalidVoException {
+    public void validateVo(DataAccessAdapter em, ProfessorRatingVo vo) throws InvalidVoException, DataAccessException {
         if (em == null) {
             throw new IllegalArgumentException("EntityManager em cannot be null");
         }
@@ -59,7 +60,7 @@ public class ProfessorRatingsService extends SimpleCrudService<ProfessorRatingVo
      * @param professorId Professor's ID
      * @return A list of the ratings associated with the specified professor
      */
-    public List<ProfessorRatingVo> getByProfessorId(DataAccessAdapter em, long professorId) {
+    public List<ProfessorRatingVo> getByProfessorId(DataAccessAdapter em, long professorId) throws DataAccessException {
         return ((JpaProfessorRatingDao) getDao()).getByProfessorId(em, professorId);
     }
 
@@ -74,7 +75,7 @@ public class ProfessorRatingsService extends SimpleCrudService<ProfessorRatingVo
      * <code>ProfessorRatingVo</code> associated with the given professor and
      * user ids
      */
-    public ProfessorRatingVo getByProfessorIdAndUserId(DataAccessAdapter em, long professorId, long userId) {
+    public ProfessorRatingVo getByProfessorIdAndUserId(DataAccessAdapter em, long professorId, long userId) throws DataAccessException {
         return ((JpaProfessorRatingDao) getDao()).getByProfessorIdAndUserId(em, professorId, userId);
     }
 
@@ -86,7 +87,7 @@ public class ProfessorRatingsService extends SimpleCrudService<ProfessorRatingVo
      * @return A value object containing the number of times the specified
      * professor has obtained positive and negative ratings
      */
-    public RatingSummaryVo getSummary(DataAccessAdapter em, long professorId) {
+    public RatingSummaryVo getSummary(DataAccessAdapter em, long professorId) throws DataAccessException {
         return ((JpaProfessorRatingDao) getDao()).getSummary(em, professorId);
 
     }

@@ -18,7 +18,7 @@ import org.xtremeware.iudex.vo.RatingSummaryVo;
  *
  * @author josebermeo
  */
-public class CommentRatingsService extends SimpleCrudService<CommentRatingVo, CommentRatingEntity> {
+public class CommentRatingsService extends SimpleCrudService<CommentRatingVo> {
 
     /**
      * CommentRatingsService constructor

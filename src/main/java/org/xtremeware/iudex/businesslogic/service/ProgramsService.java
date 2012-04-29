@@ -3,6 +3,7 @@ package org.xtremeware.iudex.businesslogic.service;
 import java.util.List;
 import org.xtremeware.iudex.businesslogic.InvalidVoException;
 import org.xtremeware.iudex.da.DataAccessAdapter;
+import org.xtremeware.iudex.da.DataAccessException;
 import org.xtremeware.iudex.dao.AbstractDaoFactory;
 import org.xtremeware.iudex.dao.CrudDao;
 import org.xtremeware.iudex.dao.jpa.JpaProgramDao;
@@ -42,7 +43,7 @@ public class ProgramsService extends SimpleCrudService<ProgramVo> {
 	 * @param name
 	 * @return Return a list of <code>ProgramVo></code> objects that contain the given name
 	 */
-	public List<ProgramVo> getByNameLike(DataAccessAdapter em, String name) {
+	public List<ProgramVo> getByNameLike(DataAccessAdapter em, String name) throws DataAccessException {
 		return ((JpaProgramDao) getDao()).getByNameLike(em, name);
 	}
 }

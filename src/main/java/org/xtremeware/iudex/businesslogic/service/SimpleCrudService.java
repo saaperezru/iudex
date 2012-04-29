@@ -15,13 +15,13 @@ import org.xtremeware.iudex.vo.ValueObject;
  */
 public abstract class SimpleCrudService<E extends ValueObject> extends CrudService<E> {
 
-    protected CrudDao<E,F> dao;
+    protected CrudDao<E,?> dao;
 
     public SimpleCrudService(AbstractDaoFactory daoFactory) {
         super(daoFactory);
     }
 
-    protected abstract CrudDao<E,F> getDao();
+    protected abstract CrudDao<E,?> getDao();
 
     public E update(DataAccessAdapter em, E vo) throws InvalidVoException, ExternalServiceConnectionException, DataAccessException {
         validateVo(em,vo);

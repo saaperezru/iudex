@@ -4,6 +4,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import org.xtremeware.iudex.da.DataAccessAdapter;
+import org.xtremeware.iudex.da.DataAccessException;
 import org.xtremeware.iudex.dao.CourseRatingDao;
 import org.xtremeware.iudex.entity.CourseEntity;
 import org.xtremeware.iudex.entity.CourseRatingEntity;
@@ -40,7 +41,7 @@ public class JpaCourseRatingDao extends JpaCrudDao<CourseRatingVo, CourseRatingE
     }
 
     @Override
-    protected Class getEntityClass() {
+    protected Class<CourseRatingEntity> getEntityClass() {
         return CourseRatingEntity.class;
     }
 
@@ -53,9 +54,9 @@ public class JpaCourseRatingDao extends JpaCrudDao<CourseRatingVo, CourseRatingE
      * @return a list of CourseRatingVo with a course identified by courseId
      */
     @Override
-    public List<CourseRatingVo> getByCourseId(DataAccessAdapter<EntityManager> em, Long courseId) {
+    public List<CourseRatingVo> getByCourseId(DataAccessAdapter<EntityManager> em, Long courseId) throws DataAccessException{
         checkDataAccessAdapter(em);
-        return entitiesToVos(em.getDataAccess().createNamedQuery("getCourseRatingByCourseId").setParameter("courseId", courseId).getResultList());
+        return entitiesToVos(em.getDataAccess().createNamedQuery("getCourseRatingByCourseId",getEntityClass()).setParameter("courseId", courseId).getResultList());
     }
 
     /**
@@ -68,10 +69,10 @@ public class JpaCourseRatingDao extends JpaCrudDao<CourseRatingVo, CourseRatingE
      * @return CourseRatingEntity with the indicated user and course
      */
     @Override
-    public CourseRatingVo getByCourseIdAndUserId(DataAccessAdapter<EntityManager> em, Long courseId, Long userId) {
+    public CourseRatingVo getByCourseIdAndUserId(DataAccessAdapter<EntityManager> em, Long courseId, Long userId) throws DataAccessException{
         checkDataAccessAdapter(em);
         try {
-            return ((CourseRatingEntity) em.getDataAccess().createNamedQuery("getCourseRatingByCourseIdAndUserId").setParameter("courseId", courseId).setParameter("userId", userId).getSingleResult()).toVo();
+            return em.getDataAccess().createNamedQuery("getCourseRatingByCourseIdAndUserId",getEntityClass()).setParameter("courseId", courseId).setParameter("userId", userId).getSingleResult().toVo();
         } catch (NoResultException noResultException) {
             return null;
         }
@@ -86,8 +87,8 @@ public class JpaCourseRatingDao extends JpaCrudDao<CourseRatingVo, CourseRatingE
      * userId
      */
     @Override
-    public List<CourseRatingVo> getByUserId(DataAccessAdapter<EntityManager> em, Long userId) {
+    public List<CourseRatingVo> getByUserId(DataAccessAdapter<EntityManager> em, Long userId) throws DataAccessException{
         checkDataAccessAdapter(em);
-        return entitiesToVos(em.getDataAccess().createNamedQuery("getCourseRatingByUserId").setParameter("userId", userId).getResultList());
+        return entitiesToVos(em.getDataAccess().createNamedQuery("getCourseRatingByUserId",getEntityClass()).setParameter("userId", userId).getResultList());
     }
 }

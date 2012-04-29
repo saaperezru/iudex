@@ -1,10 +1,11 @@
 package org.xtremeware.iudex.businesslogic.service;
 
-import javax.persistence.EntityManager;
 import org.xtremeware.iudex.businesslogic.InvalidVoException;
+import org.xtremeware.iudex.da.DataAccessAdapter;
+import org.xtremeware.iudex.da.DataAccessException;
 import org.xtremeware.iudex.dao.AbstractDaoFactory;
-import org.xtremeware.iudex.dao.jpa.JpaCourseRatingDao;
-import org.xtremeware.iudex.dao.jpa.JpaCrudDao;
+import org.xtremeware.iudex.dao.CourseRatingDao;
+import org.xtremeware.iudex.dao.CrudDao;
 import org.xtremeware.iudex.entity.CourseRatingEntity;
 import org.xtremeware.iudex.vo.CourseRatingVo;
 
@@ -29,7 +30,7 @@ public class CourseRatingsService extends SimpleCrudService<CourseRatingVo, Cour
      * @return JpaCourseRatingDao
      */
     @Override
-    protected JpaCrudDao<CourseRatingEntity> getDao() {
+    protected CrudDao<CourseRatingVo, CourseRatingEntity> getDao() {
         return getDaoFactory().getCourseRatingDao();
     }
 
@@ -42,7 +43,7 @@ public class CourseRatingsService extends SimpleCrudService<CourseRatingVo, Cour
      * @throws InvalidVoException
      */
     @Override
-    public void validateVo(EntityManager em, CourseRatingVo vo) throws InvalidVoException {
+    public void validateVo(DataAccessAdapter em, CourseRatingVo vo) throws InvalidVoException, DataAccessException {
         if (em == null) {
             throw new IllegalArgumentException("EntityManager em cannot be null");
         }
@@ -74,11 +75,7 @@ public class CourseRatingsService extends SimpleCrudService<CourseRatingVo, Cour
      * @param userId user identifier
      * @return CourseRatingVo
      */
-    public CourseRatingVo getByCourseIdAndUserId(EntityManager em, long courseId, long userId) {
-        CourseRatingEntity courseRatingEntity = ((JpaCourseRatingDao) this.getDao()).getByCourseIdAndUserId(em, courseId, userId);
-        if (courseRatingEntity == null) {
-            return null;
-        }
-        return courseRatingEntity.toVo();
+    public CourseRatingVo getByCourseIdAndUserId(DataAccessAdapter em, long courseId, long userId) throws DataAccessException {
+        return ((CourseRatingDao) this.getDao()).getByCourseIdAndUserId(em, courseId, userId);
     }
 }

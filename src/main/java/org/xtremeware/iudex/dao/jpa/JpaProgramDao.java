@@ -1,9 +1,9 @@
 package org.xtremeware.iudex.dao.jpa;
 
-import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.da.DataAccessAdapter;
+import org.xtremeware.iudex.da.DataAccessException;
 import org.xtremeware.iudex.dao.ProgramDao;
 import org.xtremeware.iudex.entity.ProgramEntity;
 import org.xtremeware.iudex.vo.ProgramVo;
@@ -23,10 +23,9 @@ public class JpaProgramDao extends JpaCrudDao< ProgramVo, ProgramEntity> impleme
      * @return Return a list of programEntity objects
      */
     @Override
-    public List<ProgramVo> getByNameLike(DataAccessAdapter<EntityManager> em, String name) {
+    public List<ProgramVo> getByNameLike(DataAccessAdapter<EntityManager> em, String name) throws DataAccessException {
         checkDataAccessAdapter(em);
-        List<ProgramEntity> list = em.getDataAccess().createNamedQuery("getProgramByNameLike", ProgramEntity.class).setParameter("name", "%" + name + "%").getResultList();
-        return entitiesToVos(list);
+        return entitiesToVos(em.getDataAccess().createNamedQuery("getProgramByNameLike", getEntityClass()).setParameter("name", "%" + name + "%").getResultList());
     }
 
     @Override
@@ -38,7 +37,7 @@ public class JpaProgramDao extends JpaCrudDao< ProgramVo, ProgramEntity> impleme
     }
     
     @Override
-    protected Class getEntityClass() {
+    protected Class<ProgramEntity> getEntityClass() {
         return ProgramEntity.class;
     }
 }

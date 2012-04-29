@@ -4,6 +4,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import org.xtremeware.iudex.da.DataAccessAdapter;
+import org.xtremeware.iudex.da.DataAccessException;
 import org.xtremeware.iudex.dao.FeedbackTypeDao;
 import org.xtremeware.iudex.entity.FeedbackTypeEntity;
 import org.xtremeware.iudex.vo.FeedbackTypeVo;
@@ -36,7 +37,7 @@ public class JpaFeedbackTypeDao extends JpaCrudDao<FeedbackTypeVo,FeedbackTypeEn
     }
 
     @Override
-    protected Class getEntityClass() {
+    protected Class<FeedbackTypeEntity> getEntityClass() {
         return FeedbackTypeEntity.class;
     }
     
@@ -47,10 +48,10 @@ public class JpaFeedbackTypeDao extends JpaCrudDao<FeedbackTypeVo,FeedbackTypeEn
      * @return a feedback type value object
      */
     @Override
-    public FeedbackTypeVo getByName(DataAccessAdapter<EntityManager> em, String name) {
+    public FeedbackTypeVo getByName(DataAccessAdapter<EntityManager> em, String name) throws DataAccessException {
         checkDataAccessAdapter(em);
         try {
-            return ((FeedbackTypeEntity)em.getDataAccess().createNamedQuery("getFeedbackTypeByName", FeedbackTypeEntity.class).setParameter("name", name).getSingleResult()).toVo();
+            return em.getDataAccess().createNamedQuery("getFeedbackTypeByName", getEntityClass()).setParameter("name", name).getSingleResult().toVo();
         } catch (NoResultException ex) {
             return null;
         }
@@ -62,8 +63,8 @@ public class JpaFeedbackTypeDao extends JpaCrudDao<FeedbackTypeVo,FeedbackTypeEn
      * @return a list with all feedback types
      */
     @Override
-    public List<FeedbackTypeVo> getAll(DataAccessAdapter<EntityManager> em) {
+    public List<FeedbackTypeVo> getAll(DataAccessAdapter<EntityManager> em) throws DataAccessException{
         checkDataAccessAdapter(em);
-        return entitiesToVos(em.getDataAccess().createNamedQuery("getAllFeedbackType").getResultList());
+        return entitiesToVos(em.getDataAccess().createNamedQuery("getAllFeedbackType",getEntityClass()).getResultList());
     }
 }

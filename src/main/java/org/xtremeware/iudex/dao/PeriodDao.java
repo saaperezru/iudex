@@ -2,6 +2,7 @@ package org.xtremeware.iudex.dao;
 
 import java.util.List;
 import org.xtremeware.iudex.da.DataAccessAdapter;
+import org.xtremeware.iudex.da.DataAccessException;
 import org.xtremeware.iudex.vo.PeriodVo;
 
 /**
@@ -18,7 +19,7 @@ public interface PeriodDao<E> extends CrudDao<PeriodVo, E> {
      * @param em the DataAccessAdapter
      * @return a list with all the periods
      */
-    public List<PeriodVo> getAll(DataAccessAdapter<E> em);
+    public List<PeriodVo> getAll(DataAccessAdapter<E> em)throws DataAccessException;
 
     /**
      * Returns a list of periods which year is equal to the year
@@ -28,7 +29,7 @@ public interface PeriodDao<E> extends CrudDao<PeriodVo, E> {
      * @param year the year
      * @return a list of matched period entities
      */
-    public List<PeriodVo> getByYear(DataAccessAdapter<E> em, int year);
+    public List<PeriodVo> getByYear(DataAccessAdapter<E> em, int year)throws DataAccessException;
 
     /**
      * Returns a period which year and semester match the given arguments
@@ -38,5 +39,5 @@ public interface PeriodDao<E> extends CrudDao<PeriodVo, E> {
      * @param semester the semester
      * @return the matched period entity or null if there is no such entity
      */
-    public PeriodVo getByYearAndSemester(DataAccessAdapter<E> em, int year, int semester);
+    public PeriodVo getByYearAndSemester(DataAccessAdapter<E> em, int year, int semester)throws DataAccessException;
 }

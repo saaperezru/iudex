@@ -5,6 +5,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import org.xtremeware.iudex.da.DataAccessAdapter;
+import org.xtremeware.iudex.da.DataAccessException;
 import org.xtremeware.iudex.dao.SubjectRatingDao;
 import org.xtremeware.iudex.entity.SubjectEntity;
 import org.xtremeware.iudex.entity.SubjectRatingEntity;
@@ -27,10 +28,9 @@ public class JpaSubjectRatingDao extends JpaCrudDao<SubjectRatingVo, SubjectRati
      * @return list of SubjectRatingVo
      */
     @Override
-    public List<SubjectRatingVo> getBySubjectId(DataAccessAdapter<EntityManager> em, Long subjectId) {
+    public List<SubjectRatingVo> getBySubjectId(DataAccessAdapter<EntityManager> em, Long subjectId) throws DataAccessException {
         checkDataAccessAdapter(em);
-        List<SubjectRatingEntity> list = em.getDataAccess().createNamedQuery("getSubjectRatingBySubjectId", SubjectRatingEntity.class).setParameter("subjectId", subjectId).getResultList();
-        return entitiesToVos(list);
+        return entitiesToVos(em.getDataAccess().createNamedQuery("getSubjectRatingBySubjectId", getEntityClass()).setParameter("subjectId", subjectId).getResultList());
     }
 
     /**
@@ -43,10 +43,10 @@ public class JpaSubjectRatingDao extends JpaCrudDao<SubjectRatingVo, SubjectRati
      * @return a SubjectRatingEntity
      */
     @Override
-    public SubjectRatingVo getBySubjectIdAndUserId(DataAccessAdapter<EntityManager> em, Long subjectId, Long userId) {
+    public SubjectRatingVo getBySubjectIdAndUserId(DataAccessAdapter<EntityManager> em, Long subjectId, Long userId) throws DataAccessException {
         checkDataAccessAdapter(em);
         try {
-            return em.getDataAccess().createNamedQuery("getSubjectRatingBySubjectIdAndUserId", SubjectRatingEntity.class).setParameter("subjectId", subjectId).setParameter("userId", userId).getSingleResult().toVo();
+            return em.getDataAccess().createNamedQuery("getSubjectRatingBySubjectIdAndUserId", getEntityClass()).setParameter("subjectId", subjectId).setParameter("userId", userId).getSingleResult().toVo();
         } catch (NoResultException noResultException) {
             return null;
         }
@@ -60,10 +60,9 @@ public class JpaSubjectRatingDao extends JpaCrudDao<SubjectRatingVo, SubjectRati
      * @return list of SubjectRatingVo
      */
     @Override
-    public List<SubjectRatingVo> getByUserId(DataAccessAdapter<EntityManager> em, Long userId) {
+    public List<SubjectRatingVo> getByUserId(DataAccessAdapter<EntityManager> em, Long userId) throws DataAccessException {
         checkDataAccessAdapter(em);
-        List<SubjectRatingEntity> list = em.getDataAccess().createNamedQuery("getUserRatingBySubjectId").setParameter("userId", userId).getResultList();
-        return entitiesToVos(list);
+        return entitiesToVos(em.getDataAccess().createNamedQuery("getUserRatingBySubjectId", getEntityClass()).setParameter("userId", userId).getResultList());
     }
 
     /**
@@ -74,7 +73,7 @@ public class JpaSubjectRatingDao extends JpaCrudDao<SubjectRatingVo, SubjectRati
      * @return a RatingSummaryVo object
      */
     @Override
-    public RatingSummaryVo getSummary(DataAccessAdapter<EntityManager> em, Long subjectId) {
+    public RatingSummaryVo getSummary(DataAccessAdapter<EntityManager> em, Long subjectId) throws DataAccessException {
         checkDataAccessAdapter(em);
         RatingSummaryVo rsv = new RatingSummaryVo();
 
@@ -105,7 +104,7 @@ public class JpaSubjectRatingDao extends JpaCrudDao<SubjectRatingVo, SubjectRati
     }
 
     @Override
-    protected Class getEntityClass() {
+    protected Class<SubjectRatingEntity> getEntityClass() {
         return SubjectRatingEntity.class;
     }
 }

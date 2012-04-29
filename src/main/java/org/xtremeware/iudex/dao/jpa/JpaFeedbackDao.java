@@ -3,6 +3,7 @@ package org.xtremeware.iudex.dao.jpa;
 import java.util.List;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.da.DataAccessAdapter;
+import org.xtremeware.iudex.da.DataAccessException;
 import org.xtremeware.iudex.dao.FeedbackDao;
 import org.xtremeware.iudex.entity.FeedbackEntity;
 import org.xtremeware.iudex.entity.FeedbackTypeEntity;
@@ -38,7 +39,7 @@ public class JpaFeedbackDao extends JpaCrudDao<FeedbackVo,FeedbackEntity> implem
     }
 
     @Override
-    protected Class getEntityClass() {
+    protected Class<FeedbackEntity> getEntityClass() {
         return FeedbackEntity.class;
     }
     
@@ -52,9 +53,9 @@ public class JpaFeedbackDao extends JpaCrudDao<FeedbackVo,FeedbackEntity> implem
      * @return The list of found feedbacks
      */
     @Override
-    public List<FeedbackVo> getByTypeId(DataAccessAdapter<EntityManager> em, long feedbackTypeId) {
+    public List<FeedbackVo> getByTypeId(DataAccessAdapter<EntityManager> em, long feedbackTypeId) throws DataAccessException {
         checkDataAccessAdapter(em);
-        return entitiesToVos(em.getDataAccess().createNamedQuery("getByTypeId").setParameter("feedbackTypeId", feedbackTypeId).getResultList());
+        return entitiesToVos(em.getDataAccess().createNamedQuery("getByTypeId",getEntityClass()).setParameter("feedbackTypeId", feedbackTypeId).getResultList());
     }
 
     /**
@@ -66,8 +67,8 @@ public class JpaFeedbackDao extends JpaCrudDao<FeedbackVo,FeedbackEntity> implem
      * @return The list of found feedbacks
      */
     @Override
-    public List<FeedbackVo> getByContentLike(DataAccessAdapter<EntityManager> em, String query) {
+    public List<FeedbackVo> getByContentLike(DataAccessAdapter<EntityManager> em, String query) throws DataAccessException{
         checkDataAccessAdapter(em);
-        return entitiesToVos(em.getDataAccess().createNamedQuery("getFeedbackByContentLike").setParameter("query", "%"+query+"%").getResultList());
+        return entitiesToVos(em.getDataAccess().createNamedQuery("getFeedbackByContentLike",getEntityClass()).setParameter("query", "%"+query+"%").getResultList());
     }
 }

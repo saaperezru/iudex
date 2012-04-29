@@ -4,18 +4,18 @@
  */
 package org.xtremeware.iudex.businesslogic.service;
 
-import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.EntityManager;
 import org.xtremeware.iudex.businesslogic.InvalidVoException;
+import org.xtremeware.iudex.da.DataAccessAdapter;
+import org.xtremeware.iudex.da.DataAccessException;
 import org.xtremeware.iudex.dao.AbstractDaoFactory;
-import org.xtremeware.iudex.dao.jpa.JpaCrudDao;
-import org.xtremeware.iudex.dao.jpa.JpaFeedbackTypeDao;
-import org.xtremeware.iudex.entity.FeedbackEntity;
+import org.xtremeware.iudex.dao.CrudDao;
+import org.xtremeware.iudex.dao.FeedbackTypeDao;
 import org.xtremeware.iudex.entity.FeedbackTypeEntity;
 import org.xtremeware.iudex.helper.ExternalServiceConnectionException;
 import org.xtremeware.iudex.helper.SecurityHelper;
 import org.xtremeware.iudex.vo.FeedbackTypeVo;
+import org.xtremeware.iudex.vo.FeedbackVo;
 
 /**
  *
@@ -38,7 +38,7 @@ public class FeedbackTypesService extends SimpleCrudService<FeedbackTypeVo, Feed
      * @return
      */
     @Override
-    protected JpaCrudDao<FeedbackTypeEntity> getDao() {
+    protected CrudDao<FeedbackTypeVo, FeedbackTypeEntity> getDao() {
         return this.getDaoFactory().getFeedbackTypeDao();
     }
 
@@ -51,13 +51,17 @@ public class FeedbackTypesService extends SimpleCrudService<FeedbackTypeVo, Feed
      * @throws InvalidVoException
      */
     @Override
-    public void validateVo(EntityManager em, FeedbackTypeVo vo) throws InvalidVoException {
+    public void validateVo(DataAccessAdapter em, FeedbackTypeVo vo) throws InvalidVoException, DataAccessException, ExternalServiceConnectionException {
         if (vo == null) {
             throw new InvalidVoException("Null FeedbackTypeVo");
         }
         if (vo.getName() == null) {
             throw new InvalidVoException("Null name in the provided FeedbackTypeVo");
         }
+        
+        vo.setName(SecurityHelper.sanitizeHTML(vo.getName()));
+        
+        
     }
 
     /**
@@ -66,31 +70,23 @@ public class FeedbackTypesService extends SimpleCrudService<FeedbackTypeVo, Feed
      * @param em EntityManager
      * @return A list of all different FeedbackTypeVo
      */
-    public List<FeedbackTypeVo> list(EntityManager em) {
-        List<FeedbackTypeEntity> feedbackTypeEntitys = ((JpaFeedbackTypeDao) this.getDao()).getAll(em);
-        if (feedbackTypeEntitys.isEmpty()) {
-            return null;
-        }
-        ArrayList<FeedbackTypeVo> arrayList = new ArrayList<FeedbackTypeVo>();
-        for (FeedbackTypeEntity feedbackTypeEntity : feedbackTypeEntitys) {
-            arrayList.add(feedbackTypeEntity.toVo());
-        }
-        return arrayList;
+    public List<FeedbackTypeVo> list(DataAccessAdapter em) throws DataAccessException {
+        return ((FeedbackTypeDao) this.getDao()).getAll(em);
     }
-    
-  /**
-    * Remove the FeedBack Type and all the Feedback Comments associated  to it.
-    * 
-    * @param em entity manager
-    * @param id id of the FeedBackType
-    */    
-    @Override
-    public void remove(EntityManager em, long id) {
-            List<FeedbackEntity> feedBacks = getDaoFactory().getFeedbackDao().getByTypeId(em, id);
-                for (FeedbackEntity feedBack : feedBacks){
-                    getDaoFactory().getFeedbackDao().remove(em,feedBack.getId());
-                }
 
-            getDao().remove(em, id);
+    /**
+     * Remove the FeedBack Type and all the Feedback Comments associated to it.
+     *
+     * @param em entity manager
+     * @param id id of the FeedBackType
+     */
+    @Override
+    public void remove(DataAccessAdapter em, long id) throws DataAccessException {
+        List<FeedbackVo> feedBacks = getDaoFactory().getFeedbackDao().getByTypeId(em, id);
+        for (FeedbackVo feedBack : feedBacks) {
+            getDaoFactory().getFeedbackDao().remove(em, feedBack.getId());
+        }
+
+        getDao().remove(em, id);
     }
 }

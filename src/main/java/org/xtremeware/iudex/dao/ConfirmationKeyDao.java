@@ -1,6 +1,7 @@
 package org.xtremeware.iudex.dao;
 
 import org.xtremeware.iudex.da.DataAccessAdapter;
+import org.xtremeware.iudex.da.DataAccessException;
 import org.xtremeware.iudex.vo.ConfirmationKeyVo;
 
 /**
@@ -9,5 +10,5 @@ import org.xtremeware.iudex.vo.ConfirmationKeyVo;
  */
 public interface ConfirmationKeyDao<E> extends CrudDao<ConfirmationKeyVo, E> {
 
-    public ConfirmationKeyVo getByConfirmationKey(DataAccessAdapter<E> em, String confirmationKey);
+    public ConfirmationKeyVo getByConfirmationKey(DataAccessAdapter<E> em, String confirmationKey) throws DataAccessException;
 }

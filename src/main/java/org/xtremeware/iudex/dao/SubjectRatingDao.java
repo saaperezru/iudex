@@ -2,6 +2,7 @@ package org.xtremeware.iudex.dao;
 
 import java.util.List;
 import org.xtremeware.iudex.da.DataAccessAdapter;
+import org.xtremeware.iudex.da.DataAccessException;
 import org.xtremeware.iudex.vo.RatingSummaryVo;
 import org.xtremeware.iudex.vo.SubjectRatingVo;
 
@@ -19,7 +20,7 @@ public interface SubjectRatingDao<E> extends CrudDao<SubjectRatingVo, E> {
      * @param subjectId subject id
      * @return list of SubjectRatingVo
      */
-    public List<SubjectRatingVo> getBySubjectId(DataAccessAdapter<E> em, Long subjectId);
+    public List<SubjectRatingVo> getBySubjectId(DataAccessAdapter<E> em, Long subjectId)throws DataAccessException;
 
     /**
      * Returns a rating given by a user, identified by userId, to a subject,
@@ -30,7 +31,7 @@ public interface SubjectRatingDao<E> extends CrudDao<SubjectRatingVo, E> {
      * @param userId user id
      * @return a SubjectRatingEntity
      */
-    public SubjectRatingVo getBySubjectIdAndUserId(DataAccessAdapter<E> em, Long subjectId, Long userId);
+    public SubjectRatingVo getBySubjectIdAndUserId(DataAccessAdapter<E> em, Long subjectId, Long userId)throws DataAccessException;
 
     /**
      * Returns a list of SubjectRatings value Objects given the user
@@ -39,7 +40,7 @@ public interface SubjectRatingDao<E> extends CrudDao<SubjectRatingVo, E> {
      * @param userId user id
      * @return list of SubjectRatingVo
      */
-    public List<SubjectRatingVo> getByUserId(DataAccessAdapter<E> em, Long userId);
+    public List<SubjectRatingVo> getByUserId(DataAccessAdapter<E> em, Long userId)throws DataAccessException;
 
     /**
      * Returns a summary of the ratings given a subject.
@@ -48,5 +49,5 @@ public interface SubjectRatingDao<E> extends CrudDao<SubjectRatingVo, E> {
      * @param subjectId subject id
      * @return a RatingSummaryVo object
      */
-    public RatingSummaryVo getSummary(DataAccessAdapter<E> em, Long subjectId);
+    public RatingSummaryVo getSummary(DataAccessAdapter<E> em, Long subjectId)throws DataAccessException;
 }

@@ -2,6 +2,7 @@ package org.xtremeware.iudex.dao;
 
 import java.util.List;
 import org.xtremeware.iudex.da.DataAccessAdapter;
+import org.xtremeware.iudex.da.DataAccessException;
 import org.xtremeware.iudex.vo.FeedbackVo;
 
 /**
@@ -10,7 +11,7 @@ import org.xtremeware.iudex.vo.FeedbackVo;
  */
 public interface FeedbackDao<E> extends CrudDao<FeedbackVo, E> {
 
-    public List<FeedbackVo> getByTypeId(DataAccessAdapter<E> em, long feedbackTypeId);
+    public List<FeedbackVo> getByTypeId(DataAccessAdapter<E> em, long feedbackTypeId)throws DataAccessException;
 
-    public List<FeedbackVo> getByContentLike(DataAccessAdapter<E> em, String query);
+    public List<FeedbackVo> getByContentLike(DataAccessAdapter<E> em, String query)throws DataAccessException;
 }

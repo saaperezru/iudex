@@ -1,10 +1,10 @@
 package org.xtremeware.iudex.dao.jpa;
 
-import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import org.xtremeware.iudex.da.DataAccessAdapter;
+import org.xtremeware.iudex.da.DataAccessException;
 import org.xtremeware.iudex.dao.ProfessorRatingDao;
 import org.xtremeware.iudex.entity.ProfessorEntity;
 import org.xtremeware.iudex.entity.ProfessorRatingEntity;
@@ -28,10 +28,9 @@ public class JpaProfessorRatingDao extends JpaCrudDao< ProfessorRatingVo, Profes
      * @return A list with all ratings associated to the specified professor
      */
     @Override
-    public List<ProfessorRatingVo> getByProfessorId(DataAccessAdapter<EntityManager> em, long professorId) {
+    public List<ProfessorRatingVo> getByProfessorId(DataAccessAdapter<EntityManager> em, long professorId) throws DataAccessException {
         checkDataAccessAdapter(em);
-        List<ProfessorRatingEntity> list = em.getDataAccess().createNamedQuery("getRatingByProfessorId", ProfessorRatingEntity.class).setParameter("professor", professorId).getResultList();
-        return entitiesToVos(list);
+        return entitiesToVos(em.getDataAccess().createNamedQuery("getRatingByProfessorId", getEntityClass()).setParameter("professor", professorId).getResultList());
     }
 
     /**
@@ -43,10 +42,10 @@ public class JpaProfessorRatingDao extends JpaCrudDao< ProfessorRatingVo, Profes
      * @return The rating a student has submitted to a professor
      */
     @Override
-    public ProfessorRatingVo getByProfessorIdAndUserId(DataAccessAdapter<EntityManager> em, long professorId, long userId) {
+    public ProfessorRatingVo getByProfessorIdAndUserId(DataAccessAdapter<EntityManager> em, long professorId, long userId) throws DataAccessException {
         checkDataAccessAdapter(em);
         try {
-            return em.getDataAccess().createNamedQuery("getRatingByProfessorIdAndUserId", ProfessorRatingEntity.class).setParameter("professor", professorId).setParameter("user", userId).getSingleResult().toVo();
+            return em.getDataAccess().createNamedQuery("getRatingByProfessorIdAndUserId", getEntityClass()).setParameter("professor", professorId).setParameter("user", userId).getSingleResult().toVo();
         } catch (NoResultException e) {
             return null;
         }
@@ -61,10 +60,9 @@ public class JpaProfessorRatingDao extends JpaCrudDao< ProfessorRatingVo, Profes
      * @return A list with all ratings associated to the specified user
      */
     @Override
-    public List<ProfessorRatingVo> getByUserId(DataAccessAdapter<EntityManager> em, long userId) {
+    public List<ProfessorRatingVo> getByUserId(DataAccessAdapter<EntityManager> em, long userId) throws DataAccessException {
         checkDataAccessAdapter(em);
-        List<ProfessorRatingEntity> list = em.getDataAccess().createNamedQuery("getRatingByUserId", ProfessorRatingEntity.class).setParameter("user", userId).getResultList();
-        return entitiesToVos(list);
+        return entitiesToVos(em.getDataAccess().createNamedQuery("getRatingByUserId", getEntityClass()).setParameter("user", userId).getResultList());
     }
 
     /**
@@ -76,7 +74,7 @@ public class JpaProfessorRatingDao extends JpaCrudDao< ProfessorRatingVo, Profes
      * professor has obtained positive and negative ratings
      */
     @Override
-    public RatingSummaryVo getSummary(DataAccessAdapter<EntityManager> em, long professorId) {
+    public RatingSummaryVo getSummary(DataAccessAdapter<EntityManager> em, long professorId) throws DataAccessException {
         checkDataAccessAdapter(em);
 
         RatingSummaryVo rsv = new RatingSummaryVo();
@@ -107,7 +105,7 @@ public class JpaProfessorRatingDao extends JpaCrudDao< ProfessorRatingVo, Profes
     }
 
     @Override
-    protected Class getEntityClass() {
+    protected Class<ProfessorRatingEntity> getEntityClass() {
         return ProfessorRatingEntity.class;
     }
 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.da.DataAccessAdapter;
+import org.xtremeware.iudex.da.DataAccessException;
 import org.xtremeware.iudex.dao.SubjectDao;
 import org.xtremeware.iudex.entity.SubjectEntity;
 import org.xtremeware.iudex.vo.SubjectVo;
@@ -24,10 +25,9 @@ public class JpaSubjectDao extends JpaCrudDao<SubjectVo, SubjectEntity> implemen
      * @return a list of matched subjectVo
      */
     @Override
-    public List<SubjectVo> getByName(DataAccessAdapter<EntityManager> em, String name) {
+    public List<SubjectVo> getByName(DataAccessAdapter<EntityManager> em, String name) throws DataAccessException {
         checkDataAccessAdapter(em);
-        List<SubjectEntity> list = em.getDataAccess().createNamedQuery("getSubjectsByName", SubjectEntity.class).setParameter("name", "%" + name + "%").getResultList();
-        return entitiesToVos(list);
+        return entitiesToVos(em.getDataAccess().createNamedQuery("getSubjectsByName", getEntityClass()).setParameter("name", "%" + name + "%").getResultList());
     }
 
     /**
@@ -38,10 +38,9 @@ public class JpaSubjectDao extends JpaCrudDao<SubjectVo, SubjectEntity> implemen
      * @return a list of matched subject value objects
      */
     @Override
-    public List<SubjectVo> getByProfessorId(DataAccessAdapter<EntityManager> em, long professorId) {
+    public List<SubjectVo> getByProfessorId(DataAccessAdapter<EntityManager> em, long professorId) throws DataAccessException {
         checkDataAccessAdapter(em);
-        List<SubjectEntity> list = em.getDataAccess().createNamedQuery("getSubjectsByProfessorId", SubjectEntity.class).setParameter("professorId", professorId).getResultList();
-        return entitiesToVos(list);
+        return entitiesToVos(em.getDataAccess().createNamedQuery("getSubjectsByProfessorId", getEntityClass()).setParameter("professorId", professorId).getResultList());
     }
 
     @Override
@@ -56,7 +55,7 @@ public class JpaSubjectDao extends JpaCrudDao<SubjectVo, SubjectEntity> implemen
 
     
     @Override
-    protected Class getEntityClass() {
+    protected Class<SubjectEntity> getEntityClass() {
         return SubjectEntity.class;
     }
 }

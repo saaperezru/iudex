@@ -3,6 +3,7 @@ package org.xtremeware.iudex.dao.jpa;
 import java.util.List;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.da.DataAccessAdapter;
+import org.xtremeware.iudex.da.DataAccessException;
 import org.xtremeware.iudex.dao.CourseDao;
 import org.xtremeware.iudex.entity.CourseEntity;
 import org.xtremeware.iudex.entity.PeriodEntity;
@@ -19,9 +20,9 @@ import org.xtremeware.iudex.vo.CourseVo;
 public class JpaCourseDao extends JpaCrudDao<CourseVo, CourseEntity> implements CourseDao<EntityManager> {
 
     /**
-     * Returns a Course entity using the information in the provided
-     * Course value object.
-     * 
+     * Returns a Course entity using the information in the provided Course
+     * value object.
+     *
      * @param em the data access adapter
      * @param vo the Course value object
      * @return the Course entity
@@ -29,20 +30,20 @@ public class JpaCourseDao extends JpaCrudDao<CourseVo, CourseEntity> implements 
     @Override
     protected CourseEntity voToEntity(DataAccessAdapter<EntityManager> em, CourseVo vo) {
         CourseEntity courseEntity = new CourseEntity();
-        
+
         courseEntity.setId(vo.getId());
         courseEntity.setRatingAverage(vo.getRatingAverage());
         courseEntity.setRatingCount(vo.getRatingCount());
-        
+
         courseEntity.setPeriod(em.getDataAccess().getReference(PeriodEntity.class, vo.getPeriodId()));
         courseEntity.setProfessor(em.getDataAccess().getReference(ProfessorEntity.class, vo.getProfessorId()));
         courseEntity.setSubject(em.getDataAccess().getReference(SubjectEntity.class, vo.getSubjectId()));
-        
+
         return courseEntity;
     }
 
     @Override
-    protected Class getEntityClass() {
+    protected Class<CourseEntity> getEntityClass() {
         return CourseEntity.class;
     }
 
@@ -55,9 +56,9 @@ public class JpaCourseDao extends JpaCrudDao<CourseVo, CourseEntity> implements 
      * @return The list of found courses
      */
     @Override
-    public List<CourseVo> getByProfessorId(DataAccessAdapter<EntityManager> em, long professorId) {
+    public List<CourseVo> getByProfessorId(DataAccessAdapter<EntityManager> em, long professorId) throws DataAccessException {
         checkDataAccessAdapter(em);
-        return entitiesToVos(em.getDataAccess().createNamedQuery("getCourseByProfessorId").setParameter("professorId", professorId).getResultList());
+        return entitiesToVos(em.getDataAccess().createNamedQuery("getCourseByProfessorId", getEntityClass()).setParameter("professorId", professorId).getResultList());
     }
 
     /**
@@ -69,9 +70,9 @@ public class JpaCourseDao extends JpaCrudDao<CourseVo, CourseEntity> implements 
      * @return The list of found courses
      */
     @Override
-    public List<CourseVo> getBySubjectId(DataAccessAdapter<EntityManager> em, long subjectId) {
+    public List<CourseVo> getBySubjectId(DataAccessAdapter<EntityManager> em, long subjectId) throws DataAccessException {
         checkDataAccessAdapter(em);
-        return entitiesToVos(em.getDataAccess().createNamedQuery("getCourseBySubjectId").setParameter("subjectId", subjectId).getResultList());
+        return entitiesToVos(em.getDataAccess().createNamedQuery("getCourseBySubjectId", getEntityClass()).setParameter("subjectId", subjectId).getResultList());
     }
 
     /**
@@ -83,7 +84,7 @@ public class JpaCourseDao extends JpaCrudDao<CourseVo, CourseEntity> implements 
      * @return The list of found courses
      */
     @Override
-    public List<CourseVo> getByPeriodId(DataAccessAdapter<EntityManager> em, long periodId) {
+    public List<CourseVo> getByPeriodId(DataAccessAdapter<EntityManager> em, long periodId) throws DataAccessException {
         checkDataAccessAdapter(em);
         return entitiesToVos(em.getDataAccess().createNamedQuery("getCourseByPeriodId").setParameter("periodId", periodId).getResultList());
     }
@@ -98,7 +99,7 @@ public class JpaCourseDao extends JpaCrudDao<CourseVo, CourseEntity> implements 
      * @return The list of found courses
      */
     @Override
-    public List<CourseVo> getByProfessorIdAndSubjectId(DataAccessAdapter<EntityManager> em, long professorId, long subjectId) {
+    public List<CourseVo> getByProfessorIdAndSubjectId(DataAccessAdapter<EntityManager> em, long professorId, long subjectId) throws DataAccessException {
         checkDataAccessAdapter(em);
         return entitiesToVos(em.getDataAccess().createNamedQuery("getCourseByProfessorIdAndSubjectId").setParameter("professorId", professorId).setParameter("subjectId", subjectId).getResultList());
     }
@@ -119,17 +120,17 @@ public class JpaCourseDao extends JpaCrudDao<CourseVo, CourseEntity> implements 
      * like the ones provided.
      */
     @Override
-    public List<CourseVo> getCoursesByProfessorNameLikeAndSubjectNameLike(DataAccessAdapter<EntityManager> em, String professorName, String subjectName, Long periodId) {
+    public List<CourseVo> getCoursesByProfessorNameLikeAndSubjectNameLike(DataAccessAdapter<EntityManager> em, String professorName, String subjectName, Long periodId) throws DataAccessException {
         checkDataAccessAdapter(em);
 
         String professor = (professorName == null) ? "%" : "%" + professorName + "%";
         String subject = (subjectName == null) ? "%" : "%" + subjectName + "%";
         if (periodId == null) {
 
-            return entitiesToVos(em.getDataAccess().createNamedQuery("getCoursesByProfessorNameLikeAndSubjectNameLike").setParameter("professorName", professor).setParameter("subjectName", subject).getResultList());
+            return entitiesToVos(em.getDataAccess().createNamedQuery("getCoursesByProfessorNameLikeAndSubjectNameLike",getEntityClass()).setParameter("professorName", professor).setParameter("subjectName", subject).getResultList());
         } else {
 
-            return entitiesToVos(em.getDataAccess().createNamedQuery("getCoursesByProfessorNameLikeAndSubjectNameLikeAndPeriodId").setParameter("professorName", professor).setParameter("subjectName", subject).setParameter("periodId", periodId).getResultList());
+            return entitiesToVos(em.getDataAccess().createNamedQuery("getCoursesByProfessorNameLikeAndSubjectNameLikeAndPeriodId",getEntityClass()).setParameter("professorName", professor).setParameter("subjectName", subject).setParameter("periodId", periodId).getResultList());
         }
     }
 }

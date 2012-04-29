@@ -1,9 +1,9 @@
 package org.xtremeware.iudex.dao.jpa;
 
-import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.da.DataAccessAdapter;
+import org.xtremeware.iudex.da.DataAccessException;
 import org.xtremeware.iudex.dao.CommentDao;
 import org.xtremeware.iudex.entity.CommentEntity;
 import org.xtremeware.iudex.entity.CourseEntity;
@@ -16,7 +16,7 @@ import org.xtremeware.iudex.vo.CommentVo;
  *
  * @author saaperezru
  */
-public class JpaCommentDao extends JpaCrudDao<CommentVo,CommentEntity> implements CommentDao<EntityManager> {
+public class JpaCommentDao extends JpaCrudDao<CommentVo, CommentEntity> implements CommentDao<EntityManager> {
 
     /**
      * Returns a list of Comments associated with the course who's professor is
@@ -28,11 +28,10 @@ public class JpaCommentDao extends JpaCrudDao<CommentVo,CommentEntity> implement
      * @return The list of found comments.
      */
     @Override
-    public List<CommentVo> getByProfessorId(DataAccessAdapter<EntityManager> em, long professorId) {
+    public List<CommentVo> getByProfessorId(DataAccessAdapter<EntityManager> em, long professorId) throws DataAccessException{
         checkDataAccessAdapter(em);
-        List<CommentEntity> list = em.getDataAccess().createNamedQuery("getCommentsByProfessorId").setParameter("professorId", professorId).getResultList();
-        return entitiesToVos(list);
-        
+        return entitiesToVos(em.getDataAccess().createNamedQuery("getCommentsByProfessorId", getEntityClass()).setParameter("professorId", professorId).getResultList());
+
     }
 
     /**
@@ -45,10 +44,9 @@ public class JpaCommentDao extends JpaCrudDao<CommentVo,CommentEntity> implement
      * @return The list of found comments.
      */
     @Override
-    public List<CommentVo> getBySubjectId(DataAccessAdapter<EntityManager> em, long subjectId) {
+    public List<CommentVo> getBySubjectId(DataAccessAdapter<EntityManager> em, long subjectId) throws DataAccessException{
         checkDataAccessAdapter(em);
-        List<CommentEntity> list = em.getDataAccess().createNamedQuery("getCommentsBySubjectId").setParameter("subjectId", subjectId).getResultList();
-        return entitiesToVos(list);
+        return entitiesToVos(em.getDataAccess().createNamedQuery("getCommentsBySubjectId", getEntityClass()).setParameter("subjectId", subjectId).getResultList());
     }
 
     /**
@@ -60,10 +58,9 @@ public class JpaCommentDao extends JpaCrudDao<CommentVo,CommentEntity> implement
      * @return The list of found comments.
      */
     @Override
-    public List<CommentVo> getByUserId(DataAccessAdapter<EntityManager> em, long userId) {
+    public List<CommentVo> getByUserId(DataAccessAdapter<EntityManager> em, long userId) throws DataAccessException{
         checkDataAccessAdapter(em);
-        List<CommentEntity> list = em.getDataAccess().createNamedQuery("getCommentsByUserId").setParameter("userId", userId).getResultList();
-        return entitiesToVos(list);
+        return entitiesToVos(em.getDataAccess().createNamedQuery("getCommentsByUserId", getEntityClass()).setParameter("userId", userId).getResultList());
     }
 
     /**
@@ -75,23 +72,22 @@ public class JpaCommentDao extends JpaCrudDao<CommentVo,CommentEntity> implement
      * @return The list of found comments.
      */
     @Override
-    public List<CommentVo> getByCourseId(DataAccessAdapter<EntityManager> em, long courseId) {
+    public List<CommentVo> getByCourseId(DataAccessAdapter<EntityManager> em, long courseId) throws DataAccessException{
         checkDataAccessAdapter(em);
-        List<CommentEntity> list = em.getDataAccess().createNamedQuery("getCommentsByCourseId").setParameter("courseId", courseId).getResultList();
-        return entitiesToVos(list);
+        return entitiesToVos(em.getDataAccess().createNamedQuery("getCommentsByCourseId" , getEntityClass()).setParameter("courseId", courseId).getResultList());
     }
-    
+
     /**
      * Returns the number of comments submitted by a user on the current date
-     * 
+     *
      * @param em DataAccessAdapter
      * @param userId id of the user
      * @return number of comments submitted on the current day
      */
     @Override
-    public int getUserCommentsCounter(DataAccessAdapter<EntityManager> em, long userId) {
+    public int getUserCommentsCounter(DataAccessAdapter<EntityManager> em, long userId) throws DataAccessException{
         checkDataAccessAdapter(em);
-        return (em.getDataAccess().createNamedQuery("getUserCommentsCounter",Long.class).setParameter("userId", userId).getSingleResult()).intValue();
+        return (em.getDataAccess().createNamedQuery("getUserCommentsCounter", Long.class).setParameter("userId", userId).getSingleResult()).intValue();
     }
 
     @Override
@@ -102,14 +98,14 @@ public class JpaCommentDao extends JpaCrudDao<CommentVo,CommentEntity> implement
         entity.setDate(vo.getDate());
         entity.setId(vo.getId());
         entity.setRating(vo.getRating());
-	entity.setCourse(em.getDataAccess().getReference(CourseEntity.class, vo.getCourseId()));
+        entity.setCourse(em.getDataAccess().getReference(CourseEntity.class, vo.getCourseId()));
         entity.setUser(em.getDataAccess().getReference(UserEntity.class, vo.getUserId()));
 
-	return entity;
+        return entity;
     }
 
     @Override
-    protected Class getEntityClass() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    protected Class<CommentEntity> getEntityClass() {
+        return CommentEntity.class;
     }
 }

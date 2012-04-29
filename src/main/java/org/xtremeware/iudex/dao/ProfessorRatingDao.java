@@ -2,6 +2,7 @@ package org.xtremeware.iudex.dao;
 
 import java.util.List;
 import org.xtremeware.iudex.da.DataAccessAdapter;
+import org.xtremeware.iudex.da.DataAccessException;
 import org.xtremeware.iudex.vo.ProfessorRatingVo;
 import org.xtremeware.iudex.vo.RatingSummaryVo;
 
@@ -20,7 +21,7 @@ public interface ProfessorRatingDao<E> extends CrudDao<ProfessorRatingVo, E> {
      * @param professorId Professor's ID
      * @return A list with all ratings associated to the specified professor
      */
-    public List<ProfessorRatingVo> getByProfessorId(DataAccessAdapter<E> em, long professorId);
+    public List<ProfessorRatingVo> getByProfessorId(DataAccessAdapter<E> em, long professorId)throws DataAccessException;
 
     /**
      * Professor ratings finder according to a professor and a student
@@ -30,7 +31,7 @@ public interface ProfessorRatingDao<E> extends CrudDao<ProfessorRatingVo, E> {
      * @param userId Student's ID
      * @return The rating a student has submitted to a professor
      */
-    public ProfessorRatingVo getByProfessorIdAndUserId(DataAccessAdapter<E> em, long professorId, long userId);
+    public ProfessorRatingVo getByProfessorIdAndUserId(DataAccessAdapter<E> em, long professorId, long userId)throws DataAccessException;
 
     /**
      * Professors ratings finder according to a specified user
@@ -39,7 +40,7 @@ public interface ProfessorRatingDao<E> extends CrudDao<ProfessorRatingVo, E> {
      * @param userId user's ID
      * @return A list with all ratings associated to the specified user
      */
-    public List<ProfessorRatingVo> getByUserId(DataAccessAdapter<E> em, long userId);
+    public List<ProfessorRatingVo> getByUserId(DataAccessAdapter<E> em, long userId)throws DataAccessException;
 
     /**
      * Professor rating summary calculator
@@ -49,5 +50,5 @@ public interface ProfessorRatingDao<E> extends CrudDao<ProfessorRatingVo, E> {
      * @return A value object containing the number of times the specified
      * professor has obtained positive and negative ratings
      */
-    public RatingSummaryVo getSummary(DataAccessAdapter<E> em, long professorId);
+    public RatingSummaryVo getSummary(DataAccessAdapter<E> em, long professorId)throws DataAccessException;
 }

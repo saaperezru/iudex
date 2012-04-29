@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import org.xtremeware.iudex.da.DataAccessAdapter;
+import org.xtremeware.iudex.da.DataAccessException;
 import org.xtremeware.iudex.dao.UserDao;
 import org.xtremeware.iudex.entity.ProgramEntity;
 import org.xtremeware.iudex.entity.UserEntity;
@@ -27,17 +28,17 @@ public class JpaUserDao extends JpaCrudDao<UserVo, UserEntity> implements UserDa
      * @return Value object with required user information
      */
     @Override
-    public UserVo getByUsernameAndPassword(DataAccessAdapter<EntityManager> em, String username, String password) {
+    public UserVo getByUsernameAndPassword(DataAccessAdapter<EntityManager> em, String username, String password) throws DataAccessException {
         checkDataAccessAdapter(em);
         try {
-            return ((UserEntity) em.getDataAccess().createNamedQuery("getUserByUsernameAndPassword").setParameter("userName", username).setParameter("password", password).getSingleResult()).toVo();
+            return em.getDataAccess().createNamedQuery("getUserByUsernameAndPassword", getEntityClass()).setParameter("userName", username).setParameter("password", password).getSingleResult().toVo();
         } catch (NoResultException e) {
             return null;
         }
     }
 
     @Override
-    protected Class getEntityClass() {
+    protected Class<UserEntity> getEntityClass() {
         return UserEntity.class;
     }
 

@@ -2,6 +2,7 @@ package org.xtremeware.iudex.dao;
 
 import java.util.List;
 import org.xtremeware.iudex.da.DataAccessAdapter;
+import org.xtremeware.iudex.da.DataAccessException;
 import org.xtremeware.iudex.vo.ProgramVo;
 
 /**
@@ -18,6 +19,6 @@ public interface ProgramDao <E> extends CrudDao<ProgramVo, E> {
      * @param name
      * @return Return a list of programEntity objects
      */
-    public List<ProgramVo> getByNameLike(DataAccessAdapter<E> em, String name);
+    public List<ProgramVo> getByNameLike(DataAccessAdapter<E> em, String name)throws DataAccessException;
     
 }

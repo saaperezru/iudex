@@ -2,6 +2,7 @@ package org.xtremeware.iudex.dao;
 
 import java.util.List;
 import org.xtremeware.iudex.da.DataAccessAdapter;
+import org.xtremeware.iudex.da.DataAccessException;
 import org.xtremeware.iudex.vo.ProfessorVo;
 
 /**
@@ -20,7 +21,7 @@ public interface ProfessorDao<E> extends CrudDao<ProfessorVo, E> {
      * @return List of professors whose firstname or lastname are equal to the
      * specified
      */
-    public List<ProfessorVo> getByName(DataAccessAdapter<E> em, String name);
+    public List<ProfessorVo> getByName(DataAccessAdapter<E> em, String name)throws DataAccessException;
 
     /**
      * Professors finder according to the subjects they offer
@@ -29,5 +30,5 @@ public interface ProfessorDao<E> extends CrudDao<ProfessorVo, E> {
      * @param subjectId The ID of the required subject
      * @return A list of professors that impart the subject
      */
-    public List<ProfessorVo> getBySubjectId(DataAccessAdapter<E> em, long subjectId);
+    public List<ProfessorVo> getBySubjectId(DataAccessAdapter<E> em, long subjectId)throws DataAccessException;
 }

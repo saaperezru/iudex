@@ -3,6 +3,7 @@ package org.xtremeware.iudex.dao.jpa;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import org.xtremeware.iudex.da.DataAccessAdapter;
+import org.xtremeware.iudex.da.DataAccessException;
 import org.xtremeware.iudex.dao.ConfirmationKeyDao;
 import org.xtremeware.iudex.entity.ConfirmationKeyEntity;
 import org.xtremeware.iudex.entity.UserEntity;
@@ -51,7 +52,7 @@ public class JpaConfirmationKeyDao extends JpaCrudDao<ConfirmationKeyVo,Confirma
      * @return the ConfirmationKeyVo with the given key
      */
     @Override
-    public ConfirmationKeyVo getByConfirmationKey(DataAccessAdapter<EntityManager> em, String confirmationKey) {
+    public ConfirmationKeyVo getByConfirmationKey(DataAccessAdapter<EntityManager> em, String confirmationKey) throws DataAccessException{
         checkDataAccessAdapter(em);
         try {
             return ((ConfirmationKeyEntity) em.getDataAccess().createNamedQuery("getByConfirmationKey").setParameter("confirmationKey", confirmationKey).getSingleResult()).toVo();

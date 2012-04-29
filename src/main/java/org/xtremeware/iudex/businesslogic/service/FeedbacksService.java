@@ -1,12 +1,12 @@
 package org.xtremeware.iudex.businesslogic.service;
 
-import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.EntityManager;
 import org.xtremeware.iudex.businesslogic.InvalidVoException;
+import org.xtremeware.iudex.da.DataAccessAdapter;
+import org.xtremeware.iudex.da.DataAccessException;
 import org.xtremeware.iudex.dao.AbstractDaoFactory;
-import org.xtremeware.iudex.dao.jpa.JpaCrudDao;
-import org.xtremeware.iudex.dao.jpa.JpaFeedbackDao;
+import org.xtremeware.iudex.dao.CrudDao;
+import org.xtremeware.iudex.dao.FeedbackDao;
 import org.xtremeware.iudex.entity.FeedbackEntity;
 import org.xtremeware.iudex.helper.ExternalServiceConnectionException;
 import org.xtremeware.iudex.helper.SecurityHelper;
@@ -33,7 +33,7 @@ public class FeedbacksService extends SimpleCrudService<FeedbackVo, FeedbackEnti
      * @return JpaFeedbackDao
      */
     @Override
-    protected JpaCrudDao<FeedbackEntity> getDao() {
+    protected CrudDao<FeedbackVo,FeedbackEntity> getDao() {
         return getDaoFactory().getFeedbackDao();
     }
 
@@ -46,7 +46,7 @@ public class FeedbacksService extends SimpleCrudService<FeedbackVo, FeedbackEnti
      * @throws InvalidVoException
      */
     @Override
-    public void validateVo(EntityManager em, FeedbackVo vo) throws InvalidVoException {
+    public void validateVo(DataAccessAdapter em, FeedbackVo vo) throws InvalidVoException, DataAccessException, ExternalServiceConnectionException {
         if (em == null) {
             throw new IllegalArgumentException("EntityManager em cannot be null");
 	}
@@ -65,6 +65,7 @@ public class FeedbacksService extends SimpleCrudService<FeedbackVo, FeedbackEnti
         if (vo.getContent() == null) {
             throw new InvalidVoException("Invalid content in the the provided FeedbackVo");
         }
+        vo.setContent(SecurityHelper.sanitizeHTML(vo.getContent()));
         if (vo.getContent().length() > 2000) {
             throw new InvalidVoException("Invalid content length in the provided FeedbackVo");
         }
@@ -77,18 +78,10 @@ public class FeedbacksService extends SimpleCrudService<FeedbackVo, FeedbackEnti
      * @param query String with the search parameter
      * @return A list of FeedbackVo
      */
-    public List<FeedbackVo> search(EntityManager em, String query) {
+    public List<FeedbackVo> search(DataAccessAdapter em, String query) throws DataAccessException {
         if (query == null) {
             throw new IllegalArgumentException("Null query for a Feedback comment search");
         }
-        List<FeedbackEntity> feedbackEntitys = ((JpaFeedbackDao) this.getDao()).getByContentLike(em, query);
-        if (feedbackEntitys.isEmpty()) {
-            return null;
-        }
-        ArrayList<FeedbackVo> arrayList = new ArrayList<FeedbackVo>();
-        for (FeedbackEntity feedbackEntity : feedbackEntitys) {
-            arrayList.add(feedbackEntity.toVo());
-        }
-        return arrayList;
+        return ((FeedbackDao) this.getDao()).getByContentLike(em, query);
     }
 }

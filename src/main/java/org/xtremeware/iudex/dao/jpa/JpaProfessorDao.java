@@ -1,9 +1,9 @@
 package org.xtremeware.iudex.dao.jpa;
 
-import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.da.DataAccessAdapter;
+import org.xtremeware.iudex.da.DataAccessException;
 import org.xtremeware.iudex.dao.ProfessorDao;
 import org.xtremeware.iudex.entity.ProfessorEntity;
 import org.xtremeware.iudex.vo.ProfessorVo;
@@ -25,10 +25,9 @@ public class JpaProfessorDao extends JpaCrudDao<ProfessorVo, ProfessorEntity> im
      * specified
      */
     @Override
-    public List<ProfessorVo> getByName(DataAccessAdapter<EntityManager> em, String name) {
+    public List<ProfessorVo> getByName(DataAccessAdapter<EntityManager> em, String name) throws DataAccessException {
         checkDataAccessAdapter(em);
-        List<ProfessorEntity> list = em.getDataAccess().createNamedQuery("getProfessorByNameLike").setParameter("name", "%" + name + "%").getResultList();
-        return entitiesToVos(list);
+        return entitiesToVos(em.getDataAccess().createNamedQuery("getProfessorByNameLike", getEntityClass()).setParameter("name", "%" + name + "%").getResultList());
     }
 
     /**
@@ -39,10 +38,9 @@ public class JpaProfessorDao extends JpaCrudDao<ProfessorVo, ProfessorEntity> im
      * @return A list of professors that impart the subject
      */
     @Override
-    public List<ProfessorVo> getBySubjectId(DataAccessAdapter<EntityManager> em, long subjectId) {
+    public List<ProfessorVo> getBySubjectId(DataAccessAdapter<EntityManager> em, long subjectId) throws DataAccessException {
         checkDataAccessAdapter(em);
-        List<ProfessorEntity> list = em.getDataAccess().createNamedQuery("getProfessorBySubjectId").setParameter("subjectId", subjectId).getResultList();
-        return entitiesToVos(list);
+        return entitiesToVos(em.getDataAccess().createNamedQuery("getProfessorBySubjectId", getEntityClass()).setParameter("subjectId", subjectId).getResultList());
     }
 
     @Override

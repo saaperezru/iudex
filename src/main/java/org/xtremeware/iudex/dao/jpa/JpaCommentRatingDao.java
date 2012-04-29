@@ -7,8 +7,8 @@ package org.xtremeware.iudex.dao.jpa;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
-import javax.persistence.Query;
 import org.xtremeware.iudex.da.DataAccessAdapter;
+import org.xtremeware.iudex.da.DataAccessException;
 import org.xtremeware.iudex.dao.CommentRatingDao;
 import org.xtremeware.iudex.entity.CommentEntity;
 import org.xtremeware.iudex.entity.CommentRatingEntity;
@@ -47,7 +47,7 @@ public class JpaCommentRatingDao extends JpaCrudDao<CommentRatingVo, CommentRati
     }
 
     @Override
-    protected Class getEntityClass() {
+    protected Class<CommentRatingEntity> getEntityClass() {
         return CommentRatingEntity.class;
     }
 
@@ -59,9 +59,9 @@ public class JpaCommentRatingDao extends JpaCrudDao<CommentRatingVo, CommentRati
      * @return list of CommentRatingVo
      */
     @Override
-    public List<CommentRatingVo> getByCommentId(DataAccessAdapter<EntityManager> em, Long commentId) {
+    public List<CommentRatingVo> getByCommentId(DataAccessAdapter<EntityManager> em, Long commentId) throws DataAccessException{
         checkDataAccessAdapter(em);
-        return entitiesToVos(em.getDataAccess().createNamedQuery("getCommentRatingByCommentId").setParameter("commentId", commentId).getResultList());
+        return entitiesToVos(em.getDataAccess().createNamedQuery("getCommentRatingByCommentId",getEntityClass()).setParameter("commentId", commentId).getResultList());
     }
 
     /**
@@ -74,10 +74,10 @@ public class JpaCommentRatingDao extends JpaCrudDao<CommentRatingVo, CommentRati
      * @return a CommentRatingVo
      */
     @Override
-    public CommentRatingVo getByCommentIdAndUserId(DataAccessAdapter<EntityManager> em, Long commentId, Long userId) {
+    public CommentRatingVo getByCommentIdAndUserId(DataAccessAdapter<EntityManager> em, Long commentId, Long userId) throws DataAccessException{
         checkDataAccessAdapter(em);
         try {
-            return ((CommentRatingEntity) em.getDataAccess().createNamedQuery("getCommentRatingByCommentIdAndUserId").setParameter("commentId", commentId).setParameter("userId", userId).getSingleResult()).toVo();
+            return em.getDataAccess().createNamedQuery("getCommentRatingByCommentIdAndUserId", getEntityClass()).setParameter("commentId", commentId).setParameter("userId", userId).getSingleResult().toVo();
         } catch (NoResultException noResultException) {
             return null;
         }
@@ -91,35 +91,33 @@ public class JpaCommentRatingDao extends JpaCrudDao<CommentRatingVo, CommentRati
      * @return list of CommentRatingVo
      */
     @Override
-    public List<CommentRatingVo> getByUserId(DataAccessAdapter<EntityManager> em, Long userId) {
+    public List<CommentRatingVo> getByUserId(DataAccessAdapter<EntityManager> em, Long userId) throws DataAccessException{
         checkDataAccessAdapter(em);
-        return entitiesToVos(em.getDataAccess().createNamedQuery("getCommentRatingByUserId").setParameter("userId", userId).getResultList());
+        return entitiesToVos(em.getDataAccess().createNamedQuery("getCommentRatingByUserId", getEntityClass()).setParameter("userId", userId).getResultList());
     }
 
     /**
      * Returns a summary of the ratings given a comment.
      *
-     * @param em the data acces adapter
+     * @param em the data access adapter
      * @param commentId comment id
      * @return a RatingSummaryVo object, null if the COUNTING process of either
      * positive or negative ratings returns no result from the EntityManager.
      */
     @Override
-    public RatingSummaryVo getSummary(DataAccessAdapter<EntityManager> em, Long commentId) {
+    public RatingSummaryVo getSummary(DataAccessAdapter<EntityManager> em, Long commentId) throws DataAccessException{
         checkDataAccessAdapter(em);
 
         RatingSummaryVo rsv = new RatingSummaryVo();
 
-        Query q = em.getDataAccess().createNamedQuery("countPositiveCommentRating").setParameter("commentId", commentId);
         try {
-            rsv.setPositive(((Integer) q.getSingleResult()).intValue());
+            rsv.setPositive(em.getDataAccess().createNamedQuery("countPositiveCommentRating",Long.class).setParameter("commentId", commentId).getSingleResult().intValue());
         } catch (NoResultException noResultException) {
             return null;
         }
 
-        q = em.getDataAccess().createNamedQuery("countNegativeCommentRating").setParameter("commentId", commentId);
         try {
-            rsv.setNegative(((Integer) q.getSingleResult()).intValue());
+            rsv.setNegative(em.getDataAccess().createNamedQuery("countNegativeCommentRating",Long.class).setParameter("commentId", commentId).getSingleResult().intValue());
         } catch (NoResultException noResultException) {
             return null;
         }

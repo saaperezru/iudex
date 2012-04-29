@@ -1,6 +1,7 @@
 package org.xtremeware.iudex.dao;
 
 import org.xtremeware.iudex.da.DataAccessAdapter;
+import org.xtremeware.iudex.da.DataAccessException;
 import org.xtremeware.iudex.vo.UserVo;
 
 /**
@@ -20,5 +21,5 @@ public interface UserDao<E> extends CrudDao<UserVo, E> {
      * @param password String containing the password
      * @return Value object with required user information
      */
-    public UserVo getByUsernameAndPassword(DataAccessAdapter<E> em, String username, String password);
+    public UserVo getByUsernameAndPassword(DataAccessAdapter<E> em, String username, String password)throws DataAccessException;
 }

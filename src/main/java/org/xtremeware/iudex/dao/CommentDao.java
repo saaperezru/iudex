@@ -2,6 +2,7 @@ package org.xtremeware.iudex.dao;
 
 import java.util.List;
 import org.xtremeware.iudex.da.DataAccessAdapter;
+import org.xtremeware.iudex.da.DataAccessException;
 import org.xtremeware.iudex.vo.CommentVo;
 
 /**
@@ -21,7 +22,7 @@ public interface CommentDao<E> extends CrudDao<CommentVo, E> {
      * associated professor .
      * @return The list of found comments.
      */
-    public List<CommentVo> getByProfessorId(DataAccessAdapter<E> em, long professorId);
+    public List<CommentVo> getByProfessorId(DataAccessAdapter<E> em, long professorId)throws DataAccessException;
 
     /**
      * Returns a list of Comments associated with the course who's subject is
@@ -32,7 +33,7 @@ public interface CommentDao<E> extends CrudDao<CommentVo, E> {
      * associated course.
      * @return The list of found comments.
      */
-    public List<CommentVo> getBySubjectId(DataAccessAdapter<E> em, long subjectId);
+    public List<CommentVo> getBySubjectId(DataAccessAdapter<E> em, long subjectId)throws DataAccessException;
 
     /**
      * Returns a list of Comments associated with the period identified by the
@@ -42,7 +43,7 @@ public interface CommentDao<E> extends CrudDao<CommentVo, E> {
      * @param userId User identifier to look for in comments table.
      * @return The list of found comments.
      */
-    public List<CommentVo> getByUserId(DataAccessAdapter<E> em, long userId);
+    public List<CommentVo> getByUserId(DataAccessAdapter<E> em, long userId)throws DataAccessException;
 
     /**
      * Returns a list of Comments associated with the course identified by the
@@ -52,7 +53,7 @@ public interface CommentDao<E> extends CrudDao<CommentVo, E> {
      * @param courseId Course identifier to look for in comment table.
      * @return The list of found comments.
      */
-    public List<CommentVo> getByCourseId(DataAccessAdapter<E> em, long courseId);
+    public List<CommentVo> getByCourseId(DataAccessAdapter<E> em, long courseId)throws DataAccessException;
 
     /**
      * Returns the number of comments submitted by a user on the current date
@@ -61,5 +62,5 @@ public interface CommentDao<E> extends CrudDao<CommentVo, E> {
      * @param userId id of the user
      * @return number of comments submitted on the current day
      */
-    public int getUserCommentsCounter(DataAccessAdapter<E> em, long userId);
+    public int getUserCommentsCounter(DataAccessAdapter<E> em, long userId)throws DataAccessException;
 }

@@ -7,14 +7,12 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.businesslogic.InvalidVoException;
 import org.xtremeware.iudex.dao.AbstractDaoFactory;
+import org.xtremeware.iudex.dao.UserDao;
 import org.xtremeware.iudex.entity.*;
-
-import org.xtremeware.iudex.entity.ConfirmationKeyEntity;
-import org.xtremeware.iudex.entity.ProgramEntity;
-import org.xtremeware.iudex.entity.UserEntity;
 import org.xtremeware.iudex.helper.Config;
 import org.xtremeware.iudex.helper.ConfigurationVariablesHelper;
 import org.xtremeware.iudex.helper.ExternalServiceConnectionException;
+import org.xtremeware.iudex.helper.Role;
 import org.xtremeware.iudex.helper.SecurityHelper;
 import org.xtremeware.iudex.vo.ConfirmationKeyVo;
 import org.xtremeware.iudex.vo.UserVo;
@@ -36,7 +34,6 @@ public class UsersService extends CrudService<UserVo> {
         MAX_USERNAME_LENGTH = Integer.parseInt(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAX_USERNAME_LENGTH));
         MAX_USER_PASSWORD_LENGTH = Integer.parseInt(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAX_USER_PASSWORD_LENGTH));
         MIN_USER_PASSWORD_LENGTH = Integer.parseInt(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MIN_USER_PASSWORD_LENGTH));
-
     }
 
     public void validateVo(EntityManager em, UserVo vo) throws InvalidVoException {
@@ -84,7 +81,6 @@ public class UsersService extends CrudService<UserVo> {
     }
 
     public UserEntity voToEntity(EntityManager em, UserVo vo) throws InvalidVoException, ExternalServiceConnectionException {
-
         validateVo(em, vo);
 
         UserEntity userEntity = new UserEntity();
@@ -93,7 +89,7 @@ public class UsersService extends CrudService<UserVo> {
         userEntity.setLastName(SecurityHelper.sanitizeHTML(vo.getLastName()));
         userEntity.setUserName(SecurityHelper.sanitizeHTML(vo.getUserName()));
         userEntity.setPassword(vo.getPassword());
-        userEntity.setRol(vo.getRole());
+        userEntity.setRole(vo.getRole());
         userEntity.setActive(vo.isActive());
 
         ArrayList<ProgramEntity> arrayList = new ArrayList<ProgramEntity>();
@@ -103,7 +99,6 @@ public class UsersService extends CrudService<UserVo> {
 
         userEntity.setPrograms(arrayList);
         return userEntity;
-
     }
 
     public UserVo create(EntityManager em, UserVo user) throws InvalidVoException, ExternalServiceConnectionException {
@@ -164,10 +159,18 @@ public class UsersService extends CrudService<UserVo> {
         return this.getDaoFactory().getUserDao().getById(em, id).toVo();
     }
 
-    public void update(EntityManager em, UserVo user) throws InvalidVoException, ExternalServiceConnectionException {
-        UserEntity userEntity = voToEntity(em, user);
-        userEntity.setPassword(SecurityHelper.hashPassword(userEntity.getPassword()));
-        this.getDaoFactory().getUserDao().merge(em, userEntity);
+    public UserVo update(EntityManager em, UserVo user) throws InvalidVoException, ExternalServiceConnectionException {
+        UserDao userDao = getDaoFactory().getUserDao();
+        UserEntity existingUser = userDao.getById(em, user.getId());
+        if (existingUser != null) {
+            UserEntity userEntity = voToEntity(em, user);
+            userEntity.setUserName(existingUser.getUserName());
+            userEntity.setRole(existingUser.getRole());
+            userEntity.setPassword(SecurityHelper.hashPassword(userEntity.getPassword()));
+            return userDao.merge(em, userEntity).toVo();
+        } else {
+            throw new InvalidVoException("The user doesn't exist");
+        }
     }
 
     /**

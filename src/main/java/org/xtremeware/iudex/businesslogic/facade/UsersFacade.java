@@ -120,9 +120,8 @@ public class UsersFacade extends AbstractFacade {
             em = getEntityManagerFactory().createEntityManager();
             tx = em.getTransaction();
             tx.begin();
-            getServiceFactory().createUsersService().update(em, user);
+            user = getServiceFactory().createUsersService().update(em, vo);
             tx.commit();
-
         } catch (InvalidVoException ex) {
             throw ex;
         } catch (Exception e) {

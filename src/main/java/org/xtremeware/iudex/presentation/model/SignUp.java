@@ -118,7 +118,7 @@ public class SignUp {
             programsList.add(programId);
         }
         user.setProgramsId(programsList);
-        user.setRol(Role.STUDENT);
+        user.setRole(Role.STUDENT);
         try {
             usersFacade.addUser(user);
             return "success";

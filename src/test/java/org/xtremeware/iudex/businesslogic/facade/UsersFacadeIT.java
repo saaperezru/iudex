@@ -2,6 +2,8 @@ package org.xtremeware.iudex.businesslogic.facade;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import static org.junit.Assert.*;
 import org.junit.Test;
 import org.xtremeware.iudex.businesslogic.InvalidVoException;
@@ -116,5 +118,21 @@ public class UsersFacadeIT {
         UsersFacade usersFacade = Config.getInstance().getFacadeFactory().getUsersFacade();
         user = usersFacade.editUser(user);
         assertEquals(expectedUser, user);
+    }
+
+    /**
+     * Test an attempt to edit an inexistent user
+     */
+    @Test
+    public void test_BL_11_2() {
+        UserVo user = new UserVo();
+        user.setId(-1L);
+        try {
+            Config.getInstance().getFacadeFactory().getUsersFacade().editUser(user);
+        } catch (InvalidVoException ex) {
+            assertEquals("The user doesn't exist", ex.getMessage());
+            return;
+        }
+        fail("There was no InvalidVoException");
     }
 }

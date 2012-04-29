@@ -2,7 +2,7 @@ package org.xtremeware.iudex.vo;
 
 public class PeriodVo extends ValueObject {
 
-    private long id;
+    private Long id;
     private int year;
     private int semester;
 
@@ -41,11 +41,11 @@ public class PeriodVo extends ValueObject {
         return "PeriodVo{" + "id=" + id + ", year=" + year + ", semester=" + semester + '}';
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

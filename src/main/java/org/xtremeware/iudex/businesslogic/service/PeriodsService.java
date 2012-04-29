@@ -17,7 +17,7 @@ import org.xtremeware.iudex.helper.Config;
 import org.xtremeware.iudex.vo.PeriodVo;
 
 /**
- * Supports CRUD operations on the periods submited to the system
+ * Supports CRUD operations on the periods submitted to the system
  * 
  * @author juan
  */

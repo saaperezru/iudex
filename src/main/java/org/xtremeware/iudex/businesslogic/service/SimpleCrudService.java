@@ -13,7 +13,7 @@ import org.xtremeware.iudex.vo.ValueObject;
  *
  * @author healarconr
  */
-public abstract class SimpleCrudService<E extends ValueObject, F extends Entity<E>> extends CrudService<E> {
+public abstract class SimpleCrudService<E extends ValueObject> extends CrudService<E> {
 
     protected CrudDao<E,F> dao;
 

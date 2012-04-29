@@ -15,6 +15,8 @@ import org.xtremeware.iudex.entity.CommentEntity;
 import org.xtremeware.iudex.entity.CommentRatingEntity;
 import org.xtremeware.iudex.helper.ConfigurationVariablesHelper;
 import org.xtremeware.iudex.helper.ExternalServiceConnectionException;
+import org.xtremeware.iudex.helper.SecurityHelper;
+import org.xtremeware.iudex.vo.CommentRatingVo;
 import org.xtremeware.iudex.vo.CommentVo;
 
 /**

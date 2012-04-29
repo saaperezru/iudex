@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.businesslogic.InvalidVoException;
+import org.xtremeware.iudex.da.DataAccessAdapter;
 import org.xtremeware.iudex.dao.AbstractDaoFactory;
 import org.xtremeware.iudex.dao.jpa.JpaCrudDao;
 import org.xtremeware.iudex.entity.CommentEntity;
@@ -84,7 +85,7 @@ public class CoursesService extends SimpleCrudService<CourseVo, CourseEntity> {
 	}
 
 	@Override
-	public void remove(EntityManager em, long courseId) {
+	public void remove(DataAccessAdapter em, long courseId) {
 
 		List<CourseRatingEntity> courseRatings = getDaoFactory().getCourseRatingDao().getByCourseId(em, courseId);
 		for (CourseRatingEntity rating : courseRatings) {

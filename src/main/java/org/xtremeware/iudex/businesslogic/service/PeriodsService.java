@@ -4,16 +4,14 @@
  */
 package org.xtremeware.iudex.businesslogic.service;
 
-import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.EntityManager;
 import org.xtremeware.iudex.businesslogic.InvalidVoException;
+import org.xtremeware.iudex.da.DataAccessAdapter;
 import org.xtremeware.iudex.dao.AbstractDaoFactory;
-import org.xtremeware.iudex.dao.jpa.JpaCrudDao;
+import org.xtremeware.iudex.dao.CrudDao;
 import org.xtremeware.iudex.dao.jpa.JpaPeriodDao;
-import org.xtremeware.iudex.entity.CourseEntity;
-import org.xtremeware.iudex.entity.PeriodEntity;
 import org.xtremeware.iudex.helper.Config;
+import org.xtremeware.iudex.vo.CourseVo;
 import org.xtremeware.iudex.vo.PeriodVo;
 
 /**
@@ -21,7 +19,7 @@ import org.xtremeware.iudex.vo.PeriodVo;
  * 
  * @author juan
  */
-public class PeriodsService extends SimpleCrudService<PeriodVo, PeriodEntity> {
+public class PeriodsService extends SimpleCrudService<PeriodVo> {
 
     /**
      * Constructor
@@ -37,20 +35,8 @@ public class PeriodsService extends SimpleCrudService<PeriodVo, PeriodEntity> {
      * 
      * @return all the periods submitted
      */
-    public List<PeriodVo> list(EntityManager em) {
-        List<PeriodEntity> entities = ((JpaPeriodDao)getDao()).getAll(em);
-
-        if (entities.isEmpty()) {
-            return null;
-        }
-
-        List<PeriodVo> vos = new ArrayList<PeriodVo>();
-
-        for (PeriodEntity e : entities) {
-            vos.add(e.toVo());
-        }
-
-        return vos;
+    public List<PeriodVo> list(DataAccessAdapter em) {
+        return ((JpaPeriodDao)getDao()).getAll(em);
     }
 
     /**
@@ -59,12 +45,12 @@ public class PeriodsService extends SimpleCrudService<PeriodVo, PeriodEntity> {
      * @return CommentDao
      */
     @Override
-    protected JpaCrudDao<PeriodEntity> getDao() {
+    protected CrudDao<PeriodVo,?> getDao() {
         return getDaoFactory().getPeriodDao();
     }
 
     /**
-     * Validates wheter the PeriodVo object satisfies the business rules
+     * Validates whether the PeriodVo object satisfies the business rules
      * and contains correct references to other objects
      * 
      * @param em the entity manager
@@ -72,7 +58,7 @@ public class PeriodsService extends SimpleCrudService<PeriodVo, PeriodEntity> {
      * @throws InvalidVoException in case the business rules are violated
      */
     @Override
-    public void validateVo(EntityManager em, PeriodVo vo) throws InvalidVoException {
+    public void validateVo(DataAccessAdapter em, PeriodVo vo) throws InvalidVoException {
         if (em == null) {
             throw new IllegalArgumentException("EntityManager em cannot be null");
 	}
@@ -85,29 +71,6 @@ public class PeriodsService extends SimpleCrudService<PeriodVo, PeriodEntity> {
             throw new InvalidVoException("int Year in the provided PeriodVo must be possitive");
         }
     }
-
-    /**
-     * Creates a Entity with the data of the value object
-     * 
-     * @param em the entity manager
-     * @param vo the PeriodVo
-     * @return an Entity with the Period value object data
-     * @throws InvalidVoException 
-     */
-    @Override
-    public PeriodEntity voToEntity(EntityManager em, PeriodVo vo) throws InvalidVoException {
-
-        validateVo(em, vo);
-
-        PeriodEntity entity = new PeriodEntity();
-
-        entity.setId(vo.getId());
-        entity.setSemester(vo.getSemester());
-        entity.setYear(vo.getYear());
-
-        return entity;
-
-    }
     
       /**
         * Remove the period and all the courses associated  to it.
@@ -116,16 +79,17 @@ public class PeriodsService extends SimpleCrudService<PeriodVo, PeriodEntity> {
         * @param id id of the period
         */    
         @Override
-        public void remove(EntityManager em, long id) {
+        public void remove(DataAccessAdapter em, long id) {
             
           /**
             * This is a bad implementation, but due to few time, it had to be implemented,
             * it will be changed for the next release.
             */
-            List<CourseEntity> courses = getDaoFactory().getCourseDao().getByPeriodId(em, id);
+            List<CourseVo> courses = getDaoFactory().getCourseDao().getByPeriodId(em, id);
 
             CoursesService courseService = Config.getInstance().getServiceFactory().createCoursesService();
-            for (CourseEntity course : courses){
+            
+            for (CourseVo course : courses){
                     courseService.remove(em, course.getId());    
             } 
 

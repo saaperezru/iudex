@@ -1,4 +1,4 @@
-package org.xtremeware.iudex.presentation.model;
+package org.xtremeware.iudex.presentation.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;

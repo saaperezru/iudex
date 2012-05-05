@@ -2,8 +2,6 @@ package org.xtremeware.iudex.businesslogic.facade;
 
 import java.util.Locale;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.xtremeware.iudex.helper.Config;
 import org.xtremeware.iudex.helper.ConfigurationVariablesHelper;
 import org.xtremeware.iudex.helper.ExternalServiceConnectionException;

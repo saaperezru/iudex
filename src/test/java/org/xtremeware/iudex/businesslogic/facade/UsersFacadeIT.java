@@ -124,15 +124,10 @@ public class UsersFacadeIT {
      * Test an attempt to edit an inexistent user
      */
     @Test
-    public void test_BL_11_2() {
+    public void test_BL_11_2() throws InvalidVoException {
         UserVo user = new UserVo();
         user.setId(-1L);
-        try {
-            Config.getInstance().getFacadeFactory().getUsersFacade().editUser(user);
-        } catch (InvalidVoException ex) {
-            assertEquals("The user doesn't exist", ex.getMessage());
-            return;
-        }
-        fail("There was no InvalidVoException");
+        user = Config.getInstance().getFacadeFactory().getUsersFacade().editUser(user);
+        assertNull(user);
     }
 }

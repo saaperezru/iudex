@@ -169,7 +169,7 @@ public class UsersService extends CrudService<UserVo> {
             userEntity.setPassword(SecurityHelper.hashPassword(userEntity.getPassword()));
             return userDao.merge(em, userEntity).toVo();
         } else {
-            throw new InvalidVoException("The user doesn't exist");
+            return null;
         }
     }
 

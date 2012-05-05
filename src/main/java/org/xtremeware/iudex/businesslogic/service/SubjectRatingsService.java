@@ -1,27 +1,28 @@
 package org.xtremeware.iudex.businesslogic.service;
 
+import org.xtremeware.iudex.businesslogic.service.updateimplementations.SimpleUpdate;
+import org.xtremeware.iudex.businesslogic.service.removeimplementations.SimpleRemove;
+import org.xtremeware.iudex.businesslogic.service.readimplementations.SimpleRead;
+import org.xtremeware.iudex.businesslogic.service.createimplementations.SimpleCreate;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.businesslogic.InvalidVoException;
 import org.xtremeware.iudex.dao.AbstractDaoFactory;
-import org.xtremeware.iudex.dao.CrudDaoInterface;
-import org.xtremeware.iudex.dao.SubjectRatingDaoInterface;
 import org.xtremeware.iudex.entity.SubjectEntity;
 import org.xtremeware.iudex.entity.SubjectRatingEntity;
 import org.xtremeware.iudex.entity.UserEntity;
 import org.xtremeware.iudex.vo.RatingSummaryVo;
 import org.xtremeware.iudex.vo.SubjectRatingVo;
 
-public class SubjectRatingsService extends SimpleCrudService<SubjectRatingVo, SubjectRatingEntity> {
+public class SubjectRatingsService extends CrudService<SubjectRatingVo, SubjectRatingEntity> {
 
 	public SubjectRatingsService(AbstractDaoFactory daoFactory) {
-		super(daoFactory);
-	}
-
-	@Override
-	protected CrudDaoInterface<SubjectRatingEntity> getDao() {
-		return getDaoFactory().getSubjectRatingDao();
+		super(daoFactory, 
+                new SimpleCreate<SubjectRatingEntity>(daoFactory.getSubjectRatingDao()),
+                new SimpleRead<SubjectRatingEntity>(daoFactory.getSubjectRatingDao()),
+                new SimpleUpdate<SubjectRatingEntity>(daoFactory.getSubjectRatingDao()),
+                new SimpleRemove<SubjectRatingEntity>(daoFactory.getSubjectRatingDao()));
 	}
 
 	@Override
@@ -75,7 +76,7 @@ public class SubjectRatingsService extends SimpleCrudService<SubjectRatingVo, Su
 	 */
 	public List<SubjectRatingVo> getBySubjectId(EntityManager em, long subjectId) {
 		List<SubjectRatingVo> list = new ArrayList<SubjectRatingVo>();
-		for (SubjectRatingEntity rating : ((SubjectRatingDaoInterface) getDao()).getBySubjectId(em, subjectId)) {
+		for (SubjectRatingEntity rating : getDaoFactory().getSubjectRatingDao().getBySubjectId(em, subjectId)) {
 			list.add(rating.toVo());
 		}
 		return list;
@@ -94,7 +95,7 @@ public class SubjectRatingsService extends SimpleCrudService<SubjectRatingVo, Su
 	 * subject
 	 */
 	public SubjectRatingVo getBySubjectIdAndUserId(EntityManager em, long subjectId, long userId) {
-		return ((SubjectRatingDaoInterface) getDao()).getBySubjectIdAndUserId(em, subjectId, userId).toVo();
+		return getDaoFactory().getSubjectRatingDao().getBySubjectIdAndUserId(em, subjectId, userId).toVo();
 	}
 
 	/**
@@ -106,6 +107,6 @@ public class SubjectRatingsService extends SimpleCrudService<SubjectRatingVo, Su
 	 * the ratings corresponding to the specified subject
 	 */
 	public RatingSummaryVo getSummary(EntityManager em, long subjectId) {
-		return ((SubjectRatingDaoInterface) getDao()).getSummary(em, subjectId);
+		return getDaoFactory().getSubjectRatingDao().getSummary(em, subjectId);
 	}
 }

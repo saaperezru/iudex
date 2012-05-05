@@ -60,7 +60,9 @@ public class CommentVo implements ValueObject {
 
     @Override
     public String toString() {
-        return "CommentVo{" + "id=" + id + ", content=" + content + ", date=" + date + ", user=" + userId + ", course=" + courseId + ", anonymous=" + anonymous + ", rating=" + rating + '}';
+        return "CommentVo{" + "id=" + id + ", content=" + content 
+                + ", date=" + date + ", user=" + userId + ", course=" 
+                + courseId + ", anonymous=" + anonymous + ", rating=" + rating + '}';
     }
 
     public boolean isAnonymous() {

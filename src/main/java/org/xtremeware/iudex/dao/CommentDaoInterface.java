@@ -5,7 +5,7 @@ import javax.persistence.EntityManager;
 import org.xtremeware.iudex.entity.CommentEntity;
 
 /**
- * DAO Interface for the Comment entities. 
+ * DAO Interface for the Comment entities.
  *
  * @author josebermeo
  */

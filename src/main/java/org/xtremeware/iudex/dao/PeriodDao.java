@@ -11,11 +11,11 @@ import org.xtremeware.iudex.entity.PeriodEntity;
  *
  * @author healarconr
  */
-public class PeriodDao extends CrudDao<PeriodEntity> implements PeriodDaoInterface{
+public class PeriodDao extends CrudDao<PeriodEntity> implements PeriodDaoInterface {
 
     /**
      * Returns the list of all periods entities
-     * 
+     *
      * @param em the entity manager
      * @return a list with all the periods
      */

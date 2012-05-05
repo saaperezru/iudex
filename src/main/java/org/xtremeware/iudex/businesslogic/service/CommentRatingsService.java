@@ -1,10 +1,12 @@
 package org.xtremeware.iudex.businesslogic.service;
 
+import org.xtremeware.iudex.businesslogic.service.updateimplementations.SimpleUpdate;
+import org.xtremeware.iudex.businesslogic.service.removeimplementations.SimpleRemove;
+import org.xtremeware.iudex.businesslogic.service.readimplementations.SimpleRead;
+import org.xtremeware.iudex.businesslogic.service.createimplementations.SimpleCreate;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.businesslogic.InvalidVoException;
 import org.xtremeware.iudex.dao.AbstractDaoFactory;
-import org.xtremeware.iudex.dao.CommentRatingDaoInterface;
-import org.xtremeware.iudex.dao.CrudDaoInterface;
 import org.xtremeware.iudex.entity.CommentRatingEntity;
 import org.xtremeware.iudex.vo.CommentRatingVo;
 import org.xtremeware.iudex.vo.RatingSummaryVo;
@@ -13,7 +15,7 @@ import org.xtremeware.iudex.vo.RatingSummaryVo;
  *
  * @author josebermeo
  */
-public class CommentRatingsService extends SimpleCrudService<CommentRatingVo, CommentRatingEntity> {
+public class CommentRatingsService extends CrudService<CommentRatingVo, CommentRatingEntity> {
 
     /**
      * CommentRatingsService constructor
@@ -21,17 +23,11 @@ public class CommentRatingsService extends SimpleCrudService<CommentRatingVo, Co
      * @param daoFactory
      */
     public CommentRatingsService(AbstractDaoFactory daoFactory) {
-        super(daoFactory);
-    }
-
-    /**
-     * returns the CommentRatingDaoInterface to be used.
-     *
-     * @return
-     */
-    @Override
-    protected CrudDaoInterface<CommentRatingEntity> getDao() {
-        return this.getDaoFactory().getCommentRatingDao();
+        super(daoFactory,
+                new SimpleCreate<CommentRatingEntity>(daoFactory.getCommentRatingDao()),
+                new SimpleRead<CommentRatingEntity>(daoFactory.getCommentRatingDao()),
+                new SimpleUpdate<CommentRatingEntity>(daoFactory.getCommentRatingDao()),
+                new SimpleRemove<CommentRatingEntity>(daoFactory.getCommentRatingDao()));
     }
 
     /**
@@ -63,7 +59,8 @@ public class CommentRatingsService extends SimpleCrudService<CommentRatingVo, Co
             throw new InvalidVoException("No such user associated with CommentRatingVo.userId");
         }
         if (vo.getValue() < -1 || vo.getValue() > 1) {
-            throw new InvalidVoException("int Value in the provided CommentRatingVo must be less than or equal to 1 and greater than or equal to -1");
+            throw new InvalidVoException("int Value in the provided CommentRatingVo "+
+                    "must be less than or equal to 1 and greater than or equal to -1");
         }
     }
 
@@ -101,22 +98,11 @@ public class CommentRatingsService extends SimpleCrudService<CommentRatingVo, Co
      * @return CommentRatingVo
      */
     public CommentRatingVo getByCommentIdAndUserId(EntityManager em, long commentId, long userId) {
-        CommentRatingEntity commentRatingEntity = ((CommentRatingDaoInterface) this.getDao()).getByCommentIdAndUserId(em, commentId, userId);
+        CommentRatingEntity commentRatingEntity = this.getDaoFactory().getCommentRatingDao().getByCommentIdAndUserId(em, commentId, userId);
         if (commentRatingEntity == null) {
             return null;
         }
         return commentRatingEntity.toVo();
-    }
-
-    /**
-     * Returns a summary of the rating, given a comment.
-     *
-     * @param em EntityManager
-     * @param commentId comment identifier
-     * @return RatingSummaryVo
-     */
-    public RatingSummaryVo getByCommentId(EntityManager em, long commentId) {
-        return ((CommentRatingDaoInterface) this.getDao()).getSummary(em, commentId);
     }
 
     /**
@@ -128,6 +114,6 @@ public class CommentRatingsService extends SimpleCrudService<CommentRatingVo, Co
      * ratings corresponding to the specified comment
      */
     public RatingSummaryVo getSummary(EntityManager em, long commentId) {
-        return ((CommentRatingDaoInterface) getDao()).getSummary(em, commentId);
+        return getDaoFactory().getCommentRatingDao().getSummary(em, commentId);
     }
 }

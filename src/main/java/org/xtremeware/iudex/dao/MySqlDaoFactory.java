@@ -2,11 +2,11 @@ package org.xtremeware.iudex.dao;
 
 /**
  * DAO factory for a MySQL persistence unit
- * 
+ *
  * @author healarconr
  */
 public class MySqlDaoFactory implements AbstractDaoFactory {
-    
+
     private CommentDaoInterface commentDao;
     private CommentRatingDaoInterface commentRatingDao;
     private ConfirmationKeyDaoInterface confirmationKeyDao;
@@ -21,7 +21,7 @@ public class MySqlDaoFactory implements AbstractDaoFactory {
     private SubjectDaoInterface subjectDao;
     private SubjectRatingDaoInterface subjectRatingDao;
     private UserDaoInterface userDao;
-    
+
     @Override
     public CommentDaoInterface getCommentDao() {
         if (commentDao == null) {
@@ -29,7 +29,7 @@ public class MySqlDaoFactory implements AbstractDaoFactory {
         }
         return commentDao;
     }
-    
+
     @Override
     public CommentRatingDaoInterface getCommentRatingDao() {
         if (commentRatingDao == null) {
@@ -37,7 +37,7 @@ public class MySqlDaoFactory implements AbstractDaoFactory {
         }
         return commentRatingDao;
     }
-    
+
     @Override
     public ConfirmationKeyDaoInterface getConfirmationKeyDao() {
         if (confirmationKeyDao == null) {
@@ -45,7 +45,7 @@ public class MySqlDaoFactory implements AbstractDaoFactory {
         }
         return confirmationKeyDao;
     }
-    
+
     @Override
     public CourseDaoInterface getCourseDao() {
         if (courseDao == null) {
@@ -53,7 +53,7 @@ public class MySqlDaoFactory implements AbstractDaoFactory {
         }
         return courseDao;
     }
-    
+
     @Override
     public CourseRatingDaoInterface getCourseRatingDao() {
         if (courseRatingDao == null) {
@@ -61,7 +61,7 @@ public class MySqlDaoFactory implements AbstractDaoFactory {
         }
         return courseRatingDao;
     }
-    
+
     @Override
     public FeedbackDaoInterface getFeedbackDao() {
         if (feedbackDao == null) {
@@ -69,7 +69,7 @@ public class MySqlDaoFactory implements AbstractDaoFactory {
         }
         return feedbackDao;
     }
-    
+
     @Override
     public FeedbackTypeDaoInterface getFeedbackTypeDao() {
         if (feedbackTypeDao == null) {
@@ -77,7 +77,7 @@ public class MySqlDaoFactory implements AbstractDaoFactory {
         }
         return feedbackTypeDao;
     }
-    
+
     @Override
     public PeriodDaoInterface getPeriodDao() {
         if (periodDao == null) {
@@ -85,7 +85,7 @@ public class MySqlDaoFactory implements AbstractDaoFactory {
         }
         return periodDao;
     }
-    
+
     @Override
     public ProfessorDaoInterface getProfessorDao() {
         if (professorDao == null) {
@@ -93,7 +93,7 @@ public class MySqlDaoFactory implements AbstractDaoFactory {
         }
         return professorDao;
     }
-    
+
     @Override
     public ProfessorRatingDaoInterface getProfessorRatingDao() {
         if (professorRatingDao == null) {
@@ -101,7 +101,7 @@ public class MySqlDaoFactory implements AbstractDaoFactory {
         }
         return professorRatingDao;
     }
-    
+
     @Override
     public ProgramDaoInterface getProgramDao() {
         if (programDao == null) {
@@ -109,7 +109,7 @@ public class MySqlDaoFactory implements AbstractDaoFactory {
         }
         return programDao;
     }
-    
+
     @Override
     public SubjectDaoInterface getSubjectDao() {
         if (subjectDao == null) {
@@ -117,7 +117,7 @@ public class MySqlDaoFactory implements AbstractDaoFactory {
         }
         return subjectDao;
     }
-    
+
     @Override
     public SubjectRatingDaoInterface getSubjectRatingDao() {
         if (subjectRatingDao == null) {
@@ -125,7 +125,7 @@ public class MySqlDaoFactory implements AbstractDaoFactory {
         }
         return subjectRatingDao;
     }
-    
+
     @Override
     public UserDaoInterface getUserDao() {
         if (userDao == null) {

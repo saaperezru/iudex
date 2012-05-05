@@ -58,7 +58,10 @@ public class ProfessorVo implements ValueObject {
 
     @Override
     public String toString() {
-        return "ProfessorVo{" + "id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", website=" + website + ", imageUrl=" + imageUrl + ", description=" + description + ", email=" + email + '}';
+        return "ProfessorVo{" + "id=" + id + ", firstName=" + firstName 
+                + ", lastName=" + lastName + ", website=" + website 
+                + ", imageUrl=" + imageUrl + ", description=" + description 
+                + ", email=" + email + '}';
     }
 
 

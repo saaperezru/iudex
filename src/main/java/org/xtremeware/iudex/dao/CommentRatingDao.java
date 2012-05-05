@@ -22,7 +22,8 @@ public class CommentRatingDao extends CrudDao<CommentRatingEntity> implements Co
     @Override
     public List<CommentRatingEntity> getByCommentId(EntityManager em, Long commentId) {
         checkEntityManager(em);
-        return em.createNamedQuery("getCommentRatingByCommentId", CommentRatingEntity.class).setParameter("commentId", commentId).getResultList();
+        return em.createNamedQuery("getCommentRatingByCommentId", CommentRatingEntity.class).
+                setParameter("commentId", commentId).getResultList();
     }
 
     /**
@@ -38,7 +39,8 @@ public class CommentRatingDao extends CrudDao<CommentRatingEntity> implements Co
     public CommentRatingEntity getByCommentIdAndUserId(EntityManager em, Long commentId, Long userId) {
         checkEntityManager(em);
         try {
-            return em.createNamedQuery("getCommentRatingByCommentIdAndUserId", CommentRatingEntity.class).setParameter("commentId", commentId).setParameter("userId", userId).getSingleResult();
+            return em.createNamedQuery("getCommentRatingByCommentIdAndUserId", CommentRatingEntity.class).
+                    setParameter("commentId", commentId).setParameter("userId", userId).getSingleResult();
         } catch (NoResultException noResultException) {
             return null;
         }
@@ -71,13 +73,15 @@ public class CommentRatingDao extends CrudDao<CommentRatingEntity> implements Co
         RatingSummaryVo rsv = new RatingSummaryVo();
 
         try {
-            rsv.setPositive(em.createNamedQuery("countPositiveCommentRating", Long.class).setParameter("commentId", commentId).getSingleResult().intValue());
+            rsv.setPositive(em.createNamedQuery("countPositiveCommentRating", Long.class).
+                    setParameter("commentId", commentId).getSingleResult().intValue());
         } catch (NoResultException noResultException) {
             return null;
         }
 
         try {
-            rsv.setNegative(em.createNamedQuery("countNegativeCommentRating", Long.class).setParameter("commentId", commentId).getSingleResult().intValue());
+            rsv.setNegative(em.createNamedQuery("countNegativeCommentRating", Long.class).
+                    setParameter("commentId", commentId).getSingleResult().intValue());
         } catch (NoResultException noResultException) {
             return null;
         }

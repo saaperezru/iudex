@@ -9,7 +9,7 @@ import org.xtremeware.iudex.entity.CourseRatingEntity;
  *
  * @author josebermeo
  */
-public class CourseRatingDao extends CrudDao<CourseRatingEntity> implements CourseRatingDaoInterface{
+public class CourseRatingDao extends CrudDao<CourseRatingEntity> implements CourseRatingDaoInterface {
 
     /**
      * Returns a list of CourseRating entities which has the same indicated
@@ -39,7 +39,8 @@ public class CourseRatingDao extends CrudDao<CourseRatingEntity> implements Cour
     public CourseRatingEntity getByCourseIdAndUserId(EntityManager em, Long courseId, Long userId) {
         checkEntityManager(em);
         try {
-            return em.createNamedQuery("getCourseRatingByCourseIdAndUserId", CourseRatingEntity.class).setParameter("courseId", courseId).setParameter("userId", userId).getSingleResult();
+            return em.createNamedQuery("getCourseRatingByCourseIdAndUserId", CourseRatingEntity.class).
+                    setParameter("courseId", courseId).setParameter("userId", userId).getSingleResult();
         } catch (NoResultException noResultException) {
             return null;
         }

@@ -5,7 +5,7 @@ import javax.persistence.EntityManager;
 import org.xtremeware.iudex.entity.FeedbackEntity;
 
 /**
- * DAO Interface for the Feedback entities. 
+ * DAO Interface for the Feedback entities.
  *
  * @author saaperezru
  */
@@ -20,7 +20,7 @@ public interface FeedbackDaoInterface extends CrudDaoInterface<FeedbackEntity> {
      * entities.
      * @return The list of found feedbacks.
      */
-    public List<FeedbackEntity> getByTypeId(EntityManager em, long feedbackTypeId) ;
+    public List<FeedbackEntity> getByTypeId(EntityManager em, long feedbackTypeId);
 
-    public List<FeedbackEntity> getByContentLike(EntityManager em, String query) ;
+    public List<FeedbackEntity> getByContentLike(EntityManager em, String query);
 }

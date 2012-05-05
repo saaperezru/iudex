@@ -74,7 +74,9 @@ public class CommentEntity implements Serializable, Entity<CommentVo> {
 
     @Override
     public String toString() {
-        return "CommentEntity{" + "id=" + id + ", content=" + content + ", date=" + date + ", user=" + user + ", course=" + course + ", anonymous=" + anonymous + ", rating=" + rating + '}';
+        return "CommentEntity{" + "id=" + id + ", content=" + content 
+                + ", date=" + date + ", user=" + user + ", course=" + course 
+                + ", anonymous=" + anonymous + ", rating=" + rating + '}';
     }
 
     public boolean isAnonymous() {

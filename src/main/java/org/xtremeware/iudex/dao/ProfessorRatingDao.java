@@ -11,12 +11,12 @@ import org.xtremeware.iudex.entity.ProfessorRatingEntity;
 import org.xtremeware.iudex.vo.RatingSummaryVo;
 
 /**
- * DAO for the ProfessorRating entities. Implements additionally some useful finders
- * by professor and user
- * 
+ * DAO for the ProfessorRating entities. Implements additionally some useful
+ * finders by professor and user
+ *
  * @author juan
  */
-public class ProfessorRatingDao extends CrudDao<ProfessorRatingEntity> implements ProfessorRatingDaoInterface{
+public class ProfessorRatingDao extends CrudDao<ProfessorRatingEntity> implements ProfessorRatingDaoInterface {
 
     /**
      * Professors ratings finder according to a specified professor
@@ -28,7 +28,8 @@ public class ProfessorRatingDao extends CrudDao<ProfessorRatingEntity> implement
     @Override
     public List<ProfessorRatingEntity> getByProfessorId(EntityManager em, long professorId) {
         checkEntityManager(em);
-        return em.createNamedQuery("getRatingByProfessorId", ProfessorRatingEntity.class).setParameter("professor", professorId).getResultList();
+        return em.createNamedQuery("getRatingByProfessorId", ProfessorRatingEntity.class).
+                setParameter("professor", professorId).getResultList();
 
     }
 
@@ -45,13 +46,14 @@ public class ProfessorRatingDao extends CrudDao<ProfessorRatingEntity> implement
         checkEntityManager(em);
 
         try {
-            return em.createNamedQuery("getRatingByProfessorIdAndUserId", ProfessorRatingEntity.class).setParameter("professor", professorId).setParameter("user", userId).getSingleResult();
+            return em.createNamedQuery("getRatingByProfessorIdAndUserId", ProfessorRatingEntity.class).
+                    setParameter("professor", professorId).setParameter("user", userId).getSingleResult();
         } catch (NoResultException e) {
             return null;
         }
 
     }
-    
+
     /**
      * Professors ratings finder according to a specified user
      *
@@ -64,7 +66,7 @@ public class ProfessorRatingDao extends CrudDao<ProfessorRatingEntity> implement
         checkEntityManager(em);
         return em.createNamedQuery("getRatingByUserId", ProfessorRatingEntity.class).setParameter("user", userId).getResultList();
 
-    }   
+    }
 
     /**
      * Professor rating summary calculator
@@ -81,13 +83,15 @@ public class ProfessorRatingDao extends CrudDao<ProfessorRatingEntity> implement
         RatingSummaryVo result = new RatingSummaryVo();
 
         try {
-            result.setPositive(em.createNamedQuery("countPositiveProfessorRating", Long.class).setParameter("professorId", professorId).getSingleResult().intValue());
+            result.setPositive(em.createNamedQuery("countPositiveProfessorRating", Long.class).
+                    setParameter("professorId", professorId).getSingleResult().intValue());
         } catch (NoResultException e) {
             return null;
         }
 
         try {
-            result.setNegative(em.createNamedQuery("countNegativeProfessorRating", Long.class).setParameter("professorId", professorId).getSingleResult().intValue());
+            result.setNegative(em.createNamedQuery("countNegativeProfessorRating", Long.class).
+                    setParameter("professorId", professorId).getSingleResult().intValue());
         } catch (NoResultException e) {
             return null;
         }

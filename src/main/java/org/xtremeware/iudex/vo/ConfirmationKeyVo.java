@@ -45,7 +45,9 @@ public class ConfirmationKeyVo implements ValueObject {
 
     @Override
     public String toString() {
-        return "ConfirmationKeyVo{" + "id=" + id + ", expirationDate=" + expirationDate + ", confirmationKey=" + confirmationKey + ", userId=" + userId + '}';
+        return "ConfirmationKeyVo{" + "id=" + id + ", expirationDate="
+                + expirationDate + ", confirmationKey="
+                + confirmationKey + ", userId=" + userId + '}';
     }
 
     public String getConfirmationKey() {

@@ -20,6 +20,7 @@ public class ProgramDao extends CrudDao<ProgramEntity> implements ProgramDaoInte
     @Override
     public List<ProgramEntity> getByNameLike(EntityManager em, String name) {
         checkEntityManager(em);
-        return em.createNamedQuery("getProgramByNameLike", ProgramEntity.class).setParameter("name", "%" + name + "%").getResultList();
+        return em.createNamedQuery("getProgramByNameLike", ProgramEntity.class).
+                setParameter("name", "%" + name + "%").getResultList();
     }
 }

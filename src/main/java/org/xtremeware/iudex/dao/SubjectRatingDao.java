@@ -22,7 +22,8 @@ public class SubjectRatingDao extends CrudDao<SubjectRatingEntity> implements Su
     @Override
     public List<SubjectRatingEntity> getBySubjectId(EntityManager em, Long subjectId) {
         checkEntityManager(em);
-        return em.createNamedQuery("getSubjectRatingBySubjectId", SubjectRatingEntity.class).setParameter("subjectId", subjectId).getResultList();
+        return em.createNamedQuery("getSubjectRatingBySubjectId", SubjectRatingEntity.class).
+                setParameter("subjectId", subjectId).getResultList();
     }
 
     /**
@@ -38,7 +39,8 @@ public class SubjectRatingDao extends CrudDao<SubjectRatingEntity> implements Su
     public SubjectRatingEntity getBySubjectIdAndUserId(EntityManager em, Long subjectId, Long userId) {
         checkEntityManager(em);
         try {
-            return em.createNamedQuery("getSubjectRatingBySubjectIdAndUserId", SubjectRatingEntity.class).setParameter("subjectId", subjectId).setParameter("userId", userId).getSingleResult();
+            return em.createNamedQuery("getSubjectRatingBySubjectIdAndUserId", SubjectRatingEntity.class).
+                    setParameter("subjectId", subjectId).setParameter("userId", userId).getSingleResult();
         } catch (NoResultException noResultException) {
             return null;
         }
@@ -54,7 +56,8 @@ public class SubjectRatingDao extends CrudDao<SubjectRatingEntity> implements Su
     @Override
     public List<SubjectRatingEntity> getByUserId(EntityManager em, Long userId) {
         checkEntityManager(em);
-        return em.createNamedQuery("getUserRatingBySubjectId", SubjectRatingEntity.class).setParameter("userId", userId).getResultList();
+        return em.createNamedQuery("getUserRatingBySubjectId", SubjectRatingEntity.class).
+                setParameter("userId", userId).getResultList();
     }
 
     /**
@@ -70,13 +73,15 @@ public class SubjectRatingDao extends CrudDao<SubjectRatingEntity> implements Su
         RatingSummaryVo rsv = new RatingSummaryVo();
 
         try {
-            rsv.setPositive(em.createNamedQuery("countPositiveSubjectRating", Long.class).setParameter("subjectId", subjectId).getSingleResult().intValue());
+            rsv.setPositive(em.createNamedQuery("countPositiveSubjectRating", Long.class).
+                    setParameter("subjectId", subjectId).getSingleResult().intValue());
         } catch (NoResultException noResultException) {
             return null;
         }
 
         try {
-            rsv.setNegative(em.createNamedQuery("countNegativeSubjectRating", Long.class).setParameter("subjectId", subjectId).getSingleResult().intValue());
+            rsv.setNegative(em.createNamedQuery("countNegativeSubjectRating", Long.class).
+                    setParameter("subjectId", subjectId).getSingleResult().intValue());
         } catch (NoResultException noResultException) {
             return null;
         }

@@ -4,8 +4,8 @@ import javax.persistence.EntityManager;
 import org.xtremeware.iudex.entity.ConfirmationKeyEntity;
 
 /**
- *DAO Interface for the ConfirmationKey entities.
- * 
+ * DAO Interface for the ConfirmationKey entities.
+ *
  * @author josebermeo
  */
 public interface ConfirmationKeyDaoInterface extends CrudDaoInterface<ConfirmationKeyEntity> {

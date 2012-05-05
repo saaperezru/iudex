@@ -71,7 +71,9 @@ public class ConfirmationKeyEntity implements Serializable, Entity<ConfirmationK
 
     @Override
     public String toString() {
-        return "ConfirmationKeyEntity{" + "id=" + id + ", expirationDate=" + expirationDate + ", confirmationKey=" + confirmationKey + ", user=" + user + '}';
+        return "ConfirmationKeyEntity{" + "id=" + id + ", expirationDate="
+                + expirationDate + ", confirmationKey=" + confirmationKey
+                + ", user=" + user + '}';
     }
 
     public String getConfirmationKey() {

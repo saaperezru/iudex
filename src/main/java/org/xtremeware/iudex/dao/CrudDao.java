@@ -56,7 +56,7 @@ public abstract class CrudDao<E extends Entity> implements CrudDaoInterface<E> {
             throw new NoResultException("No entity found for id " + String.valueOf(id) + "while triying to delete the associated record");
         }
         em.remove(entity);
-        
+
     }
 
     /**
@@ -70,10 +70,10 @@ public abstract class CrudDao<E extends Entity> implements CrudDaoInterface<E> {
     public E getById(EntityManager em, long id) {
         checkEntityManager(em);
         return (E) em.find(returnedClass(), id);
-        
-        
+
+
     }
-    
+
     @Override
     public void checkEntityManager(EntityManager em) {
         if (em == null) {
@@ -146,13 +146,13 @@ public abstract class CrudDao<E extends Entity> implements CrudDaoInterface<E> {
             } else {
                 ParameterizedType parameterizedType = (ParameterizedType) type;
                 Class<?> rawType = (Class) parameterizedType.getRawType();
-                
+
                 Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
                 TypeVariable<?>[] typeParameters = rawType.getTypeParameters();
                 for (int i = 0; i < actualTypeArguments.length; i++) {
                     resolvedTypes.put(typeParameters[i], actualTypeArguments[i]);
                 }
-                
+
                 if (!rawType.equals(baseClass)) {
                     type = rawType.getGenericSuperclass();
                 }

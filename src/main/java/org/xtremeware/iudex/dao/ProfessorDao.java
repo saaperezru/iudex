@@ -10,7 +10,7 @@ import org.xtremeware.iudex.entity.ProfessorEntity;
  *
  * @author juan
  */
-public class ProfessorDao extends CrudDao<ProfessorEntity> implements ProfessorDaoInterface{
+public class ProfessorDao extends CrudDao<ProfessorEntity> implements ProfessorDaoInterface {
 
     /**
      * Professors finder according to a required name

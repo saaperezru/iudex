@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.xtremeware.iudex.dao;
 
 import javax.persistence.EntityManager;
@@ -30,7 +26,8 @@ public class UserDao extends CrudDao<UserEntity> implements UserDaoInterface {
 
         checkEntityManager(em);
         try {
-            return em.createNamedQuery("getUserByUsernameAndPassword", UserEntity.class).setParameter("userName", username).setParameter("password", password).getSingleResult();
+            return em.createNamedQuery("getUserByUsernameAndPassword", UserEntity.class).
+                    setParameter("userName", username).setParameter("password", password).getSingleResult();
         } catch (NoResultException e) {
             return null;
         }

@@ -5,8 +5,8 @@ import javax.persistence.EntityManager;
 import org.xtremeware.iudex.entity.ProfessorEntity;
 
 /**
- * DAO Interface for the Professor entities. 
- * 
+ * DAO Interface for the Professor entities.
+ *
  * @author juan
  */
 public interface ProfessorDaoInterface extends CrudDaoInterface<ProfessorEntity> {
@@ -19,7 +19,7 @@ public interface ProfessorDaoInterface extends CrudDaoInterface<ProfessorEntity>
      * @return List of professors whose first-name or last-name are equal to the
      * specified
      */
-    public List<ProfessorEntity> getByNameLike(EntityManager em, String name) ;
+    public List<ProfessorEntity> getByNameLike(EntityManager em, String name);
 
     /**
      * Professors finder according to the subjects they offer
@@ -28,5 +28,5 @@ public interface ProfessorDaoInterface extends CrudDaoInterface<ProfessorEntity>
      * @param subjectId The ID of the required subject
      * @return A list of professors that impart the subject
      */
-    public List<ProfessorEntity> getBySubjectId(EntityManager em, long subjectId) ;
+    public List<ProfessorEntity> getBySubjectId(EntityManager em, long subjectId);
 }

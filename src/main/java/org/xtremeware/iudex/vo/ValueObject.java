@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 /**
  *
- * @author Administrator
+ * @author jdbermeol
  */
 public interface ValueObject extends Serializable {
 

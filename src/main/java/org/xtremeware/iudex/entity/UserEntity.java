@@ -85,7 +85,9 @@ public class UserEntity implements Serializable, Entity<UserVo> {
         if (this.programs != other.programs && (this.programs == null || !this.programs.equals(other.programs))) {
             return false;
         }
-        if (this.confirmationKey != other.confirmationKey && (this.confirmationKey == null || !this.confirmationKey.equals(other.confirmationKey))) {
+        if (this.confirmationKey != other.confirmationKey 
+                && (this.confirmationKey == null 
+                || !this.confirmationKey.equals(other.confirmationKey))) {
             return false;
         }
         return true;
@@ -108,7 +110,10 @@ public class UserEntity implements Serializable, Entity<UserVo> {
 
     @Override
     public String toString() {
-        return "UserEntity{" + "id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", userName=" + userName + ", password=" + password + ", rol=" + rol + ", active=" + active + ", programs=" + programs + ", confirmationKey=" + confirmationKey + '}';
+        return "UserEntity{" + "id=" + id + ", firstName=" + firstName 
+                + ", lastName=" + lastName + ", userName=" + userName 
+                + ", password=" + password + ", rol=" + rol + ", active=" 
+                + active + ", programs=" + programs + ", confirmationKey=" + confirmationKey + '}';
     }
 
     public boolean isActive() {

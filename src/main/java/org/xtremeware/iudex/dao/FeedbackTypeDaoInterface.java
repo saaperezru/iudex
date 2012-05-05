@@ -5,7 +5,7 @@ import javax.persistence.EntityManager;
 import org.xtremeware.iudex.entity.FeedbackTypeEntity;
 
 /**
- * DAO Interface for feedback type entities. 
+ * DAO Interface for feedback type entities.
  *
  * @author healarconr
  */

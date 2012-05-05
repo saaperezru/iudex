@@ -5,7 +5,7 @@ import javax.persistence.EntityManager;
 import org.xtremeware.iudex.entity.SubjectEntity;
 
 /**
- * DAO Interface for subject entities. 
+ * DAO Interface for subject entities.
  *
  * @author healarconr
  */

@@ -10,7 +10,7 @@ import org.xtremeware.iudex.entity.SubjectEntity;
  *
  * @author healarconr
  */
-public class SubjectDao extends CrudDao<SubjectEntity> implements SubjectDaoInterface{
+public class SubjectDao extends CrudDao<SubjectEntity> implements SubjectDaoInterface {
 
     /**
      * Returns a list of subject entities which name contains the argument name
@@ -22,7 +22,8 @@ public class SubjectDao extends CrudDao<SubjectEntity> implements SubjectDaoInte
     @Override
     public List<SubjectEntity> getByName(EntityManager em, String name) {
         checkEntityManager(em);
-        return em.createNamedQuery("getSubjectsByName", SubjectEntity.class).setParameter("name", "%" + name + "%").getResultList();
+        return em.createNamedQuery("getSubjectsByName", SubjectEntity.class).
+                setParameter("name", "%" + name + "%").getResultList();
     }
 
     /**
@@ -35,6 +36,7 @@ public class SubjectDao extends CrudDao<SubjectEntity> implements SubjectDaoInte
     @Override
     public List<SubjectEntity> getByProfessorId(EntityManager em, long professorId) {
         checkEntityManager(em);
-        return em.createNamedQuery("getSubjectsByProfessorId", SubjectEntity.class).setParameter("professorId", professorId).getResultList();
+        return em.createNamedQuery("getSubjectsByProfessorId", SubjectEntity.class).
+                setParameter("professorId", professorId).getResultList();
     }
 }

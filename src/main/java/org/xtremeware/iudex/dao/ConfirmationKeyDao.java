@@ -21,7 +21,8 @@ public class ConfirmationKeyDao extends CrudDao<ConfirmationKeyEntity> implement
     public ConfirmationKeyEntity getByConfirmationKey(EntityManager em, String confirmationKey) {
         checkEntityManager(em);
         try {
-            return em.createNamedQuery("getByConfirmationKey", ConfirmationKeyEntity.class).setParameter("confirmationKey", confirmationKey).getSingleResult();
+            return em.createNamedQuery("getByConfirmationKey", ConfirmationKeyEntity.class).
+                    setParameter("confirmationKey", confirmationKey).getSingleResult();
         } catch (NoResultException noResultException) {
             return null;
         }

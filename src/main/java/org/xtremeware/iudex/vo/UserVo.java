@@ -23,19 +23,24 @@ public class UserVo implements ValueObject {
             return false;
         }
         final UserVo other = (UserVo) obj;
-        if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
+        if (this.id != other.id 
+                && (this.id == null || !this.id.equals(other.id))) {
             return false;
         }
-        if ((this.firstName == null) ? (other.firstName != null) : !this.firstName.equals(other.firstName)) {
+        if ((this.firstName == null) ? (other.firstName != null)
+                : !this.firstName.equals(other.firstName)) {
             return false;
         }
-        if ((this.lastName == null) ? (other.lastName != null) : !this.lastName.equals(other.lastName)) {
+        if ((this.lastName == null) ? (other.lastName != null) 
+                : !this.lastName.equals(other.lastName)) {
             return false;
         }
-        if ((this.userName == null) ? (other.userName != null) : !this.userName.equals(other.userName)) {
+        if ((this.userName == null) ? (other.userName != null) 
+                : !this.userName.equals(other.userName)) {
             return false;
         }
-        if ((this.password == null) ? (other.password != null) : !this.password.equals(other.password)) {
+        if ((this.password == null) ? (other.password != null) 
+                : !this.password.equals(other.password)) {
             return false;
         }
         if (this.rol != other.rol) {
@@ -44,7 +49,9 @@ public class UserVo implements ValueObject {
         if (this.active != other.active) {
             return false;
         }
-        if (this.programsId != other.programsId && (this.programsId == null || !this.programsId.equals(other.programsId))) {
+        if (this.programsId != other.programsId
+                && (this.programsId == null
+                || !this.programsId.equals(other.programsId))) {
             return false;
         }
         return true;
@@ -66,7 +73,10 @@ public class UserVo implements ValueObject {
 
     @Override
     public String toString() {
-        return "UserVo{" + "id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", userName=" + userName + ", password=" + password + ", role=" + rol + ", active=" + active + ", programsId=" + programsId + '}';
+        return "UserVo{" + "id=" + id + ", firstName=" + firstName
+                + ", lastName=" + lastName + ", userName=" + userName
+                + ", password=" + password + ", role=" + rol + ", active="
+                + active + ", programsId=" + programsId + '}';
     }
 
     public boolean isActive() {

@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.xtremeware.iudex.businesslogic.service;
 
 /**
@@ -9,7 +5,6 @@ package org.xtremeware.iudex.businesslogic.service;
  * @author juan
  */
 public class InvalidConfirmationKeyException extends Exception {
-
 
     public InvalidConfirmationKeyException(Throwable cause) {
         super(cause);
@@ -25,5 +20,4 @@ public class InvalidConfirmationKeyException extends Exception {
 
     public InvalidConfirmationKeyException() {
     }
-    
 }

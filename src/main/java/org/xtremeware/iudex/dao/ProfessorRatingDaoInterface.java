@@ -11,7 +11,7 @@ import org.xtremeware.iudex.vo.RatingSummaryVo;
 
 /**
  * DAO Interface for the ProfessorRating entities.
- * 
+ *
  * @author juan
  */
 public interface ProfessorRatingDaoInterface extends CrudDaoInterface<ProfessorRatingEntity> {
@@ -23,7 +23,7 @@ public interface ProfessorRatingDaoInterface extends CrudDaoInterface<ProfessorR
      * @param professorId Professor's ID
      * @return A list with all ratings associated to the specified professor
      */
-    public List<ProfessorRatingEntity> getByProfessorId(EntityManager em, long professorId) ;
+    public List<ProfessorRatingEntity> getByProfessorId(EntityManager em, long professorId);
 
     /**
      * Professor ratings finder according to a professor and a student
@@ -33,8 +33,8 @@ public interface ProfessorRatingDaoInterface extends CrudDaoInterface<ProfessorR
      * @param userId Student's ID
      * @return The rating a student has submitted to a professor
      */
-    public ProfessorRatingEntity getByProfessorIdAndUserId(EntityManager em, long professorId, long userId) ;
-    
+    public ProfessorRatingEntity getByProfessorIdAndUserId(EntityManager em, long professorId, long userId);
+
     /**
      * Professors ratings finder according to a specified user
      *
@@ -42,7 +42,7 @@ public interface ProfessorRatingDaoInterface extends CrudDaoInterface<ProfessorR
      * @param userId user's ID
      * @return A list with all ratings associated to the specified user
      */
-    public List<ProfessorRatingEntity> getByUserId(EntityManager em, long userId) ;
+    public List<ProfessorRatingEntity> getByUserId(EntityManager em, long userId);
 
     /**
      * Professor rating summary calculator
@@ -52,5 +52,5 @@ public interface ProfessorRatingDaoInterface extends CrudDaoInterface<ProfessorR
      * @return A value object containing the number of times the specified
      * professor has obtained positive and negative ratings
      */
-    public RatingSummaryVo getSummary(EntityManager em, long professorId) ;
+    public RatingSummaryVo getSummary(EntityManager em, long professorId);
 }

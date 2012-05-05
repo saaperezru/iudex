@@ -69,7 +69,8 @@ public class CourseDao extends CrudDao<CourseEntity> implements CourseDaoInterfa
     @Override
     public List<CourseEntity> getByProfessorIdAndSubjectId(EntityManager em, long professorId, long subjectId) {
         checkEntityManager(em);
-        return em.createNamedQuery("getCourseByProfessorIdAndSubjectId", CourseEntity.class).setParameter("professorId", professorId).setParameter("subjectId", subjectId).getResultList();
+        return em.createNamedQuery("getCourseByProfessorIdAndSubjectId", CourseEntity.class).
+                setParameter("professorId", professorId).setParameter("subjectId", subjectId).getResultList();
 
     }
 
@@ -89,16 +90,17 @@ public class CourseDao extends CrudDao<CourseEntity> implements CourseDaoInterfa
      * like the ones provided.
      */
     @Override
-    public List<CourseEntity> getCoursesByProfessorNameLikeAndSubjectNameLike(EntityManager em, String professorName, String subjectName, Long periodId) {
+    public List<CourseEntity> getCoursesByProfessorNameLikeAndSubjectNameLike(EntityManager em,
+            String professorName, String subjectName, Long periodId) {
         checkEntityManager(em);
-        String professor = (professorName == null) ? "%" : "%" + professorName + "%";
-        String subject = (subjectName == null) ? "%" : "%" + subjectName + "%";
         if (periodId == null) {
-
-            return em.createNamedQuery("getCoursesByProfessorNameLikeAndSubjectNameLike", CourseEntity.class).setParameter("professorName", professor).setParameter("subjectName", subject).getResultList();
+            return em.createNamedQuery("getCoursesByProfessorNameLikeAndSubjectNameLike", CourseEntity.class).
+                    setParameter("professorName", "%" + professorName + "%").setParameter("subjectName", "%" + subjectName + "%").
+                    getResultList();
         } else {
-
-            return em.createNamedQuery("getCoursesByProfessorNameLikeAndSubjectNameLikeAndPeriodId", CourseEntity.class).setParameter("professorName", professor).setParameter("subjectName", subject).setParameter("periodId", periodId).getResultList();
+            return em.createNamedQuery("getCoursesByProfessorNameLikeAndSubjectNameLikeAndPeriodId", CourseEntity.class).
+                    setParameter("professorName", "%" + professorName + "%").setParameter("subjectName", "%" + subjectName + "%").
+                    setParameter("periodId", periodId).getResultList();
         }
 
     }

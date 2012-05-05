@@ -85,10 +85,12 @@ public class ProfessorEntity implements Serializable, Entity<ProfessorVo> {
         this.firstName = firstName;
     }
 
+    @Override
     public Long getId() {
         return id;
     }
 
+    @Override
     public void setId(Long id) {
         this.id = id;
     }

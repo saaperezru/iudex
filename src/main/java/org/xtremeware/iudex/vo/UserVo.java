@@ -9,7 +9,7 @@ public class UserVo extends IdentifiableValueObject<Long> implements ValueObject
     private String lastName;
     private String userName;
     private String password;
-    private Role rol;
+    private Role role;
     private boolean active;
     private List<Long> programsId;
 
@@ -42,7 +42,7 @@ public class UserVo extends IdentifiableValueObject<Long> implements ValueObject
                 : !this.password.equals(other.password)) {
             return false;
         }
-        if (this.rol != other.rol) {
+        if (this.role != other.role) {
             return false;
         }
         if (this.active != other.active) {
@@ -64,7 +64,7 @@ public class UserVo extends IdentifiableValueObject<Long> implements ValueObject
         hash = 59 * hash + (this.lastName != null ? this.lastName.hashCode() : 0);
         hash = 59 * hash + (this.userName != null ? this.userName.hashCode() : 0);
         hash = 59 * hash + (this.password != null ? this.password.hashCode() : 0);
-        hash = 59 * hash + (this.rol != null ? this.rol.hashCode() : 0);
+        hash = 59 * hash + (this.role != null ? this.role.hashCode() : 0);
         hash = 59 * hash + (this.active ? 1 : 0);
         hash = 59 * hash + (this.programsId != null ? this.programsId.hashCode() : 0);
         return hash;
@@ -74,7 +74,7 @@ public class UserVo extends IdentifiableValueObject<Long> implements ValueObject
     public String toString() {
         return "UserVo{" + "id=" + id + ", firstName=" + firstName
                 + ", lastName=" + lastName + ", userName=" + userName
-                + ", password=" + password + ", role=" + rol + ", active="
+                + ", password=" + password + ", role=" + role + ", active="
                 + active + ", programsId=" + programsId + '}';
     }
 
@@ -119,11 +119,11 @@ public class UserVo extends IdentifiableValueObject<Long> implements ValueObject
     }
 
     public Role getRole() {
-        return rol;
+        return role;
     }
 
-    public void setRol(Role rol) {
-        this.rol = rol;
+    public void setRole(Role role) {
+        this.role = role;
     }
 
     public String getUserName() {

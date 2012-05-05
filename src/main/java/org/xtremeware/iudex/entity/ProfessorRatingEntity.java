@@ -72,10 +72,12 @@ public class ProfessorRatingEntity implements Serializable, Entity<ProfessorRati
         return "ProfessorRatingEntity{" + "id=" + id + '}';
     }
 
+    @Override
     public Long getId() {
         return id;
     }
 
+    @Override
     public void setId(Long id) {
         this.id = id;
     }

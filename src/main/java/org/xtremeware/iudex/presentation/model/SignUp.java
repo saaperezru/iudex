@@ -1,4 +1,4 @@
-package org.xtremeware.iudex.presentation.controller;
+package org.xtremeware.iudex.presentation.model;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -14,6 +14,7 @@ import org.xtremeware.iudex.businesslogic.facade.ProgramsFacade;
 import org.xtremeware.iudex.businesslogic.facade.UsersFacade;
 import org.xtremeware.iudex.helper.Config;
 import org.xtremeware.iudex.helper.Role;
+import org.xtremeware.iudex.presentation.controller.AuthCheck;
 import org.xtremeware.iudex.vo.ProgramVo;
 import org.xtremeware.iudex.vo.UserVo;
 

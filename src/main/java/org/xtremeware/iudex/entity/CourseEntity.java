@@ -80,14 +80,16 @@ public class CourseEntity implements Serializable, Entity<CourseVo> {
     @Override
     public String toString() {
         return "CourseEntity{" + "id=" + id + ", professor=" + professor
-                + ", subject=" + subject + ", period=" + period 
+                + ", subject=" + subject + ", period=" + period
                 + ", ratingAverage=" + ratingAverage + ", ratingCount=" + ratingCount + '}';
     }
 
+    @Override
     public Long getId() {
         return id;
     }
 
+    @Override
     public void setId(Long id) {
         this.id = id;
     }

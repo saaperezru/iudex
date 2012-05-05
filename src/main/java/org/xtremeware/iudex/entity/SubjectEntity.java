@@ -65,10 +65,12 @@ public class SubjectEntity implements Serializable, Entity<SubjectVo> {
         this.description = description;
     }
 
+    @Override
     public Long getId() {
         return id;
     }
 
+    @Override
     public void setId(Long id) {
         this.id = id;
     }

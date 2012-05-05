@@ -72,10 +72,12 @@ public class SubjectRatingEntity implements Serializable, Entity<SubjectRatingVo
         return hash;
     }
 
+    @Override
     public Long getId() {
         return id;
     }
 
+    @Override
     public void setId(Long id) {
         this.id = id;
     }

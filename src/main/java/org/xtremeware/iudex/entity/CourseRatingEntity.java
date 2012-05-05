@@ -68,10 +68,12 @@ public class CourseRatingEntity implements Serializable, Entity<CourseRatingVo> 
         return "CourseRatingEntity{" + "id=" + id + ", course=" + course + ", user=" + user + ", value=" + value + '}';
     }
 
+    @Override
     public Long getId() {
         return id;
     }
 
+    @Override
     public void setId(Long id) {
         this.id = id;
     }

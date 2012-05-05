@@ -79,10 +79,12 @@ public class FeedbackEntity implements Serializable, Entity<FeedbackVo> {
         return "FeedbackEntity{" + "id=" + id + ", type=" + type + ", content=" + content + ", date=" + date + '}';
     }
 
+    @Override
     public Long getId() {
         return id;
     }
 
+    @Override
     public void setId(Long id) {
         this.id = id;
     }

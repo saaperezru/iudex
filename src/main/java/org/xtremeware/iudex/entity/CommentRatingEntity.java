@@ -82,10 +82,12 @@ public class CommentRatingEntity implements Serializable, Entity<CommentRatingVo
         this.comment = comment;
     }
 
+    @Override
     public Long getId() {
         return id;
     }
 
+    @Override
     public void setId(Long id) {
         this.id = id;
     }

@@ -54,10 +54,12 @@ public class ProgramEntity implements Serializable, Entity<ProgramVo> {
         return "ProgramEntity{" + "id=" + id + ", name=" + name + '}';
     }
 
+    @Override
     public Long getId() {
         return id;
     }
 
+    @Override
     public void setId(Long id) {
         this.id = id;
     }

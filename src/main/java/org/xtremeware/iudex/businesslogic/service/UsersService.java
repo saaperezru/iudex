@@ -1,12 +1,12 @@
 package org.xtremeware.iudex.businesslogic.service;
 
-import org.xtremeware.iudex.businesslogic.service.updateimplementations.SimpleUpdate;
-import org.xtremeware.iudex.businesslogic.service.removeimplementations.UsersRemove;
-import org.xtremeware.iudex.businesslogic.service.readimplementations.SimpleRead;
-import org.xtremeware.iudex.businesslogic.service.createimplementations.UsersCreate;
 import java.util.ArrayList;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.businesslogic.InvalidVoException;
+import org.xtremeware.iudex.businesslogic.service.createimplementations.UsersCreate;
+import org.xtremeware.iudex.businesslogic.service.readimplementations.SimpleRead;
+import org.xtremeware.iudex.businesslogic.service.removeimplementations.UsersRemove;
+import org.xtremeware.iudex.businesslogic.service.updateimplementations.SimpleUpdate;
 import org.xtremeware.iudex.dao.AbstractDaoFactory;
 import org.xtremeware.iudex.entity.ConfirmationKeyEntity;
 import org.xtremeware.iudex.entity.ProgramEntity;
@@ -38,7 +38,6 @@ public class UsersService extends CrudService<UserVo, UserEntity> {
         MAX_USERNAME_LENGTH = Integer.parseInt(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAX_USERNAME_LENGTH));
         MAX_USER_PASSWORD_LENGTH = Integer.parseInt(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAX_USER_PASSWORD_LENGTH));
         MIN_USER_PASSWORD_LENGTH = Integer.parseInt(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MIN_USER_PASSWORD_LENGTH));
-
     }
 
     @Override
@@ -91,7 +90,6 @@ public class UsersService extends CrudService<UserVo, UserEntity> {
 
     @Override
     public UserEntity voToEntity(EntityManager em, UserVo vo) throws InvalidVoException, ExternalServiceConnectionException {
-
         validateVo(em, vo);
 
         UserEntity userEntity = new UserEntity();
@@ -100,7 +98,7 @@ public class UsersService extends CrudService<UserVo, UserEntity> {
         userEntity.setLastName(vo.getLastName());
         userEntity.setUserName(vo.getUserName());
         userEntity.setPassword(vo.getPassword());
-        userEntity.setRol(vo.getRole());
+        userEntity.setRole(vo.getRole());
         userEntity.setActive(vo.isActive());
 
         ArrayList<ProgramEntity> arrayList = new ArrayList<ProgramEntity>();
@@ -110,7 +108,6 @@ public class UsersService extends CrudService<UserVo, UserEntity> {
 
         userEntity.setPrograms(arrayList);
         return userEntity;
-
     }
 
     public UserVo authenticate(EntityManager em, String userName, String password) throws InactiveUserException, ExternalServiceConnectionException {

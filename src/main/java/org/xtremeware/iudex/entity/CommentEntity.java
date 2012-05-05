@@ -74,8 +74,8 @@ public class CommentEntity implements Serializable, Entity<CommentVo> {
 
     @Override
     public String toString() {
-        return "CommentEntity{" + "id=" + id + ", content=" + content 
-                + ", date=" + date + ", user=" + user + ", course=" + course 
+        return "CommentEntity{" + "id=" + id + ", content=" + content
+                + ", date=" + date + ", user=" + user + ", course=" + course
                 + ", anonymous=" + anonymous + ", rating=" + rating + '}';
     }
 
@@ -111,10 +111,12 @@ public class CommentEntity implements Serializable, Entity<CommentVo> {
         this.date = date;
     }
 
+    @Override
     public Long getId() {
         return id;
     }
 
+    @Override
     public void setId(Long id) {
         this.id = id;
     }

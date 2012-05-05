@@ -1,4 +1,4 @@
-package org.xtremeware.iudex.presentation.model;
+package org.xtremeware.iudex.presentation.controller;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;

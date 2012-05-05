@@ -1,4 +1,4 @@
-package org.xtremeware.iudex.presentation.model;
+package org.xtremeware.iudex.presentation.controller;
 
 import java.util.List;
 import java.util.logging.Level;

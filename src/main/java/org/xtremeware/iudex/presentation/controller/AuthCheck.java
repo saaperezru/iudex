@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.xtremeware.iudex.presentation.model;
+package org.xtremeware.iudex.presentation.controller;
 
 import java.util.Map;
 import javax.faces.application.FacesMessage;

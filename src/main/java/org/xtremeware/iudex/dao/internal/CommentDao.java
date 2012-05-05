@@ -1,7 +1,9 @@
-package org.xtremeware.iudex.dao;
+package org.xtremeware.iudex.dao.internal;
 
+import org.xtremeware.iudex.dao.internal.CrudDao;
 import java.util.List;
 import javax.persistence.EntityManager;
+import org.xtremeware.iudex.dao.CommentDaoInterface;
 import org.xtremeware.iudex.entity.CommentEntity;
 
 /**
@@ -84,5 +86,10 @@ public class CommentDao extends CrudDao<CommentEntity> implements CommentDaoInte
     public int getUserCommentsCounter(EntityManager em, long userId) {
         checkEntityManager(em);
         return em.createNamedQuery("getUserCommentsCounter", Long.class).setParameter("userId", userId).getSingleResult().intValue();
+    }
+
+    @Override
+    protected Class getEntityClass() {
+        return CommentEntity.class;
     }
 }

@@ -2,11 +2,12 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.xtremeware.iudex.dao;
+package org.xtremeware.iudex.dao.internal;
 
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import org.xtremeware.iudex.dao.ProfessorRatingDaoInterface;
 import org.xtremeware.iudex.entity.ProfessorRatingEntity;
 import org.xtremeware.iudex.vo.RatingSummaryVo;
 
@@ -97,5 +98,10 @@ public class ProfessorRatingDao extends CrudDao<ProfessorRatingEntity> implement
         }
 
         return result;
+    }
+
+    @Override
+    protected Class getEntityClass() {
+        return ProfessorRatingEntity.class;
     }
 }

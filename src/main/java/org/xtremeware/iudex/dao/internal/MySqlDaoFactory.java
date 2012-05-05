@@ -1,4 +1,20 @@
-package org.xtremeware.iudex.dao;
+package org.xtremeware.iudex.dao.internal;
+
+import org.xtremeware.iudex.dao.AbstractDaoFactory;
+import org.xtremeware.iudex.dao.CommentDaoInterface;
+import org.xtremeware.iudex.dao.CommentRatingDaoInterface;
+import org.xtremeware.iudex.dao.ConfirmationKeyDaoInterface;
+import org.xtremeware.iudex.dao.CourseDaoInterface;
+import org.xtremeware.iudex.dao.CourseRatingDaoInterface;
+import org.xtremeware.iudex.dao.FeedbackDaoInterface;
+import org.xtremeware.iudex.dao.FeedbackTypeDaoInterface;
+import org.xtremeware.iudex.dao.PeriodDaoInterface;
+import org.xtremeware.iudex.dao.ProfessorDaoInterface;
+import org.xtremeware.iudex.dao.ProfessorRatingDaoInterface;
+import org.xtremeware.iudex.dao.ProgramDaoInterface;
+import org.xtremeware.iudex.dao.SubjectDaoInterface;
+import org.xtremeware.iudex.dao.SubjectRatingDaoInterface;
+import org.xtremeware.iudex.dao.UserDaoInterface;
 
 /**
  * DAO factory for a MySQL persistence unit
@@ -21,6 +37,17 @@ public class MySqlDaoFactory implements AbstractDaoFactory {
     private SubjectDaoInterface subjectDao;
     private SubjectRatingDaoInterface subjectRatingDao;
     private UserDaoInterface userDao;
+    private static MySqlDaoFactory instance;
+
+    private MySqlDaoFactory() {
+    }
+
+    public static synchronized MySqlDaoFactory getInstance() {
+        if (instance == null) {
+            instance = new MySqlDaoFactory();
+        }
+        return instance;
+    }
 
     @Override
     public CommentDaoInterface getCommentDao() {

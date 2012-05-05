@@ -3,9 +3,8 @@ package org.xtremeware.iudex.vo;
 import java.util.List;
 import org.xtremeware.iudex.helper.Role;
 
-public class UserVo implements ValueObject {
+public class UserVo extends IdentifiableValueObject<Long> implements ValueObject {
 
-    private Long id;
     private String firstName;
     private String lastName;
     private String userName;
@@ -93,14 +92,6 @@ public class UserVo implements ValueObject {
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getLastName() {

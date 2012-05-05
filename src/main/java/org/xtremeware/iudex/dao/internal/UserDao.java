@@ -1,7 +1,8 @@
-package org.xtremeware.iudex.dao;
+package org.xtremeware.iudex.dao.internal;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import org.xtremeware.iudex.dao.UserDaoInterface;
 import org.xtremeware.iudex.entity.UserEntity;
 
 /**
@@ -31,5 +32,10 @@ public class UserDao extends CrudDao<UserEntity> implements UserDaoInterface {
         } catch (NoResultException e) {
             return null;
         }
+    }
+
+    @Override
+    protected Class getEntityClass() {
+        return UserDao.class;
     }
 }

@@ -1,9 +1,7 @@
-
 package org.xtremeware.iudex.vo;
 
-public class ProgramVo implements ValueObject{
+public class ProgramVo extends IdentifiableValueObject<Long> implements ValueObject {
 
-    private Long id;
     private String name;
 
     @Override
@@ -37,14 +35,6 @@ public class ProgramVo implements ValueObject{
         return "ProgramVo{" + "id=" + id + ", name=" + name + '}';
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getName() {
         return name;
     }
@@ -52,5 +42,4 @@ public class ProgramVo implements ValueObject{
     public void setName(String name) {
         this.name = name;
     }
-
 }

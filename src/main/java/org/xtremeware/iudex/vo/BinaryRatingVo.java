@@ -4,9 +4,8 @@ package org.xtremeware.iudex.vo;
  *
  * @author jdbermeol
  */
-public class BinaryRatingVo implements ValueObject {
+public abstract class BinaryRatingVo extends IdentifiableValueObject<Long> implements ValueObject {
 
-    private Long id;
     private Long evaluetedObjectId;
     private Long user;
     private int value;
@@ -44,14 +43,6 @@ public class BinaryRatingVo implements ValueObject {
 
     public void setEvaluetedObjectId(Long evaluetedObjectId) {
         this.evaluetedObjectId = evaluetedObjectId;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public Long getUser() {

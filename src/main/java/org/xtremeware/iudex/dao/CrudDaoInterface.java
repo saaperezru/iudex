@@ -16,6 +16,4 @@ public interface CrudDaoInterface<E extends Entity> {
     public void remove(EntityManager em, long id);
 
     public E getById(EntityManager em, long id);
-
-    public void checkEntityManager(EntityManager em);
 }

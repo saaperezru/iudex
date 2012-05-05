@@ -2,9 +2,8 @@ package org.xtremeware.iudex.vo;
 
 import java.util.Date;
 
-public class CommentVo implements ValueObject {
+public class CommentVo extends IdentifiableValueObject<Long> implements ValueObject {
 
-    private Long id;
     private String content;
     private Date date;
     private Long userId;
@@ -95,14 +94,6 @@ public class CommentVo implements ValueObject {
 
     public void setDate(Date date) {
         this.date = date;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public Float getRating() {

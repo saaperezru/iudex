@@ -1,8 +1,10 @@
-package org.xtremeware.iudex.dao;
+package org.xtremeware.iudex.dao.internal;
 
+import org.xtremeware.iudex.dao.internal.CrudDao;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import org.xtremeware.iudex.dao.CommentRatingDaoInterface;
 import org.xtremeware.iudex.entity.CommentRatingEntity;
 import org.xtremeware.iudex.vo.RatingSummaryVo;
 
@@ -87,5 +89,10 @@ public class CommentRatingDao extends CrudDao<CommentRatingEntity> implements Co
         }
 
         return rsv;
+    }
+
+    @Override
+    protected Class getEntityClass() {
+        return CommentRatingEntity.class;
     }
 }

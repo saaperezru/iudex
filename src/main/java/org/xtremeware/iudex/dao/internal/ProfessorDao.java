@@ -1,7 +1,8 @@
-package org.xtremeware.iudex.dao;
+package org.xtremeware.iudex.dao.internal;
 
 import java.util.List;
 import javax.persistence.EntityManager;
+import org.xtremeware.iudex.dao.ProfessorDaoInterface;
 import org.xtremeware.iudex.entity.ProfessorEntity;
 
 /**
@@ -37,5 +38,10 @@ public class ProfessorDao extends CrudDao<ProfessorEntity> implements ProfessorD
     public List<ProfessorEntity> getBySubjectId(EntityManager em, long subjectId) {
         checkEntityManager(em);
         return em.createNamedQuery("getProfessorBySubjectId", ProfessorEntity.class).setParameter("subjectId", subjectId).getResultList();
+    }
+
+    @Override
+    protected Class getEntityClass() {
+        return ProfessorEntity.class;
     }
 }

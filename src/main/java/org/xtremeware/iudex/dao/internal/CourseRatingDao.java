@@ -1,8 +1,10 @@
-package org.xtremeware.iudex.dao;
+package org.xtremeware.iudex.dao.internal;
 
+import org.xtremeware.iudex.dao.internal.CrudDao;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import org.xtremeware.iudex.dao.CourseRatingDaoInterface;
 import org.xtremeware.iudex.entity.CourseRatingEntity;
 
 /**
@@ -59,5 +61,10 @@ public class CourseRatingDao extends CrudDao<CourseRatingEntity> implements Cour
     public List<CourseRatingEntity> getByUserId(EntityManager em, Long userId) {
         checkEntityManager(em);
         return em.createNamedQuery("getCourseRatingByUserId", CourseRatingEntity.class).setParameter("userId", userId).getResultList();
+    }
+
+    @Override
+    protected Class getEntityClass() {
+        return CourseRatingEntity.class;
     }
 }

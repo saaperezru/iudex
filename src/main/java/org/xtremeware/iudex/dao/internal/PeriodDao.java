@@ -1,8 +1,9 @@
-package org.xtremeware.iudex.dao;
+package org.xtremeware.iudex.dao.internal;
 
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import org.xtremeware.iudex.dao.PeriodDaoInterface;
 import org.xtremeware.iudex.entity.PeriodEntity;
 
 /**
@@ -56,5 +57,10 @@ public class PeriodDao extends CrudDao<PeriodEntity> implements PeriodDaoInterfa
             return null;
         }
 
+    }
+
+    @Override
+    protected Class getEntityClass() {
+        return PeriodEntity.class;
     }
 }

@@ -1,7 +1,8 @@
-package org.xtremeware.iudex.dao;
+package org.xtremeware.iudex.dao.internal;
 
 import java.util.List;
 import javax.persistence.EntityManager;
+import org.xtremeware.iudex.dao.FeedbackDaoInterface;
 import org.xtremeware.iudex.entity.FeedbackEntity;
 
 /**
@@ -31,5 +32,10 @@ public class FeedbackDao extends CrudDao<FeedbackEntity> implements FeedbackDaoI
     public List<FeedbackEntity> getByContentLike(EntityManager em, String query) {
         checkEntityManager(em);
         return em.createNamedQuery("getFeedbackByContentLike", FeedbackEntity.class).setParameter("query", "%" + query + "%").getResultList();
+    }
+
+    @Override
+    protected Class getEntityClass() {
+        return FeedbackEntity.class;
     }
 }

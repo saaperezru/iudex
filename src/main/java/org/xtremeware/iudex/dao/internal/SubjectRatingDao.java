@@ -1,8 +1,9 @@
-package org.xtremeware.iudex.dao;
+package org.xtremeware.iudex.dao.internal;
 
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import org.xtremeware.iudex.dao.SubjectRatingDaoInterface;
 import org.xtremeware.iudex.entity.SubjectRatingEntity;
 import org.xtremeware.iudex.vo.RatingSummaryVo;
 
@@ -87,5 +88,10 @@ public class SubjectRatingDao extends CrudDao<SubjectRatingEntity> implements Su
         }
 
         return rsv;
+    }
+
+    @Override
+    protected Class getEntityClass() {
+        return SubjectRatingEntity.class;
     }
 }

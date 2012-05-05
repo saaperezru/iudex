@@ -1,8 +1,7 @@
 package org.xtremeware.iudex.vo;
 
-public class CourseVo implements ValueObject {
+public class CourseVo extends IdentifiableValueObject<Long> implements ValueObject {
 
-    private Long id;
     private Long professorId;
     private Long subjectId;
     private Long periodId;
@@ -59,14 +58,6 @@ public class CourseVo implements ValueObject {
                 + professorId + ", subjectId=" + subjectId
                 + ", periodId=" + periodId + ", ratingAverage="
                 + ratingAverage + ", ratingCount=" + ratingCount + '}';
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public Long getPeriodId() {

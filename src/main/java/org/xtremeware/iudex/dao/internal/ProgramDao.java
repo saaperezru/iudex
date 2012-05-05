@@ -1,7 +1,8 @@
-package org.xtremeware.iudex.dao;
+package org.xtremeware.iudex.dao.internal;
 
 import java.util.List;
 import javax.persistence.EntityManager;
+import org.xtremeware.iudex.dao.ProgramDaoInterface;
 import org.xtremeware.iudex.entity.ProgramEntity;
 
 /**
@@ -22,5 +23,10 @@ public class ProgramDao extends CrudDao<ProgramEntity> implements ProgramDaoInte
         checkEntityManager(em);
         return em.createNamedQuery("getProgramByNameLike", ProgramEntity.class).
                 setParameter("name", "%" + name + "%").getResultList();
+    }
+
+    @Override
+    protected Class getEntityClass() {
+        return ProgramEntity.class;
     }
 }

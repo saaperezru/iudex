@@ -1,7 +1,9 @@
-package org.xtremeware.iudex.dao;
+package org.xtremeware.iudex.dao.internal;
 
+import org.xtremeware.iudex.dao.internal.CrudDao;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import org.xtremeware.iudex.dao.ConfirmationKeyDaoInterface;
 import org.xtremeware.iudex.entity.ConfirmationKeyEntity;
 
 /**
@@ -26,5 +28,10 @@ public class ConfirmationKeyDao extends CrudDao<ConfirmationKeyEntity> implement
         } catch (NoResultException noResultException) {
             return null;
         }
+    }
+
+    @Override
+    protected Class getEntityClass() {
+        return ConfirmationKeyEntity.class;
     }
 }

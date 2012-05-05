@@ -1,7 +1,9 @@
-package org.xtremeware.iudex.dao;
+package org.xtremeware.iudex.dao.internal;
 
+import org.xtremeware.iudex.dao.internal.CrudDao;
 import java.util.List;
 import javax.persistence.EntityManager;
+import org.xtremeware.iudex.dao.CourseDaoInterface;
 import org.xtremeware.iudex.entity.CourseEntity;
 
 /**
@@ -103,5 +105,10 @@ public class CourseDao extends CrudDao<CourseEntity> implements CourseDaoInterfa
                     setParameter("periodId", periodId).getResultList();
         }
 
+    }
+
+    @Override
+    protected Class getEntityClass() {
+        return CourseEntity.class;
     }
 }

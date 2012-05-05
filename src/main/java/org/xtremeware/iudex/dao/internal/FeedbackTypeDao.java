@@ -1,8 +1,9 @@
-package org.xtremeware.iudex.dao;
+package org.xtremeware.iudex.dao.internal;
 
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import org.xtremeware.iudex.dao.FeedbackTypeDaoInterface;
 import org.xtremeware.iudex.entity.FeedbackTypeEntity;
 
 /**
@@ -34,5 +35,10 @@ public class FeedbackTypeDao extends CrudDao<FeedbackTypeEntity> implements Feed
     public List<FeedbackTypeEntity> getAll(EntityManager em) {
         checkEntityManager(em);
         return em.createNamedQuery("getAllFeedbackType", FeedbackTypeEntity.class).getResultList();
+    }
+
+    @Override
+    protected Class getEntityClass() {
+        return FeedbackTypeEntity.class;
     }
 }

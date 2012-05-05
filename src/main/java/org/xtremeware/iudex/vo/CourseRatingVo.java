@@ -1,8 +1,7 @@
 package org.xtremeware.iudex.vo;
 
-public class CourseRatingVo implements ValueObject {
+public class CourseRatingVo extends IdentifiableValueObject<Long> implements ValueObject {
 
-    private Long id;
     private Long courseId;
     private Long userId;
     private float value;

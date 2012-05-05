@@ -1,7 +1,7 @@
 
 package org.xtremeware.iudex.vo;
 
-public class MailingConfigVo extends ValueObject{
+public class MailingConfigVo implements ValueObject{
     
     	private String sender;
 	private String smtpServer;

@@ -1,9 +1,7 @@
 
 package org.xtremeware.iudex.vo;
 
-import java.util.Date;
-
-public class CourseVo extends ValueObject{
+public class CourseVo implements ValueObject{
 
 	private Long id;
 	private Long professorId;

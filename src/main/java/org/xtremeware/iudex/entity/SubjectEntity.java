@@ -16,9 +16,9 @@ public class SubjectEntity implements Serializable, Entity<SubjectVo> {
     @Id
     @Column(name = "ID_SUBJECT")
     private Long id;
-    @Column(name = "NAME", nullable=false, length=50, unique= true)
+    @Column(name = "NAME", nullable = false, length = 50, unique = true)
     private String name;
-    @Column(name = "DESCRIPTION", length= 2000)
+    @Column(name = "DESCRIPTION", length = 2000)
     private String description;
 
     @Override

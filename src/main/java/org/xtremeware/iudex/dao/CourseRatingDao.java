@@ -9,7 +9,7 @@ import org.xtremeware.iudex.entity.CourseRatingEntity;
  *
  * @author josebermeo
  */
-public class CourseRatingDao extends Dao<CourseRatingEntity> {
+public class CourseRatingDao extends CrudDao<CourseRatingEntity> implements CourseRatingDaoInterface{
 
     /**
      * Returns a list of CourseRating entities which has the same indicated
@@ -20,33 +20,31 @@ public class CourseRatingDao extends Dao<CourseRatingEntity> {
      * @return a list of CourseRating entities with a course identified by
      * courseId
      */
+    @Override
     public List<CourseRatingEntity> getByCourseId(EntityManager em, Long courseId) {
-        if (em == null) {
-            throw new IllegalArgumentException("EntityManager em cannot be null");
-        }
-        return em.createNamedQuery("getCourseRatingByCourseId").setParameter("courseId", courseId).getResultList();
+        checkEntityManager(em);
+        return em.createNamedQuery("getCourseRatingByCourseId", CourseRatingEntity.class).setParameter("courseId", courseId).getResultList();
     }
 
     /**
      * Returns a CourseRating entity which have the given course and user mapped
-     * by the respective Ids.
+     * by the respective Id.
      *
      * @param em the entity manager
      * @param courseId id of the course
      * @param userId id of the user
      * @return CourseRatingEntity with the indicated user and course
      */
+    @Override
     public CourseRatingEntity getByCourseIdAndUserId(EntityManager em, Long courseId, Long userId) {
-        if (em == null) {
-            throw new IllegalArgumentException("EntityManager em cannot be null");
-        }
+        checkEntityManager(em);
         try {
-            return (CourseRatingEntity) em.createNamedQuery("getCourseRatingByCourseIdAndUserId").setParameter("courseId", courseId).setParameter("userId", userId).getSingleResult();
+            return em.createNamedQuery("getCourseRatingByCourseIdAndUserId", CourseRatingEntity.class).setParameter("courseId", courseId).setParameter("userId", userId).getSingleResult();
         } catch (NoResultException noResultException) {
             return null;
         }
     }
-    
+
     /**
      * Returns a list of CourseRating entities which has the same indicated
      * user.
@@ -56,10 +54,9 @@ public class CourseRatingDao extends Dao<CourseRatingEntity> {
      * @return a list of CourseRating entities with a course identified by
      * userId
      */
+    @Override
     public List<CourseRatingEntity> getByUserId(EntityManager em, Long userId) {
-        if (em == null) {
-            throw new IllegalArgumentException("EntityManager em cannot be null");
-        }
-        return em.createNamedQuery("getCourseRatingByUserId").setParameter("userId", userId).getResultList();
+        checkEntityManager(em);
+        return em.createNamedQuery("getCourseRatingByUserId", CourseRatingEntity.class).setParameter("userId", userId).getResultList();
     }
 }

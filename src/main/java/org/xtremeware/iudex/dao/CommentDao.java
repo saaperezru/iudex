@@ -10,7 +10,7 @@ import org.xtremeware.iudex.entity.CommentEntity;
  *
  * @author saaperezru
  */
-public class CommentDao extends Dao<CommentEntity> {
+public class CommentDao extends CrudDao<CommentEntity> implements CommentDaoInterface {
 
     /**
      * Returns a list of Comments associated with the course who's professor is
@@ -21,11 +21,10 @@ public class CommentDao extends Dao<CommentEntity> {
      * associated professor .
      * @return The list of found comments.
      */
+    @Override
     public List<CommentEntity> getByProfessorId(EntityManager em, long professorId) {
-        if (em == null) {
-            throw new IllegalArgumentException("EntityManager em cannot be null");
-        }
-        return em.createNamedQuery("getCommentsByProfessorId").setParameter("professorId", professorId).getResultList();
+        checkEntityManager(em);
+        return em.createNamedQuery("getCommentsByProfessorId", CommentEntity.class).setParameter("professorId", professorId).getResultList();
 
     }
 
@@ -34,15 +33,14 @@ public class CommentDao extends Dao<CommentEntity> {
      * identified by the given id
      *
      * @param em EntityManager with which the entities will be searched
-     * @param subjectId Subject identifier to look for in comments entities'
+     * @param subjectId Subject identifier to look for in comments entities.
      * associated course.
      * @return The list of found comments.
      */
+    @Override
     public List<CommentEntity> getBySubjectId(EntityManager em, long subjectId) {
-        if (em == null) {
-            throw new IllegalArgumentException("EntityManager em cannot be null");
-        }
-        return em.createNamedQuery("getCommentsBySubjectId").setParameter("subjectId", subjectId).getResultList();
+        checkEntityManager(em);
+        return em.createNamedQuery("getCommentsBySubjectId", CommentEntity.class).setParameter("subjectId", subjectId).getResultList();
 
     }
 
@@ -54,11 +52,10 @@ public class CommentDao extends Dao<CommentEntity> {
      * @param userId User identifier to look for in comments entities.
      * @return The list of found comments.
      */
+    @Override
     public List<CommentEntity> getByUserId(EntityManager em, long userId) {
-        if (em == null) {
-            throw new IllegalArgumentException("EntityManager em cannot be null");
-        }
-        return em.createNamedQuery("getCommentsByUserId").setParameter("userId", userId).getResultList();
+        checkEntityManager(em);
+        return em.createNamedQuery("getCommentsByUserId", CommentEntity.class).setParameter("userId", userId).getResultList();
 
     }
 
@@ -70,24 +67,22 @@ public class CommentDao extends Dao<CommentEntity> {
      * @param courseId Course identifier to look for in comment entities.
      * @return The list of found comments.
      */
+    @Override
     public List<CommentEntity> getByCourseId(EntityManager em, long courseId) {
-        if (em == null) {
-            throw new IllegalArgumentException("EntityManager em cannot be null");
-        }
-        return em.createNamedQuery("getCommentsByCourseId").setParameter("courseId", courseId).getResultList();
+        checkEntityManager(em);
+        return em.createNamedQuery("getCommentsByCourseId", CommentEntity.class).setParameter("courseId", courseId).getResultList();
     }
-    
+
     /**
      * Returns the number of comments submitted by a user on the current date
-     * 
+     *
      * @param em entity manager
      * @param userId id of the user
      * @return number of comments submitted on the current day
      */
-    public int getUserCommentsCounter(EntityManager em, long userId){
-        if (em == null) {
-            throw new IllegalArgumentException("EntityManager em cannot be null");
-        }
-        return ((Integer) em.createNamedQuery("getUserCommentsCounter").setParameter("userId", userId).getSingleResult()).intValue();
+    @Override
+    public int getUserCommentsCounter(EntityManager em, long userId) {
+        checkEntityManager(em);
+        return em.createNamedQuery("getUserCommentsCounter", Long.class).setParameter("userId", userId).getSingleResult().intValue();
     }
 }

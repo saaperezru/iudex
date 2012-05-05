@@ -7,8 +7,8 @@ import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.businesslogic.InvalidVoException;
 import org.xtremeware.iudex.dao.AbstractDaoFactory;
-import org.xtremeware.iudex.dao.Dao;
-import org.xtremeware.iudex.dao.ProfessorDao;
+import org.xtremeware.iudex.dao.CrudDaoInterface;
+import org.xtremeware.iudex.dao.ProfessorDaoInterface;
 import org.xtremeware.iudex.entity.CourseEntity;
 import org.xtremeware.iudex.entity.ProfessorEntity;
 import org.xtremeware.iudex.entity.ProfessorRatingEntity;
@@ -26,7 +26,7 @@ public class ProfessorsService extends SimpleCrudService<ProfessorVo, ProfessorE
 
 	public List<ProfessorVo> getByNameLike(EntityManager em, String name) {
 		ArrayList<ProfessorVo> list = new ArrayList<ProfessorVo>();
-		for (ProfessorEntity professor : ((ProfessorDao) getDao()).getByNameLike(em, name)) {
+		for (ProfessorEntity professor : ((ProfessorDaoInterface) getDao()).getByNameLike(em, name)) {
 			list.add(professor.toVo());
 		}
 		return list;
@@ -34,14 +34,14 @@ public class ProfessorsService extends SimpleCrudService<ProfessorVo, ProfessorE
 
 	public List<ProfessorVo> getBySubjectId(EntityManager em, long subjectId) {
 		ArrayList<ProfessorVo> list = new ArrayList<ProfessorVo>();
-		for (ProfessorEntity professor : ((ProfessorDao) getDao()).getBySubjectId(em, subjectId)) {
+		for (ProfessorEntity professor : ((ProfessorDaoInterface) getDao()).getBySubjectId(em, subjectId)) {
 			list.add(professor.toVo());
 		}
 		return list;
 	}
 
 	@Override
-	protected Dao<ProfessorEntity> getDao() {
+	protected CrudDaoInterface<ProfessorEntity> getDao() {
 		return getDaoFactory().getProfessorDao();
 	}
 

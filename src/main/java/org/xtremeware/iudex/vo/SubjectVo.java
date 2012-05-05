@@ -1,7 +1,7 @@
 
 package org.xtremeware.iudex.vo;
 
-public class SubjectVo extends ValueObject{
+public class SubjectVo implements ValueObject{
 
     private Long id;
     private String name;

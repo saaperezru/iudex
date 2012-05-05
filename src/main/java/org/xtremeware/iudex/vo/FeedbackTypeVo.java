@@ -1,6 +1,6 @@
 package org.xtremeware.iudex.vo;
 
-public class FeedbackTypeVo extends ValueObject{
+public class FeedbackTypeVo implements ValueObject{
 
 	private Long id;
 	private String name;

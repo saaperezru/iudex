@@ -1,6 +1,6 @@
 package org.xtremeware.iudex.vo;
 
-public class ProfessorVo extends ValueObject {
+public class ProfessorVo implements ValueObject {
 
     private Long id;
     private String firstName;

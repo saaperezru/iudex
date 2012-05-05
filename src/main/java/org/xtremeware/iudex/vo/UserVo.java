@@ -3,7 +3,7 @@ package org.xtremeware.iudex.vo;
 import java.util.List;
 import org.xtremeware.iudex.helper.Role;
 
-public class UserVo extends ValueObject {
+public class UserVo implements ValueObject {
 
     private Long id;
     private String firstName;

@@ -10,7 +10,7 @@ import org.xtremeware.iudex.vo.RatingSummaryVo;
  *
  * @author josebermeo
  */
-public class SubjectRatingDao extends Dao<SubjectRatingEntity> {
+public class SubjectRatingDao extends CrudDao<SubjectRatingEntity> implements SubjectRatingDaoInterface {
 
     /**
      * Returns a list of SubjectRatings entities given the subject
@@ -19,11 +19,10 @@ public class SubjectRatingDao extends Dao<SubjectRatingEntity> {
      * @param subjectId subject id
      * @return list of SubjectRatingEntity
      */
+    @Override
     public List<SubjectRatingEntity> getBySubjectId(EntityManager em, Long subjectId) {
-        if (em == null) {
-            throw new IllegalArgumentException("EntityManager em cannot be null");
-        }
-        return em.createNamedQuery("getSubjectRatingBySubjectId").setParameter("subjectId", subjectId).getResultList();
+        checkEntityManager(em);
+        return em.createNamedQuery("getSubjectRatingBySubjectId", SubjectRatingEntity.class).setParameter("subjectId", subjectId).getResultList();
     }
 
     /**
@@ -35,12 +34,11 @@ public class SubjectRatingDao extends Dao<SubjectRatingEntity> {
      * @param userId user id
      * @return a SubjectRatingEntity
      */
+    @Override
     public SubjectRatingEntity getBySubjectIdAndUserId(EntityManager em, Long subjectId, Long userId) {
-        if (em == null) {
-            throw new IllegalArgumentException("EntityManager em cannot be null");
-        }
+        checkEntityManager(em);
         try {
-            return (SubjectRatingEntity) em.createNamedQuery("getSubjectRatingBySubjectIdAndUserId").setParameter("subjectId", subjectId).setParameter("userId", userId).getSingleResult();
+            return em.createNamedQuery("getSubjectRatingBySubjectIdAndUserId", SubjectRatingEntity.class).setParameter("subjectId", subjectId).setParameter("userId", userId).getSingleResult();
         } catch (NoResultException noResultException) {
             return null;
         }
@@ -53,13 +51,12 @@ public class SubjectRatingDao extends Dao<SubjectRatingEntity> {
      * @param userId user id
      * @return list of SubjectRatingEntity
      */
+    @Override
     public List<SubjectRatingEntity> getByUserId(EntityManager em, Long userId) {
-        if (em == null) {
-            throw new IllegalArgumentException("EntityManager em cannot be null");
-        }
-        return em.createNamedQuery("getUserRatingBySubjectId").setParameter("userId", userId).getResultList();
-    }    
-    
+        checkEntityManager(em);
+        return em.createNamedQuery("getUserRatingBySubjectId", SubjectRatingEntity.class).setParameter("userId", userId).getResultList();
+    }
+
     /**
      * Returns a summary of the ratings given a subject.
      *
@@ -67,20 +64,19 @@ public class SubjectRatingDao extends Dao<SubjectRatingEntity> {
      * @param subjectId subject id
      * @return a RatingSummaryVo object
      */
+    @Override
     public RatingSummaryVo getSummary(EntityManager em, Long subjectId) {
-        if (em == null) {
-            throw new IllegalArgumentException("EntityManager em cannot be null");
-        }
+        checkEntityManager(em);
         RatingSummaryVo rsv = new RatingSummaryVo();
 
         try {
-            rsv.setPositive(((Long) em.createNamedQuery("countPositiveSubjectRating").setParameter("subjectId", subjectId).getSingleResult()).intValue());
+            rsv.setPositive(em.createNamedQuery("countPositiveSubjectRating", Long.class).setParameter("subjectId", subjectId).getSingleResult().intValue());
         } catch (NoResultException noResultException) {
             return null;
         }
 
         try {
-            rsv.setNegative(((Long) em.createNamedQuery("countNegativeSubjectRating").setParameter("subjectId", subjectId).getSingleResult()).intValue());
+            rsv.setNegative(em.createNamedQuery("countNegativeSubjectRating", Long.class).setParameter("subjectId", subjectId).getSingleResult().intValue());
         } catch (NoResultException noResultException) {
             return null;
         }

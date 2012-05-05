@@ -3,8 +3,8 @@ package org.xtremeware.iudex.businesslogic.service;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.businesslogic.InvalidVoException;
 import org.xtremeware.iudex.dao.AbstractDaoFactory;
-import org.xtremeware.iudex.dao.CourseRatingDao;
-import org.xtremeware.iudex.dao.Dao;
+import org.xtremeware.iudex.dao.CourseRatingDaoInterface;
+import org.xtremeware.iudex.dao.CrudDaoInterface;
 import org.xtremeware.iudex.entity.CourseRatingEntity;
 import org.xtremeware.iudex.vo.CourseRatingVo;
 
@@ -24,12 +24,12 @@ public class CourseRatingsService extends SimpleCrudService<CourseRatingVo, Cour
     }
 
     /**
-     * returns the CourseRatingDao to be used.
+     * returns the CourseRatingDaoInterface to be used.
      *
-     * @return CourseRatingDao
+     * @return CourseRatingDaoInterface
      */
     @Override
-    protected Dao<CourseRatingEntity> getDao() {
+    protected CrudDaoInterface<CourseRatingEntity> getDao() {
         return getDaoFactory().getCourseRatingDao();
     }
 
@@ -100,7 +100,7 @@ public class CourseRatingsService extends SimpleCrudService<CourseRatingVo, Cour
      * @return CourseRatingVo
      */
     public CourseRatingVo getByCourseIdAndUserId(EntityManager em, long courseId, long userId) {
-        CourseRatingEntity courseRatingEntity = ((CourseRatingDao) this.getDao()).getByCourseIdAndUserId(em, courseId, userId);
+        CourseRatingEntity courseRatingEntity = ((CourseRatingDaoInterface) this.getDao()).getByCourseIdAndUserId(em, courseId, userId);
         if (courseRatingEntity == null) {
             return null;
         }

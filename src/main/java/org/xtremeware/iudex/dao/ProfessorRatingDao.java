@@ -7,7 +7,6 @@ package org.xtremeware.iudex.dao;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
-import javax.persistence.Query;
 import org.xtremeware.iudex.entity.ProfessorRatingEntity;
 import org.xtremeware.iudex.vo.RatingSummaryVo;
 
@@ -17,7 +16,7 @@ import org.xtremeware.iudex.vo.RatingSummaryVo;
  * 
  * @author juan
  */
-public class ProfessorRatingDao extends Dao<ProfessorRatingEntity> {
+public class ProfessorRatingDao extends CrudDao<ProfessorRatingEntity> implements ProfessorRatingDaoInterface{
 
     /**
      * Professors ratings finder according to a specified professor
@@ -26,12 +25,10 @@ public class ProfessorRatingDao extends Dao<ProfessorRatingEntity> {
      * @param professorId Professor's ID
      * @return A list with all ratings associated to the specified professor
      */
+    @Override
     public List<ProfessorRatingEntity> getByProfessorId(EntityManager em, long professorId) {
-        if (em == null) {
-            throw new IllegalArgumentException("EntityManager em cannot be null");
-        }
-
-        return em.createNamedQuery("getRatingByProfessorId").setParameter("professor", professorId).getResultList();
+        checkEntityManager(em);
+        return em.createNamedQuery("getRatingByProfessorId", ProfessorRatingEntity.class).setParameter("professor", professorId).getResultList();
 
     }
 
@@ -41,15 +38,14 @@ public class ProfessorRatingDao extends Dao<ProfessorRatingEntity> {
      * @param em the entity manager
      * @param professorId Professor's ID
      * @param userId Student's ID
-     * @return The rating a student has subbmited to a professor
+     * @return The rating a student has submitted to a professor
      */
+    @Override
     public ProfessorRatingEntity getByProfessorIdAndUserId(EntityManager em, long professorId, long userId) {
-        if (em == null) {
-            throw new IllegalArgumentException("EntityManager em cannot be null");
-        }
+        checkEntityManager(em);
 
         try {
-            return (ProfessorRatingEntity) em.createNamedQuery("getRatingByProfessorIdAndUserId").setParameter("professor", professorId).setParameter("user", userId).getSingleResult();
+            return em.createNamedQuery("getRatingByProfessorIdAndUserId", ProfessorRatingEntity.class).setParameter("professor", professorId).setParameter("user", userId).getSingleResult();
         } catch (NoResultException e) {
             return null;
         }
@@ -63,42 +59,35 @@ public class ProfessorRatingDao extends Dao<ProfessorRatingEntity> {
      * @param userId user's ID
      * @return A list with all ratings associated to the specified user
      */
+    @Override
     public List<ProfessorRatingEntity> getByUserId(EntityManager em, long userId) {
-        if (em == null) {
-            throw new IllegalArgumentException("EntityManager em cannot be null");
-        }
-
-        return em.createNamedQuery("getRatingByUserId").setParameter("user", userId).getResultList();
+        checkEntityManager(em);
+        return em.createNamedQuery("getRatingByUserId", ProfessorRatingEntity.class).setParameter("user", userId).getResultList();
 
     }   
 
     /**
-     * Proffesor rating summary calculator
+     * Professor rating summary calculator
      *
      * @param em the entity manager
      * @param professorId Professor's ID
      * @return A value object containing the number of times the specified
-     * professor has obtained possitive and negative ratings
+     * professor has obtained positive and negative ratings
      */
+    @Override
     public RatingSummaryVo getSummary(EntityManager em, long professorId) {
-        if (em == null) {
-            throw new IllegalArgumentException("EntityManager em cannot be null");
-        }
+        checkEntityManager(em);
 
         RatingSummaryVo result = new RatingSummaryVo();
 
-        Query q = em.createQuery("SELECT COUNT(r) FROM ProfessorRating r WHERE r.value = 1");
-
         try {
-            result.setPositive(((Integer) q.getSingleResult()).intValue());
+            result.setPositive(em.createNamedQuery("countPositiveProfessorRating", Long.class).setParameter("professorId", professorId).getSingleResult().intValue());
         } catch (NoResultException e) {
             return null;
         }
 
-        q = em.createQuery("SELECT COUNT(r) FROM ProfessorRating r WHERE r.value = -1");
-
         try {
-            result.setNegative(((Integer) q.getSingleResult()).intValue());
+            result.setNegative(em.createNamedQuery("countNegativeProfessorRating", Long.class).setParameter("professorId", professorId).getSingleResult().intValue());
         } catch (NoResultException e) {
             return null;
         }

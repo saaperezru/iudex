@@ -5,7 +5,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.businesslogic.InvalidVoException;
 import org.xtremeware.iudex.dao.AbstractDaoFactory;
-import org.xtremeware.iudex.dao.Dao;
+import org.xtremeware.iudex.dao.CrudDaoInterface;
 import org.xtremeware.iudex.entity.CommentEntity;
 import org.xtremeware.iudex.entity.CourseEntity;
 import org.xtremeware.iudex.entity.CourseRatingEntity;
@@ -120,7 +120,7 @@ public class CoursesService extends SimpleCrudService<CourseVo, CourseEntity> {
 	}
 
 	@Override
-	protected Dao<CourseEntity> getDao() {
+	protected CrudDaoInterface<CourseEntity> getDao() {
 		return getDaoFactory().getCourseDao();
 	}
 }

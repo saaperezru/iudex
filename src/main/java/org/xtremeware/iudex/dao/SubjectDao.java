@@ -10,7 +10,7 @@ import org.xtremeware.iudex.entity.SubjectEntity;
  *
  * @author healarconr
  */
-public class SubjectDao extends Dao<SubjectEntity> {
+public class SubjectDao extends CrudDao<SubjectEntity> implements SubjectDaoInterface{
 
     /**
      * Returns a list of subject entities which name contains the argument name
@@ -19,10 +19,9 @@ public class SubjectDao extends Dao<SubjectEntity> {
      * @param name the subject's name
      * @return a list of matched subject entities
      */
+    @Override
     public List<SubjectEntity> getByName(EntityManager em, String name) {
-        if (em == null) {
-            throw new IllegalArgumentException("EntityManager em cannot be null");
-        }
+        checkEntityManager(em);
         return em.createNamedQuery("getSubjectsByName", SubjectEntity.class).setParameter("name", "%" + name + "%").getResultList();
     }
 
@@ -33,10 +32,9 @@ public class SubjectDao extends Dao<SubjectEntity> {
      * @param professorId the professor's id
      * @return a list of matched subject entities
      */
+    @Override
     public List<SubjectEntity> getByProfessorId(EntityManager em, long professorId) {
-        if (em == null) {
-            throw new IllegalArgumentException("EntityManager em cannot be null");
-        }
+        checkEntityManager(em);
         return em.createNamedQuery("getSubjectsByProfessorId", SubjectEntity.class).setParameter("professorId", professorId).getResultList();
     }
 }

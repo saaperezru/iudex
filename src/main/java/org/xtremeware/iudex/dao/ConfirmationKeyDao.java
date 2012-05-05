@@ -8,7 +8,7 @@ import org.xtremeware.iudex.entity.ConfirmationKeyEntity;
  *
  * @author josebermeo
  */
-public class ConfirmationKeyDao extends Dao<ConfirmationKeyEntity> {
+public class ConfirmationKeyDao extends CrudDao<ConfirmationKeyEntity> implements ConfirmationKeyDaoInterface {
 
     /**
      * Returns a ConfirmationKey entity which key matched with the given string.
@@ -17,12 +17,11 @@ public class ConfirmationKeyDao extends Dao<ConfirmationKeyEntity> {
      * @param confirmationKey key reference for the search
      * @return the ConfirmationKey entity wit the given key
      */
+    @Override
     public ConfirmationKeyEntity getByConfirmationKey(EntityManager em, String confirmationKey) {
-        if (em == null) {
-            throw new IllegalArgumentException("EntityManager em cannot be null");
-        }
+        checkEntityManager(em);
         try {
-            return (ConfirmationKeyEntity) em.createNamedQuery("getByConfirmationKey").setParameter("confirmationKey", confirmationKey).getSingleResult();
+            return em.createNamedQuery("getByConfirmationKey", ConfirmationKeyEntity.class).setParameter("confirmationKey", confirmationKey).getSingleResult();
         } catch (NoResultException noResultException) {
             return null;
         }

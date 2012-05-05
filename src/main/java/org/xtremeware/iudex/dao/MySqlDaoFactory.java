@@ -7,23 +7,23 @@ package org.xtremeware.iudex.dao;
  */
 public class MySqlDaoFactory implements AbstractDaoFactory {
     
-    private CommentDao commentDao;
-    private CommentRatingDao commentRatingDao;
-    private ConfirmationKeyDao confirmationKeyDao;
-    private CourseDao courseDao;
-    private CourseRatingDao courseRatingDao;
-    private FeedbackDao feedbackDao;
-    private FeedbackTypeDao feedbackTypeDao;
-    private PeriodDao periodDao;
-    private ProfessorDao professorDao;
-    private ProfessorRatingDao professorRatingDao;
-    private ProgramDao programDao;
-    private SubjectDao subjectDao;
-    private SubjectRatingDao subjectRatingDao;
-    private UserDao userDao;
+    private CommentDaoInterface commentDao;
+    private CommentRatingDaoInterface commentRatingDao;
+    private ConfirmationKeyDaoInterface confirmationKeyDao;
+    private CourseDaoInterface courseDao;
+    private CourseRatingDaoInterface courseRatingDao;
+    private FeedbackDaoInterface feedbackDao;
+    private FeedbackTypeDaoInterface feedbackTypeDao;
+    private PeriodDaoInterface periodDao;
+    private ProfessorDaoInterface professorDao;
+    private ProfessorRatingDaoInterface professorRatingDao;
+    private ProgramDaoInterface programDao;
+    private SubjectDaoInterface subjectDao;
+    private SubjectRatingDaoInterface subjectRatingDao;
+    private UserDaoInterface userDao;
     
     @Override
-    public CommentDao getCommentDao() {
+    public CommentDaoInterface getCommentDao() {
         if (commentDao == null) {
             commentDao = new CommentDao();
         }
@@ -31,7 +31,7 @@ public class MySqlDaoFactory implements AbstractDaoFactory {
     }
     
     @Override
-    public CommentRatingDao getCommentRatingDao() {
+    public CommentRatingDaoInterface getCommentRatingDao() {
         if (commentRatingDao == null) {
             commentRatingDao = new CommentRatingDao();
         }
@@ -39,7 +39,7 @@ public class MySqlDaoFactory implements AbstractDaoFactory {
     }
     
     @Override
-    public ConfirmationKeyDao getConfirmationKeyDao() {
+    public ConfirmationKeyDaoInterface getConfirmationKeyDao() {
         if (confirmationKeyDao == null) {
             confirmationKeyDao = new ConfirmationKeyDao();
         }
@@ -47,7 +47,7 @@ public class MySqlDaoFactory implements AbstractDaoFactory {
     }
     
     @Override
-    public CourseDao getCourseDao() {
+    public CourseDaoInterface getCourseDao() {
         if (courseDao == null) {
             courseDao = new CourseDao();
         }
@@ -55,7 +55,7 @@ public class MySqlDaoFactory implements AbstractDaoFactory {
     }
     
     @Override
-    public CourseRatingDao getCourseRatingDao() {
+    public CourseRatingDaoInterface getCourseRatingDao() {
         if (courseRatingDao == null) {
             courseRatingDao = new CourseRatingDao();
         }
@@ -63,7 +63,7 @@ public class MySqlDaoFactory implements AbstractDaoFactory {
     }
     
     @Override
-    public FeedbackDao getFeedbackDao() {
+    public FeedbackDaoInterface getFeedbackDao() {
         if (feedbackDao == null) {
             feedbackDao = new FeedbackDao();
         }
@@ -71,7 +71,7 @@ public class MySqlDaoFactory implements AbstractDaoFactory {
     }
     
     @Override
-    public FeedbackTypeDao getFeedbackTypeDao() {
+    public FeedbackTypeDaoInterface getFeedbackTypeDao() {
         if (feedbackTypeDao == null) {
             feedbackTypeDao = new FeedbackTypeDao();
         }
@@ -79,7 +79,7 @@ public class MySqlDaoFactory implements AbstractDaoFactory {
     }
     
     @Override
-    public PeriodDao getPeriodDao() {
+    public PeriodDaoInterface getPeriodDao() {
         if (periodDao == null) {
             periodDao = new PeriodDao();
         }
@@ -87,7 +87,7 @@ public class MySqlDaoFactory implements AbstractDaoFactory {
     }
     
     @Override
-    public ProfessorDao getProfessorDao() {
+    public ProfessorDaoInterface getProfessorDao() {
         if (professorDao == null) {
             professorDao = new ProfessorDao();
         }
@@ -95,7 +95,7 @@ public class MySqlDaoFactory implements AbstractDaoFactory {
     }
     
     @Override
-    public ProfessorRatingDao getProfessorRatingDao() {
+    public ProfessorRatingDaoInterface getProfessorRatingDao() {
         if (professorRatingDao == null) {
             professorRatingDao = new ProfessorRatingDao();
         }
@@ -103,7 +103,7 @@ public class MySqlDaoFactory implements AbstractDaoFactory {
     }
     
     @Override
-    public ProgramDao getProgramDao() {
+    public ProgramDaoInterface getProgramDao() {
         if (programDao == null) {
             programDao = new ProgramDao();
         }
@@ -111,7 +111,7 @@ public class MySqlDaoFactory implements AbstractDaoFactory {
     }
     
     @Override
-    public SubjectDao getSubjectDao() {
+    public SubjectDaoInterface getSubjectDao() {
         if (subjectDao == null) {
             subjectDao = new SubjectDao();
         }
@@ -119,7 +119,7 @@ public class MySqlDaoFactory implements AbstractDaoFactory {
     }
     
     @Override
-    public SubjectRatingDao getSubjectRatingDao() {
+    public SubjectRatingDaoInterface getSubjectRatingDao() {
         if (subjectRatingDao == null) {
             subjectRatingDao = new SubjectRatingDao();
         }
@@ -127,7 +127,7 @@ public class MySqlDaoFactory implements AbstractDaoFactory {
     }
     
     @Override
-    public UserDao getUserDao() {
+    public UserDaoInterface getUserDao() {
         if (userDao == null) {
             userDao = new UserDao();
         }

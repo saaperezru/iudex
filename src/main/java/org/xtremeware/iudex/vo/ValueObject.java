@@ -2,15 +2,18 @@ package org.xtremeware.iudex.vo;
 
 import java.io.Serializable;
 
-public abstract class ValueObject implements Serializable{
-	
-	@Override
-	public abstract boolean equals(Object ob);
-	
-	@Override
-	public abstract int hashCode();
+/**
+ *
+ * @author Administrator
+ */
+public interface ValueObject extends Serializable {
 
-	@Override
-	public abstract String toString();
+    @Override
+    public abstract boolean equals(Object ob);
 
+    @Override
+    public abstract int hashCode();
+
+    @Override
+    public abstract String toString();
 }

@@ -2,7 +2,7 @@ package org.xtremeware.iudex.vo;
 
 import java.util.Date;
 
-public class CommentVo extends ValueObject {
+public class CommentVo implements ValueObject {
 
     private Long id;
     private String content;

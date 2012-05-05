@@ -9,8 +9,8 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.businesslogic.InvalidVoException;
 import org.xtremeware.iudex.dao.AbstractDaoFactory;
-import org.xtremeware.iudex.dao.CommentDao;
-import org.xtremeware.iudex.dao.Dao;
+import org.xtremeware.iudex.dao.CommentDaoInterface;
+import org.xtremeware.iudex.dao.CrudDaoInterface;
 import org.xtremeware.iudex.entity.CommentEntity;
 import org.xtremeware.iudex.entity.CommentRatingEntity;
 import org.xtremeware.iudex.helper.ConfigurationVariablesHelper;
@@ -47,7 +47,7 @@ public class CommentsService extends CrudService<CommentVo> {
 	 * @return comments in the specified course
 	 */
 	public List<CommentVo> getByCourseId(EntityManager em, long courseId) {
-		List<CommentEntity> entities = ((CommentDao) getDao()).getByCourseId(em, courseId);
+		List<CommentEntity> entities = ((CommentDaoInterface) getDao()).getByCourseId(em, courseId);
 
 		if (entities.isEmpty()) {
 			return null;
@@ -63,11 +63,11 @@ public class CommentsService extends CrudService<CommentVo> {
 	}
 
 	/**
-	 * Returns the CommentDao from DaoFactory
+	 * Returns the CommentDaoInterface from DaoFactory
 	 *
-	 * @return CommentDao
+	 * @return CommentDaoInterface
 	 */
-	protected Dao<CommentEntity> getDao() {
+	protected CrudDaoInterface<CommentEntity> getDao() {
 		return getDaoFactory().getCommentDao();
 	}
 
@@ -160,7 +160,7 @@ public class CommentsService extends CrudService<CommentVo> {
 	 * @return number of comments submitted on the current day
 	 */
 	public int checkUserCommentsCounter(EntityManager em, Long userId) {
-		return ((CommentDao) getDao()).getUserCommentsCounter(em, userId);
+		return ((CommentDaoInterface) getDao()).getUserCommentsCounter(em, userId);
 	}
 
 	public CommentVo update(EntityManager em, CommentVo vo) throws InvalidVoException, ExternalServiceConnectionException {

@@ -2,7 +2,7 @@ package org.xtremeware.iudex.vo;
 
 import java.util.Date;
 
-public class ConfirmationKeyVo extends ValueObject {
+public class ConfirmationKeyVo implements ValueObject {
 
     private Long id;
     private Date expirationDate;

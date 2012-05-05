@@ -151,8 +151,8 @@ public class CommentsFacade extends AbstractFacade {
 		CommentRatingVo rating = null;
 		try {
 			CommentRatingVo vo = new CommentRatingVo();
-			vo.setCommentId(commentId);
-			vo.setUserId(userId);
+			vo.setEvaluetedObjectId(commentId);
+			vo.setUser(userId);
 			vo.setValue(value);
 
 			em = getEntityManagerFactory().createEntityManager();

@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.xtremeware.iudex.dao;
 
 import java.util.List;
@@ -14,22 +10,20 @@ import org.xtremeware.iudex.entity.ProfessorEntity;
  *
  * @author juan
  */
-public class ProfessorDao extends Dao<ProfessorEntity> {
+public class ProfessorDao extends CrudDao<ProfessorEntity> implements ProfessorDaoInterface{
 
     /**
      * Professors finder according to a required name
      *
      * @param em the entity manager
-     * @param name Professor's Firstname or lastname
-     * @return List of professors whose firstname or lastname are equal to the
+     * @param name Professor's first-name or last-name
+     * @return List of professors whose first-name or last-name are equal to the
      * specified
      */
+    @Override
     public List<ProfessorEntity> getByNameLike(EntityManager em, String name) {
-        if (em == null) {
-            throw new IllegalArgumentException("EntityManager em cannot be null");
-        }
-
-        return em.createNamedQuery("getProfessorByNameLike").setParameter("name", name).getResultList();
+        checkEntityManager(em);
+        return em.createNamedQuery("getProfessorByNameLike", ProfessorEntity.class).setParameter("name", name).getResultList();
     }
 
     /**
@@ -39,12 +33,9 @@ public class ProfessorDao extends Dao<ProfessorEntity> {
      * @param subjectId The ID of the required subject
      * @return A list of professors that impart the subject
      */
+    @Override
     public List<ProfessorEntity> getBySubjectId(EntityManager em, long subjectId) {
-
-        if (em == null) {
-            throw new IllegalArgumentException("EntityManager em cannot be null");
-        }
-
-        return em.createNamedQuery("getProfessorBySubjectId").setParameter("subjectId", subjectId).getResultList();
+        checkEntityManager(em);
+        return em.createNamedQuery("getProfessorBySubjectId", ProfessorEntity.class).setParameter("subjectId", subjectId).getResultList();
     }
 }

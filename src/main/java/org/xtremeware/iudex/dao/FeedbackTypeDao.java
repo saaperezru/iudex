@@ -11,7 +11,7 @@ import org.xtremeware.iudex.entity.FeedbackTypeEntity;
  *
  * @author healarconr
  */
-public class FeedbackTypeDao extends Dao<FeedbackTypeEntity> {
+public class FeedbackTypeDao extends CrudDao<FeedbackTypeEntity> implements FeedbackTypeDaoInterface {
 
     /**
      * Returns a feedback type entity which name matches the given name
@@ -20,10 +20,9 @@ public class FeedbackTypeDao extends Dao<FeedbackTypeEntity> {
      * @param name the name
      * @return a feedback type entity
      */
+    @Override
     public FeedbackTypeEntity getByName(EntityManager em, String name) {
-        if (em == null) {
-            throw new IllegalArgumentException("EntityManager em cannot be null");
-        }
+        checkEntityManager(em);
         try {
             return em.createNamedQuery("getFeedbackTypeByName", FeedbackTypeEntity.class).setParameter("name", name).getSingleResult();
         } catch (NoResultException ex) {
@@ -31,10 +30,9 @@ public class FeedbackTypeDao extends Dao<FeedbackTypeEntity> {
         }
     }
 
+    @Override
     public List<FeedbackTypeEntity> getAll(EntityManager em) {
-        if (em == null) {
-            throw new IllegalArgumentException("EntityManager em cannot be null");
-        }
-        return em.createNamedQuery("getAllFeedbackType").getResultList();
+        checkEntityManager(em);
+        return em.createNamedQuery("getAllFeedbackType", FeedbackTypeEntity.class).getResultList();
     }
 }

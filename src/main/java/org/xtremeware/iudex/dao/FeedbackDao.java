@@ -10,7 +10,7 @@ import org.xtremeware.iudex.entity.FeedbackEntity;
  *
  * @author saaperezru
  */
-public class FeedbackDao extends Dao<FeedbackEntity> {
+public class FeedbackDao extends CrudDao<FeedbackEntity> implements FeedbackDaoInterface {
 
     /**
      * Returns a list of Feedback with a type corresponding to the specified
@@ -21,17 +21,15 @@ public class FeedbackDao extends Dao<FeedbackEntity> {
      * entities.
      * @return The list of found feedbacks.
      */
+    @Override
     public List<FeedbackEntity> getByTypeId(EntityManager em, long feedbackTypeId) {
-        if (em == null) {
-            throw new IllegalArgumentException("EntityManager em cannot be null");
-        }
-        return em.createNamedQuery("getByTypeId").setParameter("feedbackTypeId", feedbackTypeId).getResultList();
+        checkEntityManager(em);
+        return em.createNamedQuery("getByTypeId", FeedbackEntity.class).setParameter("feedbackTypeId", feedbackTypeId).getResultList();
     }
 
+    @Override
     public List<FeedbackEntity> getByContentLike(EntityManager em, String query) {
-        if (em == null) {
-            throw new IllegalArgumentException("EntityManager em cannot be null");
-        }
-        return em.createNamedQuery("getFeedbackByContentLike").setParameter("query", "%"+query+"%").getResultList();
+        checkEntityManager(em);
+        return em.createNamedQuery("getFeedbackByContentLike", FeedbackEntity.class).setParameter("query", "%" + query + "%").getResultList();
     }
 }

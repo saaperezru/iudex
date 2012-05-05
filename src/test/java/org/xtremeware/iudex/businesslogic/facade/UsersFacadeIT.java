@@ -1,9 +1,6 @@
 package org.xtremeware.iudex.businesslogic.facade;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import static org.junit.Assert.*;
 import org.junit.Test;
 import org.xtremeware.iudex.businesslogic.InvalidVoException;
@@ -18,8 +15,38 @@ import org.xtremeware.iudex.vo.UserVo;
  * @author healarconr
  */
 public class UsersFacadeIT {
-    
+
     public UsersFacadeIT() {
+    }
+
+    /**
+     * Test of a successful registration
+     */
+    @Test
+    public void test_BL_2_1() throws InvalidVoException {
+        UserVo user = new UserVo();
+        user.setFirstName("John");
+        user.setLastName("Doe");
+        user.setPassword("123456789");
+        user.setProgramsId(Arrays.asList(new Long[]{2537L, 2556L}));
+        user.setRole(Role.STUDENT);
+        user.setUserName("healarconr");
+        user.setActive(true); // Should be overriden
+        UserVo expectedUser = new UserVo();
+        expectedUser.setFirstName("John");
+        expectedUser.setLastName("Doe");
+        expectedUser.setPassword(SecurityHelper.hashPassword("123456789"));
+        expectedUser.setProgramsId(Arrays.asList(new Long[]{2537L, 2556L}));
+        expectedUser.setRole(Role.STUDENT);
+        expectedUser.setUserName("healarconr");
+        expectedUser.setActive(false);
+        UsersFacade usersFacade = Config.getInstance().getFacadeFactory().getUsersFacade();
+        user = usersFacade.addUser(user);
+        assertNotNull(user.getId());
+        assertTrue(user.getId() > 0);
+        // The id is OK, transfer it to expectedUser to ease the assertion
+        expectedUser.setId(user.getId());
+        assertEquals(expectedUser, user);
     }
 
     /**

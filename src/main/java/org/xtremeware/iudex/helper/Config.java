@@ -19,50 +19,49 @@ import org.xtremeware.iudex.vo.MailingConfigVo;
  */
 public class Config {
 
-	public final static String CONFIGURATION_VARIABLES_PATH = "/META-INF/iudex.properties";
+    public final static String CONFIGURATION_VARIABLES_PATH = "/org/xtremeware/iudex/iudex.properties";
+    private String persistenceUnit;
+    private AbstractDaoFactory daoFactory;
+    private static Config instance;
+    private ServiceFactory serviceFactory;
+    private FacadeFactory facadeFactory;
 
-	private String persistenceUnit;
-	private AbstractDaoFactory daoFactory;
-	private static Config instance;
-	private ServiceFactory serviceFactory;
-        private FacadeFactory facadeFactory;
+    private Config(String persistenceUnit, AbstractDaoFactory daoFactory) throws ExternalServiceConnectionException {
+        this.daoFactory = daoFactory;
+        MailingConfigVo mailingConf = new MailingConfigVo();
+        mailingConf.setSender(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAILING_SENDER_EMAIL_ADDRESS));
+        mailingConf.setSmtpPassword(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAILING_SMTP_PASSWORD));
+        mailingConf.setSmtpServer(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAILING_SMTP_SERVER));
+        mailingConf.setSmtpServerPort(Integer.parseInt(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAILING_SMTP_PORT)));
+        mailingConf.setSmtpUser(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAILING_SMTP_USER));
+        this.serviceFactory = new ServiceFactory(daoFactory, mailingConf);
+        facadeFactory = new FacadeFactory(serviceFactory, Persistence.createEntityManagerFactory(persistenceUnit));
+    }
 
-	private Config(String persistenceUnit, AbstractDaoFactory daoFactory) throws ExternalServiceConnectionException {
-		this.daoFactory = daoFactory;
-		MailingConfigVo mailingConf = new MailingConfigVo();
-		mailingConf.setSender(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAILING_SENDER_EMAIL_ADDRESS));
-		mailingConf.setSmtpPassword(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAILING_SMTP_PASSWORD));
-		mailingConf.setSmtpServer(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAILING_SMTP_SERVER));
-		mailingConf.setSmtpServerPort(Integer.parseInt(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAILING_SMTP_PORT)));
-		mailingConf.setSmtpUser(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAILING_SMTP_USER));
-		this.serviceFactory = new ServiceFactory(daoFactory, mailingConf);
-                facadeFactory = new FacadeFactory(serviceFactory, Persistence.createEntityManagerFactory(persistenceUnit));
-	}
-
-	public static Config getInstance() {
-		while (instance == null) {
-			try {
-				instance = new Config("org.xtremeware.iudex_local", new MySqlDaoFactory());
-			} catch (ExternalServiceConnectionException ex) {
-				System.out.println("[FATAL ERROR] Configuration Variables file could not be found, this is a ");
-			}
-		}
-		return instance;
-	}
-
-	public AbstractDaoFactory getDaoFactory() {
-		return daoFactory;
-	}
-
-	public String getPersistenceUnit() {
-		return persistenceUnit;
-	}
-
-	public ServiceFactory getServiceFactory() {
-		return serviceFactory;
-	}
-        
-        public FacadeFactory getFacadeFactory() {
-        	return facadeFactory;
+    public static Config getInstance() {
+        if (instance == null) {
+            try {
+                instance = new Config("org.xtremeware.iudex_local", new MySqlDaoFactory());
+            } catch (ExternalServiceConnectionException ex) {
+                System.out.println("[FATAL ERROR] Configuration Variables file could not be found, this is a ");
+            }
         }
+        return instance;
+    }
+
+    public AbstractDaoFactory getDaoFactory() {
+        return daoFactory;
+    }
+
+    public String getPersistenceUnit() {
+        return persistenceUnit;
+    }
+
+    public ServiceFactory getServiceFactory() {
+        return serviceFactory;
+    }
+
+    public FacadeFactory getFacadeFactory() {
+        return facadeFactory;
+    }
 }

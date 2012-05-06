@@ -42,7 +42,7 @@ public class SubjectsService extends SimpleCrudService<SubjectVo, SubjectEntity>
     
 
     /**
-     * Validate the provided SubjectVo, if the SubjectVo is not correct the
+    getSubjectDao * Validate the provided SubjectVo, if the SubjectVo is not correct the
      * methods throws an exception
      *
      * @param em EntityManager
@@ -149,10 +149,25 @@ public class SubjectsService extends SimpleCrudService<SubjectVo, SubjectEntity>
         if (name == null) {
             throw new IllegalArgumentException("Null name for a subject search");
         }
-        List<SubjectEntity> subjectEntitys = ((SubjectDao) this.getDao()).getByName(em, name);
+        List<SubjectEntity> subjectEntitys = ((SubjectDao) this.getDao()).getByName(em, name.toUpperCase());
         if (subjectEntitys.isEmpty()) {
-            return null;
+		return new ArrayList<SubjectVo>();
         }
+        ArrayList<SubjectVo> arrayList = new ArrayList<SubjectVo>();
+        for (SubjectEntity subjectEntity : subjectEntitys) {
+            arrayList.add(subjectEntity.toVo());
+        }
+        return arrayList;
+    }
+    /**
+     * Returns a list of SubjectVos that had been taught by the specified professor. 
+     *
+     * @param em EntityManager
+     * @param professorId Professor's id to look for subjects.
+     * @return A list of SubjectVo
+     */
+    public List<SubjectVo> getByProfessorId(EntityManager em, long professorId) {
+        List<SubjectEntity> subjectEntitys = ((SubjectDao) this.getDao()).getByProfessorId(em, professorId);
         ArrayList<SubjectVo> arrayList = new ArrayList<SubjectVo>();
         for (SubjectEntity subjectEntity : subjectEntitys) {
             arrayList.add(subjectEntity.toVo());

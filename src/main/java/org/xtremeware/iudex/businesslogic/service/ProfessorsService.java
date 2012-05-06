@@ -26,7 +26,7 @@ public class ProfessorsService extends SimpleCrudService<ProfessorVo, ProfessorE
 
 	public List<ProfessorVo> getByNameLike(EntityManager em, String name) {
 		ArrayList<ProfessorVo> list = new ArrayList<ProfessorVo>();
-		for (ProfessorEntity professor : ((ProfessorDao) getDao()).getByNameLike(em, name)) {
+		for (ProfessorEntity professor : ((ProfessorDao) getDao()).getByNameLike(em, name.toUpperCase())) {
 			list.add(professor.toVo());
 		}
 		return list;

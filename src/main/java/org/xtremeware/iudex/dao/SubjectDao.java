@@ -23,7 +23,7 @@ public class SubjectDao extends Dao<SubjectEntity> {
         if (em == null) {
             throw new IllegalArgumentException("EntityManager em cannot be null");
         }
-        return em.createNamedQuery("getSubjectsByName", SubjectEntity.class).setParameter("name", "%" + name + "%").getResultList();
+        return em.createNamedQuery("getSubjectsByNameLike", SubjectEntity.class).setParameter("name", "%" + name + "%").getResultList();
     }
 
     /**

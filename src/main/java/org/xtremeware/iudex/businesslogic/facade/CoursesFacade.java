@@ -31,12 +31,29 @@ public class CoursesFacade extends AbstractFacade {
 					RatingSummaryVo rating = getServiceFactory().createProfessorRatingsService().getSummary(em, p.getId());
 					professorsVoVws.put(p.getId(), new ProfessorVoVwSmall(p.getId(), p.getFirstName() + " " + p.getLastName(), rating));
 				}
+
+				List<SubjectVo> professorsSubjects = getServiceFactory().createSubjectsService().getByProfessorId(em, p.getId());
+				for (SubjectVo s : professorsSubjects) {
+					if (!subjectsVoVws.containsKey(s.getId())) {
+						RatingSummaryVo rating = getServiceFactory().createSubjectRatingsService().getSummary(em, s.getId());
+						subjectsVoVws.put(s.getId(), new SubjectVoVwSmall(s.getId(), s.getName(), rating));
+					}
+				}
 			}
 			List<SubjectVo> subjects = getServiceFactory().createSubjectsService().getByNameLike(em, query);
 			for (SubjectVo s : subjects) {
 				if (!subjectsVoVws.containsKey(s.getId())) {
 					RatingSummaryVo rating = getServiceFactory().createSubjectRatingsService().getSummary(em, s.getId());
 					subjectsVoVws.put(s.getId(), new SubjectVoVwSmall(s.getId(), s.getName(), rating));
+				}
+
+				List<ProfessorVo> subjectsProfessors = getServiceFactory().createProfessorsService().getBySubjectId(em, s.getId());
+				for (ProfessorVo p : subjectsProfessors) {
+					if (!professorsVoVws.containsKey(p.getId())) {
+						RatingSummaryVo rating = getServiceFactory().createProfessorRatingsService().getSummary(em, p.getId());
+						professorsVoVws.put(p.getId(), new ProfessorVoVwSmall(p.getId(), p.getFirstName() + " " + p.getLastName(), rating));
+					}
+
 				}
 			}
 

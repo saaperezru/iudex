@@ -87,18 +87,18 @@ public class ProfessorRatingDao extends Dao<ProfessorRatingEntity> {
 
         RatingSummaryVo result = new RatingSummaryVo();
 
-        Query q = em.createQuery("SELECT COUNT(r) FROM ProfessorRating r WHERE r.value = 1");
+        Query q = em.createQuery("SELECT COUNT(r) FROM ProfessorRating r WHERE r.professor.id = :professorId AND r.value = 1").setParameter("professorId",professorId);
 
         try {
-            result.setPositive(((Integer) q.getSingleResult()).intValue());
+            result.setPositive(((Long) q.getSingleResult()).intValue());
         } catch (NoResultException e) {
             return null;
         }
 
-        q = em.createQuery("SELECT COUNT(r) FROM ProfessorRating r WHERE r.value = -1");
+        q = em.createQuery("SELECT COUNT(r) FROM ProfessorRating r WHERE r.professor.id = :professorId AND r.value = -1").setParameter("professorId",professorId);
 
         try {
-            result.setNegative(((Integer) q.getSingleResult()).intValue());
+            result.setNegative(((Long) q.getSingleResult()).intValue());
         } catch (NoResultException e) {
             return null;
         }

@@ -4,8 +4,7 @@
  */
 package org.xtremeware.iudex.helper;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import org.xtremeware.iudex.businesslogic.facade.FacadeFactory;
 import org.xtremeware.iudex.businesslogic.service.ServiceFactory;
@@ -21,14 +20,14 @@ public class Config {
 
 	public final static String CONFIGURATION_VARIABLES_PATH = "/META-INF/iudex.properties";
 
-	private String persistenceUnit;
+	private EntityManagerFactory persistenceUnit;
 	private AbstractDaoFactory daoFactory;
 	private static Config instance;
 	private ServiceFactory serviceFactory;
         private FacadeFactory facadeFactory;
 
 	private Config(String persistenceUnit, AbstractDaoFactory daoFactory) throws ExternalServiceConnectionException {
-		this.persistenceUnit = persistenceUnit;
+		this.persistenceUnit = Persistence.createEntityManagerFactory(persistenceUnit);
 		this.daoFactory = daoFactory;
 		MailingConfigVo mailingConf = new MailingConfigVo();
 		mailingConf.setSender(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAILING_SENDER_EMAIL_ADDRESS));
@@ -37,10 +36,10 @@ public class Config {
 		mailingConf.setSmtpServerPort(Integer.parseInt(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAILING_SMTP_PORT)));
 		mailingConf.setSmtpUser(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAILING_SMTP_USER));
 		this.serviceFactory = new ServiceFactory(daoFactory, mailingConf);
-                facadeFactory = new FacadeFactory(serviceFactory, Persistence.createEntityManagerFactory(persistenceUnit));
+                facadeFactory = new FacadeFactory(serviceFactory, this.persistenceUnit);
 	}
 
-	public static Config getInstance() {
+	public static synchronized Config getInstance() {
 		while (instance == null) {
 			try {
 				instance = new Config("org.xtremeware.iudex_local", new MySqlDaoFactory());
@@ -55,7 +54,7 @@ public class Config {
 		return daoFactory;
 	}
 
-	public String getPersistenceUnit() {
+	public EntityManagerFactory getPersistenceUnit() {
 		return persistenceUnit;
 	}
 

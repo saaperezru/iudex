@@ -141,6 +141,29 @@ public class CoursesFacadeIT {
 		}
 	}
 
+	
+	/**
+	 * Test of search method when the query has no results
+	 */
+	@Test
+	public void test_BL_1_2() {
+		CoursesFacade facade = Config.getInstance().getFacadeFactory().getCoursesFacade();
+		//TODO: As long as we are still not giving a precise order to the results, i'm not testing the order, just the presence, of the results.
+		//First lets look by a subject's name
+		String query = "' OR 1=1--'";
+		List<CourseVoVwFull> search = facade.search(query);
+		assertNotNull(search);
+		assertEquals(search.size(), 0);
+		query = "# DROP DATABASE TEST";
+		search = facade.search(query);
+		assertNotNull(search);
+		assertEquals(search.size(), 0);
+		query = "Marios";
+		search = facade.search(query);
+		assertNotNull(search);
+		assertEquals(search.size(), 0);
+	}
+
 	/**
 	 * Test of details of course with comments and ratings
 	 */

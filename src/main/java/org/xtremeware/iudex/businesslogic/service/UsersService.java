@@ -6,14 +6,13 @@ import org.xtremeware.iudex.businesslogic.InvalidVoException;
 import org.xtremeware.iudex.businesslogic.service.createimplementations.UsersCreate;
 import org.xtremeware.iudex.businesslogic.service.readimplementations.SimpleRead;
 import org.xtremeware.iudex.businesslogic.service.removeimplementations.UsersRemove;
-import org.xtremeware.iudex.businesslogic.service.updateimplementations.SimpleUpdate;
+import org.xtremeware.iudex.businesslogic.service.updateimplementations.UsersUpdate;
 import org.xtremeware.iudex.dao.AbstractDaoFactory;
 import org.xtremeware.iudex.entity.ConfirmationKeyEntity;
 import org.xtremeware.iudex.entity.ProgramEntity;
 import org.xtremeware.iudex.entity.UserEntity;
 import org.xtremeware.iudex.helper.ConfigurationVariablesHelper;
 import org.xtremeware.iudex.helper.ExternalServiceConnectionException;
-import org.xtremeware.iudex.helper.Role;
 import org.xtremeware.iudex.helper.SecurityHelper;
 import org.xtremeware.iudex.vo.ConfirmationKeyVo;
 import org.xtremeware.iudex.vo.UserVo;
@@ -33,7 +32,7 @@ public class UsersService extends CrudService<UserVo, UserEntity> {
         super(daoFactory,
                 new UsersCreate(daoFactory),
                 new SimpleRead<UserEntity>(daoFactory.getUserDao()),
-                new SimpleUpdate<UserEntity>(daoFactory.getUserDao()),
+                new UsersUpdate(daoFactory.getUserDao()),
                 new UsersRemove(daoFactory));
         MIN_USERNAME_LENGTH = Integer.parseInt(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MIN_USERNAME_LENGTH));
         MAX_USERNAME_LENGTH = Integer.parseInt(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAX_USERNAME_LENGTH));

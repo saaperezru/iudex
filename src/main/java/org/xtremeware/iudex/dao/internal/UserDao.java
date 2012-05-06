@@ -36,6 +36,6 @@ public class UserDao extends CrudDao<UserEntity> implements UserDaoInterface {
 
     @Override
     protected Class getEntityClass() {
-        return UserDao.class;
+        return UserEntity.class;
     }
 }

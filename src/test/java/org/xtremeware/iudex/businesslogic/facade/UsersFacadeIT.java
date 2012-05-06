@@ -154,6 +154,12 @@ public class UsersFacadeIT {
     public void test_BL_11_2() throws InvalidVoException {
         UserVo user = new UserVo();
         user.setId(-1L);
+        user.setFirstName("John");
+        user.setLastName("Doe");
+        user.setPassword("123456789");
+        user.setProgramsId(Arrays.asList(new Long[]{2537L, 2556L}));
+        user.setRole(Role.STUDENT);
+        user.setUserName("healarconr");
         user = Config.getInstance().getFacadeFactory().getUsersFacade().editUser(user);
         assertNull(user);
     }

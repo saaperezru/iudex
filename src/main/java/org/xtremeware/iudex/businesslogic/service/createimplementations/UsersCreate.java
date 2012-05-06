@@ -36,6 +36,7 @@ public class UsersCreate implements CreateInterface<UserEntity> {
         Calendar expiration = new GregorianCalendar();
         expiration.add(Calendar.DAY_OF_MONTH, 1);
         confirmationKeyEntity.setExpirationDate(expiration.getTime());
+        confirmationKeyEntity.setConfirmationKey(SecurityHelper.generateConfirmationKey());
         //Associate confirmation key with user
         entity.setConfirmationKey(confirmationKeyEntity);
         confirmationKeyEntity.setUser(entity);

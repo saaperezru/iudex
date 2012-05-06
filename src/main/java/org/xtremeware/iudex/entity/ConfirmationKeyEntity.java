@@ -14,9 +14,10 @@ public class ConfirmationKeyEntity implements Serializable, Entity<ConfirmationK
 
 	private static final long serialVersionUID = 1L;
 	@Id
-	@Column(name = "ID_USER_")
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "ID_CONFIRMATION_KEY")
 	private Long id;
-	
+        
         @Temporal(javax.persistence.TemporalType.DATE)
 	@Column(name = "EXPIRATION_DATE", nullable = false)
 	private Date expirationDate;
@@ -25,7 +26,8 @@ public class ConfirmationKeyEntity implements Serializable, Entity<ConfirmationK
 	private String confirmationKey;
 	
         @OneToOne
-	@JoinColumn(name="ID_USER_", referencedColumnName="ID_USER_")
+	@JoinColumn(name="ID_USER_")
+        @Column(name = "ID_USER", nullable= false, unique= true)
 	private UserEntity user;
 
 	@Override
@@ -65,10 +67,10 @@ public class ConfirmationKeyEntity implements Serializable, Entity<ConfirmationK
         @Override
         public int hashCode() {
             int hash = 7;
-            hash = 29 * hash + (this.id != null ? this.id.hashCode() : 0);
-            hash = 29 * hash + (this.expirationDate != null ? this.expirationDate.hashCode() : 0);
-            hash = 29 * hash + (this.confirmationKey != null ? this.confirmationKey.hashCode() : 0);
-            hash = 29 * hash + (this.user != null ? this.user.hashCode() : 0);
+            hash = 97 * hash + (this.id != null ? this.id.hashCode() : 0);
+            hash = 97 * hash + (this.expirationDate != null ? this.expirationDate.hashCode() : 0);
+            hash = 97 * hash + (this.confirmationKey != null ? this.confirmationKey.hashCode() : 0);
+            hash = 97 * hash + (this.user != null ? this.user.hashCode() : 0);
             return hash;
         }
 

@@ -37,7 +37,11 @@ public class UserEntity implements Serializable, Entity<UserVo> {
 	private boolean active;
 	//ADD ASOCIATION
 	
-        @OneToMany(mappedBy = "id")
+        @ManyToMany
+        @JoinTable(
+            name="USER_PROGRAM",
+            joinColumns={@JoinColumn(name="ID_USER_", referencedColumnName="ID_USER_")},
+            inverseJoinColumns={@JoinColumn(name="ID_PROGRAM", referencedColumnName="ID_PROGRAM")})
 	private List<ProgramEntity> programs;
         
         @OneToOne(mappedBy = "user")

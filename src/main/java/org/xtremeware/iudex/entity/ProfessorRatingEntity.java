@@ -16,7 +16,7 @@ import org.xtremeware.iudex.vo.ProfessorRatingVo;
     query = "SELECT COUNT (result) FROM ProfessorRating result "
     + "WHERE result.professor.id = :professorId AND result.value = 1"),
     @NamedQuery(name = "countNegativeProfessorRating",
-    query = "SSELECT COUNT (result) FROM ProfessorRating result "
+    query = "SELECT COUNT (result) FROM ProfessorRating result "
     + "WHERE result.professor.id = :professorId AND result.value = -1")})
 @Table(name = "PROFESSOR_RATING")
 public class ProfessorRatingEntity implements Serializable, Entity<ProfessorRatingVo> {

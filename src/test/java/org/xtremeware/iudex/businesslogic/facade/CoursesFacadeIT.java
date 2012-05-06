@@ -141,6 +141,22 @@ public class CoursesFacadeIT {
 		}
 	}
 
+	/**
+	 * Test of details of course with comments and ratings
+	 */
+	@Test
+	public void test_BL_6_1() {
+		CoursesFacade facade = Config.getInstance().getFacadeFactory().getCoursesFacade();
+		CourseVoVwFull expectedCourse = new CourseVoVwFull(marioIs2, is2, mario);
+		long courseId = 1L;
+		try {
+			CourseVoVwFull course = facade.getCourse(courseId);
+			assertEquals(expectedCourse, course);
+		} catch (Exception ex) {
+			throw new AssertionFailedError(ex.getMessage());
+		}
+
+	}
 
 
 }

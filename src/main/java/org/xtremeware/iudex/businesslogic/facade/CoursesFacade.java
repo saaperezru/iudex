@@ -155,7 +155,7 @@ public class CoursesFacade extends AbstractFacade {
 			ProfessorVo professor = getServiceFactory().createProfessorsService().getById(em, vo.getProfessorId());
 			//TODO: The received summaries could be NULL. It is still pending to manage this case sucessfully
 			SubjectVoVwSmall subjectSmall = new SubjectVoVwSmall(subject.getId(), subject.getName(), getServiceFactory().createSubjectRatingsService().getSummary(em, subject.getId()));
-			ProfessorVoVwSmall professorSmall = new ProfessorVoVwSmall(professor.getId(), professor.getFirstName() + professor.getLastName(), getServiceFactory().createProfessorRatingsService().getSummary(em, professor.getId()));
+			ProfessorVoVwSmall professorSmall = new ProfessorVoVwSmall(professor.getId(), professor.getFirstName() + " " + professor.getLastName(), getServiceFactory().createProfessorRatingsService().getSummary(em, professor.getId()));
 
 			voVw = new CourseVoVwFull(vo, subjectSmall, professorSmall);
 

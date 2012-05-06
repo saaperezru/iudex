@@ -28,6 +28,7 @@ public class Config {
         private FacadeFactory facadeFactory;
 
 	private Config(String persistenceUnit, AbstractDaoFactory daoFactory) throws ExternalServiceConnectionException {
+		this.persistenceUnit = persistenceUnit;
 		this.daoFactory = daoFactory;
 		MailingConfigVo mailingConf = new MailingConfigVo();
 		mailingConf.setSender(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAILING_SENDER_EMAIL_ADDRESS));

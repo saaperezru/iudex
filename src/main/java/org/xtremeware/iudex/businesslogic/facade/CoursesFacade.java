@@ -17,71 +17,84 @@ public class CoursesFacade extends AbstractFacade {
 		super(serviceFactory, emFactory);
 	}
 
+	/**
+	 *  Searches for courses by professor and subject name that contain the 
+	 *  string specified in the query parameter. If the query is empty or full
+	 *  of spaces, the results will be empty. (Because of the overhead of
+	 *  bringing ALL the information from database and translating it to the
+	 *  proper format).
+	 * 
+	 * @param query String to be searched among the professors and subjects names.
+	 * @return A list of CourseVoVwFull with the information of the found courses.
+	 */
 	public List<CourseVoVwFull> search(String query) {
 		EntityManager em = null;
 		List<CourseVoVwFull> list = new ArrayList<CourseVoVwFull>();
-		Set<Long> coursesIds = new HashSet<Long>();
-		HashMap<Long, ProfessorVoVwSmall> professorsVoVws = new HashMap<Long, ProfessorVoVwSmall>();
-		HashMap<Long, SubjectVoVwSmall> subjectsVoVws = new HashMap<Long, SubjectVoVwSmall>();
-		try {
-			em = getEntityManagerFactory().createEntityManager();
-			List<ProfessorVo> professors = getServiceFactory().createProfessorsService().getByNameLike(em, query);
-			for (ProfessorVo p : professors) {
-				if (!professorsVoVws.containsKey(p.getId())) {
-					RatingSummaryVo rating = getServiceFactory().createProfessorRatingsService().getSummary(em, p.getId());
-					professorsVoVws.put(p.getId(), new ProfessorVoVwSmall(p.getId(), p.getFirstName() + " " + p.getLastName(), rating));
-				}
+		if (!query.isEmpty()) {
 
-				List<SubjectVo> professorsSubjects = getServiceFactory().createSubjectsService().getByProfessorId(em, p.getId());
-				for (SubjectVo s : professorsSubjects) {
-					if (!subjectsVoVws.containsKey(s.getId())) {
-						RatingSummaryVo rating = getServiceFactory().createSubjectRatingsService().getSummary(em, s.getId());
-						subjectsVoVws.put(s.getId(), new SubjectVoVwSmall(s.getId(), s.getName(), rating));
-					}
-				}
-			}
-			List<SubjectVo> subjects = getServiceFactory().createSubjectsService().getByNameLike(em, query);
-			for (SubjectVo s : subjects) {
-				if (!subjectsVoVws.containsKey(s.getId())) {
-					RatingSummaryVo rating = getServiceFactory().createSubjectRatingsService().getSummary(em, s.getId());
-					subjectsVoVws.put(s.getId(), new SubjectVoVwSmall(s.getId(), s.getName(), rating));
-				}
-
-				List<ProfessorVo> subjectsProfessors = getServiceFactory().createProfessorsService().getBySubjectId(em, s.getId());
-				for (ProfessorVo p : subjectsProfessors) {
+			Set<Long> coursesIds = new HashSet<Long>();
+			HashMap<Long, ProfessorVoVwSmall> professorsVoVws = new HashMap<Long, ProfessorVoVwSmall>();
+			HashMap<Long, SubjectVoVwSmall> subjectsVoVws = new HashMap<Long, SubjectVoVwSmall>();
+			try {
+				em = getEntityManagerFactory().createEntityManager();
+				List<ProfessorVo> professors = getServiceFactory().createProfessorsService().getByNameLike(em, query);
+				for (ProfessorVo p : professors) {
 					if (!professorsVoVws.containsKey(p.getId())) {
 						RatingSummaryVo rating = getServiceFactory().createProfessorRatingsService().getSummary(em, p.getId());
 						professorsVoVws.put(p.getId(), new ProfessorVoVwSmall(p.getId(), p.getFirstName() + " " + p.getLastName(), rating));
 					}
 
-				}
-			}
-
-
-			for (ProfessorVo p : professors) {
-				for (CourseVo c : getServiceFactory().createCoursesService().getByProfessorId(em, p.getId())) {
-					//If this course is still not in the set of results, add it.
-					if (!coursesIds.contains(c.getId())) {
-						list.add(new CourseVoVwFull(c, subjectsVoVws.get(c.getSubjectId()), professorsVoVws.get(c.getProfessorId())));
+					List<SubjectVo> professorsSubjects = getServiceFactory().createSubjectsService().getByProfessorId(em, p.getId());
+					for (SubjectVo s : professorsSubjects) {
+						if (!subjectsVoVws.containsKey(s.getId())) {
+							RatingSummaryVo rating = getServiceFactory().createSubjectRatingsService().getSummary(em, s.getId());
+							subjectsVoVws.put(s.getId(), new SubjectVoVwSmall(s.getId(), s.getName(), rating));
+						}
 					}
 				}
-			}
-			for (SubjectVo s : subjects) {
-				for (CourseVo c : getServiceFactory().createCoursesService().getBySubjectId(em, s.getId())) {
-					//If this course is still not in the set of results, add it.
-					if (!coursesIds.contains(c.getId())) {
-						list.add(new CourseVoVwFull(c, subjectsVoVws.get(c.getSubjectId()), professorsVoVws.get(c.getProfessorId())));
+				List<SubjectVo> subjects = getServiceFactory().createSubjectsService().getByNameLike(em, query);
+				for (SubjectVo s : subjects) {
+					if (!subjectsVoVws.containsKey(s.getId())) {
+						RatingSummaryVo rating = getServiceFactory().createSubjectRatingsService().getSummary(em, s.getId());
+						subjectsVoVws.put(s.getId(), new SubjectVoVwSmall(s.getId(), s.getName(), rating));
+					}
+
+					List<ProfessorVo> subjectsProfessors = getServiceFactory().createProfessorsService().getBySubjectId(em, s.getId());
+					for (ProfessorVo p : subjectsProfessors) {
+						if (!professorsVoVws.containsKey(p.getId())) {
+							RatingSummaryVo rating = getServiceFactory().createProfessorRatingsService().getSummary(em, p.getId());
+							professorsVoVws.put(p.getId(), new ProfessorVoVwSmall(p.getId(), p.getFirstName() + " " + p.getLastName(), rating));
+						}
+
 					}
 				}
 
-			}
 
-		} catch (Exception e) {
-			getServiceFactory().createLogService().error(e.getMessage(), e);
-		} finally {
-			if (em != null) {
-				em.clear();
-				em.close();
+				for (ProfessorVo p : professors) {
+					for (CourseVo c : getServiceFactory().createCoursesService().getByProfessorId(em, p.getId())) {
+						//If this course is still not in the set of results, add it.
+						if (!coursesIds.contains(c.getId())) {
+							list.add(new CourseVoVwFull(c, subjectsVoVws.get(c.getSubjectId()), professorsVoVws.get(c.getProfessorId())));
+						}
+					}
+				}
+				for (SubjectVo s : subjects) {
+					for (CourseVo c : getServiceFactory().createCoursesService().getBySubjectId(em, s.getId())) {
+						//If this course is still not in the set of results, add it.
+						if (!coursesIds.contains(c.getId())) {
+							list.add(new CourseVoVwFull(c, subjectsVoVws.get(c.getSubjectId()), professorsVoVws.get(c.getProfessorId())));
+						}
+					}
+
+				}
+
+			} catch (Exception e) {
+				getServiceFactory().createLogService().error(e.getMessage(), e);
+			} finally {
+				if (em != null) {
+					em.clear();
+					em.close();
+				}
 			}
 		}
 		return list;

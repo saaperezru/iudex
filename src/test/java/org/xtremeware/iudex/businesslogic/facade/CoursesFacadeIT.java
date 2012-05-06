@@ -125,6 +125,15 @@ public class CoursesFacadeIT {
 				throw new AssertionFailedError("The following course was not expected for query " + query + ": " + result.toString());
 			}
 		}
+		query = "sOFTWArE";
+		search = facade.search(query);
+		assertNotNull(search);
+		assertNotSame(search.size(), 0);
+		for (CourseVoVwFull result : search) {
+			if (!expected.contains(result)) {
+				throw new AssertionFailedError("The following course was not expected for query " + query + ": " + result.toString());
+			}
+		}
 		//Now lets look by a professor's name
 		query = "maRio";
 		search = facade.search(query);
@@ -141,15 +150,13 @@ public class CoursesFacadeIT {
 		}
 	}
 
-	
 	/**
 	 * Test of search method when the query has no results
 	 */
 	@Test
 	public void test_BL_1_2() {
 		CoursesFacade facade = Config.getInstance().getFacadeFactory().getCoursesFacade();
-		//TODO: As long as we are still not giving a precise order to the results, i'm not testing the order, just the presence, of the results.
-		//First lets look by a subject's name
+
 		String query = "' OR 1=1--'";
 		List<CourseVoVwFull> search = facade.search(query);
 		assertNotNull(search);
@@ -160,6 +167,18 @@ public class CoursesFacadeIT {
 		assertEquals(search.size(), 0);
 		query = "Marios";
 		search = facade.search(query);
+		assertNotNull(search);
+		assertEquals(search.size(), 0);
+	}
+
+	/**
+	 * Test of search method when the query is empty
+	 */
+	@Test
+	public void test_BL_1_3() {
+		CoursesFacade facade = Config.getInstance().getFacadeFactory().getCoursesFacade();
+		String query = "";
+		List<CourseVoVwFull> search = facade.search(query);
 		assertNotNull(search);
 		assertEquals(search.size(), 0);
 	}
@@ -181,5 +200,36 @@ public class CoursesFacadeIT {
 
 	}
 
+	/**
+	 * Test of details of course that doesn't exists
+	 */
+	@Test
+	public void test_BL_6_2() {
+		CoursesFacade facade = Config.getInstance().getFacadeFactory().getCoursesFacade();
+		long courseId = Long.MAX_VALUE;
+		try {
+			CourseVoVwFull course = facade.getCourse(courseId);
+			assertNull(course);
+		} catch (Exception ex) {
+			throw new AssertionFailedError(ex.getMessage());
+		}
 
+	}
+
+	/**
+	 * Test of details of course that doesn't have comments and ratings
+	 */
+	@Test
+	public void test_BL_6_3() {
+		CoursesFacade facade = Config.getInstance().getFacadeFactory().getCoursesFacade();
+		long courseId = 5L;
+		try {
+			CourseVoVwFull course = facade.getCourse(courseId);
+			assertEquals(course.getRatingAverage(), 0.0,0);
+			assertEquals(course.getRatingCount(), 0,0);
+		} catch (Exception ex) {
+			throw new AssertionFailedError(ex.getMessage());
+		}
+
+	}
 }

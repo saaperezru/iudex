@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <title>Profesor X</title>
     <link href="./css/bootstrap.css" rel="stylesheet" />
@@ -21,9 +21,6 @@
         margin-top: 20px;
         margin-bottom: 20px;
       }
-      .comment > div{
-	      display: inline-block;
-      }
       .comment-rating, .vote , .comment-text, .comment-photo{
         display: inline-block;
       }
@@ -31,211 +28,362 @@
         float:right;
       }
       .professor-photo{
-	      margin-left: auto;
-	      margin-right: auto;
+      }
+      .vote-professor{
+      }
+      .vote-professor span {
+        height:60px;
+        width:125px;
+        display:block;
+      }
+      .sidebar-nav{
+        padding:20px;
+      }
+
+      .professor-photo {
+        margin: 20px auto;
+        display: block;
+        width: 200px;
+        height: 120px;
+        position: absolute;
+        text-decoration: none;
+        -webkit-transition: all .15s linear;
+        -moz-transition: all .15s linear;
+        -ms-transition: all .15s linear;
+        -o-transition: all .15s linear;
+        transition: all .15s linear;
+        color: #333; 
+        left: 0px;
+        top: 0px;
+      }
+      .professor-photo img {
+        width: 120px;
+        position: relative;
+        z-index: 30;
+        float: left;
+      }
+      div.professor-photo div {
+        display: block;
+        text-align: center;
+        -webkit-transition: all .25s linear;
+        -moz-transition: all .25s linear;
+        -ms-transition: all .25s linear;
+        -o-transition: all .25s linear;
+        transition: all .25s linear;
+        clear: left;
+        width: 120px;
+      }
+      div.professor-photo div h5 {
+        text-align: center;
+      }
+      div.professor-photo span.vote-prof {
+        width: 116px;
+        height: 116px;
+        z-index: 1;
+        display: block;
+        -webkit-transition: all .25s linear;
+        -moz-transition: all .25s linear;
+        -ms-transition: all .25s linear;
+        -o-transition: all .25s linear;
+        transition: all .25s linear;
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        margin-left: 16px;
+      }
+      div.professor-photo span.vote-prof div {
+        /*TODO: add a background for vote*/
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        display: block;
+        z-index: 10;
+        width: 112px;
+        height: 112px;
+        overflow: hidden;
+      }
+      div.professor-photo:hover span.vote-prof {
+        -webkit-transform: translateX(60px);
+        -moz-transform: translateX(60px);
+        -ms-transform: translateX(60px);
+        -o-transform: translateX(60px);
+        transform: translateX(60px);
+      }
+      div.professor-photo ul.actions {
+        display: block;
+        position: absolute;
+        width: 60px;
+        border-radius: 3px;
+        left: 35px;
+        top: 0px;
+        height: 114px;
+        z-index: 20;
+        -webkit-transition: all .25s linear;
+        -moz-transition: all .25s linear;
+        -ms-transition: all .25s linear;
+        -o-transition: all .25s linear;
+        transition: all .25s linear;
+      }
+      div.professor-photo:hover ul.actions {
+        -webkit-transform: translateX(60px);
+        -moz-transform: translateX(60px);
+        -ms-transform: translateX(60px);
+        -o-transform: translateX(60px);
+        transform: translateX(60px);
+      }
+
+      div.professor-photo ul.actions li {
+        display: block;
+        position: absolute;
+        height: 20px;
+        width: 20px;
+        left: 10px;
+        top: 22px;
+      }
+      div.professor-photo ul.actions li.downvote-prof {
+        top: 48px;
+      }
+      div.professor-photo ul.actions li a {
+        display: block;
+        width: 20px; height: 20px; }
+      div.professor-photo ul.actions li.upvote-prof a {
+      }
+      div.professor-photo ul.actions li.downvote-prof a {
       }
     </style>
-</head>
-<body>
-  <!--navbar-->
-  <div class="navbar navbar-fixed-top">
-    <div class="navbar-inner">
-      <div class="container-fluid">
-        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </a>
-        <a class="brand" href="#">IUDEX</a>
-        <div class="btn-group pull-right">
-          <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-            <i class="icon-user"></i> Username
-            <span class="caret"></span>
+  </head>
+  <body>
+    <!--navbar-->
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
           </a>
-          <ul class="dropdown-menu">
-            <li><a href="#">Profile</a></li>
-            <li class="divider"></li>
-            <li><a href="#">Sign Out</a></li>
-          </ul>
+          <a class="brand" href="#">IUDEX</a>
+          <div class="btn-group pull-right">
+            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+              <i class="icon-user"></i> Username
+              <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+              <li><a href="#">Profile</a></li>
+              <li class="divider"></li>
+              <li><a href="#">Sign Out</a></li>
+            </ul>
+          </div>
+          <div class="nav-collapse">
+            <ul class="nav">
+              <li class="active"><a href="#">Home</a></li>
+              <li><a href="#about">About</a></li>
+              <li><a href="#contact">Contact</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
         </div>
-        <div class="nav-collapse">
-          <ul class="nav">
-            <li class="active"><a href="#">Home</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#contact">Contact</a></li>
-          </ul>
-        </div><!--/.nav-collapse -->
       </div>
     </div>
-  </div>
-  <!--end navbar-->
-  <!--content-->
-  <div class="container-fluid">
-    <div class="row-fluid">
-      <div class="span3">
-        <div class="well sidebar-nav span3" style="position: fixed;">
-		<div class="professor-photo thumbnail span2">
-                <img src="http://placekitten.com/140/140" alt="profesor x" />
-                <h5>Profesor X</h5>
-                <p>Cirujano AeroEspacial</p>
-              </div>
-        </div><!--/.well -->
-      </div><!--/span-->
-      <div class="span9">
-        <div class="row-fluid">
-          <div class="comment span9">
-            <div class="comment-text">
-              <div class="vote">
-                <a href="#" class="upvote icon-arrow-up"></a>
-                <a href="#" class="downvote icon-arrow-down"></a>
-                <span class="vote-count">1337</span>
-              </div>
-              <div class="comment-rating">
-                <span class="icon-star"></span>
-                <span class="icon-star"></span>
-                <span class="icon-star"></span>
-                <span class="icon-star-empty"></span>
-                <span class="icon-star-empty"></span>
-              </div>
-              <div class="comment-photo thumbnail">
-                <img src="http://placekitten.com/140/140" alt="profesor x" />
-                <h5>Profesor X</h5>
-                <p>Cirujano AeroEspacial</p>
-              </div>
-              <p>
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-              </p>
-            </div>
-            <div class="comment-photo"></div>
-            <div class="comment-report">
-              <span class=""><a href="#">reportar comentario</a></span>
-            </div>
-          </div>
-       <div class="comment span9">
-            <div class="comment-text">
-              <div class="vote">
-                <a href="#" class="upvote icon-arrow-up"></a>
-                <a href="#" class="downvote icon-arrow-down"></a>
-                <span class="vote-count">1337</span>
-              </div>
-              <div class="comment-rating">
-                <span class="icon-star"></span>
-                <span class="icon-star"></span>
-                <span class="icon-star"></span>
-                <span class="icon-star-empty"></span>
-                <span class="icon-star-empty"></span>
-              </div>
-              <div class="comment-photo thumbnail">
-                <img src="http://placekitten.com/140/140" alt="profesor x" />
-                <h5>Profesor X</h5>
-                <p>Cirujano AeroEspacial</p>
-              </div>
-              <p>
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-              </p>
-            </div>
-            <div class="comment-photo"></div>
-            <div class="comment-report">
-              <span class=""><a href="#">reportar comentario</a></span>
-            </div>
-          </div> 
-		<div class="comment span9">
-            <div class="comment-text">
-              <div class="vote">
-                <a href="#" class="upvote icon-arrow-up"></a>
-                <a href="#" class="downvote icon-arrow-down"></a>
-                <span class="vote-count">1337</span>
-              </div>
-              <div class="comment-rating">
-                <span class="icon-star"></span>
-                <span class="icon-star"></span>
-                <span class="icon-star"></span>
-                <span class="icon-star-empty"></span>
-                <span class="icon-star-empty"></span>
-              </div>
-              <div class="comment-photo thumbnail">
-                <img src="http://placekitten.com/140/140" alt="profesor x" />
-                <h5>Profesor X</h5>
-                <p>Cirujano AeroEspacial</p>
-              </div>
-              <p>
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-              </p>
-            </div>
-            <div class="comment-photo"></div>
-            <div class="comment-report">
-              <span class=""><a href="#">reportar comentario</a></span>
-            </div>
-          </div>
-		<div class="comment span9">
-            <div class="comment-text">
-              <div class="vote">
-                <a href="#" class="upvote icon-arrow-up"></a>
-                <a href="#" class="downvote icon-arrow-down"></a>
-                <span class="vote-count">1337</span>
-              </div>
-              <div class="comment-rating">
-                <span class="icon-star"></span>
-                <span class="icon-star"></span>
-                <span class="icon-star"></span>
-                <span class="icon-star-empty"></span>
-                <span class="icon-star-empty"></span>
-              </div>
-              <div class="comment-photo thumbnail">
-                <img src="http://placekitten.com/140/140" alt="profesor x" />
-                <h5>Profesor X</h5>
-                <p>Cirujano AeroEspacial</p>
-              </div>
-              <p>
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-              </p>
-            </div>
-            <div class="comment-photo"></div>
-            <div class="comment-report">
-              <span class=""><a href="#">reportar comentario</a></span>
-            </div>
-          </div>
-		<div class="comment span9">
-            <div class="comment-text">
-              <div class="vote">
-                <a href="#" class="upvote icon-arrow-up"></a>
-                <a href="#" class="downvote icon-arrow-down"></a>
-                <span class="vote-count">1337</span>
-              </div>
-              <div class="comment-rating">
-                <span class="icon-star"></span>
-                <span class="icon-star"></span>
-                <span class="icon-star"></span>
-                <span class="icon-star-empty"></span>
-                <span class="icon-star-empty"></span>
-              </div>
-              <div class="comment-photo thumbnail">
-                <img src="http://placekitten.com/140/140" alt="profesor x" />
-                <h5>Profesor X</h5>
-                <p>Cirujano AeroEspacial</p>
-              </div>
-              <p>
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-              </p>
-            </div>
-            <div class="comment-photo"></div>
-            <div class="comment-report">
-              <span class=""><a href="#">reportar comentario</a></span>
-            </div>
-          </div>
-	</div><!--/row-->
-      </div><!--/span-->
-    </div><!--/row-->
+    <!--end navbar-->
+    <!--content-->
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <div class="span3">
+          <div class="well sidebar-nav span3" style="position: fixed;">
 
-    <hr>
 
-    <footer>
-    <p>© Company 2012</p>
-    </footer>
+            <div class="professor-photo">
+              <a href=""><img src="http://placekitten.com/140/140"></a>
+              <span class="vote-prof">
+                <div></div>
+              </span>
+              <ul class="actions">
+                <li class="upvote-prof"><a href="#" class="icon-thumbs-up"></a></li>
+                <li class="downvote-prof"><a href="#" class="icon-thumbs-down"></a></li>
+              </ul>
+              <div>
+                <h5>Profesor X</h5>
+                <small>Cirujano AeroEspacial</small>
+              </div>
+            </div>
 
-  </div>
-  <!--end content-->
-  <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.2.min.js"></script>
-  <script type="text/javascript" src="./js/bootstrap.js"></script>
-</body>
+
+
+          </div><!--/.well -->
+        </div><!--/span-->
+        <div class="span9">
+          <!--start of comment-->
+          <div class="row-fluid">
+            <div class="comment span9">
+              <div class="comment-text">
+                <div class="vote">
+                  <a href="#" class="upvote icon-arrow-up"></a>
+                  <a href="#" class="downvote icon-arrow-down"></a>
+                  <span class="vote-count">1337</span>
+                </div>
+                <div class="comment-rating">
+                  <span class="icon-star"></span>
+                  <span class="icon-star"></span>
+                  <span class="icon-star"></span>
+                  <span class="icon-star-empty"></span>
+                  <span class="icon-star-empty"></span>
+                </div>
+                <div class="comment-photo thumbnail">
+                  <img src="http://placekitten.com/140/140" alt="profesor x" />
+                  <h5>Profesor X</h5>
+                  <p>Cirujano AeroEspacial</p>
+                </div>
+                <p>
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                </p>
+              </div>
+              <div class="comment-photo"></div>
+              <div class="comment-report">
+                <span class=""><a href="#">reportar comentario</a></span>
+              </div>
+            </div>
+          </div>
+          <!--end of comment-->
+          <!--start of comment-->
+          <div class="row-fluid">
+            <div class="comment span9">
+              <div class="comment-text">
+                <div class="vote">
+                  <a href="#" class="upvote icon-arrow-up"></a>
+                  <a href="#" class="downvote icon-arrow-down"></a>
+                  <span class="vote-count">1337</span>
+                </div>
+                <div class="comment-rating">
+                  <span class="icon-star"></span>
+                  <span class="icon-star"></span>
+                  <span class="icon-star"></span>
+                  <span class="icon-star-empty"></span>
+                  <span class="icon-star-empty"></span>
+                </div>
+                <div class="comment-photo thumbnail">
+                  <img src="http://placekitten.com/140/140" alt="profesor x" />
+                  <h5>Profesor X</h5>
+                  <p>Cirujano AeroEspacial</p>
+                </div>
+                <p>
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                </p>
+              </div>
+              <div class="comment-photo"></div>
+              <div class="comment-report">
+                <span class=""><a href="#">reportar comentario</a></span>
+              </div>
+            </div>
+          </div>
+          <!--end of comment-->
+          <!--start of comment-->
+          <div class="row-fluid">
+            <div class="comment span9">
+              <div class="comment-text">
+                <div class="vote">
+                  <a href="#" class="upvote icon-arrow-up"></a>
+                  <a href="#" class="downvote icon-arrow-down"></a>
+                  <span class="vote-count">1337</span>
+                </div>
+                <div class="comment-rating">
+                  <span class="icon-star"></span>
+                  <span class="icon-star"></span>
+                  <span class="icon-star"></span>
+                  <span class="icon-star-empty"></span>
+                  <span class="icon-star-empty"></span>
+                </div>
+                <div class="comment-photo thumbnail">
+                  <img src="http://placekitten.com/140/140" alt="profesor x" />
+                  <h5>Profesor X</h5>
+                  <p>Cirujano AeroEspacial</p>
+                </div>
+                <p>
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                </p>
+              </div>
+              <div class="comment-photo"></div>
+              <div class="comment-report">
+                <span class=""><a href="#">reportar comentario</a></span>
+              </div>
+            </div>
+          </div>
+          <!--end of comment-->
+          <!--start of comment-->
+          <div class="row-fluid">
+            <div class="comment span9">
+              <div class="comment-text">
+                <div class="vote">
+                  <a href="#" class="upvote icon-arrow-up"></a>
+                  <a href="#" class="downvote icon-arrow-down"></a>
+                  <span class="vote-count">1337</span>
+                </div>
+                <div class="comment-rating">
+                  <span class="icon-star"></span>
+                  <span class="icon-star"></span>
+                  <span class="icon-star"></span>
+                  <span class="icon-star-empty"></span>
+                  <span class="icon-star-empty"></span>
+                </div>
+                <div class="comment-photo thumbnail">
+                  <img src="http://placekitten.com/140/140" alt="profesor x" />
+                  <h5>Profesor X</h5>
+                  <p>Cirujano AeroEspacial</p>
+                </div>
+                <p>
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                </p>
+              </div>
+              <div class="comment-photo"></div>
+              <div class="comment-report">
+                <span class=""><a href="#">reportar comentario</a></span>
+              </div>
+            </div>
+          </div>
+          <!--end of comment-->
+          <!--start of comment-->
+          <div class="row-fluid">
+            <div class="comment span9">
+              <div class="comment-text">
+                <div class="vote">
+                  <a href="#" class="upvote icon-arrow-up"></a>
+                  <a href="#" class="downvote icon-arrow-down"></a>
+                  <span class="vote-count">1337</span>
+                </div>
+                <div class="comment-rating">
+                  <span class="icon-star"></span>
+                  <span class="icon-star"></span>
+                  <span class="icon-star"></span>
+                  <span class="icon-star-empty"></span>
+                  <span class="icon-star-empty"></span>
+                </div>
+                <div class="comment-photo thumbnail">
+                  <img src="http://placekitten.com/140/140" alt="profesor x" />
+                  <h5>Profesor X</h5>
+                  <p>Cirujano AeroEspacial</p>
+                </div>
+                <p>
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                </p>
+              </div>
+              <div class="comment-photo"></div>
+              <div class="comment-report">
+                <span class=""><a href="#">reportar comentario</a></span>
+              </div>
+            </div>
+          </div>
+          <!--end of comment-->
+        </div><!--/span-->
+      </div><!--/row-->
+
+      <hr>
+
+      <footer>
+      <p>© Company 2012</p>
+      </footer>
+
+    </div>
+    <!--end content-->
+    <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="./js/bootstrap.js"></script>
+  </body>
 </html>

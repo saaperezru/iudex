@@ -23,7 +23,7 @@ public class SubjectDao extends CrudDao<SubjectEntity> implements SubjectDaoInte
     @Override
     public List<SubjectEntity> getByName(EntityManager em, String name) {
         checkEntityManager(em);
-        return em.createNamedQuery("getSubjectsByName", SubjectEntity.class).
+        return em.createNamedQuery("getSubjectsByNameLike", SubjectEntity.class).
                 setParameter("name", "%" + name + "%").getResultList();
     }
 

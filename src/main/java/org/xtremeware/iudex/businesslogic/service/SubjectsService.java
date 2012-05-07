@@ -118,7 +118,7 @@ public class SubjectsService extends CrudService<SubjectVo, SubjectEntity> {
             throw new IllegalArgumentException("Null name for a subject search");
         }
         name = SecurityHelper.sanitizeHTML(name);
-        List<SubjectEntity> subjectEntitys = getDaoFactory().getSubjectDao().getByName(em, name);
+        List<SubjectEntity> subjectEntitys = getDaoFactory().getSubjectDao().getByName(em, name.toUpperCase());
         if (subjectEntitys.isEmpty()) {
 		return new ArrayList<SubjectVo>();
         }

@@ -31,7 +31,7 @@ public class UserEntity implements Serializable, Entity<UserVo> {
 	private String password;
 	
         @Column(name = "ROL", nullable = false)
-	private Role rol;
+	private Role role;
 	
         @Column(name = "ACTIVE")
 	private boolean active;

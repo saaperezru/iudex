@@ -149,6 +149,15 @@ public class CoursesFacadeIT {
 				throw new AssertionFailedError("The following course was not expected for query " + query + ": " + result.toString());
 			}
 		}
+		query = "mario";
+		search = facade.search(query);
+		assertNotNull(search);
+		assertNotSame(search.size(), 0);
+		for (CourseVoVwFull result : search) {
+			if (!expected.contains(result)) {
+				throw new AssertionFailedError("The following course was not expected for query " + query + ": " + result.toString());
+			}
+		}
 	}
 
 	/**
@@ -212,6 +221,7 @@ public class CoursesFacadeIT {
 			CourseVoVwFull course = facade.getCourse(courseId);
 			assertNull(course);
 		} catch (Exception ex) {
+			ex.printStackTrace();
 			throw new AssertionFailedError(ex.getMessage());
 		}
 		courseId = Long.MIN_VALUE;
@@ -255,7 +265,7 @@ public class CoursesFacadeIT {
 			expected.setRatingAverage(0.0);
 			expected.setRatingCount(0L);
 
-			facade.addCourse(2, 1, 1);
+			facade.addCourse(fabio.getId(), is2.getId(), 1L);
 
 		} catch (InvalidVoException ex) {
 			throw new AssertionFailedError(ex.getMessage());

@@ -22,7 +22,7 @@ public class LogService {
             // TODO: Use the configuration helper to obtain the log configuration
             logger.setLevel(Level.ALL);
             logger.addAppender(new DailyRollingFileAppender(
-                    new EnhancedPatternLayout(EnhancedPatternLayout.TTCC_CONVERSION_PATTERN),
+                    new EnhancedPatternLayout("[%d] - " + EnhancedPatternLayout.TTCC_CONVERSION_PATTERN),
                     "log/iudex.log", "'.'yyyy-MM-dd"));
         } catch (IOException ex) {
             ex.printStackTrace();

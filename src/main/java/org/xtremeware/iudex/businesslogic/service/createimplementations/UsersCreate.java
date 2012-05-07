@@ -39,10 +39,9 @@ public class UsersCreate implements CreateInterface<UserEntity> {
         confirmationKeyEntity.setConfirmationKey(SecurityHelper.generateConfirmationKey());
         //Associate confirmation key with user
         entity.setConfirmationKey(confirmationKeyEntity);
-        confirmationKeyEntity.setUser(entity);
 
         entity = getDaoFactory().getUserDao().persist(em, entity);
-        confirmationKeyEntity.setId(entity.getId());
+        confirmationKeyEntity.setUser(entity);
         //persist confirmation key
         getDaoFactory().getConfirmationKeyDao().persist(em, confirmationKeyEntity);
 

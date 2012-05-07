@@ -26,8 +26,7 @@ public class ConfirmationKeyEntity implements Serializable, Entity<ConfirmationK
 	private String confirmationKey;
 	
         @OneToOne
-	@JoinColumn(name="ID_USER_")
-        @Column(name = "ID_USER", nullable= false, unique= true)
+	@JoinColumn(name="ID_USER_", nullable= false, unique= true)
 	private UserEntity user;
 
     @Override

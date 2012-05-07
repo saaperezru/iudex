@@ -113,12 +113,13 @@ public class CoursesFacade extends AbstractFacade {
 			vo.setRatingAverage(0.0);
 			em = getEntityManagerFactory().createEntityManager();
 			tx = em.getTransaction();
-			tx.commit();
+			tx.begin();
 			createdVo = getServiceFactory().createCoursesService().create(em, vo);
 			tx.commit();
 		} catch (InvalidVoException e) {
 			throw e;
 		} catch (Exception e) {
+			e.printStackTrace();
 			if (em != null && tx != null) {
 				tx.rollback();
 			}

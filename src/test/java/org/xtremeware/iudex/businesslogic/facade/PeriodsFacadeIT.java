@@ -25,6 +25,7 @@ public class PeriodsFacadeIT {
 
     @BeforeClass
     public static void setUpClass() throws Exception {
+	    TestHelper.initializeDatabase();
     }
 
     @AfterClass

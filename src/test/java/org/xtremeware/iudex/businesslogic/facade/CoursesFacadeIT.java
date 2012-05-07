@@ -2,13 +2,14 @@
  */
 package org.xtremeware.iudex.businesslogic.facade;
 
+import java.io.FileReader;
+import java.sql.DriverManager;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Properties;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.persistence.EntityManager;
 import junit.framework.AssertionFailedError;
+import org.h2.tools.RunScript;
 import org.junit.*;
 import static org.junit.Assert.*;
 import org.xtremeware.iudex.businesslogic.InvalidVoException;
@@ -16,7 +17,6 @@ import org.xtremeware.iudex.helper.Config;
 import org.xtremeware.iudex.presentation.vovw.CourseVoVwFull;
 import org.xtremeware.iudex.presentation.vovw.ProfessorVoVwSmall;
 import org.xtremeware.iudex.presentation.vovw.SubjectVoVwSmall;
-import org.xtremeware.iudex.vo.CourseRatingVo;
 import org.xtremeware.iudex.vo.CourseVo;
 import org.xtremeware.iudex.vo.RatingSummaryVo;
 
@@ -35,6 +35,9 @@ public class CoursesFacadeIT {
 
 	@BeforeClass
 	public static void setUpClass() throws Exception {
+
+		TestHelper.initializeDatabase();
+
 		RatingSummaryVo rating = new RatingSummaryVo();
 		rating.setPositive(3);
 		rating.setNegative(0);

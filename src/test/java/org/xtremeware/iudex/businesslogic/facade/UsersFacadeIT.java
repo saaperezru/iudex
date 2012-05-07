@@ -2,6 +2,7 @@ package org.xtremeware.iudex.businesslogic.facade;
 
 import java.util.Arrays;
 import static org.junit.Assert.*;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.xtremeware.iudex.businesslogic.InvalidVoException;
 import org.xtremeware.iudex.businesslogic.service.InactiveUserException;
@@ -15,6 +16,11 @@ import org.xtremeware.iudex.vo.UserVo;
  * @author healarconr
  */
 public class UsersFacadeIT {
+
+	 @BeforeClass
+    public static void setUpClass() throws Exception {
+	    TestHelper.initializeDatabase();
+    }
 
     public UsersFacadeIT() {
     }

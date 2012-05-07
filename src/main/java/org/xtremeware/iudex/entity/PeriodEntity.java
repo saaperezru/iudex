@@ -10,7 +10,9 @@ import org.xtremeware.iudex.vo.PeriodVo;
     @NamedQuery(name = "getPeriodByYearAndSemester", query = "SELECT p FROM Period p WHERE p.year = :year AND p.semester = :semester"),
     @NamedQuery(name = "getAllPeriods", query = "SELECT p FROM Period p")
 })
-@Table(name = "PERIOD_")
+@Table(name = "PERIOD_",
+uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"YEAR_", "SEMESTER"})})
 public class PeriodEntity implements Serializable, Entity<PeriodVo> {
 
     private static final long serialVersionUID = 1L;

@@ -5,10 +5,15 @@ import javax.persistence.*;
 import org.xtremeware.iudex.vo.ProgramVo;
 
 @javax.persistence.Entity(name = "Program")
-@NamedQuery(name = "getProgramByNameLike",
-query = "SELECT result FROM Program result "
-+ "WHERE result.name LIKE :name")
-@Table(name = "PROGRAM")
+@NamedQueries({
+    @NamedQuery(name = "getProgramByNameLike",
+    query = "SELECT result FROM Program result "
+    + "WHERE result.name LIKE :name"),
+    @NamedQuery(name = "getAllPrograms",
+    query = "SELECT result FROM Program result")})
+@Table(name = "PROGRAM",
+uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"NAME"})})
 public class ProgramEntity implements Serializable, Entity<ProgramVo> {
 
     private static final long serialVersionUID = 1L;

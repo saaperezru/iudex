@@ -13,11 +13,15 @@ import org.xtremeware.iudex.entity.PeriodEntity;
 import org.xtremeware.iudex.vo.PeriodVo;
 
 /**
- * Supports CRUD operations on the periods submited to the system
+ * Supports CRUD operations on the periods submitted to the system
  *
  * @author juan
  */
 public class PeriodsService extends CrudService<PeriodVo, PeriodEntity> {
+    
+    private final int MIN_YEAR;
+    private final int MIN_SEMESTER;
+    private final int MAX_SEMESTER;
 
     /**
      * Constructor
@@ -30,6 +34,9 @@ public class PeriodsService extends CrudService<PeriodVo, PeriodEntity> {
                 new SimpleRead<PeriodEntity>(daoFactory.getPeriodDao()),
                 new SimpleUpdate<PeriodEntity>(daoFactory.getPeriodDao()),
                 new PeriodRemove(daoFactory));
+        MIN_YEAR = 1000;
+        MIN_SEMESTER = 1;
+        MAX_SEMESTER = 3;
     }
 
     /**
@@ -69,10 +76,10 @@ public class PeriodsService extends CrudService<PeriodVo, PeriodEntity> {
         if (vo == null) {
             throw new InvalidVoException("Null PeriodVo");
         }
-        if (vo.getSemester() < 1 || vo.getSemester() > 3) {
+        if (vo.getSemester() < MIN_SEMESTER || vo.getSemester() > MAX_SEMESTER) {
             throw new InvalidVoException("int Semester in the provided PeriodVo must be greater than 1 and less than 3");
         }
-        if (vo.getYear() < 0) {
+        if (vo.getYear() < MIN_YEAR) {
             throw new InvalidVoException("int Year in the provided PeriodVo must be possitive");
         }
     }

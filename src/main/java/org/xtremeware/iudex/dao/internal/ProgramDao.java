@@ -29,4 +29,10 @@ public class ProgramDao extends CrudDao<ProgramEntity> implements ProgramDaoInte
     protected Class getEntityClass() {
         return ProgramEntity.class;
     }
+
+    @Override
+    public List<ProgramEntity> getAll(EntityManager em) {
+        checkEntityManager(em);
+        return em.createNamedQuery("getAllPrograms", ProgramEntity.class).getResultList();
+    }
 }

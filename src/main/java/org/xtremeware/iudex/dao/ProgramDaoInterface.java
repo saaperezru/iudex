@@ -18,4 +18,6 @@ public interface ProgramDaoInterface extends CrudDaoInterface<ProgramEntity> {
      * @return Return a list of programEntity objects
      */
     public List<ProgramEntity> getByNameLike(EntityManager em, String name);
+    
+    public List<ProgramEntity> getAll(EntityManager em);
 }

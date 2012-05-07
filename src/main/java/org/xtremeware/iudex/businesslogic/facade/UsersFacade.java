@@ -116,30 +116,29 @@ public class UsersFacade extends AbstractFacade {
 	 */
 	public UserVo editUser(UserVo vo) throws InvalidVoException {
 
-		EntityManager em = null;
-		EntityTransaction tx = null;
-		UserVo user = null;
-		try {
-			em = getEntityManagerFactory().createEntityManager();
-			tx = em.getTransaction();
-			tx.begin();
-			UsersService createUsersService = getServiceFactory().createUsersService();
-			user = createUsersService.update(em, vo);
-			tx.commit();
-		} catch (InvalidVoException ex) {
-			throw ex;
-		} catch (Exception e) {
-			if (em != null && tx != null) {
-				tx.rollback();
-			}
-			getServiceFactory().createLogService().error(e.getMessage(), e);
-		} finally {
-			if (em != null) {
-				em.clear();
-				em.close();
-			}
-		}
-		return user;
+        EntityManager em = null;
+        EntityTransaction tx = null;
+        UserVo user = null;
+        try {
+            em = getEntityManagerFactory().createEntityManager();
+            tx = em.getTransaction();
+            tx.begin();
+            user = getServiceFactory().createUsersService().update(em, vo);
+            tx.commit();
+        } catch (InvalidVoException ex) {
+            throw ex;
+        } catch (Exception e) {
+            if (em != null && tx != null) {
+                tx.rollback();
+            }
+            getServiceFactory().createLogService().error(e.getMessage(), e);
+        } finally {
+            if (em != null) {
+                em.clear();
+                em.close();
+            }
+        }
+        return user;
 
-	}
+    }
 }

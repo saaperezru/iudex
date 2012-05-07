@@ -1,6 +1,5 @@
 package org.xtremeware.iudex.businesslogic.facade;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,9 +8,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import org.xtremeware.iudex.businesslogic.InvalidVoException;
 import org.xtremeware.iudex.businesslogic.service.ServiceFactory;
-import org.xtremeware.iudex.vo.PeriodVo;
 import org.xtremeware.iudex.vo.ProgramVo;
-import org.xtremeware.iudex.vo.SubjectVo;
 
 public class ProgramsFacade extends AbstractFacade {
 
@@ -29,11 +26,10 @@ public class ProgramsFacade extends AbstractFacade {
             getServiceFactory().createProgramsService().remove(em, id);
             tx.commit();
         } catch (Exception e) {
+            getServiceFactory().createLogService().error(e.getMessage(), e);
             if (em != null && tx != null) {
                 tx.rollback();
             }
-            getServiceFactory().createLogService().error(e.getMessage(), e);
-            throw e;
         } finally {
             if (em != null) {
                 em.clear();
@@ -65,10 +61,10 @@ public class ProgramsFacade extends AbstractFacade {
         } catch (InvalidVoException e) {
             throw e;
         } catch (Exception e) {
+            getServiceFactory().createLogService().error(e.getMessage(), e);
             if (em != null && tx != null) {
                 tx.rollback();
             }
-            getServiceFactory().createLogService().error(e.getMessage(), e);
         } finally {
             if (em != null) {
                 em.clear();
@@ -108,13 +104,13 @@ public class ProgramsFacade extends AbstractFacade {
             em = getEntityManagerFactory().createEntityManager();
             tx = em.getTransaction();
             tx.begin();
-            list = getServiceFactory().createProgramsService().getByNameLike(em, "gra");
+            list = getServiceFactory().createProgramsService().getAll(em);
             tx.commit();
         } catch (Exception e) {
+            getServiceFactory().createLogService().error(e.getMessage(), e);
             if (em != null && tx != null) {
                 tx.rollback();
             }
-            getServiceFactory().createLogService().error(e.getMessage(), e);
         } finally {
             if (em != null) {
                 em.clear();

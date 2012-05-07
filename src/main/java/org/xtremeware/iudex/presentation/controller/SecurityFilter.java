@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 @WebFilter(filterName = "SecurityFilter", urlPatterns = {"/*"}, initParams = {
     @WebInitParam(name = "permissions", value = "/META-INF/permissions.properties"),
     @WebInitParam(name = "denyByDefault", value = "true"),
-    @WebInitParam(name = "anybody", value = "ALL"),})
+    @WebInitParam(name = "anybody", value = "ALL")})
 // TODO: Use the standard logger in this filter
 public class SecurityFilter implements Filter {
 

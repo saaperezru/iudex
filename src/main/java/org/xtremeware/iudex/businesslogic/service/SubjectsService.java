@@ -34,7 +34,7 @@ public class SubjectsService extends CrudService<SubjectVo, SubjectEntity> {
     }
 
     /**
-    getSubjectDao * Validate the provided SubjectVo, if the SubjectVo is not correct the
+     * Validate the provided SubjectVo, if the SubjectVo is not correct the
      * methods throws an exception
      *
      * @param em EntityManager

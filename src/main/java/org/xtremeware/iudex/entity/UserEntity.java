@@ -12,31 +12,42 @@ import org.xtremeware.iudex.vo.UserVo;
 @Table(name = "USER_")
 public class UserEntity implements Serializable, Entity<UserVo> {
 
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID_USER_")
-    private Long id;
-    @Column(name = "FIRST_NAMES", length = 50, nullable = false)
-    private String firstName;
-    @Column(name = "LAST_NAMES", length = 50, nullable = false)
-    private String lastName;
-    @Column(name = "USER_NAME", length = 20, nullable = false, unique = true)
-    private String userName;
-    @Column(name = "PASSWORD_", length = 64, nullable = false)
-    private String password;
-    @Column(name = "ROLE_", nullable = false)
-    private Role role;
-    @Column(name = "ACTIVE")
-    private boolean active;
-    //ADD ASOCIATION
-    @OneToMany
-    @JoinTable(name = "USER_PROGRAM", joinColumns = {
-        @JoinColumn(name = "ID_USER_", referencedColumnName = "ID_USER_")}, inverseJoinColumns = {
-        @JoinColumn(name = "ID_PROGRAM", referencedColumnName = "ID_PROGRAM")})
-    private List<ProgramEntity> programs;
-    @OneToOne(mappedBy = "user")
-    private ConfirmationKeyEntity confirmationKey;
+	private static final long serialVersionUID = 1L;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "ID_USER_")
+	private Long id;
+	
+        @Column(name = "FIRST_NAMES", length = 50, nullable = false)
+	private String firstName;
+	
+        @Column(name = "LAST_NAMES", length = 50, nullable = false)
+	private String lastName;
+	
+        @Column(name = "USER_NAME", length = 20, nullable = false, unique= true)
+	private String userName;
+	
+        @Column(name = "PASSWORD_", length = 64, nullable = false)
+	private String password;
+	
+        @Column(name = "ROL", nullable = false)
+	private Role rol;
+	
+        @Column(name = "ACTIVE")
+	private boolean active;
+	//ADD ASOCIATION
+	
+        @ManyToMany
+        @JoinTable(
+            name="USER_PROGRAM",
+            joinColumns={@JoinColumn(name="ID_USER_", referencedColumnName="ID_USER_")},
+            inverseJoinColumns={@JoinColumn(name="ID_PROGRAM", referencedColumnName="ID_PROGRAM")})
+	private List<ProgramEntity> programs;
+        
+        @OneToOne(mappedBy = "user")
+        private ConfirmationKeyEntity confirmationKey;
+        
+        
 
     @Override
     public UserVo toVo() {

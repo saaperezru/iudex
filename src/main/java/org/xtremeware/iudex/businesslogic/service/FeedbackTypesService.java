@@ -1,17 +1,14 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.xtremeware.iudex.businesslogic.service;
 
+import org.xtremeware.iudex.businesslogic.service.removeimplementations.FeedbackTypesRemove;
+import org.xtremeware.iudex.businesslogic.service.updateimplementations.SimpleUpdate;
+import org.xtremeware.iudex.businesslogic.service.readimplementations.SimpleRead;
+import org.xtremeware.iudex.businesslogic.service.createimplementations.SimpleCreate;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.businesslogic.InvalidVoException;
 import org.xtremeware.iudex.dao.AbstractDaoFactory;
-import org.xtremeware.iudex.dao.Dao;
-import org.xtremeware.iudex.dao.FeedbackTypeDao;
-import org.xtremeware.iudex.entity.FeedbackEntity;
 import org.xtremeware.iudex.entity.FeedbackTypeEntity;
 import org.xtremeware.iudex.helper.ExternalServiceConnectionException;
 import org.xtremeware.iudex.helper.SecurityHelper;
@@ -21,7 +18,7 @@ import org.xtremeware.iudex.vo.FeedbackTypeVo;
  *
  * @author josebermeo
  */
-public class FeedbackTypesService extends SimpleCrudService<FeedbackTypeVo, FeedbackTypeEntity> {
+public class FeedbackTypesService extends CrudService<FeedbackTypeVo, FeedbackTypeEntity> {
 
     /**
      * FeedbackTypesService constructor
@@ -29,17 +26,11 @@ public class FeedbackTypesService extends SimpleCrudService<FeedbackTypeVo, Feed
      * @param daoFactory
      */
     public FeedbackTypesService(AbstractDaoFactory daoFactory) {
-        super(daoFactory);
-    }
-
-    /**
-     * returns the FeedbackTypeDao to be used.
-     *
-     * @return
-     */
-    @Override
-    protected Dao<FeedbackTypeEntity> getDao() {
-        return this.getDaoFactory().getFeedbackTypeDao();
+        super(daoFactory,
+                new SimpleCreate<FeedbackTypeEntity>(daoFactory.getFeedbackTypeDao()),
+                new SimpleRead<FeedbackTypeEntity>(daoFactory.getFeedbackTypeDao()),
+                new SimpleUpdate<FeedbackTypeEntity>(daoFactory.getFeedbackTypeDao()),
+                new FeedbackTypesRemove(daoFactory));
     }
 
     /**
@@ -51,13 +42,15 @@ public class FeedbackTypesService extends SimpleCrudService<FeedbackTypeVo, Feed
      * @throws InvalidVoException
      */
     @Override
-    public void validateVo(EntityManager em, FeedbackTypeVo vo) throws InvalidVoException {
+    public void validateVo(EntityManager em, FeedbackTypeVo vo) throws InvalidVoException,
+            ExternalServiceConnectionException {
         if (vo == null) {
             throw new InvalidVoException("Null FeedbackTypeVo");
         }
         if (vo.getName() == null) {
             throw new InvalidVoException("Null name in the provided FeedbackTypeVo");
         }
+        vo.setName(SecurityHelper.sanitizeHTML(vo.getName()));
     }
 
     /**
@@ -75,7 +68,7 @@ public class FeedbackTypesService extends SimpleCrudService<FeedbackTypeVo, Feed
         validateVo(em, vo);
         FeedbackTypeEntity feedbackTypeEntity = new FeedbackTypeEntity();
         feedbackTypeEntity.setId(vo.getId());
-        feedbackTypeEntity.setName(SecurityHelper.sanitizeHTML(vo.getName()));
+        feedbackTypeEntity.setName(vo.getName());
 
         return feedbackTypeEntity;
     }
@@ -87,7 +80,7 @@ public class FeedbackTypesService extends SimpleCrudService<FeedbackTypeVo, Feed
      * @return A list of all different FeedbackTypeVo
      */
     public List<FeedbackTypeVo> list(EntityManager em) {
-        List<FeedbackTypeEntity> feedbackTypeEntitys = ((FeedbackTypeDao) this.getDao()).getAll(em);
+        List<FeedbackTypeEntity> feedbackTypeEntitys = getDaoFactory().getFeedbackTypeDao().getAll(em);
         if (feedbackTypeEntitys.isEmpty()) {
             return null;
         }
@@ -96,21 +89,5 @@ public class FeedbackTypesService extends SimpleCrudService<FeedbackTypeVo, Feed
             arrayList.add(feedbackTypeEntity.toVo());
         }
         return arrayList;
-    }
-    
-  /**
-    * Remove the FeedBack Type and all the Feedback Comments associated  to it.
-    * 
-    * @param em entity manager
-    * @param id id of the FeedBackType
-    */    
-    @Override
-    public void remove(EntityManager em, long id) {
-            List<FeedbackEntity> feedBacks = getDaoFactory().getFeedbackDao().getByTypeId(em, id);
-                for (FeedbackEntity feedBack : feedBacks){
-                    getDaoFactory().getFeedbackDao().remove(em,feedBack.getId());
-                }
-
-            getDao().remove(em, id);
     }
 }

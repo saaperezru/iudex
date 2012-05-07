@@ -1,12 +1,14 @@
 package org.xtremeware.iudex.businesslogic.service;
 
+import org.xtremeware.iudex.businesslogic.service.updateimplementations.SimpleUpdate;
+import org.xtremeware.iudex.businesslogic.service.removeimplementations.SimpleRemove;
+import org.xtremeware.iudex.businesslogic.service.readimplementations.SimpleRead;
+import org.xtremeware.iudex.businesslogic.service.createimplementations.SimpleCreate;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.businesslogic.InvalidVoException;
 import org.xtremeware.iudex.dao.AbstractDaoFactory;
-import org.xtremeware.iudex.dao.Dao;
-import org.xtremeware.iudex.dao.FeedbackDao;
 import org.xtremeware.iudex.entity.FeedbackEntity;
 import org.xtremeware.iudex.helper.ExternalServiceConnectionException;
 import org.xtremeware.iudex.helper.SecurityHelper;
@@ -16,7 +18,7 @@ import org.xtremeware.iudex.vo.FeedbackVo;
  *
  * @author josebermeo
  */
-public class FeedbacksService extends SimpleCrudService<FeedbackVo, FeedbackEntity> {
+public class FeedbacksService extends CrudService<FeedbackVo, FeedbackEntity> {
 
     /**
      * FeedbacksService constructor
@@ -24,17 +26,11 @@ public class FeedbacksService extends SimpleCrudService<FeedbackVo, FeedbackEnti
      * @param daoFactory
      */
     public FeedbacksService(AbstractDaoFactory daoFactory) {
-        super(daoFactory);
-    }
-
-    /**
-     * returns the FeedbackDao to be used.
-     *
-     * @return FeedbackDao
-     */
-    @Override
-    protected Dao<FeedbackEntity> getDao() {
-        return getDaoFactory().getFeedbackDao();
+        super(daoFactory,
+                new SimpleCreate<FeedbackEntity>(daoFactory.getFeedbackDao()),
+                new SimpleRead<FeedbackEntity>(daoFactory.getFeedbackDao()),
+                new SimpleUpdate<FeedbackEntity>(daoFactory.getFeedbackDao()),
+                new SimpleRemove<FeedbackEntity>(daoFactory.getFeedbackDao()));
     }
 
     /**
@@ -46,10 +42,10 @@ public class FeedbacksService extends SimpleCrudService<FeedbackVo, FeedbackEnti
      * @throws InvalidVoException
      */
     @Override
-    public void validateVo(EntityManager em, FeedbackVo vo) throws InvalidVoException {
+    public void validateVo(EntityManager em, FeedbackVo vo) throws InvalidVoException, ExternalServiceConnectionException {
         if (em == null) {
             throw new IllegalArgumentException("EntityManager em cannot be null");
-	}
+        }
         if (vo == null) {
             throw new InvalidVoException("Null FeedbackVo");
         }
@@ -65,6 +61,7 @@ public class FeedbacksService extends SimpleCrudService<FeedbackVo, FeedbackEnti
         if (vo.getContent() == null) {
             throw new InvalidVoException("Invalid content in the the provided FeedbackVo");
         }
+        vo.setContent(SecurityHelper.sanitizeHTML(vo.getContent()));
         if (vo.getContent().length() > 2000) {
             throw new InvalidVoException("Invalid content length in the provided FeedbackVo");
         }
@@ -80,12 +77,13 @@ public class FeedbacksService extends SimpleCrudService<FeedbackVo, FeedbackEnti
      * @throws InvalidVoException
      */
     @Override
-    public FeedbackEntity voToEntity(EntityManager em, FeedbackVo vo) throws InvalidVoException, ExternalServiceConnectionException {
+    public FeedbackEntity voToEntity(EntityManager em, FeedbackVo vo) throws InvalidVoException,
+            ExternalServiceConnectionException {
 
         validateVo(em, vo);
 
         FeedbackEntity feedbackEntity = new FeedbackEntity();
-        feedbackEntity.setContent(SecurityHelper.sanitizeHTML(vo.getContent()));
+        feedbackEntity.setContent(vo.getContent());
         feedbackEntity.setDate(vo.getDate());
         feedbackEntity.setId(vo.getId());
 
@@ -101,11 +99,12 @@ public class FeedbacksService extends SimpleCrudService<FeedbackVo, FeedbackEnti
      * @param query String with the search parameter
      * @return A list of FeedbackVo
      */
-    public List<FeedbackVo> search(EntityManager em, String query) {
+    public List<FeedbackVo> search(EntityManager em, String query) throws ExternalServiceConnectionException {
         if (query == null) {
             throw new IllegalArgumentException("Null query for a Feedback comment search");
         }
-        List<FeedbackEntity> feedbackEntitys = ((FeedbackDao) this.getDao()).getByContentLike(em, query);
+        query = SecurityHelper.sanitizeHTML(query);
+        List<FeedbackEntity> feedbackEntitys = getDaoFactory().getFeedbackDao().getByContentLike(em, query);
         if (feedbackEntitys.isEmpty()) {
             return null;
         }

@@ -1,16 +1,15 @@
 package org.xtremeware.iudex.businesslogic.service;
 
+import org.xtremeware.iudex.businesslogic.service.updateimplementations.SimpleUpdate;
+import org.xtremeware.iudex.businesslogic.service.removeimplementations.SubjectsRemove;
+import org.xtremeware.iudex.businesslogic.service.readimplementations.SimpleRead;
+import org.xtremeware.iudex.businesslogic.service.createimplementations.SimpleCreate;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.businesslogic.InvalidVoException;
 import org.xtremeware.iudex.dao.AbstractDaoFactory;
-import org.xtremeware.iudex.dao.Dao;
-import org.xtremeware.iudex.dao.SubjectDao;
-import org.xtremeware.iudex.entity.CourseEntity;
 import org.xtremeware.iudex.entity.SubjectEntity;
-import org.xtremeware.iudex.entity.SubjectRatingEntity;
-import org.xtremeware.iudex.helper.Config;
 import org.xtremeware.iudex.helper.ExternalServiceConnectionException;
 import org.xtremeware.iudex.helper.SecurityHelper;
 import org.xtremeware.iudex.vo.SubjectVo;
@@ -19,7 +18,7 @@ import org.xtremeware.iudex.vo.SubjectVo;
  *
  * @author josebermeo
  */
-public class SubjectsService extends SimpleCrudService<SubjectVo, SubjectEntity> {
+public class SubjectsService extends CrudService<SubjectVo, SubjectEntity> {
 
     /**
      * SubjectsService constructor
@@ -27,19 +26,12 @@ public class SubjectsService extends SimpleCrudService<SubjectVo, SubjectEntity>
      * @param daoFactory
      */
     public SubjectsService(AbstractDaoFactory daoFactory) {
-        super(daoFactory);
+        super(daoFactory,
+                new SimpleCreate<SubjectEntity>(daoFactory.getSubjectDao()),
+                new SimpleRead<SubjectEntity>(daoFactory.getSubjectDao()),
+                new SimpleUpdate<SubjectEntity>(daoFactory.getSubjectDao()),
+                new SubjectsRemove(daoFactory));
     }
-
-    /**
-     * returns the SubjectDao to be used.
-     *
-     * @return
-     */
-    @Override
-    protected Dao<SubjectEntity> getDao() {
-        return getDaoFactory().getSubjectDao();
-    }
-    
 
     /**
     getSubjectDao * Validate the provided SubjectVo, if the SubjectVo is not correct the
@@ -50,7 +42,7 @@ public class SubjectsService extends SimpleCrudService<SubjectVo, SubjectEntity>
      * @throws InvalidVoException
      */
     @Override
-    public void validateVo(EntityManager em, SubjectVo vo) throws InvalidVoException {
+    public void validateVo(EntityManager em, SubjectVo vo) throws InvalidVoException, ExternalServiceConnectionException {
         if (vo == null) {
             throw new InvalidVoException("Null SubjectVo");
         }
@@ -60,6 +52,8 @@ public class SubjectsService extends SimpleCrudService<SubjectVo, SubjectEntity>
         if (vo.getDescription() == null) {
             throw new InvalidVoException("Null description in the provided SubjectVo");
         }
+        vo.setName(SecurityHelper.sanitizeHTML(vo.getName()));
+        vo.setDescription(SecurityHelper.sanitizeHTML(vo.getDescription()));
         if (vo.getName().length() > 50) {
             throw new InvalidVoException("Invalid name length in the provided SubjectVo");
         }
@@ -83,39 +77,12 @@ public class SubjectsService extends SimpleCrudService<SubjectVo, SubjectEntity>
 
         SubjectEntity subjectEntity = new SubjectEntity();
         subjectEntity.setId(vo.getId());
-        subjectEntity.setName(SecurityHelper.sanitizeHTML(vo.getName()));
-        subjectEntity.setDescription(SecurityHelper.sanitizeHTML(vo.getDescription()));
+        subjectEntity.setName(vo.getName());
+        subjectEntity.setDescription(vo.getDescription());
 
         return subjectEntity;
     }
 
-   /**
-     * Remove the subject and all the subjectRatings and courses associated  to it.
-     * 
-     * @param em entity manager
-     * @param id id of the subject
-     */    
-    @Override
-    public void remove(EntityManager em, long id) {
-            List<SubjectRatingEntity> subjectRatings = getDaoFactory().getSubjectRatingDao().getBySubjectId(em, id);
-                for (SubjectRatingEntity rating : subjectRatings){
-                    getDaoFactory().getSubjectRatingDao().remove(em,rating.getId());
-                }
-            
-            /**
-            * This is a bad implementation, but due to few time, it had to be implemented,
-            * it will be changed for the next release.
-            */
-            List<CourseEntity> courses = getDaoFactory().getCourseDao().getBySubjectId(em, id);
-
-            CoursesService courseService = Config.getInstance().getServiceFactory().createCoursesService();
-            for (CourseEntity course : courses){
-                    courseService.remove(em, course.getId());    
-            } 
-            
-            getDao().remove(em, id);
-    }
-    
     /**
      * Returns a list of SubjectVo according with the search query
      *
@@ -123,11 +90,12 @@ public class SubjectsService extends SimpleCrudService<SubjectVo, SubjectEntity>
      * @param query String with the search parameter
      * @return A list of SubjectVo
      */
-    public List<SubjectVo> search(EntityManager em, String query) {
+    public List<SubjectVo> search(EntityManager em, String query) throws ExternalServiceConnectionException {
         if (query == null) {
             throw new IllegalArgumentException("Null query for a subject search");
         }
-        List<SubjectEntity> subjectEntitys = ((SubjectDao) this.getDao()).getByName(em, query);
+        query = SecurityHelper.sanitizeHTML(query);
+        List<SubjectEntity> subjectEntitys = getDaoFactory().getSubjectDao().getByName(em, query.toUpperCase());
         if (subjectEntitys.isEmpty()) {
             return null;
         }
@@ -145,11 +113,12 @@ public class SubjectsService extends SimpleCrudService<SubjectVo, SubjectEntity>
      * @param name String with the name of the SubjectVo
      * @return A list if SubjectVo
      */
-    public List<SubjectVo> getByNameLike(EntityManager em, String name) {
+    public List<SubjectVo> getByNameLike(EntityManager em, String name) throws ExternalServiceConnectionException {
         if (name == null) {
             throw new IllegalArgumentException("Null name for a subject search");
         }
-        List<SubjectEntity> subjectEntitys = ((SubjectDao) this.getDao()).getByName(em, name.toUpperCase());
+        name = SecurityHelper.sanitizeHTML(name);
+        List<SubjectEntity> subjectEntitys = getDaoFactory().getSubjectDao().getByName(em, name);
         if (subjectEntitys.isEmpty()) {
 		return new ArrayList<SubjectVo>();
         }
@@ -167,7 +136,7 @@ public class SubjectsService extends SimpleCrudService<SubjectVo, SubjectEntity>
      * @return A list of SubjectVo
      */
     public List<SubjectVo> getByProfessorId(EntityManager em, long professorId) {
-        List<SubjectEntity> subjectEntitys = ((SubjectDao) this.getDao()).getByProfessorId(em, professorId);
+        List<SubjectEntity> subjectEntitys = getDaoFactory().getSubjectDao().getByProfessorId(em, professorId);
         ArrayList<SubjectVo> arrayList = new ArrayList<SubjectVo>();
         for (SubjectEntity subjectEntity : subjectEntitys) {
             arrayList.add(subjectEntity.toVo());

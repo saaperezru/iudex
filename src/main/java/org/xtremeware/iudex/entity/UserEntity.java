@@ -25,8 +25,8 @@ public class UserEntity implements Serializable, Entity<UserVo> {
     private String userName;
     @Column(name = "PASSWORD_", length = 64, nullable = false)
     private String password;
-    @Column(name = "ROL", nullable = false)
-    private Role rol;
+    @Column(name = "ROLE_", nullable = false)
+    private Role role;
     @Column(name = "ACTIVE")
     private boolean active;
     //ADD ASOCIATION
@@ -46,7 +46,7 @@ public class UserEntity implements Serializable, Entity<UserVo> {
         vo.setLastName(getLastName());
         vo.setUserName(getUserName());
         vo.setPassword(getPassword());
-        vo.setRol(getRol());
+        vo.setRole(getRole());
         ArrayList<Long> programsId = new ArrayList<Long>();
         for (ProgramEntity program : getPrograms()) {
             programsId.add(program.getId());
@@ -80,7 +80,7 @@ public class UserEntity implements Serializable, Entity<UserVo> {
         if ((this.password == null) ? (other.password != null) : !this.password.equals(other.password)) {
             return false;
         }
-        if (this.rol != other.rol) {
+        if (this.role != other.role) {
             return false;
         }
         if (this.active != other.active) {
@@ -103,7 +103,7 @@ public class UserEntity implements Serializable, Entity<UserVo> {
         hash = 19 * hash + (this.lastName != null ? this.lastName.hashCode() : 0);
         hash = 19 * hash + (this.userName != null ? this.userName.hashCode() : 0);
         hash = 19 * hash + (this.password != null ? this.password.hashCode() : 0);
-        hash = 19 * hash + (this.rol != null ? this.rol.hashCode() : 0);
+        hash = 19 * hash + (this.role != null ? this.role.hashCode() : 0);
         hash = 19 * hash + (this.active ? 1 : 0);
         hash = 19 * hash + (this.programs != null ? this.programs.hashCode() : 0);
         hash = 19 * hash + (this.confirmationKey != null ? this.confirmationKey.hashCode() : 0);
@@ -112,7 +112,7 @@ public class UserEntity implements Serializable, Entity<UserVo> {
 
     @Override
     public String toString() {
-        return "UserEntity{" + "id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", userName=" + userName + ", password=" + password + ", rol=" + rol + ", active=" + active + ", programs=" + programs + ", confirmationKey=" + confirmationKey + '}';
+        return "UserEntity{" + "id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", userName=" + userName + ", password=" + password + ", rol=" + role + ", active=" + active + ", programs=" + programs + ", confirmationKey=" + confirmationKey + '}';
     }
 
     public boolean isActive() {
@@ -163,12 +163,12 @@ public class UserEntity implements Serializable, Entity<UserVo> {
         this.programs = programs;
     }
 
-    public Role getRol() {
-        return rol;
+    public Role getRole() {
+        return role;
     }
 
-    public void setRol(Role rol) {
-        this.rol = rol;
+    public void setRole(Role role) {
+        this.role = role;
     }
 
     public String getUserName() {

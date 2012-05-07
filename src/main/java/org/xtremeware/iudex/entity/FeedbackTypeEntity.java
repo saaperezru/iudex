@@ -15,7 +15,7 @@ public class FeedbackTypeEntity implements Serializable, Entity<FeedbackTypeVo> 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID_TYPE_FEEDBACK")
     private Long id;
-    @Column(name = "NAME", length = 20, nullable = false, unique= true )
+    @Column(name = "NAME", length = 20, nullable = false, unique = true)
     private String name;
 
     @Override
@@ -51,10 +51,12 @@ public class FeedbackTypeEntity implements Serializable, Entity<FeedbackTypeVo> 
         return "FeedbackTypeEntity{" + "id=" + id + ", name=" + name + '}';
     }
 
+    @Override
     public Long getId() {
         return id;
     }
 
+    @Override
     public void setId(Long id) {
         this.id = id;
     }

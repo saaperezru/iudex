@@ -2,9 +2,8 @@ package org.xtremeware.iudex.vo;
 
 import java.util.Date;
 
-public class CommentVo extends ValueObject {
+public class CommentVo extends IdentifiableValueObject<Long> implements ValueObject {
 
-    private Long id;
     private String content;
     private Date date;
     private Long userId;
@@ -60,7 +59,9 @@ public class CommentVo extends ValueObject {
 
     @Override
     public String toString() {
-        return "CommentVo{" + "id=" + id + ", content=" + content + ", date=" + date + ", user=" + userId + ", course=" + courseId + ", anonymous=" + anonymous + ", rating=" + rating + '}';
+        return "CommentVo{" + "id=" + id + ", content=" + content 
+                + ", date=" + date + ", user=" + userId + ", course=" 
+                + courseId + ", anonymous=" + anonymous + ", rating=" + rating + '}';
     }
 
     public boolean isAnonymous() {
@@ -93,14 +94,6 @@ public class CommentVo extends ValueObject {
 
     public void setDate(Date date) {
         this.date = date;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public Float getRating() {

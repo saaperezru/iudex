@@ -86,7 +86,7 @@ public class SubjectsFacade extends AbstractFacade {
 		SubjectRatingVo rating = null;
 		try {
 			SubjectRatingVo vo = new SubjectRatingVo();
-			vo.setSubject(subjectId);
+			vo.setEvaluetedObjectId(subjectId);
 			vo.setUser(userId);
 			vo.setValue(value);
 

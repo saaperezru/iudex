@@ -1,10 +1,12 @@
 package org.xtremeware.iudex.businesslogic.service;
 
+import org.xtremeware.iudex.businesslogic.service.updateimplementations.SimpleUpdate;
+import org.xtremeware.iudex.businesslogic.service.removeimplementations.SimpleRemove;
+import org.xtremeware.iudex.businesslogic.service.readimplementations.SimpleRead;
+import org.xtremeware.iudex.businesslogic.service.createimplementations.SimpleCreate;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.businesslogic.InvalidVoException;
 import org.xtremeware.iudex.dao.AbstractDaoFactory;
-import org.xtremeware.iudex.dao.CourseRatingDao;
-import org.xtremeware.iudex.dao.Dao;
 import org.xtremeware.iudex.entity.CourseRatingEntity;
 import org.xtremeware.iudex.vo.CourseRatingVo;
 
@@ -12,7 +14,7 @@ import org.xtremeware.iudex.vo.CourseRatingVo;
  *
  * @author josebermeo
  */
-public class CourseRatingsService extends SimpleCrudService<CourseRatingVo, CourseRatingEntity> {
+public class CourseRatingsService extends CrudService<CourseRatingVo, CourseRatingEntity> {
 
     /**
      * CourseRatingsService constructor
@@ -20,17 +22,11 @@ public class CourseRatingsService extends SimpleCrudService<CourseRatingVo, Cour
      * @param daoFactory
      */
     public CourseRatingsService(AbstractDaoFactory daoFactory) {
-        super(daoFactory);
-    }
-
-    /**
-     * returns the CourseRatingDao to be used.
-     *
-     * @return CourseRatingDao
-     */
-    @Override
-    protected Dao<CourseRatingEntity> getDao() {
-        return getDaoFactory().getCourseRatingDao();
+        super(daoFactory,
+                new SimpleCreate<CourseRatingEntity>(daoFactory.getCourseRatingDao()),
+                new SimpleRead<CourseRatingEntity>(daoFactory.getCourseRatingDao()),
+                new SimpleUpdate<CourseRatingEntity>(daoFactory.getCourseRatingDao()),
+                new SimpleRemove<CourseRatingEntity>(daoFactory.getCourseRatingDao()));
     }
 
     /**
@@ -62,7 +58,8 @@ public class CourseRatingsService extends SimpleCrudService<CourseRatingVo, Cour
             throw new InvalidVoException("No such user associated with CourseRatingVo.userId");
         }
         if (vo.getValue() < 0.0 || vo.getValue() > 5.0) {
-            throw new InvalidVoException("int Value in the provided CourseRatingVo must be less than or equal to 5.0 and greater than or equal to 0.0");
+            throw new InvalidVoException("int Value in the provided CourseRatingVo "
+                    + "must be less than or equal to 5.0 and greater than or equal to 0.0");
         }
     }
 
@@ -100,7 +97,8 @@ public class CourseRatingsService extends SimpleCrudService<CourseRatingVo, Cour
      * @return CourseRatingVo
      */
     public CourseRatingVo getByCourseIdAndUserId(EntityManager em, long courseId, long userId) {
-        CourseRatingEntity courseRatingEntity = ((CourseRatingDao) this.getDao()).getByCourseIdAndUserId(em, courseId, userId);
+        CourseRatingEntity courseRatingEntity = getDaoFactory().getCourseRatingDao().
+                getByCourseIdAndUserId(em, courseId, userId);
         if (courseRatingEntity == null) {
             return null;
         }

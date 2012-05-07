@@ -84,7 +84,7 @@ public class ProgramsFacadeIT {
         ProgramsFacade programsFacade = Config.getInstance().getFacadeFactory().getProgramsFacade();
         long id = 2539;
         programsFacade.removeProgram(id);
-        Entity result = (Entity) entityManager.createQuery("SELECT p FROM Program p WHERE p.id = :id").
+        ProgramEntity result = (ProgramEntity) entityManager.createQuery("SELECT p FROM Program p WHERE p.id = :id").
                 setParameter("id", id).getSingleResult();
         assertEquals(null, result);
     }

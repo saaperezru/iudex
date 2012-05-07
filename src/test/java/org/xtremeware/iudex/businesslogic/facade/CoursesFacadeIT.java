@@ -11,6 +11,7 @@ import javax.persistence.EntityManager;
 import junit.framework.AssertionFailedError;
 import org.junit.*;
 import static org.junit.Assert.*;
+import org.xtremeware.iudex.businesslogic.InvalidVoException;
 import org.xtremeware.iudex.helper.Config;
 import org.xtremeware.iudex.presentation.vovw.CourseVoVwFull;
 import org.xtremeware.iudex.presentation.vovw.ProfessorVoVwSmall;
@@ -213,6 +214,13 @@ public class CoursesFacadeIT {
 		} catch (Exception ex) {
 			throw new AssertionFailedError(ex.getMessage());
 		}
+		courseId = Long.MIN_VALUE;
+		try {
+			CourseVoVwFull course = facade.getCourse(courseId);
+			assertNull(course);
+		} catch (Exception ex) {
+			throw new AssertionFailedError(ex.getMessage());
+		}
 
 	}
 
@@ -225,11 +233,33 @@ public class CoursesFacadeIT {
 		long courseId = 5L;
 		try {
 			CourseVoVwFull course = facade.getCourse(courseId);
-			assertEquals(course.getRatingAverage(), 0.0,0);
-			assertEquals(course.getRatingCount(), 0,0);
+			assertEquals(course.getRatingAverage(), 0.0, 0);
+			assertEquals(course.getRatingCount(), 0, 0);
 		} catch (Exception ex) {
 			throw new AssertionFailedError(ex.getMessage());
 		}
 
+	}
+
+	/**
+	 * Test of courses creation success.
+	 */
+	@Test
+	public void test_BL_4_1() {
+		CoursesFacade facade = Config.getInstance().getFacadeFactory().getCoursesFacade();
+		try {
+			CourseVo expected = new CourseVo();
+			expected.setPeriodId(1L);
+			expected.setProfessorId(2L);
+			expected.setSubjectId(1L);
+			expected.setRatingAverage(0.0);
+			expected.setRatingCount(0L);
+
+			facade.addCourse(2, 1, 1);
+
+		} catch (InvalidVoException ex) {
+			throw new AssertionFailedError(ex.getMessage());
+		}
+		throw new AssertionFailedError("Unfinished test");
 	}
 }

@@ -15,6 +15,7 @@
         padding: 9px 0;
       }
       .comment {
+	      position: relative;
         border: solid 1px #AAA;
         padding: 10px 10px;
         border-radius: 4px;
@@ -150,6 +151,30 @@
       }
       div.professor-photo ul.actions li.downvote-prof a {
       }
+      .upvote{
+	      background-image: url(img/up.png);
+	      display: block;
+	      top : 0px;
+	      right: -64px;
+	      position: absolute;
+	      width: 64px;
+	      height: 64px;
+      }
+      .downvote{
+	      background-image: url(img/down.png);
+	      display: block;
+	      position: absolute;
+	      bottom: 0px;
+	      right: -64px;
+	      width: 64px;
+	      height: 64px;
+      }
+      .vote-count{
+	      position: absolute;
+	      top: 50%;
+	      right: -60px;
+	      font-size: 20px;
+      }
     </style>
   </head>
   <body>
@@ -192,7 +217,7 @@
           <div class="well sidebar-nav span3" style="position: fixed;">
 
 
-            <div class="professor-photo">
+	  <div class="professor-photo" >
               <a href=""><img src="http://placekitten.com/140/140"></a>
               <span class="vote-prof">
                 <div></div>
@@ -212,166 +237,146 @@
           </div><!--/.well -->
         </div><!--/span-->
         <div class="span9">
-          <!--start of comment-->
-          <div class="row-fluid">
-            <div class="comment span9">
-              <div class="comment-text">
-                <div class="vote">
-                  <a href="#" class="upvote icon-arrow-up"></a>
-                  <a href="#" class="downvote icon-arrow-down"></a>
-                  <span class="vote-count">1337</span>
-                </div>
-                <div class="comment-rating">
-                  <span class="icon-star"></span>
-                  <span class="icon-star"></span>
-                  <span class="icon-star"></span>
-                  <span class="icon-star-empty"></span>
-                  <span class="icon-star-empty"></span>
-                </div>
-                <div class="comment-photo thumbnail">
-                  <img src="http://placekitten.com/140/140" alt="profesor x" />
-                  <h5>Profesor X</h5>
-                  <p>Cirujano AeroEspacial</p>
-                </div>
-                <p>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                </p>
+	<!-- Beginning of comment -->
+        <div class="row-fluid">
+	<div class="comment-container span11">
+          <div class="comment">
+            <div class="comment-text">
+              <div class="comment-rating">
+                <span class="icon-star"></span>
+                <span class="icon-star"></span>
+                <span class="icon-star"></span>
+                <span class="icon-star-empty"></span>
+                <span class="icon-star-empty"></span>
               </div>
-              <div class="comment-photo"></div>
-              <div class="comment-report">
-                <span class=""><a href="#">reportar comentario</a></span>
+              <div class="comment-photo thumbnail">
+                <img src="http://placekitten.com/140/140" alt="profesor x" />
+                <h5>Profesor X</h5>
+                <p>Cirujano AeroEspacial</p>
               </div>
+              <p>
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+              </p>
             </div>
-          </div>
-          <!--end of comment-->
-          <!--start of comment-->
-          <div class="row-fluid">
-            <div class="comment span9">
-              <div class="comment-text">
-                <div class="vote">
-                  <a href="#" class="upvote icon-arrow-up"></a>
-                  <a href="#" class="downvote icon-arrow-down"></a>
-                  <span class="vote-count">1337</span>
-                </div>
-                <div class="comment-rating">
-                  <span class="icon-star"></span>
-                  <span class="icon-star"></span>
-                  <span class="icon-star"></span>
-                  <span class="icon-star-empty"></span>
-                  <span class="icon-star-empty"></span>
-                </div>
-                <div class="comment-photo thumbnail">
-                  <img src="http://placekitten.com/140/140" alt="profesor x" />
-                  <h5>Profesor X</h5>
-                  <p>Cirujano AeroEspacial</p>
-                </div>
-                <p>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                </p>
-              </div>
-              <div class="comment-photo"></div>
-              <div class="comment-report">
-                <span class=""><a href="#">reportar comentario</a></span>
-              </div>
+            <div class="comment-photo"></div>
+            <div class="comment-report">
+              <span class=""><a href="#">reportar comentario</a></span>
             </div>
-          </div>
-          <!--end of comment-->
-          <!--start of comment-->
-          <div class="row-fluid">
-            <div class="comment span9">
-              <div class="comment-text">
-                <div class="vote">
-                  <a href="#" class="upvote icon-arrow-up"></a>
-                  <a href="#" class="downvote icon-arrow-down"></a>
-                  <span class="vote-count">1337</span>
-                </div>
-                <div class="comment-rating">
-                  <span class="icon-star"></span>
-                  <span class="icon-star"></span>
-                  <span class="icon-star"></span>
-                  <span class="icon-star-empty"></span>
-                  <span class="icon-star-empty"></span>
-                </div>
-                <div class="comment-photo thumbnail">
-                  <img src="http://placekitten.com/140/140" alt="profesor x" />
-                  <h5>Profesor X</h5>
-                  <p>Cirujano AeroEspacial</p>
-                </div>
-                <p>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                </p>
+               <div class="vote">
+                <a href="#" class="upvote "></a>
+                <span class="vote-count">1337</span>
+                <a href="#" class="downvote "></a>
               </div>
-              <div class="comment-photo"></div>
-              <div class="comment-report">
-                <span class=""><a href="#">reportar comentario</a></span>
+	  </div>
+
+         </div>
+	</div><!--/row-->
+	<!-- Ending of comment -->
+	<!-- Beginning of comment -->
+        <div class="row-fluid">
+	<div class="comment-container span11">
+          <div class="comment">
+            <div class="comment-text">
+              <div class="comment-rating">
+                <span class="icon-star"></span>
+                <span class="icon-star"></span>
+                <span class="icon-star"></span>
+                <span class="icon-star-empty"></span>
+                <span class="icon-star-empty"></span>
               </div>
+              <div class="comment-photo thumbnail">
+                <img src="http://placekitten.com/140/140" alt="profesor x" />
+                <h5>Profesor X</h5>
+                <p>Cirujano AeroEspacial</p>
+              </div>
+              <p>
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+              </p>
             </div>
-          </div>
-          <!--end of comment-->
-          <!--start of comment-->
-          <div class="row-fluid">
-            <div class="comment span9">
-              <div class="comment-text">
-                <div class="vote">
-                  <a href="#" class="upvote icon-arrow-up"></a>
-                  <a href="#" class="downvote icon-arrow-down"></a>
-                  <span class="vote-count">1337</span>
-                </div>
-                <div class="comment-rating">
-                  <span class="icon-star"></span>
-                  <span class="icon-star"></span>
-                  <span class="icon-star"></span>
-                  <span class="icon-star-empty"></span>
-                  <span class="icon-star-empty"></span>
-                </div>
-                <div class="comment-photo thumbnail">
-                  <img src="http://placekitten.com/140/140" alt="profesor x" />
-                  <h5>Profesor X</h5>
-                  <p>Cirujano AeroEspacial</p>
-                </div>
-                <p>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                </p>
-              </div>
-              <div class="comment-photo"></div>
-              <div class="comment-report">
-                <span class=""><a href="#">reportar comentario</a></span>
-              </div>
+            <div class="comment-photo"></div>
+            <div class="comment-report">
+              <span class=""><a href="#">reportar comentario</a></span>
             </div>
-          </div>
-          <!--end of comment-->
-          <!--start of comment-->
-          <div class="row-fluid">
-            <div class="comment span9">
-              <div class="comment-text">
-                <div class="vote">
-                  <a href="#" class="upvote icon-arrow-up"></a>
-                  <a href="#" class="downvote icon-arrow-down"></a>
-                  <span class="vote-count">1337</span>
-                </div>
-                <div class="comment-rating">
-                  <span class="icon-star"></span>
-                  <span class="icon-star"></span>
-                  <span class="icon-star"></span>
-                  <span class="icon-star-empty"></span>
-                  <span class="icon-star-empty"></span>
-                </div>
-                <div class="comment-photo thumbnail">
-                  <img src="http://placekitten.com/140/140" alt="profesor x" />
-                  <h5>Profesor X</h5>
-                  <p>Cirujano AeroEspacial</p>
-                </div>
-                <p>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                </p>
+               <div class="vote">
+                <a href="#" class="upvote "></a>
+                <span class="vote-count">1337</span>
+                <a href="#" class="downvote "></a>
               </div>
-              <div class="comment-photo"></div>
-              <div class="comment-report">
-                <span class=""><a href="#">reportar comentario</a></span>
+	  </div>
+
+         </div>
+	</div><!--/row-->
+	<!-- Ending of comment -->
+	<!-- Beginning of comment -->
+        <div class="row-fluid">
+	<div class="comment-container span11">
+          <div class="comment">
+            <div class="comment-text">
+              <div class="comment-rating">
+                <span class="icon-star"></span>
+                <span class="icon-star"></span>
+                <span class="icon-star"></span>
+                <span class="icon-star-empty"></span>
+                <span class="icon-star-empty"></span>
               </div>
+              <div class="comment-photo thumbnail">
+                <img src="http://placekitten.com/140/140" alt="profesor x" />
+                <h5>Profesor X</h5>
+                <p>Cirujano AeroEspacial</p>
+              </div>
+              <p>
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+              </p>
             </div>
-          </div>
-          <!--end of comment-->
+            <div class="comment-photo"></div>
+            <div class="comment-report">
+              <span class=""><a href="#">reportar comentario</a></span>
+            </div>
+               <div class="vote">
+                <a href="#" class="upvote "></a>
+                <span class="vote-count">1337</span>
+                <a href="#" class="downvote "></a>
+              </div>
+	  </div>
+
+         </div>
+	</div><!--/row-->
+	<!-- Ending of comment -->
+	<!-- Beginning of comment -->
+        <div class="row-fluid">
+	<div class="comment-container span11">
+          <div class="comment">
+            <div class="comment-text">
+              <div class="comment-rating">
+                <span class="icon-star"></span>
+                <span class="icon-star"></span>
+                <span class="icon-star"></span>
+                <span class="icon-star-empty"></span>
+                <span class="icon-star-empty"></span>
+              </div>
+              <div class="comment-photo thumbnail">
+                <img src="http://placekitten.com/140/140" alt="profesor x" />
+                <h5>Profesor X</h5>
+                <p>Cirujano AeroEspacial</p>
+              </div>
+              <p>
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+              </p>
+            </div>
+            <div class="comment-photo"></div>
+            <div class="comment-report">
+              <span class=""><a href="#">reportar comentario</a></span>
+            </div>
+               <div class="vote">
+                <a href="#" class="upvote "></a>
+                <span class="vote-count">1337</span>
+                <a href="#" class="downvote "></a>
+              </div>
+	  </div>
+
+         </div>
+	</div><!--/row-->
+	<!-- Ending of comment -->
         </div><!--/span-->
       </div><!--/row-->
 

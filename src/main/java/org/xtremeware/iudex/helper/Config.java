@@ -1,5 +1,7 @@
 package org.xtremeware.iudex.helper;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import org.xtremeware.iudex.businesslogic.facade.FacadeFactory;
@@ -14,6 +16,13 @@ import org.xtremeware.iudex.vo.MailingConfigVo;
  */
 public class Config {
 
+	static {
+		try {
+			Class.forName("com.mysql.jdbc.Driver").newInstance();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
 	public final static String CONFIGURATION_VARIABLES_PATH = "/org/xtremeware/iudex/iudex.properties";
 	private EntityManagerFactory persistenceUnit;
 	private AbstractDaoFactory daoFactory;
@@ -25,7 +34,7 @@ public class Config {
 		try {
 
 			this.persistenceUnit = Persistence.createEntityManagerFactory(persistenceUnit);
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		this.daoFactory = daoFactory;

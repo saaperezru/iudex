@@ -78,6 +78,7 @@ public class CommentsFacade extends AbstractFacade {
 			tx.begin();
 			List<CommentVo> comments = getServiceFactory().createCommentsService().getByCourseId(em, courseId);
 			HashMap<Long, UserVoVwSmall> users = new HashMap<Long, UserVoVwSmall>();
+			UserVoVwSmall anonymous = new UserVoVwSmall(-1L, "Anonymous","anonymous");
 
 			for (CommentVo c : comments) {
 				if (!users.containsKey(c.getUserId())) {
@@ -85,7 +86,7 @@ public class CommentsFacade extends AbstractFacade {
 					UserVoVwSmall uservo = new UserVoVwSmall(courseId, vo.getFirstName() + " " + vo.getLastName(), vo.getUserName());
 				}
 				if (c.isAnonymous()) {
-					result.add(new CommentVoVwFull(c, null));
+					result.add(new CommentVoVwFull(c, anonymous));
 				} else {
 
 					result.add(new CommentVoVwFull(c, users.get(c.getId())));

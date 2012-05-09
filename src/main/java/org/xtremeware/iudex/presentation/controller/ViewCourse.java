@@ -20,22 +20,20 @@ import org.xtremeware.iudex.presentation.vovw.SubjectVoVwFull;
 @RequestScoped
 public class ViewCourse {
 
-    private CourseVoVwFull course;
-    private List<CommentVoVwFull> comments;
-    private ProfessorVoVwFull professor; 
-    private SubjectVoVwFull subject; 
+	private CourseVoVwFull course;
+	private List<CommentVoVwFull> comments;
+	private ProfessorVoVwFull professor;
+	private SubjectVoVwFull subject;
+	@ManagedProperty(value = "#{param['id']}")
+	private long id;
 
+	public long getId() {
+		return id;
+	}
 
-    @ManagedProperty(value = "#{param['id']}")
-    private long id;
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
+	public void setId(long id) {
+		this.id = id;
+	}
 
 	public List<CommentVoVwFull> getComments() {
 		return comments;
@@ -69,14 +67,17 @@ public class ViewCourse {
 		this.subject = subject;
 	}
 
-    public void preRenderView() {
-	   try{
+	public void preRenderView() {
+		try {
 			course = Config.getInstance().getFacadeFactory().getCoursesFacade().getCourse(id);
-			comments  = Config.getInstance().getFacadeFactory().getCommentsFacade().getCommentsByCourseId(id);
+			comments = Config.getInstance().getFacadeFactory().getCommentsFacade().getCommentsByCourseId(id);
+			System.out.println("For course id : " + course.getId());
+			for (CommentVoVwFull comment : comments) {
+				System.out.println(comment.getContent());
+			}
 
-	   } catch(Exception ex){
-		   ex.printStackTrace();
-		   Config.getInstance().getServiceFactory().createLogService().error(ex);
-	   }
-    }
+		} catch (Exception ex) {
+			Config.getInstance().getServiceFactory().createLogService().error(ex.getMessage(), ex);
+		}
+	}
 }

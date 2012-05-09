@@ -4,6 +4,7 @@ import org.xtremeware.iudex.businesslogic.service.crudinterfaces.ReadInterface;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.dao.CrudDaoInterface;
 import org.xtremeware.iudex.entity.Entity;
+import org.xtremeware.iudex.helper.DataBaseException;
 
 /**
  *
@@ -18,7 +19,7 @@ public class SimpleRead<E extends Entity> implements ReadInterface<E> {
     }
 
     @Override
-    public E getById(EntityManager em, long id) {
+    public E getById(EntityManager em, long id) throws DataBaseException {
         return getDao().getById(em, id);
     }
 

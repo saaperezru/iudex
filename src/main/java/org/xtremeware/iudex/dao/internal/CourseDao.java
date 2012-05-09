@@ -1,10 +1,10 @@
 package org.xtremeware.iudex.dao.internal;
 
-import org.xtremeware.iudex.dao.internal.CrudDao;
 import java.util.List;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.dao.CourseDaoInterface;
 import org.xtremeware.iudex.entity.CourseEntity;
+import org.xtremeware.iudex.helper.DataBaseException;
 
 /**
  * DAO for the Course entities. Implements additionally some useful finders by
@@ -23,10 +23,14 @@ public class CourseDao extends CrudDao<CourseEntity> implements CourseDaoInterfa
      * @return The list of found courses.
      */
     @Override
-    public List<CourseEntity> getByProfessorId(EntityManager em, long professorId) {
+    public List<CourseEntity> getByProfessorId(EntityManager em, long professorId)
+            throws DataBaseException {
         checkEntityManager(em);
-        return em.createNamedQuery("getCourseByProfessorId", CourseEntity.class).setParameter("professorId", professorId).getResultList();
-
+        try {
+            return em.createNamedQuery("getCourseByProfessorId", CourseEntity.class).setParameter("professorId", professorId).getResultList();
+        } catch (Exception e) {
+            throw new DataBaseException(e.getMessage(), e.getCause());
+        }
     }
 
     /**
@@ -38,10 +42,14 @@ public class CourseDao extends CrudDao<CourseEntity> implements CourseDaoInterfa
      * @return The list of found courses.
      */
     @Override
-    public List<CourseEntity> getBySubjectId(EntityManager em, long subjectId) {
+    public List<CourseEntity> getBySubjectId(EntityManager em, long subjectId)
+            throws DataBaseException {
         checkEntityManager(em);
-        return em.createNamedQuery("getCourseBySubjectId", CourseEntity.class).setParameter("subjectId", subjectId).getResultList();
-
+        try {
+            return em.createNamedQuery("getCourseBySubjectId", CourseEntity.class).setParameter("subjectId", subjectId).getResultList();
+        } catch (Exception e) {
+            throw new DataBaseException(e.getMessage(), e.getCause());
+        }
     }
 
     /**
@@ -53,10 +61,14 @@ public class CourseDao extends CrudDao<CourseEntity> implements CourseDaoInterfa
      * @return The list of found courses.
      */
     @Override
-    public List<CourseEntity> getByPeriodId(EntityManager em, long periodId) {
+    public List<CourseEntity> getByPeriodId(EntityManager em, long periodId)
+            throws DataBaseException {
         checkEntityManager(em);
-        return em.createNamedQuery("getCourseByPeriodId", CourseEntity.class).setParameter("periodId", periodId).getResultList();
-
+        try {
+            return em.createNamedQuery("getCourseByPeriodId", CourseEntity.class).setParameter("periodId", periodId).getResultList();
+        } catch (Exception e) {
+            throw new DataBaseException(e.getMessage(), e.getCause());
+        }
     }
 
     /**
@@ -69,11 +81,15 @@ public class CourseDao extends CrudDao<CourseEntity> implements CourseDaoInterfa
      * @return The list of found courses.
      */
     @Override
-    public List<CourseEntity> getByProfessorIdAndSubjectId(EntityManager em, long professorId, long subjectId) {
+    public List<CourseEntity> getByProfessorIdAndSubjectId(EntityManager em,
+            long professorId, long subjectId) throws DataBaseException {
         checkEntityManager(em);
-        return em.createNamedQuery("getCourseByProfessorIdAndSubjectId", CourseEntity.class).
-                setParameter("professorId", professorId).setParameter("subjectId", subjectId).getResultList();
-
+        try {
+            return em.createNamedQuery("getCourseByProfessorIdAndSubjectId", CourseEntity.class).
+                    setParameter("professorId", professorId).setParameter("subjectId", subjectId).getResultList();
+        } catch (Exception e) {
+            throw new DataBaseException(e.getMessage(), e.getCause());
+        }
     }
 
     /**
@@ -93,16 +109,20 @@ public class CourseDao extends CrudDao<CourseEntity> implements CourseDaoInterfa
      */
     @Override
     public List<CourseEntity> getCoursesByProfessorNameLikeAndSubjectNameLike(EntityManager em,
-            String professorName, String subjectName, Long periodId) {
+            String professorName, String subjectName, Long periodId) throws DataBaseException {
         checkEntityManager(em);
-        if (periodId == null) {
-            return em.createNamedQuery("getCoursesByProfessorNameLikeAndSubjectNameLike", CourseEntity.class).
-                    setParameter("professorName", "%" + professorName + "%").setParameter("subjectName", "%" + subjectName + "%").
-                    getResultList();
-        } else {
-            return em.createNamedQuery("getCoursesByProfessorNameLikeAndSubjectNameLikeAndPeriodId", CourseEntity.class).
-                    setParameter("professorName", "%" + professorName + "%").setParameter("subjectName", "%" + subjectName + "%").
-                    setParameter("periodId", periodId).getResultList();
+        try {
+            if (periodId == null) {
+                return em.createNamedQuery("getCoursesByProfessorNameLikeAndSubjectNameLike", CourseEntity.class).
+                        setParameter("professorName", "%" + professorName + "%").setParameter("subjectName", "%" + subjectName + "%").
+                        getResultList();
+            } else {
+                return em.createNamedQuery("getCoursesByProfessorNameLikeAndSubjectNameLikeAndPeriodId", CourseEntity.class).
+                        setParameter("professorName", "%" + professorName + "%").setParameter("subjectName", "%" + subjectName + "%").
+                        setParameter("periodId", periodId).getResultList();
+            }
+        } catch (Exception e) {
+            throw new DataBaseException(e.getMessage(), e.getCause());
         }
 
     }

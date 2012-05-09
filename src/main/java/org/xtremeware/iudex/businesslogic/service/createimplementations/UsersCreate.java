@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.xtremeware.iudex.businesslogic.service.createimplementations;
 
 import org.xtremeware.iudex.businesslogic.service.crudinterfaces.CreateInterface;
@@ -11,6 +7,7 @@ import javax.persistence.EntityManager;
 import org.xtremeware.iudex.dao.AbstractDaoFactory;
 import org.xtremeware.iudex.entity.ConfirmationKeyEntity;
 import org.xtremeware.iudex.entity.UserEntity;
+import org.xtremeware.iudex.helper.DataBaseException;
 import org.xtremeware.iudex.helper.SecurityHelper;
 
 /**
@@ -25,7 +22,7 @@ public class UsersCreate implements CreateInterface<UserEntity> {
     }
 
     @Override
-    public UserEntity create(EntityManager em, UserEntity entity) {
+    public UserEntity create(EntityManager em, UserEntity entity) throws DataBaseException {
         //It is not possible to create users that are already active
         entity.setActive(false);
         //Hash password

@@ -8,6 +8,7 @@ import org.xtremeware.iudex.dao.AbstractDaoFactory;
 import org.xtremeware.iudex.entity.CourseEntity;
 import org.xtremeware.iudex.entity.ProfessorRatingEntity;
 import org.xtremeware.iudex.helper.Config;
+import org.xtremeware.iudex.helper.DataBaseException;
 
 /**
  *
@@ -28,7 +29,7 @@ public class ProfessorsRemove implements RemoveInterface {
      * @param id id of the professor
      */
     @Override
-    public void remove(EntityManager em, Long id) {
+    public void remove(EntityManager em, Long id) throws DataBaseException {
         List<ProfessorRatingEntity> professorRatings = getDaoFactory().getProfessorRatingDao().getByProfessorId(em, id);
         for (ProfessorRatingEntity rating : professorRatings) {
             getDaoFactory().getProfessorRatingDao().remove(em, rating.getId());

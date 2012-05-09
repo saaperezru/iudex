@@ -4,6 +4,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.dao.ProfessorDaoInterface;
 import org.xtremeware.iudex.entity.ProfessorEntity;
+import org.xtremeware.iudex.helper.DataBaseException;
 
 /**
  * DAO for the Professor entities. Implements additionally some useful finders
@@ -22,9 +23,14 @@ public class ProfessorDao extends CrudDao<ProfessorEntity> implements ProfessorD
      * specified
      */
     @Override
-    public List<ProfessorEntity> getByNameLike(EntityManager em, String name) {
+    public List<ProfessorEntity> getByNameLike(EntityManager em, String name)
+            throws DataBaseException {
         checkEntityManager(em);
-        return em.createNamedQuery("getProfessorByNameLike", ProfessorEntity.class).setParameter("name", name).getResultList();
+        try {
+            return em.createNamedQuery("getProfessorByNameLike", ProfessorEntity.class).setParameter("name", name).getResultList();
+        } catch (Exception e) {
+            throw new DataBaseException(e.getMessage(), e.getCause());
+        }
     }
 
     /**
@@ -35,9 +41,13 @@ public class ProfessorDao extends CrudDao<ProfessorEntity> implements ProfessorD
      * @return A list of professors that impart the subject
      */
     @Override
-    public List<ProfessorEntity> getBySubjectId(EntityManager em, long subjectId) {
+    public List<ProfessorEntity> getBySubjectId(EntityManager em, long subjectId) throws DataBaseException {
         checkEntityManager(em);
-        return em.createNamedQuery("getProfessorBySubjectId", ProfessorEntity.class).setParameter("subjectId", subjectId).getResultList();
+        try {
+            return em.createNamedQuery("getProfessorBySubjectId", ProfessorEntity.class).setParameter("subjectId", subjectId).getResultList();
+        } catch (Exception e) {
+            throw new DataBaseException(e.getMessage(), e.getCause());
+        }
     }
 
     @Override

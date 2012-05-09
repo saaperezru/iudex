@@ -4,6 +4,7 @@ import org.xtremeware.iudex.businesslogic.service.crudinterfaces.CreateInterface
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.dao.CrudDaoInterface;
 import org.xtremeware.iudex.entity.Entity;
+import org.xtremeware.iudex.helper.DataBaseException;
 
 /**
  *
@@ -18,11 +19,11 @@ public class SimpleCreate<E extends Entity> implements CreateInterface<E>{
     }
 
     @Override
-    public E create(EntityManager em, E entity) {
+    public E create(EntityManager em, E entity) throws DataBaseException {
         return getDao().persist(em, entity);
     }
 
-    public CrudDaoInterface<E> getDao(){
+    private CrudDaoInterface<E> getDao(){
         return dao;
     }
 }

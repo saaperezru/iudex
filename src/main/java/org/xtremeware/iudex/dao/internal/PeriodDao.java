@@ -5,6 +5,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import org.xtremeware.iudex.dao.PeriodDaoInterface;
 import org.xtremeware.iudex.entity.PeriodEntity;
+import org.xtremeware.iudex.helper.DataBaseException;
 
 /**
  * DAO for the period entities. Implements additionally some useful finders by
@@ -21,9 +22,13 @@ public class PeriodDao extends CrudDao<PeriodEntity> implements PeriodDaoInterfa
      * @return a list with all the periods
      */
     @Override
-    public List<PeriodEntity> getAll(EntityManager em) {
+    public List<PeriodEntity> getAll(EntityManager em) throws DataBaseException {
         checkEntityManager(em);
-        return em.createNamedQuery("getAllPeriods", PeriodEntity.class).getResultList();
+        try {
+            return em.createNamedQuery("getAllPeriods", PeriodEntity.class).getResultList();
+        } catch (Exception e) {
+            throw new DataBaseException(e.getMessage(), e.getCause());
+        }
     }
 
     /**
@@ -35,9 +40,14 @@ public class PeriodDao extends CrudDao<PeriodEntity> implements PeriodDaoInterfa
      * @return a list of matched period entities
      */
     @Override
-    public List<PeriodEntity> getByYear(EntityManager em, int year) {
+    public List<PeriodEntity> getByYear(EntityManager em, int year)
+            throws DataBaseException {
         checkEntityManager(em);
-        return em.createNamedQuery("getPeriodsByYear", PeriodEntity.class).setParameter("year", year).getResultList();
+        try {
+            return em.createNamedQuery("getPeriodsByYear", PeriodEntity.class).setParameter("year", year).getResultList();
+        } catch (Exception e) {
+            throw new DataBaseException(e.getMessage(), e.getCause());
+        }
     }
 
     /**
@@ -49,12 +59,15 @@ public class PeriodDao extends CrudDao<PeriodEntity> implements PeriodDaoInterfa
      * @return the matched period entity or null if there is no such entity
      */
     @Override
-    public PeriodEntity getByYearAndSemester(EntityManager em, int year, int semester) {
+    public PeriodEntity getByYearAndSemester(EntityManager em, int year, int semester)
+            throws DataBaseException {
         checkEntityManager(em);
         try {
             return em.createNamedQuery("getPeriodByYearAndSemester", PeriodEntity.class).setParameter("year", year).setParameter("semester", semester).getSingleResult();
         } catch (NoResultException ex) {
             return null;
+        } catch (Exception e) {
+            throw new DataBaseException(e.getMessage(), e.getCause());
         }
 
     }

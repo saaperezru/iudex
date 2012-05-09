@@ -4,6 +4,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.dao.SubjectDaoInterface;
 import org.xtremeware.iudex.entity.SubjectEntity;
+import org.xtremeware.iudex.helper.DataBaseException;
 
 /**
  * DAO for subject entities. Implements additionally some useful finders by name
@@ -21,10 +22,14 @@ public class SubjectDao extends CrudDao<SubjectEntity> implements SubjectDaoInte
      * @return a list of matched subject entities
      */
     @Override
-    public List<SubjectEntity> getByName(EntityManager em, String name) {
+    public List<SubjectEntity> getByName(EntityManager em, String name) throws DataBaseException {
         checkEntityManager(em);
-        return em.createNamedQuery("getSubjectsByNameLike", SubjectEntity.class).
-                setParameter("name", "%" + name + "%").getResultList();
+        try {
+            return em.createNamedQuery("getSubjectsByNameLike", SubjectEntity.class).
+                    setParameter("name", "%" + name + "%").getResultList();
+        } catch (Exception e) {
+            throw new DataBaseException(e.getMessage(), e.getCause());
+        }
     }
 
     /**
@@ -35,10 +40,16 @@ public class SubjectDao extends CrudDao<SubjectEntity> implements SubjectDaoInte
      * @return a list of matched subject entities
      */
     @Override
-    public List<SubjectEntity> getByProfessorId(EntityManager em, long professorId) {
+    public List<SubjectEntity> getByProfessorId(EntityManager em, long professorId) throws
+            DataBaseException {
         checkEntityManager(em);
-        return em.createNamedQuery("getSubjectsByProfessorId", SubjectEntity.class).
-                setParameter("professorId", professorId).getResultList();
+        try {
+            return em.createNamedQuery("getSubjectsByProfessorId", SubjectEntity.class).
+                    setParameter("professorId", professorId).getResultList();
+        } catch (Exception e) {
+            throw new DataBaseException(e.getMessage(), e.getCause());
+        }
+
     }
 
     @Override

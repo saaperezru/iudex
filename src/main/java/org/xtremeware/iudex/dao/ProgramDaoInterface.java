@@ -3,6 +3,7 @@ package org.xtremeware.iudex.dao;
 import java.util.List;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.entity.ProgramEntity;
+import org.xtremeware.iudex.helper.DataBaseException;
 
 /**
  *
@@ -17,7 +18,9 @@ public interface ProgramDaoInterface extends CrudDaoInterface<ProgramEntity> {
      * @param name
      * @return Return a list of programEntity objects
      */
-    public List<ProgramEntity> getByNameLike(EntityManager em, String name);
-    
-    public List<ProgramEntity> getAll(EntityManager em);
+    public List<ProgramEntity> getByNameLike(EntityManager em, String name) throws
+            DataBaseException;
+
+    public List<ProgramEntity> getAll(EntityManager em) throws
+            DataBaseException;
 }

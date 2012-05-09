@@ -3,6 +3,7 @@ package org.xtremeware.iudex.dao;
 import java.util.List;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.entity.FeedbackTypeEntity;
+import org.xtremeware.iudex.helper.DataBaseException;
 
 /**
  * DAO Interface for feedback type entities.
@@ -18,7 +19,9 @@ public interface FeedbackTypeDaoInterface extends CrudDaoInterface<FeedbackTypeE
      * @param name the name
      * @return a feedback type entity
      */
-    public FeedbackTypeEntity getByName(EntityManager em, String name);
+    public FeedbackTypeEntity getByName(EntityManager em, String name)
+            throws DataBaseException;
 
-    public List<FeedbackTypeEntity> getAll(EntityManager em);
+    public List<FeedbackTypeEntity> getAll(EntityManager em)
+            throws DataBaseException;
 }

@@ -10,7 +10,9 @@ import javax.persistence.EntityManager;
 import org.xtremeware.iudex.businesslogic.InvalidVoException;
 import org.xtremeware.iudex.dao.AbstractDaoFactory;
 import org.xtremeware.iudex.entity.ProgramEntity;
+import org.xtremeware.iudex.helper.DataBaseException;
 import org.xtremeware.iudex.helper.ExternalServiceConnectionException;
+import org.xtremeware.iudex.helper.MultipleMessageException;
 import org.xtremeware.iudex.helper.SecurityHelper;
 import org.xtremeware.iudex.vo.ProgramVo;
 
@@ -28,24 +30,34 @@ public class ProgramsService extends CrudService<ProgramVo, ProgramEntity> {
     }
 
     @Override
-    public void validateVo(EntityManager em, ProgramVo vo) throws InvalidVoException, ExternalServiceConnectionException {
+    public void validateVo(EntityManager em, ProgramVo vo) 
+            throws ExternalServiceConnectionException, MultipleMessageException {
         if (em == null) {
             throw new IllegalArgumentException("EntityManager em cannot be null");
         }
+        MultipleMessageException multipleMessageException = new MultipleMessageException();
         if (vo == null) {
-            throw new InvalidVoException("Null ProgramVo");
+            multipleMessageException.getExceptions().add(new InvalidVoException("Null ProgramVo"));
+            throw multipleMessageException;
         }
         if (vo.getName() == null) {
-            throw new InvalidVoException("String message in the provided ProgramVo cannot be null");
+            multipleMessageException.getExceptions().add(new InvalidVoException(
+                    "String message in the provided ProgramVo cannot be null"));
+        } else {
+            vo.setName(SecurityHelper.sanitizeHTML(vo.getName()));
+            if (vo.getName().length() > MAX_PROGRAMNAME_LENGTH) {
+                multipleMessageException.getExceptions().add(new InvalidVoException(
+                        "Program name too large"));
+            }
         }
-        vo.setName(SecurityHelper.sanitizeHTML(vo.getName()));
-        if (vo.getName().length() > MAX_PROGRAMNAME_LENGTH) {
-            throw new InvalidVoException("Program name too large");
+        if (!multipleMessageException.getExceptions().isEmpty()) {
+            throw multipleMessageException;
         }
     }
 
     @Override
-    public ProgramEntity voToEntity(EntityManager em, ProgramVo vo) throws InvalidVoException, ExternalServiceConnectionException {
+    public ProgramEntity voToEntity(EntityManager em, ProgramVo vo) 
+            throws ExternalServiceConnectionException, MultipleMessageException {
         validateVo(em, vo);
         ProgramEntity entity = new ProgramEntity();
         entity.setId(vo.getId());
@@ -62,7 +74,8 @@ public class ProgramsService extends CrudService<ProgramVo, ProgramEntity> {
      * @return Return a list of
      * <code>ProgramVo></code> objects that contain the given name
      */
-    public List<ProgramVo> getByNameLike(EntityManager em, String name) throws ExternalServiceConnectionException {
+    public List<ProgramVo> getByNameLike(EntityManager em, String name) 
+            throws ExternalServiceConnectionException, DataBaseException {
         name = SecurityHelper.sanitizeHTML(name);
         ArrayList<ProgramVo> list = new ArrayList<ProgramVo>();
         for (ProgramEntity entity : getDaoFactory().getProgramDao().getByNameLike(em, name)) {
@@ -71,7 +84,8 @@ public class ProgramsService extends CrudService<ProgramVo, ProgramEntity> {
         return list;
     }
 
-    public List<ProgramVo> getAll(EntityManager em) throws ExternalServiceConnectionException {
+    public List<ProgramVo> getAll(EntityManager em) 
+            throws ExternalServiceConnectionException, DataBaseException {
         ArrayList<ProgramVo> list = new ArrayList<ProgramVo>();
         for (ProgramEntity entity : getDaoFactory().getProgramDao().getAll(em)) {
             list.add(entity.toVo());

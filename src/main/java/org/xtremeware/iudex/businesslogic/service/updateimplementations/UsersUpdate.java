@@ -4,6 +4,7 @@ import javax.persistence.EntityManager;
 import org.xtremeware.iudex.businesslogic.service.crudinterfaces.UpdateInterface;
 import org.xtremeware.iudex.dao.CrudDaoInterface;
 import org.xtremeware.iudex.entity.UserEntity;
+import org.xtremeware.iudex.helper.DataBaseException;
 import org.xtremeware.iudex.helper.SecurityHelper;
 
 /**
@@ -19,14 +20,13 @@ public class UsersUpdate implements UpdateInterface<UserEntity> {
     }
 
     @Override
-    public UserEntity update(EntityManager em, UserEntity entity) {
-        CrudDaoInterface<UserEntity> dao = getDao();
-        UserEntity existingUser = dao.getById(em, entity.getId());
+    public UserEntity update(EntityManager em, UserEntity entity) throws DataBaseException {
+        UserEntity existingUser = getDao().getById(em, entity.getId());
         if (existingUser != null) {
             entity.setUserName(existingUser.getUserName());
             entity.setRole(existingUser.getRole());
             entity.setPassword(SecurityHelper.hashPassword(entity.getPassword()));
-            return dao.merge(em, entity);
+            return getDao().merge(em, entity);
         } else {
             return null;
         }

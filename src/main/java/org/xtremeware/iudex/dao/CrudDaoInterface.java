@@ -2,6 +2,7 @@ package org.xtremeware.iudex.dao;
 
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.entity.Entity;
+import org.xtremeware.iudex.helper.DataBaseException;
 
 /**
  *
@@ -9,11 +10,15 @@ import org.xtremeware.iudex.entity.Entity;
  */
 public interface CrudDaoInterface<E extends Entity> {
 
-    public E persist(EntityManager em, E entity);
+    public E persist(EntityManager em, E entity)
+            throws DataBaseException;
 
-    public E merge(EntityManager em, E entity);
+    public E merge(EntityManager em, E entity)
+            throws DataBaseException;
 
-    public void remove(EntityManager em, long id);
+    public void remove(EntityManager em, long id)
+            throws DataBaseException;
 
-    public E getById(EntityManager em, long id);
+    public E getById(EntityManager em, long id)
+            throws DataBaseException;
 }

@@ -7,6 +7,7 @@ import org.xtremeware.iudex.businesslogic.service.CommentsService;
 import org.xtremeware.iudex.dao.AbstractDaoFactory;
 import org.xtremeware.iudex.entity.*;
 import org.xtremeware.iudex.helper.Config;
+import org.xtremeware.iudex.helper.DataBaseException;
 
 /**
  *
@@ -30,7 +31,7 @@ public class UsersRemove implements RemoveInterface {
      * @param id User ID
      */
     @Override
-    public void remove(EntityManager em, Long id) {
+    public void remove(EntityManager em, Long id) throws DataBaseException {
 
         ConfirmationKeyEntity confirmationkey = getDaoFactory().getConfirmationKeyDao().getById(em, id);
         if (confirmationkey != null) {

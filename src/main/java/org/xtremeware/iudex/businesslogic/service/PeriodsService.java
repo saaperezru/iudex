@@ -10,6 +10,8 @@ import javax.persistence.EntityManager;
 import org.xtremeware.iudex.businesslogic.InvalidVoException;
 import org.xtremeware.iudex.dao.AbstractDaoFactory;
 import org.xtremeware.iudex.entity.PeriodEntity;
+import org.xtremeware.iudex.helper.DataBaseException;
+import org.xtremeware.iudex.helper.MultipleMessageException;
 import org.xtremeware.iudex.vo.PeriodVo;
 
 /**
@@ -19,9 +21,9 @@ import org.xtremeware.iudex.vo.PeriodVo;
  */
 public class PeriodsService extends CrudService<PeriodVo, PeriodEntity> {
     
-    private final int MIN_YEAR;
-    private final int MIN_SEMESTER;
-    private final int MAX_SEMESTER;
+    private final int MIN_YEAR = 1000;
+    private final int MIN_SEMESTER = 1;
+    private final int MAX_SEMESTER = 3;
 
     /**
      * Constructor
@@ -34,9 +36,6 @@ public class PeriodsService extends CrudService<PeriodVo, PeriodEntity> {
                 new SimpleRead<PeriodEntity>(daoFactory.getPeriodDao()),
                 new SimpleUpdate<PeriodEntity>(daoFactory.getPeriodDao()),
                 new PeriodRemove(daoFactory));
-        MIN_YEAR = 1000;
-        MIN_SEMESTER = 1;
-        MAX_SEMESTER = 3;
     }
 
     /**
@@ -44,7 +43,7 @@ public class PeriodsService extends CrudService<PeriodVo, PeriodEntity> {
      *
      * @return all the periods submitted
      */
-    public List<PeriodVo> list(EntityManager em) {
+    public List<PeriodVo> list(EntityManager em) throws DataBaseException {
         List<PeriodEntity> entities = getDaoFactory().getPeriodDao().getAll(em);
 
         if (entities.isEmpty()) {
@@ -61,7 +60,7 @@ public class PeriodsService extends CrudService<PeriodVo, PeriodEntity> {
     }
 
     /**
-     * Validates wheter the PeriodVo object satisfies the business rules and
+     * Validates whether the PeriodVo object satisfies the business rules and
      * contains correct references to other objects
      *
      * @param em the entity manager
@@ -69,18 +68,26 @@ public class PeriodsService extends CrudService<PeriodVo, PeriodEntity> {
      * @throws InvalidVoException in case the business rules are violated
      */
     @Override
-    public void validateVo(EntityManager em, PeriodVo vo) throws InvalidVoException {
+    public void validateVo(EntityManager em, PeriodVo vo) 
+            throws MultipleMessageException {
         if (em == null) {
             throw new IllegalArgumentException("EntityManager em cannot be null");
         }
+        MultipleMessageException multipleMessageException = new MultipleMessageException();
         if (vo == null) {
-            throw new InvalidVoException("Null PeriodVo");
+            multipleMessageException.getExceptions().add(new InvalidVoException("Null PeriodVo"));
+            throw multipleMessageException;
         }
         if (vo.getSemester() < MIN_SEMESTER || vo.getSemester() > MAX_SEMESTER) {
-            throw new InvalidVoException("int Semester in the provided PeriodVo must be greater than 1 and less than 3");
+            multipleMessageException.getExceptions().add(new InvalidVoException(
+                    "Int Semester in the provided PeriodVo must be greater than 1 and less than 3"));
         }
         if (vo.getYear() < MIN_YEAR) {
-            throw new InvalidVoException("int Year in the provided PeriodVo must be possitive");
+            multipleMessageException.getExceptions().add(new InvalidVoException(
+                    "Int Year in the provided PeriodVo must be possitive"));
+        }
+        if (!multipleMessageException.getExceptions().isEmpty()) {
+            throw multipleMessageException;
         }
     }
 
@@ -93,7 +100,8 @@ public class PeriodsService extends CrudService<PeriodVo, PeriodEntity> {
      * @throws InvalidVoException
      */
     @Override
-    public PeriodEntity voToEntity(EntityManager em, PeriodVo vo) throws InvalidVoException {
+    public PeriodEntity voToEntity(EntityManager em, PeriodVo vo) 
+            throws MultipleMessageException {
 
         validateVo(em, vo);
 

@@ -26,7 +26,8 @@ public class ProfessorsService extends CrudService<ProfessorVo, ProfessorEntity>
                 ConfigurationVariablesHelper.MAX_PROFESSOR_NAME_LENGTH));
     }
 
-    public List<ProfessorVo> getByNameLike(EntityManager em, String name) throws ExternalServiceConnectionException {
+    public List<ProfessorVo> getByNameLike(EntityManager em, String name) 
+            throws ExternalServiceConnectionException, DataBaseException {
         name = SecurityHelper.sanitizeHTML(name);
         ArrayList<ProfessorVo> list = new ArrayList<ProfessorVo>();
         for (ProfessorEntity professor : getDaoFactory().getProfessorDao().getByNameLike(em, name.toUpperCase())) {
@@ -35,7 +36,8 @@ public class ProfessorsService extends CrudService<ProfessorVo, ProfessorEntity>
         return list;
     }
 
-    public List<ProfessorVo> getBySubjectId(EntityManager em, long subjectId) {
+    public List<ProfessorVo> getBySubjectId(EntityManager em, long subjectId) 
+            throws DataBaseException {
         ArrayList<ProfessorVo> list = new ArrayList<ProfessorVo>();
         for (ProfessorEntity professor : getDaoFactory().getProfessorDao().getBySubjectId(em, subjectId)) {
             list.add(professor.toVo());
@@ -44,53 +46,74 @@ public class ProfessorsService extends CrudService<ProfessorVo, ProfessorEntity>
     }
 
     @Override
-    public void validateVo(EntityManager em, ProfessorVo vo) throws InvalidVoException, ExternalServiceConnectionException {
+    public void validateVo(EntityManager em, ProfessorVo vo)
+            throws ExternalServiceConnectionException, MultipleMessageException {
         if (em == null) {
             throw new IllegalArgumentException("EntityManager em cannot be null");
         }
+        MultipleMessageException multipleMessageException = new MultipleMessageException();
         if (vo == null) {
-            throw new InvalidVoException("Null ProfessorVo");
+            multipleMessageException.getExceptions().add(new InvalidVoException("Null ProfessorVo"));
+            throw multipleMessageException;
         }
         if (vo.getFirstName() == null) {
-            throw new InvalidVoException("String firstName in the provided ProgramVo cannot be null");
+            multipleMessageException.getExceptions().add(new InvalidVoException(
+                    "String firstName in the provided ProgramVo cannot be null"));
+        } else {
+            vo.setFirstName(SecurityHelper.sanitizeHTML(vo.getFirstName()));
+            if (vo.getFirstName().length() > MAX_PROFESSOR_NAME_LENGTH) {
+            multipleMessageException.getExceptions().add(new InvalidVoException(
+                    "String firstName length must be less than "
+                    + String.valueOf(MAX_PROFESSOR_NAME_LENGTH)));
+            }
         }
         if (vo.getLastName() == null) {
-            throw new InvalidVoException("String lastName in the provided ProgramVo cannot be null");
+             multipleMessageException.getExceptions().add(new InvalidVoException(
+                     "String lastName in the provided ProgramVo cannot be null"));
+        } else {
+            vo.setLastName(SecurityHelper.sanitizeHTML(vo.getLastName()));
+            if (vo.getLastName().length() > MAX_PROFESSOR_NAME_LENGTH) {
+            multipleMessageException.getExceptions().add(new InvalidVoException(
+                    "String lastName length must be less than "
+                    + String.valueOf(MAX_PROFESSOR_NAME_LENGTH)));
+            }
         }
         if (vo.getDescription() == null) {
-            throw new InvalidVoException("String description in the provided ProgramVo cannot be null");
+            multipleMessageException.getExceptions().add(new InvalidVoException(
+                    "String description in the provided ProgramVo cannot be null"));
+        } else {
+            vo.setDescription(SecurityHelper.sanitizeHTML(vo.getDescription()));
         }
-        vo.setDescription(SecurityHelper.sanitizeHTML(vo.getDescription()));
-        vo.setFirstName(SecurityHelper.sanitizeHTML(vo.getFirstName()));
-        vo.setLastName(SecurityHelper.sanitizeHTML(vo.getLastName()));
+        
         if (vo.getEmail() == null) {
-            throw new InvalidVoException("String email in the provided ProgramVo cannot be null");
+            multipleMessageException.getExceptions().add(new InvalidVoException(
+                    "String email in the provided ProgramVo cannot be null"));
+        } else if (vo.getEmail().length() > 0 && !ValidityHelper.isValidEmail(vo.getEmail())) {
+            multipleMessageException.getExceptions().add(new InvalidVoException(
+                    "Strng email in the provided ProgramVo must be a valid email address"));
         }
         if (vo.getImageUrl() == null) {
-            throw new InvalidVoException("String imageUrl in the provided ProgramVo cannot be null");
+            multipleMessageException.getExceptions().add(new InvalidVoException(
+                    "String imageUrl in the provided ProgramVo cannot be null"));
+        } else if (vo.getImageUrl().length() > 0 && !ValidityHelper.isValidUrl(vo.getImageUrl())) {
+            multipleMessageException.getExceptions().add(new InvalidVoException(
+                    "String imageUrl in the provided ProgamVo must be a valid URL"));
         }
         if (vo.getWebsite() == null) {
-            throw new InvalidVoException("String website in the provided ProgramVo cannot be null");
+            multipleMessageException.getExceptions().add(new InvalidVoException(
+                    "String website in the provided ProgramVo cannot be null"));
+        } else if (vo.getWebsite().length() > 0 && !ValidityHelper.isValidUrl(vo.getWebsite())) {
+            multipleMessageException.getExceptions().add(new InvalidVoException(
+                    "String website in provided ProgramVo must be a valid URL"));
         }
-        if (vo.getImageUrl().length() > 0 && !ValidityHelper.isValidUrl(vo.getImageUrl())) {
-            throw new InvalidVoException("String imageUrl in the provided ProgamVo must be a valid URL");
-        }
-        if (vo.getEmail().length() > 0 && !ValidityHelper.isValidEmail(vo.getEmail())) {
-            throw new InvalidVoException("Strng email in the provided ProgramVo must be a valid email address");
-        }
-        if (vo.getWebsite().length() > 0 && !ValidityHelper.isValidUrl(vo.getWebsite())) {
-            throw new InvalidVoException("String website in provided ProgramVo must be a valid URL");
-        }
-        if (vo.getFirstName().length() > MAX_PROFESSOR_NAME_LENGTH
-                || vo.getLastName().length() > MAX_PROFESSOR_NAME_LENGTH) {
-            throw new InvalidVoException("String firstName and String lastName length must be less than "
-                    + String.valueOf(MAX_PROFESSOR_NAME_LENGTH));
+        if (!multipleMessageException.getExceptions().isEmpty()) {
+            throw multipleMessageException;
         }
     }
 
     @Override
-    public ProfessorEntity voToEntity(EntityManager em, ProfessorVo vo) throws InvalidVoException,
-            ExternalServiceConnectionException {
+    public ProfessorEntity voToEntity(EntityManager em, ProfessorVo vo) 
+            throws ExternalServiceConnectionException, MultipleMessageException {
         validateVo(em, vo);
         ProfessorEntity entity = new ProfessorEntity();
         entity.setId(vo.getId());

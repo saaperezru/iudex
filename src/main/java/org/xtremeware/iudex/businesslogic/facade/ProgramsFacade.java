@@ -6,8 +6,8 @@ import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
-import org.xtremeware.iudex.businesslogic.InvalidVoException;
 import org.xtremeware.iudex.businesslogic.service.ServiceFactory;
+import org.xtremeware.iudex.helper.MultipleMessageException;
 import org.xtremeware.iudex.vo.ProgramVo;
 
 public class ProgramsFacade extends AbstractFacade {
@@ -46,7 +46,7 @@ public class ProgramsFacade extends AbstractFacade {
      * @return Returns null if there is a problem while persisting (logs all
      * errors) and throws an exception if data isn't valid.
      */
-    public ProgramVo addProgram(String name) throws InvalidVoException {
+    public ProgramVo addProgram(String name) throws MultipleMessageException {
         ProgramVo createdVo = null;
         ProgramVo vo = new ProgramVo();
         vo.setName(name);
@@ -58,7 +58,7 @@ public class ProgramsFacade extends AbstractFacade {
             tx.begin();
             createdVo = getServiceFactory().createProgramsService().create(em, vo);
             tx.commit();
-        } catch (InvalidVoException e) {
+        } catch (MultipleMessageException e) {
             throw e;
         } catch (Exception e) {
             getServiceFactory().createLogService().error(e.getMessage(), e);

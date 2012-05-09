@@ -2,6 +2,7 @@ package org.xtremeware.iudex.dao;
 
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.entity.UserEntity;
+import org.xtremeware.iudex.helper.DataBaseException;
 
 /**
  * DAO Interface for the User Entities.
@@ -19,5 +20,6 @@ public interface UserDaoInterface extends CrudDaoInterface<UserEntity> {
      * @param password String containing the password
      * @return Value object with required user information
      */
-    public UserEntity getByUsernameAndPassword(EntityManager em, String username, String password);
+    public UserEntity getByUsernameAndPassword(EntityManager em, String username,
+            String password) throws DataBaseException;
 }

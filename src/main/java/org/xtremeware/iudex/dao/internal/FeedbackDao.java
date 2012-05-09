@@ -4,6 +4,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.dao.FeedbackDaoInterface;
 import org.xtremeware.iudex.entity.FeedbackEntity;
+import org.xtremeware.iudex.helper.DataBaseException;
 
 /**
  * DAO for the Feedback entities. Implements additionally a useful finder by
@@ -23,15 +24,25 @@ public class FeedbackDao extends CrudDao<FeedbackEntity> implements FeedbackDaoI
      * @return The list of found feedbacks.
      */
     @Override
-    public List<FeedbackEntity> getByTypeId(EntityManager em, long feedbackTypeId) {
+    public List<FeedbackEntity> getByTypeId(EntityManager em, long feedbackTypeId)
+            throws DataBaseException {
         checkEntityManager(em);
-        return em.createNamedQuery("getByTypeId", FeedbackEntity.class).setParameter("feedbackTypeId", feedbackTypeId).getResultList();
+        try {
+            return em.createNamedQuery("getByTypeId", FeedbackEntity.class).setParameter("feedbackTypeId", feedbackTypeId).getResultList();
+        } catch (Exception e) {
+            throw new DataBaseException(e.getMessage(), e.getCause());
+        }
     }
 
     @Override
-    public List<FeedbackEntity> getByContentLike(EntityManager em, String query) {
+    public List<FeedbackEntity> getByContentLike(EntityManager em, String query)
+            throws DataBaseException {
         checkEntityManager(em);
-        return em.createNamedQuery("getFeedbackByContentLike", FeedbackEntity.class).setParameter("query", "%" + query + "%").getResultList();
+        try {
+            return em.createNamedQuery("getFeedbackByContentLike", FeedbackEntity.class).setParameter("query", "%" + query + "%").getResultList();
+        } catch (Exception e) {
+            throw new DataBaseException(e.getMessage(), e.getCause());
+        }
     }
 
     @Override

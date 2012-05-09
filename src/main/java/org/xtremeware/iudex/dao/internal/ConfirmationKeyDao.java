@@ -1,10 +1,10 @@
 package org.xtremeware.iudex.dao.internal;
 
-import org.xtremeware.iudex.dao.internal.CrudDao;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import org.xtremeware.iudex.dao.ConfirmationKeyDaoInterface;
 import org.xtremeware.iudex.entity.ConfirmationKeyEntity;
+import org.xtremeware.iudex.helper.DataBaseException;
 
 /**
  *
@@ -20,13 +20,16 @@ public class ConfirmationKeyDao extends CrudDao<ConfirmationKeyEntity> implement
      * @return the ConfirmationKey entity wit the given key
      */
     @Override
-    public ConfirmationKeyEntity getByConfirmationKey(EntityManager em, String confirmationKey) {
+    public ConfirmationKeyEntity getByConfirmationKey(EntityManager em, String confirmationKey) 
+            throws DataBaseException {
         checkEntityManager(em);
         try {
             return em.createNamedQuery("getByConfirmationKey", ConfirmationKeyEntity.class).
                     setParameter("confirmationKey", confirmationKey).getSingleResult();
         } catch (NoResultException noResultException) {
             return null;
+        } catch (Exception e) {
+            throw new DataBaseException(e.getMessage(), e.getCause());
         }
     }
 

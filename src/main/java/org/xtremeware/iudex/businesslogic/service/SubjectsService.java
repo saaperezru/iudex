@@ -10,7 +10,9 @@ import javax.persistence.EntityManager;
 import org.xtremeware.iudex.businesslogic.InvalidVoException;
 import org.xtremeware.iudex.dao.AbstractDaoFactory;
 import org.xtremeware.iudex.entity.SubjectEntity;
+import org.xtremeware.iudex.helper.DataBaseException;
 import org.xtremeware.iudex.helper.ExternalServiceConnectionException;
+import org.xtremeware.iudex.helper.MultipleMessageException;
 import org.xtremeware.iudex.helper.SecurityHelper;
 import org.xtremeware.iudex.vo.SubjectVo;
 
@@ -42,23 +44,38 @@ public class SubjectsService extends CrudService<SubjectVo, SubjectEntity> {
      * @throws InvalidVoException
      */
     @Override
-    public void validateVo(EntityManager em, SubjectVo vo) throws InvalidVoException, ExternalServiceConnectionException {
+    public void validateVo(EntityManager em, SubjectVo vo)
+            throws ExternalServiceConnectionException, MultipleMessageException {
+        if (em == null) {
+            throw new IllegalArgumentException("EntityManager em cannot be null");
+        }
+        MultipleMessageException multipleMessageException = new MultipleMessageException();
         if (vo == null) {
-            throw new InvalidVoException("Null SubjectVo");
+            multipleMessageException.getExceptions().add(new InvalidVoException("Null SubjectVo"));
+            throw multipleMessageException;
         }
         if (vo.getName() == null) {
-            throw new InvalidVoException("Null name in the provided SubjectVo");
+            multipleMessageException.getExceptions().add(new InvalidVoException(
+                    "Null name in the provided SubjectVo"));
+        } else {
+            vo.setName(SecurityHelper.sanitizeHTML(vo.getName()));
+            if (vo.getName().length() > 50) {
+                multipleMessageException.getExceptions().add(new InvalidVoException(
+                        "Invalid name length in the provided SubjectVo"));
+            }
         }
         if (vo.getDescription() == null) {
-            throw new InvalidVoException("Null description in the provided SubjectVo");
+            multipleMessageException.getExceptions().add(new InvalidVoException(
+                    "Null description in the provided SubjectVo"));
+        } else {
+            vo.setDescription(SecurityHelper.sanitizeHTML(vo.getDescription()));
+            if (vo.getDescription().length() > 2000) {
+                multipleMessageException.getExceptions().add(new InvalidVoException(
+                        "Invalid description length in the provided SubjectVo"));
+            }
         }
-        vo.setName(SecurityHelper.sanitizeHTML(vo.getName()));
-        vo.setDescription(SecurityHelper.sanitizeHTML(vo.getDescription()));
-        if (vo.getName().length() > 50) {
-            throw new InvalidVoException("Invalid name length in the provided SubjectVo");
-        }
-        if (vo.getDescription().length() > 2000) {
-            throw new InvalidVoException("Invalid description length in the provided SubjectVo");
+        if (!multipleMessageException.getExceptions().isEmpty()) {
+            throw multipleMessageException;
         }
     }
 
@@ -71,7 +88,8 @@ public class SubjectsService extends CrudService<SubjectVo, SubjectEntity> {
      * @throws InvalidVoException
      */
     @Override
-    public SubjectEntity voToEntity(EntityManager em, SubjectVo vo) throws InvalidVoException, ExternalServiceConnectionException {
+    public SubjectEntity voToEntity(EntityManager em, SubjectVo vo)
+            throws ExternalServiceConnectionException, MultipleMessageException {
 
         validateVo(em, vo);
 
@@ -90,12 +108,11 @@ public class SubjectsService extends CrudService<SubjectVo, SubjectEntity> {
      * @param query String with the search parameter
      * @return A list of SubjectVo
      */
-    public List<SubjectVo> search(EntityManager em, String query) throws ExternalServiceConnectionException {
-        if (query == null) {
-            throw new IllegalArgumentException("Null query for a subject search");
-        }
+    public List<SubjectVo> search(EntityManager em, String query)
+            throws ExternalServiceConnectionException, DataBaseException {
         query = SecurityHelper.sanitizeHTML(query);
-        List<SubjectEntity> subjectEntitys = getDaoFactory().getSubjectDao().getByName(em, query.toUpperCase());
+        List<SubjectEntity> subjectEntitys = getDaoFactory().getSubjectDao().
+                getByName(em, query.toUpperCase());
         if (subjectEntitys.isEmpty()) {
             return null;
         }
@@ -113,14 +130,13 @@ public class SubjectsService extends CrudService<SubjectVo, SubjectEntity> {
      * @param name String with the name of the SubjectVo
      * @return A list if SubjectVo
      */
-    public List<SubjectVo> getByNameLike(EntityManager em, String name) throws ExternalServiceConnectionException {
-        if (name == null) {
-            throw new IllegalArgumentException("Null name for a subject search");
-        }
+    public List<SubjectVo> getByNameLike(EntityManager em, String name)
+            throws ExternalServiceConnectionException, DataBaseException {
         name = SecurityHelper.sanitizeHTML(name);
-        List<SubjectEntity> subjectEntitys = getDaoFactory().getSubjectDao().getByName(em, name.toUpperCase());
+        List<SubjectEntity> subjectEntitys = getDaoFactory().getSubjectDao().
+                getByName(em, name.toUpperCase());
         if (subjectEntitys.isEmpty()) {
-		return new ArrayList<SubjectVo>();
+            return new ArrayList<SubjectVo>();
         }
         ArrayList<SubjectVo> arrayList = new ArrayList<SubjectVo>();
         for (SubjectEntity subjectEntity : subjectEntitys) {
@@ -128,15 +144,19 @@ public class SubjectsService extends CrudService<SubjectVo, SubjectEntity> {
         }
         return arrayList;
     }
+
     /**
-     * Returns a list of SubjectVos that had been taught by the specified professor. 
+     * Returns a list of SubjectVos that had been taught by the specified
+     * professor.
      *
      * @param em EntityManager
      * @param professorId Professor's id to look for subjects.
      * @return A list of SubjectVo
      */
-    public List<SubjectVo> getByProfessorId(EntityManager em, long professorId) {
-        List<SubjectEntity> subjectEntitys = getDaoFactory().getSubjectDao().getByProfessorId(em, professorId);
+    public List<SubjectVo> getByProfessorId(EntityManager em, long professorId)
+            throws DataBaseException {
+        List<SubjectEntity> subjectEntitys = getDaoFactory().getSubjectDao().
+                getByProfessorId(em, professorId);
         ArrayList<SubjectVo> arrayList = new ArrayList<SubjectVo>();
         for (SubjectEntity subjectEntity : subjectEntitys) {
             arrayList.add(subjectEntity.toVo());

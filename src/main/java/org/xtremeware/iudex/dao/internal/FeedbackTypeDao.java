@@ -5,6 +5,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import org.xtremeware.iudex.dao.FeedbackTypeDaoInterface;
 import org.xtremeware.iudex.entity.FeedbackTypeEntity;
+import org.xtremeware.iudex.helper.DataBaseException;
 
 /**
  * DAO for feedback type entities. Implements additionally an useful finder by
@@ -25,16 +26,23 @@ public class FeedbackTypeDao extends CrudDao<FeedbackTypeEntity> implements Feed
     public FeedbackTypeEntity getByName(EntityManager em, String name) {
         checkEntityManager(em);
         try {
-            return em.createNamedQuery("getFeedbackTypeByName", FeedbackTypeEntity.class).setParameter("name", name).getSingleResult();
+            return em.createNamedQuery("getFeedbackTypeByName", FeedbackTypeEntity.class).
+                    setParameter("name", name).getSingleResult();
         } catch (NoResultException ex) {
             return null;
         }
     }
 
     @Override
-    public List<FeedbackTypeEntity> getAll(EntityManager em) {
+    public List<FeedbackTypeEntity> getAll(EntityManager em)
+            throws DataBaseException {
         checkEntityManager(em);
-        return em.createNamedQuery("getAllFeedbackType", FeedbackTypeEntity.class).getResultList();
+        try {
+            return em.createNamedQuery("getAllFeedbackType", FeedbackTypeEntity.class).
+                    getResultList();
+        } catch (Exception e) {
+            throw new DataBaseException(e.getMessage(), e.getCause());
+        }
     }
 
     @Override

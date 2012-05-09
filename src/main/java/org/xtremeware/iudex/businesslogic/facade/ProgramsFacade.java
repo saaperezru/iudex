@@ -103,14 +103,9 @@ public class ProgramsFacade extends AbstractFacade {
         try {
             em = getEntityManagerFactory().createEntityManager();
             tx = em.getTransaction();
-            tx.begin();
             list = getServiceFactory().createProgramsService().getAll(em);
-            tx.commit();
         } catch (Exception e) {
             getServiceFactory().createLogService().error(e.getMessage(), e);
-            if (em != null && tx != null) {
-                tx.rollback();
-            }
         } finally {
             if (em != null) {
                 em.clear();

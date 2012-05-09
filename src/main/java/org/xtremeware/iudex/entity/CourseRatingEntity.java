@@ -16,7 +16,8 @@ import org.xtremeware.iudex.vo.CourseRatingVo;
 	query = "SELECT result FROM CourseRating result "
 	+ "WHERE result.user.id = :userId")
 })
-@Table(name="COURSE_RATING")
+@Table( name = "COURSE_RATING",
+            uniqueConstraints = { @UniqueConstraint( columnNames = { "ID_USER_", "ID_COURSE" } ) } )
 public class CourseRatingEntity implements Serializable, Entity<CourseRatingVo> {
 
 	private static final long serialVersionUID = 1L;

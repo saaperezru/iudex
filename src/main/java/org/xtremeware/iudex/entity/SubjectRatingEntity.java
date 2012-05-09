@@ -22,7 +22,8 @@ import org.xtremeware.iudex.vo.SubjectRatingVo;
 	query = "SELECT COUNT (result) FROM SubjectRating result "
 	+ "WHERE result.subject.id = :subjectId AND result.value = -1")
 })
-@Table(name = "SUBJECT_RATING")
+@Table( name = "SUBJECT_RATING",
+            uniqueConstraints = { @UniqueConstraint( columnNames = { "ID_USER_", "ID_SUBJECT" } ) } )
 public class SubjectRatingEntity implements Serializable, Entity<SubjectRatingVo> {
 
 	private static final long serialVersionUID = 1L;

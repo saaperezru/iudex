@@ -9,7 +9,8 @@ import org.xtremeware.iudex.vo.ProfessorRatingVo;
 	@NamedQuery(name = "getRatingByProfessorId", query = "SELECT r FROM ProfessorRating r WHERE r.professor.id = :professor"),
 	@NamedQuery(name = "getRatingByProfessorIdAndUserId", query = "SELECT r FROM ProfessorRating r WHERE r.professor.id = :professor AND r.user.id = :user"),
         @NamedQuery(name = "getRatingByUserId", query = "SELECT r FROM ProfessorRating r WHERE r.user.id = :user")})
-@Table(name="PROFESSOR_RATING")
+@Table( name = "PROFESSOR_RATING",
+            uniqueConstraints = { @UniqueConstraint( columnNames = { "ID_USER_", "ID_PROFESSOR" } ) } )
 public class ProfessorRatingEntity implements Serializable, Entity<ProfessorRatingVo> {
 
 	private static final long serialVersionUID = 1L;

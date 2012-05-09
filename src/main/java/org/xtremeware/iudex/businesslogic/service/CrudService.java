@@ -80,7 +80,12 @@ public abstract class CrudService<E extends ValueObject, F extends Entity<E>> {
             MultipleMessageException,
             DataBaseException {
         validateVo(em, vo);
-        return getUpdateInterface().update(em, voToEntity(em, vo)).toVo();
+        F entity = getUpdateInterface().update(em, voToEntity(em, vo));
+        if (entity != null) {
+            return entity.toVo();
+        } else {
+            return null;
+        }
     }
 
     public abstract void validateVo(EntityManager em, E vo)

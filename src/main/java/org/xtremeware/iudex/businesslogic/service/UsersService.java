@@ -11,9 +11,7 @@ import org.xtremeware.iudex.dao.AbstractDaoFactory;
 import org.xtremeware.iudex.entity.ConfirmationKeyEntity;
 import org.xtremeware.iudex.entity.ProgramEntity;
 import org.xtremeware.iudex.entity.UserEntity;
-import org.xtremeware.iudex.helper.ConfigurationVariablesHelper;
-import org.xtremeware.iudex.helper.ExternalServiceConnectionException;
-import org.xtremeware.iudex.helper.SecurityHelper;
+import org.xtremeware.iudex.helper.*;
 import org.xtremeware.iudex.vo.ConfirmationKeyVo;
 import org.xtremeware.iudex.vo.UserVo;
 
@@ -41,55 +39,84 @@ public class UsersService extends CrudService<UserVo, UserEntity> {
     }
 
     @Override
-    public void validateVo(EntityManager em, UserVo vo) throws InvalidVoException, ExternalServiceConnectionException {
+    public void validateVo(EntityManager em, UserVo vo) throws MultipleMessageException, ExternalServiceConnectionException, DataBaseException {
         if (em == null) {
             throw new IllegalArgumentException("EntityManager em cannot be null");
         }
+        MultipleMessageException multipleMessageException = new MultipleMessageException();
+
         if (vo == null) {
-            throw new InvalidVoException("Null UserVo");
+            multipleMessageException.getExceptions().add(new InvalidVoException(
+                    "Null UserVo"));
+            throw multipleMessageException;
         }
-        if (vo.getFirstName() == null || vo.getFirstName().isEmpty()) {
-            throw new InvalidVoException("Null firstName in the provided UserVo");
+
+        if (vo.getFirstName() == null) {
+            multipleMessageException.getExceptions().add(new InvalidVoException(
+                    "Null firstName in the provided UserVo"));
+        } else {
+            vo.setFirstName(SecurityHelper.sanitizeHTML(vo.getFirstName()));
+            if (vo.getFirstName().isEmpty()) {
+                multipleMessageException.getExceptions().add(new InvalidVoException(
+                        "FirstName length must be greater than 0"));
+            }
         }
-        if (vo.getLastName() == null || vo.getLastName().isEmpty()) {
-            throw new InvalidVoException("Null lastName in the provided UserVo");
+        if (vo.getLastName() == null) {
+            multipleMessageException.getExceptions().add(new InvalidVoException(
+                    "Null lastName in the provided UserVo"));
+        } else {
+            vo.setLastName(SecurityHelper.sanitizeHTML(vo.getLastName()));
+            if (vo.getLastName().isEmpty()) {
+                multipleMessageException.getExceptions().add(new InvalidVoException(
+                        "LastName length must be greater than 0"));
+            }
         }
-        if (vo.getUserName() == null || vo.getUserName().isEmpty()) {
-            throw new InvalidVoException("Null userName in the provided UserVo");
+        if (vo.getUserName() == null) {
+            multipleMessageException.getExceptions().add(new InvalidVoException(
+                    "Null userName in the provided UserVo"));
+        } else {
+            vo.setUserName(SecurityHelper.sanitizeHTML(vo.getUserName()));
+            if (vo.getUserName().length() > MAX_USERNAME_LENGTH || vo.getUserName().length() < MIN_USERNAME_LENGTH) {
+                multipleMessageException.getExceptions().add(new InvalidVoException(
+                        "Invalid userName length in the provided UserVo"));
+            }
         }
-        vo.setFirstName(SecurityHelper.sanitizeHTML(vo.getFirstName()));
-        vo.setLastName(SecurityHelper.sanitizeHTML(vo.getLastName()));
-        vo.setUserName(SecurityHelper.sanitizeHTML(vo.getUserName()));
-        if (vo.getUserName().length() > MAX_USERNAME_LENGTH || vo.getUserName().length() < MIN_USERNAME_LENGTH) {
-            throw new InvalidVoException("Invalid userName length in the provided UserVo");
-        }
-        if (vo.getPassword() == null || vo.getPassword().isEmpty()) {
-            throw new InvalidVoException("Null password in the provided UserVo");
-        }
-        if (vo.getPassword().length() > MAX_USER_PASSWORD_LENGTH || vo.getPassword().length() < MIN_USER_PASSWORD_LENGTH) {
-            throw new InvalidVoException("Invalid password length in the provided UserVo");
+        if (vo.getPassword() == null) {
+            multipleMessageException.getExceptions().add(new InvalidVoException(
+                    "Null password in the provided UserVo"));
+        } else {
+            vo.setUserName(SecurityHelper.sanitizeHTML(vo.getUserName()));
+            if (vo.getPassword().length() > MAX_USER_PASSWORD_LENGTH || vo.getPassword().length() < MIN_USER_PASSWORD_LENGTH) {
+                multipleMessageException.getExceptions().add(new InvalidVoException(
+                        "Invalid password length in the provided UserVo"));
+            }
         }
         if (vo.getProgramsId() == null) {
-            throw new InvalidVoException("Null programsId in the provided UserVo");
-        }
-        if (vo.getProgramsId().isEmpty()) {
-            throw new InvalidVoException("programsId cannot be empity");
-        }
-        for (Long programId : vo.getProgramsId()) {
-            if (programId == null) {
-                throw new InvalidVoException("Any element in programsId cannot be null");
-            }
-            if (this.getDaoFactory().getProgramDao().getById(em, programId) == null) {
-                throw new InvalidVoException("An element in programsId cannot be found");
+            multipleMessageException.getExceptions().add(new InvalidVoException(
+                    "Null programsId in the provided UserVo"));
+        } else if (vo.getProgramsId().isEmpty()) {
+            multipleMessageException.getExceptions().add(new InvalidVoException(
+                    "programsId cannot be empity"));
+        } else {
+            for (Long programId : vo.getProgramsId()) {
+                if (programId == null) {
+                    multipleMessageException.getExceptions().add(new InvalidVoException(
+                            "Any element in programsId cannot be null"));
+                } else if (getDaoFactory().getProgramDao().getById(em, programId) == null) {
+                    multipleMessageException.getExceptions().add(new InvalidVoException(
+                            "An element in programsId cannot be found"));
+                }
             }
         }
         if (vo.getRole() == null) {
-            throw new InvalidVoException("Rol cannot be null");
+            multipleMessageException.getExceptions().add(new InvalidVoException(
+                    "Rol cannot be null"));
         }
     }
 
     @Override
-    public UserEntity voToEntity(EntityManager em, UserVo vo) throws InvalidVoException, ExternalServiceConnectionException {
+    public UserEntity voToEntity(EntityManager em, UserVo vo) 
+            throws ExternalServiceConnectionException, MultipleMessageException, DataBaseException {
         validateVo(em, vo);
 
         UserEntity userEntity = new UserEntity();
@@ -110,7 +137,8 @@ public class UsersService extends CrudService<UserVo, UserEntity> {
         return userEntity;
     }
 
-    public UserVo authenticate(EntityManager em, String userName, String password) throws InactiveUserException, ExternalServiceConnectionException {
+    public UserVo authenticate(EntityManager em, String userName, String password) 
+            throws InactiveUserException, ExternalServiceConnectionException, DataBaseException {
         userName = SecurityHelper.sanitizeHTML(userName);
         password = SecurityHelper.sanitizeHTML(password);
         password = SecurityHelper.hashPassword(password);
@@ -126,7 +154,8 @@ public class UsersService extends CrudService<UserVo, UserEntity> {
         }
     }
 
-    public UserVo activateAccount(EntityManager em, String confirmationKey) throws ExternalServiceConnectionException {
+    public UserVo activateAccount(EntityManager em, String confirmationKey) 
+            throws ExternalServiceConnectionException, DataBaseException {
         confirmationKey = SecurityHelper.sanitizeHTML(confirmationKey);
         ConfirmationKeyEntity confirmationKeyEntity = getDaoFactory().getConfirmationKeyDao().getByConfirmationKey(em, confirmationKey);
         if (confirmationKeyEntity != null) {
@@ -140,7 +169,8 @@ public class UsersService extends CrudService<UserVo, UserEntity> {
         return null;
     }
 
-    public ConfirmationKeyVo getConfirmationKeyByUserId(EntityManager em, long id) {
+    public ConfirmationKeyVo getConfirmationKeyByUserId(EntityManager em, long id) 
+            throws DataBaseException {
         return getDaoFactory().getUserDao().getById(em, id).getConfirmationKey().toVo();
     }
 }

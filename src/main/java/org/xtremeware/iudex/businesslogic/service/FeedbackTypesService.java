@@ -10,7 +10,9 @@ import javax.persistence.EntityManager;
 import org.xtremeware.iudex.businesslogic.InvalidVoException;
 import org.xtremeware.iudex.dao.AbstractDaoFactory;
 import org.xtremeware.iudex.entity.FeedbackTypeEntity;
+import org.xtremeware.iudex.helper.DataBaseException;
 import org.xtremeware.iudex.helper.ExternalServiceConnectionException;
+import org.xtremeware.iudex.helper.MultipleMessageException;
 import org.xtremeware.iudex.helper.SecurityHelper;
 import org.xtremeware.iudex.vo.FeedbackTypeVo;
 
@@ -42,13 +44,22 @@ public class FeedbackTypesService extends CrudService<FeedbackTypeVo, FeedbackTy
      * @throws InvalidVoException
      */
     @Override
-    public void validateVo(EntityManager em, FeedbackTypeVo vo) throws InvalidVoException,
-            ExternalServiceConnectionException {
+    public void validateVo(EntityManager em, FeedbackTypeVo vo) 
+            throws ExternalServiceConnectionException, 
+            MultipleMessageException {
+        if (em == null) {
+            throw new IllegalArgumentException("EntityManager em cannot be null");
+        }
+        MultipleMessageException multipleMessageException = new MultipleMessageException();
         if (vo == null) {
-            throw new InvalidVoException("Null FeedbackTypeVo");
+            multipleMessageException.getExceptions().add(new InvalidVoException(
+                    "Null FeedbackTypeVo"));
+            throw multipleMessageException;
         }
         if (vo.getName() == null) {
-            throw new InvalidVoException("Null name in the provided FeedbackTypeVo");
+            multipleMessageException.getExceptions().add(new InvalidVoException(
+                    "Null name in the provided FeedbackTypeVo"));
+            throw multipleMessageException;
         }
         vo.setName(SecurityHelper.sanitizeHTML(vo.getName()));
     }
@@ -63,7 +74,8 @@ public class FeedbackTypesService extends CrudService<FeedbackTypeVo, FeedbackTy
      * @throws InvalidVoException
      */
     @Override
-    public FeedbackTypeEntity voToEntity(EntityManager em, FeedbackTypeVo vo) throws InvalidVoException, ExternalServiceConnectionException {
+    public FeedbackTypeEntity voToEntity(EntityManager em, FeedbackTypeVo vo) 
+            throws ExternalServiceConnectionException, MultipleMessageException {
 
         validateVo(em, vo);
         FeedbackTypeEntity feedbackTypeEntity = new FeedbackTypeEntity();
@@ -79,7 +91,8 @@ public class FeedbackTypesService extends CrudService<FeedbackTypeVo, FeedbackTy
      * @param em EntityManager
      * @return A list of all different FeedbackTypeVo
      */
-    public List<FeedbackTypeVo> list(EntityManager em) {
+    public List<FeedbackTypeVo> list(EntityManager em) 
+            throws DataBaseException {
         List<FeedbackTypeEntity> feedbackTypeEntitys = getDaoFactory().getFeedbackTypeDao().getAll(em);
         if (feedbackTypeEntitys.isEmpty()) {
             return null;

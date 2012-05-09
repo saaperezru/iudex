@@ -7,6 +7,7 @@ import org.xtremeware.iudex.businesslogic.service.CoursesService;
 import org.xtremeware.iudex.dao.AbstractDaoFactory;
 import org.xtremeware.iudex.entity.CourseEntity;
 import org.xtremeware.iudex.helper.Config;
+import org.xtremeware.iudex.helper.DataBaseException;
 
 /**
  *
@@ -27,7 +28,7 @@ public class PeriodRemove implements RemoveInterface {
      * @param id id of the period
      */
     @Override
-    public void remove(EntityManager em, Long id) {
+    public void remove(EntityManager em, Long id) throws DataBaseException {
 
         /**
          * This is a bad implementation, but due to few time, it had to be
@@ -35,9 +36,8 @@ public class PeriodRemove implements RemoveInterface {
          */
         List<CourseEntity> courses = getDaoFactory().getCourseDao().getByPeriodId(em, id);
 
-        CoursesService courseService = Config.getInstance().getServiceFactory().createCoursesService();
         for (CourseEntity course : courses) {
-            courseService.remove(em, course.getId());
+            getDaoFactory().getCourseDao().remove(em, course.getId());
         }
 
         getDaoFactory().getPeriodDao().remove(em, id);

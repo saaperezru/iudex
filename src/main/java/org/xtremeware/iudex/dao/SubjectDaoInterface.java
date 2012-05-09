@@ -3,6 +3,7 @@ package org.xtremeware.iudex.dao;
 import java.util.List;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.entity.SubjectEntity;
+import org.xtremeware.iudex.helper.DataBaseException;
 
 /**
  * DAO Interface for subject entities.
@@ -18,7 +19,8 @@ public interface SubjectDaoInterface extends CrudDaoInterface<SubjectEntity> {
      * @param name the subject's name
      * @return a list of matched subject entities
      */
-    public List<SubjectEntity> getByName(EntityManager em, String name);
+    public List<SubjectEntity> getByName(EntityManager em, String name)throws
+            DataBaseException;
 
     /**
      * Returns a list of subject entities associated with a specific professor
@@ -27,5 +29,6 @@ public interface SubjectDaoInterface extends CrudDaoInterface<SubjectEntity> {
      * @param professorId the professor's id
      * @return a list of matched subject entities
      */
-    public List<SubjectEntity> getByProfessorId(EntityManager em, long professorId);
+    public List<SubjectEntity> getByProfessorId(EntityManager em, long professorId)throws
+            DataBaseException;
 }

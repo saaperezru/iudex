@@ -3,6 +3,7 @@ package org.xtremeware.iudex.dao;
 import java.util.List;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.entity.SubjectRatingEntity;
+import org.xtremeware.iudex.helper.DataBaseException;
 import org.xtremeware.iudex.vo.RatingSummaryVo;
 
 /**
@@ -18,7 +19,8 @@ public interface SubjectRatingDaoInterface extends CrudDaoInterface<SubjectRatin
      * @param subjectId subject id
      * @return list of SubjectRatingEntity
      */
-    public List<SubjectRatingEntity> getBySubjectId(EntityManager em, Long subjectId);
+    public List<SubjectRatingEntity> getBySubjectId(EntityManager em,
+            Long subjectId) throws DataBaseException;
 
     /**
      * Returns a rating given by a user, identified by userId, to a subject,
@@ -29,7 +31,8 @@ public interface SubjectRatingDaoInterface extends CrudDaoInterface<SubjectRatin
      * @param userId user id
      * @return a SubjectRatingEntity
      */
-    public SubjectRatingEntity getBySubjectIdAndUserId(EntityManager em, Long subjectId, Long userId);
+    public SubjectRatingEntity getBySubjectIdAndUserId(EntityManager em,
+            Long subjectId, Long userId) throws DataBaseException;
 
     /**
      * Returns a list of SubjectRatings entities given the user
@@ -38,7 +41,8 @@ public interface SubjectRatingDaoInterface extends CrudDaoInterface<SubjectRatin
      * @param userId user id
      * @return list of SubjectRatingEntity
      */
-    public List<SubjectRatingEntity> getByUserId(EntityManager em, Long userId);
+    public List<SubjectRatingEntity> getByUserId(EntityManager em, Long userId) throws
+            DataBaseException;
 
     /**
      * Returns a summary of the ratings given a subject.
@@ -47,5 +51,6 @@ public interface SubjectRatingDaoInterface extends CrudDaoInterface<SubjectRatin
      * @param subjectId subject id
      * @return a RatingSummaryVo object
      */
-    public RatingSummaryVo getSummary(EntityManager em, Long subjectId);
+    public RatingSummaryVo getSummary(EntityManager em, Long subjectId) throws
+            DataBaseException;
 }

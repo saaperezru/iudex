@@ -1,11 +1,11 @@
 package org.xtremeware.iudex.dao.internal;
 
-import org.xtremeware.iudex.dao.internal.CrudDao;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import org.xtremeware.iudex.dao.CommentRatingDaoInterface;
 import org.xtremeware.iudex.entity.CommentRatingEntity;
+import org.xtremeware.iudex.helper.DataBaseException;
 import org.xtremeware.iudex.vo.RatingSummaryVo;
 
 /**
@@ -22,10 +22,15 @@ public class CommentRatingDao extends CrudDao<CommentRatingEntity> implements Co
      * @return list of CommentRatingEntity
      */
     @Override
-    public List<CommentRatingEntity> getByCommentId(EntityManager em, Long commentId) {
+    public List<CommentRatingEntity> getByCommentId(EntityManager em,
+            Long commentId) throws DataBaseException {
         checkEntityManager(em);
-        return em.createNamedQuery("getCommentRatingByCommentId", CommentRatingEntity.class).
-                setParameter("commentId", commentId).getResultList();
+        try {
+            return em.createNamedQuery("getCommentRatingByCommentId", CommentRatingEntity.class).
+                    setParameter("commentId", commentId).getResultList();
+        } catch (Exception e) {
+            throw new DataBaseException(e.getMessage(), e.getCause());
+        }
     }
 
     /**
@@ -38,13 +43,16 @@ public class CommentRatingDao extends CrudDao<CommentRatingEntity> implements Co
      * @return a CommentRatingEntity
      */
     @Override
-    public CommentRatingEntity getByCommentIdAndUserId(EntityManager em, Long commentId, Long userId) {
+    public CommentRatingEntity getByCommentIdAndUserId(EntityManager em,
+            Long commentId, Long userId) throws DataBaseException {
         checkEntityManager(em);
         try {
             return em.createNamedQuery("getCommentRatingByCommentIdAndUserId", CommentRatingEntity.class).
                     setParameter("commentId", commentId).setParameter("userId", userId).getSingleResult();
         } catch (NoResultException noResultException) {
             return null;
+        } catch (Exception e) {
+            throw new DataBaseException(e.getMessage(), e.getCause());
         }
     }
 
@@ -56,9 +64,14 @@ public class CommentRatingDao extends CrudDao<CommentRatingEntity> implements Co
      * @return list of CommentRatingEntity
      */
     @Override
-    public List<CommentRatingEntity> getByUserId(EntityManager em, Long userId) {
+    public List<CommentRatingEntity> getByUserId(EntityManager em, Long userId)
+            throws DataBaseException {
         checkEntityManager(em);
-        return em.createNamedQuery("getCommentRatingByUserId", CommentRatingEntity.class).setParameter("userId", userId).getResultList();
+        try {
+            return em.createNamedQuery("getCommentRatingByUserId", CommentRatingEntity.class).setParameter("userId", userId).getResultList();
+        } catch (Exception e) {
+            throw new DataBaseException(e.getMessage(), e.getCause());
+        }
     }
 
     /**
@@ -70,24 +83,20 @@ public class CommentRatingDao extends CrudDao<CommentRatingEntity> implements Co
      * positive or negative ratings returns no result from the EntityManager.
      */
     @Override
-    public RatingSummaryVo getSummary(EntityManager em, Long commentId) {
+    public RatingSummaryVo getSummary(EntityManager em, Long commentId) 
+            throws DataBaseException {
         checkEntityManager(em);
         RatingSummaryVo rsv = new RatingSummaryVo();
 
         try {
             rsv.setPositive(em.createNamedQuery("countPositiveCommentRating", Long.class).
                     setParameter("commentId", commentId).getSingleResult().intValue());
-        } catch (NoResultException noResultException) {
-            return null;
-        }
-
-        try {
+        
             rsv.setNegative(em.createNamedQuery("countNegativeCommentRating", Long.class).
                     setParameter("commentId", commentId).getSingleResult().intValue());
-        } catch (NoResultException noResultException) {
-            return null;
+        } catch (Exception e) {
+            throw new DataBaseException(e.getMessage(), e.getCause());
         }
-
         return rsv;
     }
 

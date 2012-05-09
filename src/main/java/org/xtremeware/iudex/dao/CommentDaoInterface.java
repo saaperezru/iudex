@@ -3,6 +3,7 @@ package org.xtremeware.iudex.dao;
 import java.util.List;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.entity.CommentEntity;
+import org.xtremeware.iudex.helper.DataBaseException;
 
 /**
  * DAO Interface for the Comment entities.
@@ -20,7 +21,8 @@ public interface CommentDaoInterface extends CrudDaoInterface<CommentEntity> {
      * associated professor .
      * @return The list of found comments.
      */
-    public List<CommentEntity> getByProfessorId(EntityManager em, long professorId);
+    public List<CommentEntity> getByProfessorId(EntityManager em, long professorId)
+            throws DataBaseException;
 
     /**
      * Returns a list of Comments associated with the course who's subject is
@@ -31,7 +33,8 @@ public interface CommentDaoInterface extends CrudDaoInterface<CommentEntity> {
      * associated course.
      * @return The list of found comments.
      */
-    public List<CommentEntity> getBySubjectId(EntityManager em, long subjectId);
+    public List<CommentEntity> getBySubjectId(EntityManager em, long subjectId)
+            throws DataBaseException;
 
     /**
      * Returns a list of Comments associated with the period identified by the
@@ -41,7 +44,8 @@ public interface CommentDaoInterface extends CrudDaoInterface<CommentEntity> {
      * @param userId User identifier to look for in comments table.
      * @return The list of found comments.
      */
-    public List<CommentEntity> getByUserId(EntityManager em, long userId);
+    public List<CommentEntity> getByUserId(EntityManager em, long userId)
+            throws DataBaseException;
 
     /**
      * Returns a list of Comments associated with the course identified by the
@@ -51,7 +55,8 @@ public interface CommentDaoInterface extends CrudDaoInterface<CommentEntity> {
      * @param courseId Course identifier to look for in comment table.
      * @return The list of found comments.
      */
-    public List<CommentEntity> getByCourseId(EntityManager em, long courseId);
+    public List<CommentEntity> getByCourseId(EntityManager em, long courseId)
+            throws DataBaseException;
 
     /**
      * Returns the number of comments submitted by a user on the current date
@@ -60,5 +65,6 @@ public interface CommentDaoInterface extends CrudDaoInterface<CommentEntity> {
      * @param userId id of the user
      * @return number of comments submitted on the current day
      */
-    public int getUserCommentsCounter(EntityManager em, long userId);
+    public int getUserCommentsCounter(EntityManager em, long userId)
+            throws DataBaseException;
 }

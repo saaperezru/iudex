@@ -5,6 +5,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.dao.AbstractDaoFactory;
 import org.xtremeware.iudex.entity.FeedbackEntity;
+import org.xtremeware.iudex.helper.DataBaseException;
 
 /**
  *
@@ -25,7 +26,7 @@ public class FeedbackTypesRemove implements RemoveInterface {
      * @param id id of the FeedBackType
      */
     @Override
-    public void remove(EntityManager em, Long id) {
+    public void remove(EntityManager em, Long id) throws DataBaseException {
         List<FeedbackEntity> feedBacks = getDaoFactory().getFeedbackDao().getByTypeId(em, id);
         for (FeedbackEntity feedBack : feedBacks) {
             getDaoFactory().getFeedbackDao().remove(em, feedBack.getId());

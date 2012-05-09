@@ -1,11 +1,11 @@
 package org.xtremeware.iudex.dao.internal;
 
-import org.xtremeware.iudex.dao.internal.CrudDao;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import org.xtremeware.iudex.dao.CourseRatingDaoInterface;
 import org.xtremeware.iudex.entity.CourseRatingEntity;
+import org.xtremeware.iudex.helper.DataBaseException;
 
 /**
  *
@@ -23,9 +23,14 @@ public class CourseRatingDao extends CrudDao<CourseRatingEntity> implements Cour
      * courseId
      */
     @Override
-    public List<CourseRatingEntity> getByCourseId(EntityManager em, Long courseId) {
+    public List<CourseRatingEntity> getByCourseId(EntityManager em, Long courseId)
+            throws DataBaseException {
         checkEntityManager(em);
-        return em.createNamedQuery("getCourseRatingByCourseId", CourseRatingEntity.class).setParameter("courseId", courseId).getResultList();
+        try {
+            return em.createNamedQuery("getCourseRatingByCourseId", CourseRatingEntity.class).setParameter("courseId", courseId).getResultList();
+        } catch (Exception e) {
+            throw new DataBaseException(e.getMessage(), e.getCause());
+        }
     }
 
     /**
@@ -38,13 +43,16 @@ public class CourseRatingDao extends CrudDao<CourseRatingEntity> implements Cour
      * @return CourseRatingEntity with the indicated user and course
      */
     @Override
-    public CourseRatingEntity getByCourseIdAndUserId(EntityManager em, Long courseId, Long userId) {
+    public CourseRatingEntity getByCourseIdAndUserId(EntityManager em,
+            Long courseId, Long userId) throws DataBaseException {
         checkEntityManager(em);
         try {
             return em.createNamedQuery("getCourseRatingByCourseIdAndUserId", CourseRatingEntity.class).
                     setParameter("courseId", courseId).setParameter("userId", userId).getSingleResult();
         } catch (NoResultException noResultException) {
             return null;
+        } catch (Exception e) {
+            throw new DataBaseException(e.getMessage(), e.getCause());
         }
     }
 
@@ -58,9 +66,14 @@ public class CourseRatingDao extends CrudDao<CourseRatingEntity> implements Cour
      * userId
      */
     @Override
-    public List<CourseRatingEntity> getByUserId(EntityManager em, Long userId) {
+    public List<CourseRatingEntity> getByUserId(EntityManager em, Long userId)
+            throws DataBaseException {
         checkEntityManager(em);
-        return em.createNamedQuery("getCourseRatingByUserId", CourseRatingEntity.class).setParameter("userId", userId).getResultList();
+        try {
+            return em.createNamedQuery("getCourseRatingByUserId", CourseRatingEntity.class).setParameter("userId", userId).getResultList();
+        } catch (Exception e) {
+            throw new DataBaseException(e.getMessage(), e.getCause());
+        }
     }
 
     @Override

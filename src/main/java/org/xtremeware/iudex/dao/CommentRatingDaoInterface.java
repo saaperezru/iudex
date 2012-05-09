@@ -3,6 +3,7 @@ package org.xtremeware.iudex.dao;
 import java.util.List;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.entity.CommentRatingEntity;
+import org.xtremeware.iudex.helper.DataBaseException;
 import org.xtremeware.iudex.vo.RatingSummaryVo;
 
 /**
@@ -19,7 +20,8 @@ public interface CommentRatingDaoInterface extends CrudDaoInterface<CommentRatin
      * @param commentId comment id
      * @return list of CommentRatingEntity
      */
-    public List<CommentRatingEntity> getByCommentId(EntityManager em, Long commentId);
+    public List<CommentRatingEntity> getByCommentId(EntityManager em,
+            Long commentId) throws DataBaseException;
 
     /**
      * Returns a rating given by a user, identified by userId, to a comment,
@@ -30,7 +32,8 @@ public interface CommentRatingDaoInterface extends CrudDaoInterface<CommentRatin
      * @param userId user id
      * @return a CommentRatingEntity
      */
-    public CommentRatingEntity getByCommentIdAndUserId(EntityManager em, Long commentId, Long userId);
+    public CommentRatingEntity getByCommentIdAndUserId(EntityManager em,
+            Long commentId, Long userId) throws DataBaseException;
 
     /**
      * Returns a list of CommentRating entities given the user
@@ -39,7 +42,8 @@ public interface CommentRatingDaoInterface extends CrudDaoInterface<CommentRatin
      * @param userId user id
      * @return list of CommentRatingEntity
      */
-    public List<CommentRatingEntity> getByUserId(EntityManager em, Long userId);
+    public List<CommentRatingEntity> getByUserId(EntityManager em, Long userId)
+            throws DataBaseException;
 
     /**
      * Returns a summary of the ratings given a comment.
@@ -49,5 +53,6 @@ public interface CommentRatingDaoInterface extends CrudDaoInterface<CommentRatin
      * @return a RatingSummaryVo object, null if the COUNTING process of either
      * positive or negative ratings returns no result from the EntityManager.
      */
-    public RatingSummaryVo getSummary(EntityManager em, Long commentId);
+    public RatingSummaryVo getSummary(EntityManager em, Long commentId)
+            throws DataBaseException;
 }

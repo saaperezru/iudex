@@ -1,10 +1,10 @@
 package org.xtremeware.iudex.dao.internal;
 
-import org.xtremeware.iudex.dao.internal.CrudDao;
 import java.util.List;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.dao.CommentDaoInterface;
 import org.xtremeware.iudex.entity.CommentEntity;
+import org.xtremeware.iudex.helper.DataBaseException;
 
 /**
  * DAO for the Comment entities. Implements additionally some useful finders by
@@ -24,10 +24,14 @@ public class CommentDao extends CrudDao<CommentEntity> implements CommentDaoInte
      * @return The list of found comments.
      */
     @Override
-    public List<CommentEntity> getByProfessorId(EntityManager em, long professorId) {
+    public List<CommentEntity> getByProfessorId(EntityManager em, long professorId)
+            throws DataBaseException {
         checkEntityManager(em);
-        return em.createNamedQuery("getCommentsByProfessorId", CommentEntity.class).setParameter("professorId", professorId).getResultList();
-
+        try {
+            return em.createNamedQuery("getCommentsByProfessorId", CommentEntity.class).setParameter("professorId", professorId).getResultList();
+        } catch (Exception e) {
+            throw new DataBaseException(e.getMessage(), e.getCause());
+        }
     }
 
     /**
@@ -40,10 +44,15 @@ public class CommentDao extends CrudDao<CommentEntity> implements CommentDaoInte
      * @return The list of found comments.
      */
     @Override
-    public List<CommentEntity> getBySubjectId(EntityManager em, long subjectId) {
+    public List<CommentEntity> getBySubjectId(EntityManager em, long subjectId)
+            throws DataBaseException {
         checkEntityManager(em);
-        return em.createNamedQuery("getCommentsBySubjectId", CommentEntity.class).setParameter("subjectId", subjectId).getResultList();
-
+        try {
+            return em.createNamedQuery("getCommentsBySubjectId", CommentEntity.class).
+                    setParameter("subjectId", subjectId).getResultList();
+        } catch (Exception e) {
+            throw new DataBaseException(e.getMessage(), e.getCause());
+        }
     }
 
     /**
@@ -55,10 +64,15 @@ public class CommentDao extends CrudDao<CommentEntity> implements CommentDaoInte
      * @return The list of found comments.
      */
     @Override
-    public List<CommentEntity> getByUserId(EntityManager em, long userId) {
+    public List<CommentEntity> getByUserId(EntityManager em, long userId)
+            throws DataBaseException {
         checkEntityManager(em);
-        return em.createNamedQuery("getCommentsByUserId", CommentEntity.class).setParameter("userId", userId).getResultList();
-
+        try {
+            return em.createNamedQuery("getCommentsByUserId", CommentEntity.class).
+                    setParameter("userId", userId).getResultList();
+        } catch (Exception e) {
+            throw new DataBaseException(e.getMessage(), e.getCause());
+        }
     }
 
     /**
@@ -70,9 +84,15 @@ public class CommentDao extends CrudDao<CommentEntity> implements CommentDaoInte
      * @return The list of found comments.
      */
     @Override
-    public List<CommentEntity> getByCourseId(EntityManager em, long courseId) {
+    public List<CommentEntity> getByCourseId(EntityManager em, long courseId)
+            throws DataBaseException {
         checkEntityManager(em);
-        return em.createNamedQuery("getCommentsByCourseId", CommentEntity.class).setParameter("courseId", courseId).getResultList();
+        try {
+            return em.createNamedQuery("getCommentsByCourseId", CommentEntity.class).
+                    setParameter("courseId", courseId).getResultList();
+        } catch (Exception e) {
+            throw new DataBaseException(e.getMessage(), e.getCause());
+        }
     }
 
     /**
@@ -83,9 +103,15 @@ public class CommentDao extends CrudDao<CommentEntity> implements CommentDaoInte
      * @return number of comments submitted on the current day
      */
     @Override
-    public int getUserCommentsCounter(EntityManager em, long userId) {
+    public int getUserCommentsCounter(EntityManager em, long userId)
+            throws DataBaseException {
         checkEntityManager(em);
-        return em.createNamedQuery("getUserCommentsCounter", Long.class).setParameter("userId", userId).getSingleResult().intValue();
+        try {
+            return em.createNamedQuery("getUserCommentsCounter", Long.class).
+                    setParameter("userId", userId).getSingleResult().intValue();
+        } catch (Exception e) {
+            throw new DataBaseException(e.getMessage(), e.getCause());
+        }
     }
 
     @Override

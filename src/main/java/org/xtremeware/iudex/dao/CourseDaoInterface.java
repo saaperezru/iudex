@@ -3,6 +3,7 @@ package org.xtremeware.iudex.dao;
 import java.util.List;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.entity.CourseEntity;
+import org.xtremeware.iudex.helper.DataBaseException;
 
 /**
  * DAO Interface for the Course entities.
@@ -19,7 +20,8 @@ public interface CourseDaoInterface extends CrudDaoInterface<CourseEntity> {
      * @param professorId Professor identifier to look for in courses entities.
      * @return The list of found courses.
      */
-    public List<CourseEntity> getByProfessorId(EntityManager em, long professorId);
+    public List<CourseEntity> getByProfessorId(EntityManager em, long professorId)
+            throws DataBaseException;
 
     /**
      * Returns a list of Courses associated with the subject identified by the
@@ -29,7 +31,8 @@ public interface CourseDaoInterface extends CrudDaoInterface<CourseEntity> {
      * @param subjectId Subject identifier to look for in courses entities.
      * @return The list of found courses.
      */
-    public List<CourseEntity> getBySubjectId(EntityManager em, long subjectId);
+    public List<CourseEntity> getBySubjectId(EntityManager em, long subjectId)
+            throws DataBaseException;
 
     /**
      * Returns a list of Courses associated with the period identified by the
@@ -39,7 +42,8 @@ public interface CourseDaoInterface extends CrudDaoInterface<CourseEntity> {
      * @param periodId Period identifier to look for in courses entities.
      * @return The list of found courses.
      */
-    public List<CourseEntity> getByPeriodId(EntityManager em, long periodId);
+    public List<CourseEntity> getByPeriodId(EntityManager em, long periodId)
+            throws DataBaseException;
 
     /**
      * Returns a list of Courses associated with the professor and subject
@@ -50,7 +54,8 @@ public interface CourseDaoInterface extends CrudDaoInterface<CourseEntity> {
      * @param subjectId Subject identifier to look for in courses entities.
      * @return The list of found courses.
      */
-    public List<CourseEntity> getByProfessorIdAndSubjectId(EntityManager em, long professorId, long subjectId);
+    public List<CourseEntity> getByProfessorIdAndSubjectId(EntityManager em,
+            long professorId, long subjectId) throws DataBaseException;
 
     /**
      * Returns a list of Courses associated with professors and subjects whose
@@ -68,5 +73,6 @@ public interface CourseDaoInterface extends CrudDaoInterface<CourseEntity> {
      * like the ones provided.
      */
     public List<CourseEntity> getCoursesByProfessorNameLikeAndSubjectNameLike(EntityManager em,
-            String professorName, String subjectName, Long periodId);
+            String professorName, String subjectName, Long periodId)
+            throws DataBaseException;
 }

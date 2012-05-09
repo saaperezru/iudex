@@ -4,6 +4,7 @@ import org.xtremeware.iudex.businesslogic.service.crudinterfaces.RemoveInterface
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.dao.CrudDaoInterface;
 import org.xtremeware.iudex.entity.Entity;
+import org.xtremeware.iudex.helper.DataBaseException;
 
 /**
  *
@@ -18,7 +19,7 @@ public class SimpleRemove<E extends Entity> implements RemoveInterface {
     }
 
     @Override
-    public void remove(EntityManager em, Long id) {
+    public void remove(EntityManager em, Long id) throws DataBaseException {
         getDao().remove(em, id);
     }
 

@@ -5,8 +5,9 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
-import org.xtremeware.iudex.businesslogic.InvalidVoException;
 import org.xtremeware.iudex.businesslogic.service.ServiceFactory;
+import org.xtremeware.iudex.helper.DataBaseException;
+import org.xtremeware.iudex.helper.MultipleMessageException;
 import org.xtremeware.iudex.vo.PeriodVo;
 
 public class PeriodsFacade extends AbstractFacade {
@@ -15,7 +16,7 @@ public class PeriodsFacade extends AbstractFacade {
         super(serviceFactory, emFactory);
     }
 
-    public void removePeriod(long id) throws Exception {
+    public void removePeriod(long id) throws DataBaseException {
         EntityManager em = null;
         EntityTransaction tx = null;
         try {
@@ -24,7 +25,7 @@ public class PeriodsFacade extends AbstractFacade {
             tx.begin();
             getServiceFactory().createPeriodsService().remove(em, id);
             tx.commit();
-        } catch (Exception e) {
+        } catch (DataBaseException e) {
             getServiceFactory().createLogService().error(e.getMessage(), e);
             if (em != null && tx != null) {
                 tx.rollback();
@@ -47,7 +48,8 @@ public class PeriodsFacade extends AbstractFacade {
      * @return Returns null if there is a problem while persisting (logs all
      * errors) and throws an exception if data isn't valid.
      */
-    public PeriodVo addPeriod(int year, int semester) throws InvalidVoException {
+    public PeriodVo addPeriod(int year, int semester) 
+            throws MultipleMessageException, DataBaseException {
         PeriodVo createdVo = null;
         PeriodVo vo = new PeriodVo();
         vo.setYear(year);
@@ -60,16 +62,17 @@ public class PeriodsFacade extends AbstractFacade {
             tx.begin();
             createdVo = getServiceFactory().createPeriodsService().create(em, vo);
             tx.commit();
-        } catch (InvalidVoException e) {
-            getServiceFactory().createLogService().error(e.getMessage(), e);
+        } catch (MultipleMessageException e) {
             throw e;
-        } catch (Exception e) {
+        } catch (DataBaseException e) {
             getServiceFactory().createLogService().error(e.getMessage(), e);
             if (em != null && tx != null) {
                 tx.rollback();
             }
+            throw e;
+        } catch (Exception e) {
             getServiceFactory().createLogService().error(e.getMessage(), e);
-        } finally {
+        }finally {
             if (em != null) {
                 em.clear();
                 em.close();

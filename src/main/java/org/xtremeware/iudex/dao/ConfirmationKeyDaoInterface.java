@@ -2,6 +2,7 @@ package org.xtremeware.iudex.dao;
 
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.entity.ConfirmationKeyEntity;
+import org.xtremeware.iudex.helper.DataBaseException;
 
 /**
  * DAO Interface for the ConfirmationKey entities.
@@ -17,5 +18,6 @@ public interface ConfirmationKeyDaoInterface extends CrudDaoInterface<Confirmati
      * @param confirmationKey key reference for the search
      * @return the ConfirmationKey entity wit the given key
      */
-    public ConfirmationKeyEntity getByConfirmationKey(EntityManager em, String confirmationKey);
+    public ConfirmationKeyEntity getByConfirmationKey(EntityManager em, String confirmationKey)
+            throws DataBaseException;
 }

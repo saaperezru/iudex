@@ -8,6 +8,9 @@ import org.xtremeware.iudex.vo.FeedbackTypeVo;
 @NamedQueries({
     @NamedQuery(name = "getFeedbackTypeByName", query = "SELECT ft FROM FeedbackType ft WHERE ft.name = :name"),
     @NamedQuery(name = "getAllFeedbackType", query = "SELECT ft FROM FeedbackType ft")})
+@Table(name = "TYPE_FEEDBACK",
+uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"NAME"})})
 public class FeedbackTypeEntity implements Serializable, Entity<FeedbackTypeVo> {
 
     private static final long serialVersionUID = 1L;

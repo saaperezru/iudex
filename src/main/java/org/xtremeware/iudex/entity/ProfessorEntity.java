@@ -2,6 +2,7 @@ package org.xtremeware.iudex.entity;
 
 import java.io.Serializable;
 import javax.persistence.*;
+import org.xtremeware.iudex.helper.SecurityHelper;
 import org.xtremeware.iudex.vo.ProfessorVo;
 
 @javax.persistence.Entity(name = "Professor")
@@ -33,12 +34,12 @@ public class ProfessorEntity implements Serializable, Entity<ProfessorVo> {
     public ProfessorVo toVo() {
         ProfessorVo vo = new ProfessorVo();
         vo.setId(this.getId());
-        vo.setFirstName(this.getFirstName());
-        vo.setLastName(this.getLastName());
-        vo.setWebsite(this.getWebsite());
-        vo.setImageUrl(this.getImageUrl());
-        vo.setDescription(this.getDescription());
-        vo.setEmail(this.getEmail());
+        vo.setFirstName(SecurityHelper.sanitizeHTML(this.getFirstName()));
+        vo.setLastName(SecurityHelper.sanitizeHTML(this.getLastName()));
+        vo.setWebsite(SecurityHelper.sanitizeHTML(this.getWebsite()));
+        vo.setImageUrl(SecurityHelper.sanitizeHTML(this.getImageUrl()));
+        vo.setDescription(SecurityHelper.sanitizeHTML(this.getDescription()));
+        vo.setEmail(SecurityHelper.sanitizeHTML(this.getEmail()));
         return vo;
     }
 

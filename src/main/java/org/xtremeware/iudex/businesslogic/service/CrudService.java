@@ -5,6 +5,7 @@ import org.xtremeware.iudex.businesslogic.service.crudinterfaces.ReadInterface;
 import org.xtremeware.iudex.businesslogic.service.crudinterfaces.RemoveInterface;
 import org.xtremeware.iudex.businesslogic.service.crudinterfaces.CreateInterface;
 import javax.persistence.EntityManager;
+import org.xtremeware.iudex.businesslogic.DuplicityException;
 import org.xtremeware.iudex.dao.AbstractDaoFactory;
 import org.xtremeware.iudex.entity.Entity;
 import org.xtremeware.iudex.helper.DataBaseException;
@@ -55,7 +56,8 @@ public abstract class CrudService<E extends ValueObject, F extends Entity<E>> {
 
     public E create(EntityManager em, E vo) throws MultipleMessagesException,
             ExternalServiceConnectionException,
-            DataBaseException {
+            DataBaseException, 
+            DuplicityException {
         validateVo(em, vo);
         return getCreateInterface().create(em, voToEntity(em, vo)).toVo();
 

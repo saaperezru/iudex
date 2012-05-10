@@ -2,6 +2,7 @@ package org.xtremeware.iudex.entity;
 
 import java.io.Serializable;
 import javax.persistence.*;
+import org.xtremeware.iudex.helper.SecurityHelper;
 import org.xtremeware.iudex.vo.ProgramVo;
 
 @javax.persistence.Entity(name = "Program")
@@ -28,7 +29,7 @@ public class ProgramEntity implements Serializable, Entity<ProgramVo> {
     public ProgramVo toVo() {
         ProgramVo vo = new ProgramVo();
         vo.setId(this.getId());
-        vo.setName(this.getName());
+        vo.setName(SecurityHelper.sanitizeHTML(this.getName()));
         return vo;
     }
 

@@ -2,8 +2,6 @@ package org.xtremeware.iudex.businesslogic.facade;
 
 import java.util.List;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import static org.junit.Assert.*;
 import org.junit.*;
 import org.xtremeware.iudex.businesslogic.InvalidVoException;

@@ -3,6 +3,7 @@ package org.xtremeware.iudex.entity;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.*;
+import org.xtremeware.iudex.helper.SecurityHelper;
 import org.xtremeware.iudex.vo.FeedbackVo;
 
 @javax.persistence.Entity(name = "Feedback")
@@ -35,7 +36,7 @@ public class FeedbackEntity implements Serializable, Entity<FeedbackVo> {
 
         vo.setId(id);
         vo.setFeedbackTypeId(type.getId());
-        vo.setContent(content);
+        vo.setContent(SecurityHelper.sanitizeHTML(content));
         vo.setDate(date);
 
         return vo;

@@ -1,7 +1,8 @@
 package org.xtremeware.iudex.dao.internal;
 
+import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
+import org.xtremeware.iudex.businesslogic.DuplicityException;
 import org.xtremeware.iudex.dao.CrudDaoInterface;
 import org.xtremeware.iudex.entity.Entity;
 import org.xtremeware.iudex.helper.DataBaseException;
@@ -17,10 +18,12 @@ public abstract class CrudDao<E extends Entity> implements CrudDaoInterface<E> {
      * @return The received entity after being persisted
      */
     @Override
-    public E persist(EntityManager em, E entity) throws DataBaseException {
+    public E persist(EntityManager em, E entity) throws DataBaseException, DuplicityException{
         checkEntityManager(em);
         try {
             em.persist(entity);
+        }catch (EntityExistsException e) {
+            throw new DuplicityException(e.getMessage(), e.getCause());
         } catch (Exception e) {
             throw new DataBaseException(e.getMessage(), e.getCause());
         }

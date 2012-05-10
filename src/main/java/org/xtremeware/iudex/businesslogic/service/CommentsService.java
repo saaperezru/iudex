@@ -3,6 +3,7 @@ package org.xtremeware.iudex.businesslogic.service;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
+import org.xtremeware.iudex.businesslogic.DuplicityException;
 import org.xtremeware.iudex.businesslogic.InvalidVoException;
 import org.xtremeware.iudex.dao.AbstractDaoFactory;
 import org.xtremeware.iudex.entity.CommentEntity;
@@ -155,7 +156,7 @@ public class CommentsService {
 
     public CommentVo create(EntityManager em, CommentVo vo)
             throws MultipleMessagesException, ExternalServiceConnectionException,
-            DataBaseException, MaxCommentsLimitReachedException {
+            DataBaseException, MaxCommentsLimitReachedException, DuplicityException, DataBaseException {
         validateVo(em, vo);
 
         MultipleMessagesException multipleMessageException = new MultipleMessagesException();

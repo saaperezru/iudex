@@ -6,7 +6,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.xtremeware.iudex.businesslogic.service.InactiveUserException;
 import org.xtremeware.iudex.helper.Config;
-import org.xtremeware.iudex.helper.MultipleMessageException;
+import org.xtremeware.iudex.helper.MultipleMessagesException;
 import org.xtremeware.iudex.helper.Role;
 import org.xtremeware.iudex.helper.SecurityHelper;
 import org.xtremeware.iudex.vo.UserVo;
@@ -26,7 +26,7 @@ public class UsersFacadeIT {
      * Test of a successful registration
      */
     @Test
-    public void test_BL_2_1() throws MultipleMessageException {
+    public void test_BL_2_1() throws MultipleMessagesException {
         UserVo user = new UserVo();
         user.setFirstName("John");
         user.setLastName("Doe");
@@ -128,7 +128,7 @@ public class UsersFacadeIT {
      * Test a successful user account update
      */
     @Test
-    public void test_BL_11_1() throws MultipleMessageException {
+    public void test_BL_11_1() throws MultipleMessagesException {
         UserVo user = new UserVo();
         user.setId(5L);
         user.setFirstName("New name");
@@ -154,7 +154,7 @@ public class UsersFacadeIT {
      * Test an attempt to edit an inexistent user
      */
     @Test
-    public void test_BL_11_2() throws MultipleMessageException {
+    public void test_BL_11_2() throws MultipleMessagesException {
         UserVo user = new UserVo();
         user.setId(-1L);
         user.setFirstName("John");

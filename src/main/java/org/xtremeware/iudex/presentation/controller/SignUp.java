@@ -13,7 +13,7 @@ import org.xtremeware.iudex.businesslogic.InvalidVoException;
 import org.xtremeware.iudex.businesslogic.facade.ProgramsFacade;
 import org.xtremeware.iudex.businesslogic.facade.UsersFacade;
 import org.xtremeware.iudex.helper.Config;
-import org.xtremeware.iudex.helper.MultipleMessageException;
+import org.xtremeware.iudex.helper.MultipleMessagesException;
 import org.xtremeware.iudex.helper.Role;
 import org.xtremeware.iudex.vo.ProgramVo;
 import org.xtremeware.iudex.vo.UserVo;
@@ -123,7 +123,7 @@ public class SignUp {
         try {
             usersFacade.addUser(user);
             return "success";
-        } catch (MultipleMessageException ex) {
+        } catch (MultipleMessagesException ex) {
             fc.addMessage("signUpForm", new FacesMessage(ex.getMessage()));
 	    Config.getInstance().getServiceFactory().createLogService().error(ex.getMessage(),ex);
             return "failure";

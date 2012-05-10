@@ -7,7 +7,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import org.xtremeware.iudex.businesslogic.service.ServiceFactory;
-import org.xtremeware.iudex.helper.MultipleMessageException;
+import org.xtremeware.iudex.helper.MultipleMessagesException;
 import org.xtremeware.iudex.presentation.vovw.ProfessorVoVwFull;
 import org.xtremeware.iudex.vo.*;
 
@@ -39,7 +39,7 @@ public class ProfessorsFacade extends AbstractFacade {
 		return map;
 	}
 	
-	public ProfessorVo addProfessor(ProfessorVo vo) throws MultipleMessageException {
+	public ProfessorVo addProfessor(ProfessorVo vo) throws MultipleMessagesException {
 		ProfessorVo createdVo = null;
 		EntityManager em = null;
 		EntityTransaction tx = null;
@@ -49,7 +49,7 @@ public class ProfessorsFacade extends AbstractFacade {
 			tx.commit();
 			createdVo = getServiceFactory().createProfessorsService().create(em, vo);
 			tx.commit();
-		} catch (MultipleMessageException e) {
+		} catch (MultipleMessagesException e) {
 			throw e;
 		} catch (Exception e) {
 			if (em != null && tx != null) {
@@ -106,7 +106,7 @@ public class ProfessorsFacade extends AbstractFacade {
 		return rating;
 	}
 	
-	public ProfessorRatingVo rateProfessor(long professorId, long userId, int value) throws MultipleMessageException {
+	public ProfessorRatingVo rateProfessor(long professorId, long userId, int value) throws MultipleMessagesException {
 		EntityManager em = null;
 		EntityTransaction tx = null;
 		ProfessorRatingVo rating = null;
@@ -131,7 +131,7 @@ public class ProfessorsFacade extends AbstractFacade {
 			}
 			tx.commit();
 			
-		} catch (MultipleMessageException ex){
+		} catch (MultipleMessagesException ex){
 			throw ex;
 		}catch (Exception e) {
 			if (em != null && tx != null) {

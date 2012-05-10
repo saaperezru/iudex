@@ -5,7 +5,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import org.xtremeware.iudex.businesslogic.service.InactiveUserException;
 import org.xtremeware.iudex.businesslogic.service.ServiceFactory;
-import org.xtremeware.iudex.helper.MultipleMessageException;
+import org.xtremeware.iudex.helper.MultipleMessagesException;
 import org.xtremeware.iudex.vo.UserVo;
 
 public class UsersFacade extends AbstractFacade {
@@ -48,7 +48,7 @@ public class UsersFacade extends AbstractFacade {
 		}
 	}
 
-	public UserVo addUser(UserVo vo) throws MultipleMessageException {
+	public UserVo addUser(UserVo vo) throws MultipleMessagesException {
 		EntityManager em = null;
 		EntityTransaction tx = null;
 		UserVo newVo = null;
@@ -60,7 +60,7 @@ public class UsersFacade extends AbstractFacade {
 			// TODO: The confirmation email message should be configurable
 			getServiceFactory().createMailingService().sendMessage("<a href='http://iudex.j.rsnx.ru/confirm.xhtml?key=" + getServiceFactory().createUsersService().getConfirmationKeyByUserId(em, newVo.getId()).getConfirmationKey() + "'>Confirmar registro</a>", "Confirmar registro", vo.getUserName() + "@unal.edu.co");
 			tx.commit();
-		} catch (MultipleMessageException ex) {
+		} catch (MultipleMessagesException ex) {
 			throw ex;
 		} catch (Exception e) {
 			if (em != null && tx != null) {
@@ -112,7 +112,7 @@ public class UsersFacade extends AbstractFacade {
 	 * @return Returns null if there is a problem while persisting (logs all
 	 * errors) and throws an exception if data isn't valid.
 	 */
-	public UserVo editUser(UserVo vo) throws MultipleMessageException {
+	public UserVo editUser(UserVo vo) throws MultipleMessagesException {
 
         EntityManager em = null;
         EntityTransaction tx = null;
@@ -123,7 +123,7 @@ public class UsersFacade extends AbstractFacade {
             tx.begin();
             user = getServiceFactory().createUsersService().update(em, vo);
             tx.commit();
-        } catch (MultipleMessageException ex) {
+        } catch (MultipleMessagesException ex) {
             throw ex;
         } catch (Exception e) {
             if (em != null && tx != null) {

@@ -9,7 +9,7 @@ import org.xtremeware.iudex.dao.AbstractDaoFactory;
 import org.xtremeware.iudex.entity.Entity;
 import org.xtremeware.iudex.helper.DataBaseException;
 import org.xtremeware.iudex.helper.ExternalServiceConnectionException;
-import org.xtremeware.iudex.helper.MultipleMessageException;
+import org.xtremeware.iudex.helper.MultipleMessagesException;
 import org.xtremeware.iudex.vo.ValueObject;
 
 /**
@@ -53,7 +53,7 @@ public abstract class CrudService<E extends ValueObject, F extends Entity<E>> {
         return updateInterface;
     }
 
-    public E create(EntityManager em, E vo) throws MultipleMessageException,
+    public E create(EntityManager em, E vo) throws MultipleMessagesException,
             ExternalServiceConnectionException,
             DataBaseException {
         validateVo(em, vo);
@@ -77,7 +77,7 @@ public abstract class CrudService<E extends ValueObject, F extends Entity<E>> {
 
     public E update(EntityManager em, E vo)
             throws ExternalServiceConnectionException,
-            MultipleMessageException,
+            MultipleMessagesException,
             DataBaseException {
         validateVo(em, vo);
         F entity = getUpdateInterface().update(em, voToEntity(em, vo));
@@ -89,10 +89,10 @@ public abstract class CrudService<E extends ValueObject, F extends Entity<E>> {
     }
 
     public abstract void validateVo(EntityManager em, E vo)
-            throws MultipleMessageException,
+            throws MultipleMessagesException,
             ExternalServiceConnectionException, DataBaseException;
 
     public abstract F voToEntity(EntityManager em, E vo)
-            throws MultipleMessageException,
+            throws MultipleMessagesException,
             ExternalServiceConnectionException, DataBaseException;
 }

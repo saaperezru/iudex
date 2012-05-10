@@ -2,15 +2,12 @@ package org.xtremeware.iudex.businesslogic.facade;
 
 import java.util.List;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.NoResultException;
-import javax.persistence.Persistence;
 import org.junit.*;
 import static org.junit.Assert.*;
-import org.xtremeware.iudex.businesslogic.InvalidVoException;
-import org.xtremeware.iudex.entity.Entity;
 import org.xtremeware.iudex.entity.ProgramEntity;
 import org.xtremeware.iudex.helper.Config;
+import org.xtremeware.iudex.helper.DataBaseException;
+import org.xtremeware.iudex.helper.MultipleMessagesException;
 import org.xtremeware.iudex.vo.ProgramVo;
 
 /**
@@ -35,42 +32,124 @@ public class ProgramsFacadeIT {
 
     @Before
     public void setUp() {
-        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("org.xtremeware.iudex_local");
-        entityManager = entityManagerFactory.createEntityManager();
+        entityManager = TestHelper.createEntityManager();
     }
 
     @After
     public void tearDown() {
     }
 
-//    /**
-//     * Test successfully insert of a period
-//     */
-//    @Test
-//    public void test1() throws InvalidVoException {
-//        String name = "SISTEMAS";
-//        ProgramsFacade programsFacade = Config.getInstance().getFacadeFactory().getProgramsFacade();
-//        ProgramVo programVo = programsFacade.addProgram(name);
-//        assertNotNull(programVo);
-//        assertEquals(name, programVo.getName());
-//        assertNotNull(programVo.getId());
-//    }
-//
-//    @Test(expected = InvalidVoException.class)
-//    public void test2() throws InvalidVoException {
-//        String name = "123456789012345678901234567890123456789012345678901234567890";
-//        ProgramsFacade programsFacade = Config.getInstance().getFacadeFactory().getProgramsFacade();
-//        ProgramVo programVo = programsFacade.addProgram(name);
-//    }
-//
-//    @Test
-//    public void test3_1() throws InvalidVoException {
-//        String name = "FARMACIA";
-//        ProgramsFacade programsFacade = Config.getInstance().getFacadeFactory().getProgramsFacade();
-//        ProgramVo programVo = programsFacade.addProgram(name);
-//
-//        assertEquals(null, programVo);
-//    }
+    /**
+     * Test successfully insert of a period
+     */
+    @Test
+    public void testBL_26_1() throws MultipleMessagesException {
+        String name = TestHelper.randomString(50);
+        ProgramsFacade programsFacade = Config.getInstance().getFacadeFactory().getProgramsFacade();
+        ProgramVo programVo = programsFacade.addProgram(name);
+        assertNotNull(programVo);
+        assertEquals(name, programVo.getName());
+        assertNotNull(programVo.getId());
+    }
+
+    @Test()
+    public void testBL_26_2() {
+        ProgramsFacade programsFacade = Config.getInstance().getFacadeFactory().getProgramsFacade();
+        String[] expectedMessages = new String[]{
+            "program.name.null"};
+        try {
+            ProgramVo programVo = programsFacade.addProgram(null);
+        } catch (MultipleMessagesException ex) {
+            TestHelper.checkExceptionMessages(ex, expectedMessages);
+        }
+        String name = TestHelper.randomString(51);
+        expectedMessages = new String[]{
+            "program.name.tooLong"};
+        try {
+            ProgramVo programVo = programsFacade.addProgram(name);
+        } catch (MultipleMessagesException ex) {
+            TestHelper.checkExceptionMessages(ex, expectedMessages);
+        }
+        expectedMessages = new String[]{
+            "program.name.tooShort"};
+
+        try {
+            ProgramVo programVo = programsFacade.addProgram("");
+        } catch (MultipleMessagesException ex) {
+            TestHelper.checkExceptionMessages(ex, expectedMessages);
+        }
+    }
+
+    @Test
+    public void testBL_27_1() throws MultipleMessagesException, Exception {
+        ProgramsFacade programsFacade = Config.getInstance().getFacadeFactory().getProgramsFacade();
+        programsFacade.removeProgram(2532L);
+        programsFacade.removeProgram(2541L);
+
+
+    }
+
+    @Test
+    public void testBL_27_2() throws MultipleMessagesException, Exception {
+        ProgramsFacade programsFacade = Config.getInstance().getFacadeFactory().getProgramsFacade();
+        Long id = 2532L;
+        try {
+            programsFacade.removeProgram(id);
+        } catch (DataBaseException ex) {
+            assertEquals("No entity found for id "
+                    + String.valueOf(id)
+                    + "while triying to delete the associated record", ex.getMessage());
+        }
+
+        id = 2541L;
+        try {
+            programsFacade.removeProgram(id);
+        } catch (DataBaseException ex) {
+            assertEquals("No entity found for id "
+                    + String.valueOf(id)
+                    + "while triying to delete the associated record", ex.getMessage());
+        }
+        id = Long.MAX_VALUE;
+        try {
+            programsFacade.removeProgram(id);
+        } catch (DataBaseException ex) {
+            assertEquals("No entity found for id "
+                    + String.valueOf(id)
+                    + "while triying to delete the associated record", ex.getMessage());
+        }
+        id = Long.MIN_VALUE;
+        try {
+            programsFacade.removeProgram(id);
+        } catch (DataBaseException ex) {
+            assertEquals("No entity found for id "
+                    + String.valueOf(id)
+                    + "while triying to delete the associated record", ex.getMessage());
+        }
+        id = 0L;
+        try {
+            programsFacade.removeProgram(id);
+        } catch (DataBaseException ex) {
+            assertEquals("No entity found for id "
+                    + String.valueOf(id)
+                    + "while triying to delete the associated record", ex.getMessage());
+        }
+    }
+
+    @Test
+    public void BL_28_1() throws Exception {
+        ProgramsFacade programsFacade = Config.getInstance().getFacadeFactory().getProgramsFacade();
+        List<ProgramVo> pvs  = programsFacade.listPrograms();
+        for (ProgramVo pv : pvs) {
+            ProgramVo result = entityManager.createQuery(
+                    "SELECT p FROM Program p WHERE p.id =:id", ProgramEntity.class).
+                    setParameter("id", pv.getId()).getSingleResult().toVo();
+            assertNotNull(result);
+            assertEquals(result.getId(), pv.getId());
+            assertEquals(result.getName(), pv.getName());
+        }
+        int size = entityManager.createQuery("SELECT COUNT(p) FROM Program p", Long.class).getSingleResult().intValue();
+        assertEquals(size, pvs.size());
+    }
 //
 ////    @Test
 ////    public void test3_2() throws InvalidVoException {

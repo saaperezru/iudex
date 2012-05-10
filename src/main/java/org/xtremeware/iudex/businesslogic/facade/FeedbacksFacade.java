@@ -19,11 +19,46 @@ public class FeedbacksFacade extends AbstractFacade {
     public List<FeedbackTypeVo> getFeedbackTypes() throws Exception {
         List<FeedbackTypeVo> list = null;
         EntityManager em = null;
-        EntityTransaction tx = null;
         try {
             em = getEntityManagerFactory().createEntityManager();
             list = getServiceFactory().createFeedbackTypesService().list(em);
 
+        } catch (Exception e) {
+            getServiceFactory().createLogService().error(e.getMessage(), e);
+            throw e;
+        } finally {
+            if (em != null) {
+                em.clear();
+                em.close();
+            }
+        }
+        return list;
+    }
+    
+    public List<FeedbackVo> getFeedbacksByFeedbackType(long feedbackTypeId) throws Exception {
+        List<FeedbackVo> list = null;
+        EntityManager em = null;
+        try {
+            em = getEntityManagerFactory().createEntityManager();
+            list = getServiceFactory().createFeedbacksService().getFeedbacksByFeedbackType(em,feedbackTypeId);
+        } catch (Exception e) {
+            getServiceFactory().createLogService().error(e.getMessage(), e);
+            throw e;
+        } finally {
+            if (em != null) {
+                em.clear();
+                em.close();
+            }
+        }
+        return list;
+    }
+    
+    public List<FeedbackVo> getAllFeedbacks() throws Exception {
+        List<FeedbackVo> list = null;
+        EntityManager em = null;
+        try {
+            em = getEntityManagerFactory().createEntityManager();
+            list = getServiceFactory().createFeedbacksService().getAllFeedbacks(em);
         } catch (Exception e) {
             getServiceFactory().createLogService().error(e.getMessage(), e);
             throw e;

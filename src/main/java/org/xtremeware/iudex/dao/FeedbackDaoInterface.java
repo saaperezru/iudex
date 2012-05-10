@@ -26,4 +26,6 @@ public interface FeedbackDaoInterface extends CrudDaoInterface<FeedbackEntity> {
 
     public List<FeedbackEntity> getByContentLike(EntityManager em, String query)
             throws DataBaseException;
+
+    public List<FeedbackEntity> getAll(EntityManager em)throws DataBaseException;
 }

@@ -8,7 +8,8 @@ import org.xtremeware.iudex.vo.FeedbackVo;
 @javax.persistence.Entity(name = "Feedback")
 @NamedQueries({
     @NamedQuery(name = "getByTypeId", query = "SELECT f FROM Feedback f WHERE f.type.id = :feedbackTypeId"),
-    @NamedQuery(name = "getFeedbackByContentLike", query = "SELECT f FROM Feedback f WHERE f.content = :query")
+    @NamedQuery(name = "getFeedbackByContentLike", query = "SELECT f FROM Feedback f WHERE f.content = :query"),
+    @NamedQuery(name = "getAllFeedbacks", query = "SELECT f FROM Feedback f")
 })
 @Table(name = "FEEDBACK")
 public class FeedbackEntity implements Serializable, Entity<FeedbackVo> {

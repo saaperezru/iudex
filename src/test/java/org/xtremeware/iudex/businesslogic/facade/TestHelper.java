@@ -8,6 +8,8 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Properties;
 import java.util.Random;
+import javax.persistence.EntityManager;
+import javax.persistence.Persistence;
 import org.h2.tools.RunScript;
 import static org.junit.Assert.assertTrue;
 import org.xtremeware.iudex.helper.MultipleMessagesException;
@@ -40,5 +42,9 @@ public class TestHelper {
     
     public static String randomString(int length){
         return new BigInteger(length * 5, new Random()).toString(32);
+    }
+    
+    public static EntityManager createEntityManager(){
+        return Persistence.createEntityManagerFactory("org.xtremeware.iudex_local").createEntityManager();
     }
 }

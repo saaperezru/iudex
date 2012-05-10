@@ -1,8 +1,6 @@
 package org.xtremeware.iudex.businesslogic.facade;
 
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -21,7 +19,6 @@ import org.xtremeware.iudex.vo.PeriodVo;
  */
 public class PeriodsFacadeIT {
 
-    private Set<String> exceptionMessage;
     private EntityManager entityManager;
 
     public PeriodsFacadeIT() {
@@ -32,26 +29,10 @@ public class PeriodsFacadeIT {
         TestHelper.initializeDatabase();
     }
 
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
     @Before
     public void setUp() {
 
-        EntityManagerFactory entityManagerFactory = Persistence.
-                createEntityManagerFactory("org.xtremeware.iudex_local");
-        entityManager = entityManagerFactory.createEntityManager();
-
-        exceptionMessage = new TreeSet<String>();
-        exceptionMessage.add(
-                "Int Semester in the provided PeriodVo must be greater than 1 and less than 3");
-        exceptionMessage.add(
-                "Int Year in the provided PeriodVo must be possitive");
-    }
-
-    @After
-    public void tearDown() {
+        entityManager = TestHelper.createEntityManager();
     }
 
     /**
@@ -83,42 +64,44 @@ public class PeriodsFacadeIT {
             throws DataBaseException {
         PeriodsFacade periodsFacade = Config.getInstance().getFacadeFactory().
                 getPeriodsFacade();
+        String[] expectedMessages = new String[]{
+            "period.semester.invalidSemester"};
         try {
             PeriodVo periodVo = periodsFacade.addPeriod(2012, 4);
         } catch (MultipleMessagesException ex) {
-            for (String message : ex.getMessages()) {
-                assertTrue(exceptionMessage.contains(message));
-            }
+            TestHelper.checkExceptionMessages(ex, expectedMessages);
         }
+        expectedMessages = new String[]{
+            "period.year.invalidYear"};
         try {
             PeriodVo periodVo = periodsFacade.addPeriod(-1, 3);
         } catch (MultipleMessagesException ex) {
-            for (String message : ex.getMessages()) {
-                assertTrue(exceptionMessage.contains(message));
-            }
+            TestHelper.checkExceptionMessages(ex, expectedMessages);
         }
+        expectedMessages = new String[]{
+            "period.year.invalidYear",
+            "period.semester.invalidSemester"};
         try {
             PeriodVo periodVo = periodsFacade.addPeriod(-1, 0);
         } catch (MultipleMessagesException ex) {
-            for (String message : ex.getMessages()) {
-                assertTrue(exceptionMessage.contains(message));
-            }
+            TestHelper.checkExceptionMessages(ex, expectedMessages);
         }
+        expectedMessages = new String[]{
+            "period.semester.invalidSemester"};
         try {
             PeriodVo periodVo = periodsFacade.addPeriod(Integer.MAX_VALUE,
                     Integer.MAX_VALUE);
         } catch (MultipleMessagesException ex) {
-            for (String message : ex.getMessages()) {
-                assertTrue(exceptionMessage.contains(message));
-            }
+            TestHelper.checkExceptionMessages(ex, expectedMessages);
         }
+        expectedMessages = new String[]{
+            "period.year.invalidYear",
+            "period.semester.invalidSemester"};
         try {
             PeriodVo periodVo = periodsFacade.addPeriod(Integer.MIN_VALUE,
                     Integer.MIN_VALUE);
         } catch (MultipleMessagesException ex) {
-            for (String message : ex.getMessages()) {
-                assertTrue(exceptionMessage.contains(message));
-            }
+            TestHelper.checkExceptionMessages(ex, expectedMessages);
         }
     }
 
@@ -168,9 +151,8 @@ public class PeriodsFacadeIT {
             periodsFacade.removePeriod(id);
         } catch (Exception ex) {
             assertEquals(DataBaseException.class, ex.getClass());
-            assertEquals("No entity found for id " + String.valueOf(id) +
-                    "while triying to delete the associated record", ex.
-                    getMessage());
+            assertEquals("No entity found for id " + String.valueOf(id)
+                    + "while triying to delete the associated record", ex.getMessage());
             int size = entityManager.createQuery(
                     "SELECT COUNT(p) FROM Course p WHERE period.id = :id",
                     Long.class).setParameter("id", id).getSingleResult().
@@ -182,9 +164,8 @@ public class PeriodsFacadeIT {
             periodsFacade.removePeriod(id);
         } catch (Exception ex) {
             assertEquals(DataBaseException.class, ex.getClass());
-            assertEquals("No entity found for id " + String.valueOf(id) +
-                    "while triying to delete the associated record", ex.
-                    getMessage());
+            assertEquals("No entity found for id " + String.valueOf(id)
+                    + "while triying to delete the associated record", ex.getMessage());
             int size = entityManager.createQuery(
                     "SELECT COUNT(p) FROM Course p WHERE period.id = :id",
                     Long.class).setParameter("id", id).getSingleResult().
@@ -196,9 +177,8 @@ public class PeriodsFacadeIT {
             periodsFacade.removePeriod(id);
         } catch (Exception ex) {
             assertEquals(DataBaseException.class, ex.getClass());
-            assertEquals("No entity found for id " + String.valueOf(id) +
-                    "while triying to delete the associated record", ex.
-                    getMessage());
+            assertEquals("No entity found for id " + String.valueOf(id)
+                    + "while triying to delete the associated record", ex.getMessage());
             int size = entityManager.createQuery(
                     "SELECT COUNT(p) FROM Course p WHERE period.id = :id",
                     Long.class).setParameter("id", id).getSingleResult().
@@ -210,9 +190,8 @@ public class PeriodsFacadeIT {
             periodsFacade.removePeriod(id);
         } catch (Exception ex) {
             assertEquals(DataBaseException.class, ex.getClass());
-            assertEquals("No entity found for id " + String.valueOf(id) +
-                    "while triying to delete the associated record", ex.
-                    getMessage());
+            assertEquals("No entity found for id " + String.valueOf(id)
+                    + "while triying to delete the associated record", ex.getMessage());
             int size = entityManager.createQuery(
                     "SELECT COUNT(p) FROM Course p WHERE period.id = :id",
                     Long.class).setParameter("id", id).getSingleResult().

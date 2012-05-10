@@ -47,36 +47,37 @@ public class FeedbacksService extends CrudService<FeedbackVo, FeedbackEntity> {
     public void validateVo(EntityManager em, FeedbackVo vo)
             throws ExternalServiceConnectionException, MultipleMessagesException,
             DataBaseException {
-        if (em == null) {
-            throw new IllegalArgumentException("EntityManager em cannot be null");
-        }
+
         MultipleMessagesException multipleMessageException =
                 new MultipleMessagesException();
         if (vo == null) {
             multipleMessageException.addMessage(
-                    "Null FeedbackVo");
+                    "feedback.null");
             throw multipleMessageException;
         }
         if (vo.getFeedbackTypeId() == null) {
             multipleMessageException.addMessage(
-                    "Null feedbackTypeId in the provided FeedbackVo");
-        } else if (getDaoFactory().getFeedbackTypeDao().getById(em, vo.
-                getFeedbackTypeId()) == null) {
+                    "feedback.feedbackTypeId.null");
+        } else if (getDaoFactory().getFeedbackTypeDao().getById(em, vo.getFeedbackTypeId()) == null) {
             multipleMessageException.addMessage(
-                    "No such FeedbackType associated whit FeedbackVo.FeedbackTypeId");
+                    "feedback.feedbackTypeId.element.notFound");
         }
         if (vo.getDate() == null) {
             multipleMessageException.addMessage(
-                    "Null date in the provided FeedbackVo");
+                    "feedback.date.null");
         }
         if (vo.getContent() == null) {
             multipleMessageException.addMessage(
-                    "Invalid content in the the provided FeedbackVo");
+                    "feedback.content.null");
         } else {
             vo.setContent(SecurityHelper.sanitizeHTML(vo.getContent()));
             if (vo.getContent().length() > 2000) {
                 multipleMessageException.addMessage(
-                        "Invalid content length in the provided FeedbackVo");
+                        "feedback.content.tooLong");
+            }
+            if (vo.getContent().isEmpty()) {
+                multipleMessageException.addMessage(
+                        "feedback.content.tooShort");
             }
         }
         if (!multipleMessageException.getMessages().isEmpty()) {
@@ -123,6 +124,32 @@ public class FeedbacksService extends CrudService<FeedbackVo, FeedbackEntity> {
         query = SecurityHelper.sanitizeHTML(query);
         List<FeedbackEntity> feedbackEntitys = getDaoFactory().getFeedbackDao().
                 getByContentLike(em, query);
+        if (feedbackEntitys.isEmpty()) {
+            return null;
+        }
+        ArrayList<FeedbackVo> arrayList = new ArrayList<FeedbackVo>();
+        for (FeedbackEntity feedbackEntity : feedbackEntitys) {
+            arrayList.add(feedbackEntity.toVo());
+        }
+        return arrayList;
+    }
+
+    public List<FeedbackVo> getFeedbacksByFeedbackType(EntityManager em, long feedbackTypeId) throws DataBaseException {
+        List<FeedbackEntity> feedbackEntitys = getDaoFactory().getFeedbackDao().
+                getByTypeId(em, feedbackTypeId);
+        if (feedbackEntitys.isEmpty()) {
+            return null;
+        }
+        ArrayList<FeedbackVo> arrayList = new ArrayList<FeedbackVo>();
+        for (FeedbackEntity feedbackEntity : feedbackEntitys) {
+            arrayList.add(feedbackEntity.toVo());
+        }
+        return arrayList;
+    }
+
+    public List<FeedbackVo> getAllFeedbacks(EntityManager em) throws DataBaseException {
+        List<FeedbackEntity> feedbackEntitys = getDaoFactory().getFeedbackDao()
+                .getAll(em);
         if (feedbackEntitys.isEmpty()) {
             return null;
         }

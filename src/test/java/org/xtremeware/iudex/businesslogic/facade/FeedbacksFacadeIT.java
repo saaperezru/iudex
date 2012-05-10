@@ -1,17 +1,14 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.xtremeware.iudex.businesslogic.facade;
 
 import java.util.*;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import org.junit.*;
 import static org.junit.Assert.*;
+import org.xtremeware.iudex.entity.FeedbackEntity;
+import org.xtremeware.iudex.entity.FeedbackTypeEntity;
 import org.xtremeware.iudex.helper.Config;
 import org.xtremeware.iudex.helper.MultipleMessagesException;
+import org.xtremeware.iudex.vo.FeedbackTypeVo;
 import org.xtremeware.iudex.vo.FeedbackVo;
 
 /**
@@ -30,17 +27,9 @@ public class FeedbacksFacadeIT {
         TestHelper.initializeDatabase();
     }
 
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
     @Before
     public void setUp() {
-        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("org.xtremeware.iudex_local");
-    }
-
-    @After
-    public void tearDown() {
+        entityManager = TestHelper.createEntityManager();
     }
 
     @Test
@@ -62,57 +51,94 @@ public class FeedbacksFacadeIT {
                 getFeedbacksFacade();
         FeedbackVo fv = null;
         String[] expectedMessages = new String[]{
-            "user.firstName.null",
-            "user.lastName.null",
-            "user.userName.null",
-            "user.password.null", "user.programsId.null",
-            "user.role.null"};
+            "feedback.date.null",
+            "feedback.content.null",
+            "feedback.feedbackTypeId.element.notFound"};
         try {
             fv = ff.addFeedback(0L, null, null);
         } catch (MultipleMessagesException ex) {
             TestHelper.checkExceptionMessages(ex, expectedMessages);
         }
+        expectedMessages = new String[]{
+            "feedback.date.null",
+            "feedback.content.tooShort",
+            "feedback.feedbackTypeId.element.notFound"};
         try {
             fv = ff.addFeedback(Long.MAX_VALUE, "", null);
         } catch (MultipleMessagesException ex) {
             TestHelper.checkExceptionMessages(ex, expectedMessages);
         }
+        expectedMessages = new String[]{
+            "feedback.date.null",
+            "feedback.content.tooLong",
+            "feedback.feedbackTypeId.element.notFound"};
         try {
-            fv = ff.addFeedback(Long.MIN_VALUE, "", null);
+            fv = ff.addFeedback(Long.MIN_VALUE, TestHelper.randomString(2001), null);
         } catch (MultipleMessagesException ex) {
             TestHelper.checkExceptionMessages(ex, expectedMessages);
         }
         assertNull(fv);
 
     }
-//    /**
-//     * Test of getFeedbackTypes method, of class FeedbacksFacade.
-//     */
-//    @Test
-//    public void testGetFeedbackTypes() throws Exception {
-//        System.out.println("getFeedbackTypes");
-//        FeedbacksFacade instance = null;
-//        List expResult = null;
-//        List result = instance.getFeedbackTypes();
-//        assertEquals(expResult, result);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-//
-//    /**
-//     * Test of addFeedback method, of class FeedbacksFacade.
-//     */
-//    @Test
-//    public void testAddFeedback() throws Exception {
-//        System.out.println("addFeedback");
-//        long feedbackType = 0L;
-//        String content = "";
-//        Date date = null;
-//        FeedbacksFacade instance = null;
-//        FeedbackVo expResult = null;
-//        FeedbackVo result = instance.addFeedback(feedbackType, content, date);
-//        assertEquals(expResult, result);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
+
+    @Test
+    public void BL_9_3() throws Exception {
+        FeedbacksFacade ff = Config.getInstance().getFacadeFactory().
+                getFeedbacksFacade();
+        List<FeedbackVo> fvs = ff.getAllFeedbacks();
+        for (FeedbackVo fv : fvs) {
+            FeedbackVo result = entityManager.createQuery(
+                    "SELECT p FROM Feedback p WHERE p.id =:id", FeedbackEntity.class).
+                    setParameter("id", fv.getId()).getSingleResult().toVo();
+            assertNotNull(result);
+            assertEquals(result.getId(), fv.getId());
+            assertEquals(result.getFeedbackTypeId(), fv.getFeedbackTypeId());
+            assertEquals(result.getContent(), fv.getContent());
+        }
+        int size = entityManager.createQuery("SELECT COUNT(p) FROM Feedback p", Long.class).getSingleResult().intValue();
+        assertEquals(size, fvs.size());
+    }
+
+    @Test
+    public void BL_9_4() throws Exception {
+
+        List<Long> feedbackTypeIds = entityManager.createQuery(
+                "SELECT p.id FROM FeedbackType p", Long.class).getResultList();
+
+        FeedbacksFacade ff = Config.getInstance().getFacadeFactory().
+                getFeedbacksFacade();
+        for (Long id : feedbackTypeIds) {
+            List<FeedbackVo> fvs = ff.getFeedbacksByFeedbackType(id);
+            for (FeedbackVo fv : fvs) {
+                FeedbackVo result = entityManager.createQuery(
+                        "SELECT p FROM Feedback p WHERE p.id =:id", FeedbackEntity.class).
+                        setParameter("id", fv.getId()).getSingleResult().toVo();
+
+                assertNotNull(result);
+                assertEquals(result.getId(), fv.getId());
+                assertEquals(id, fv.getFeedbackTypeId());
+                assertEquals(result.getFeedbackTypeId(), fv.getFeedbackTypeId());
+                assertEquals(result.getContent(), fv.getContent());
+            }
+            int size = entityManager.createQuery("SELECT COUNT(p) FROM Feedback p WHERE p.type.id =:id", Long.class).setParameter("id", id).getSingleResult().intValue();
+            assertEquals(size, fvs.size());
+        }
+    }
+
+    @Test
+    public void BL_9_5() throws Exception {
+        FeedbacksFacade ff = Config.getInstance().getFacadeFactory().
+                getFeedbacksFacade();
+        List<FeedbackTypeVo> fvs = ff.getFeedbackTypes();
+        for (FeedbackTypeVo fv : fvs) {
+            FeedbackTypeVo result = entityManager.createQuery(
+                    "SELECT p FROM FeedbackType p WHERE p.id =:id", FeedbackTypeEntity.class).
+                    setParameter("id", fv.getId()).getSingleResult().toVo();
+            assertNotNull(result);
+            assertEquals(result.getId(), fv.getId());
+            assertEquals(result.getName(), fv.getName());
+        }
+        int size = entityManager.createQuery("SELECT COUNT(p) FROM FeedbackType p", Long.class).getSingleResult().intValue();
+        assertEquals(size, fvs.size());
+    }
 }

@@ -48,80 +48,81 @@ public class UsersService extends CrudService<UserVo, UserEntity> {
     public void validateVo(EntityManager em, UserVo vo) throws
             MultipleMessagesException, ExternalServiceConnectionException,
             DataBaseException {
-        if (em == null) {
-            throw new IllegalArgumentException("EntityManager em cannot be null");
-        }
         MultipleMessagesException multipleMessagesException =
                 new MultipleMessagesException();
 
         if (vo == null) {
             multipleMessagesException.addMessage(
-                    "Null UserVo");
+                    "user.null");
             throw multipleMessagesException;
         }
 
         if (vo.getFirstName() == null) {
             multipleMessagesException.addMessage(
-                    "Null firstName in the provided UserVo");
+                    "user.firstName.null");
         } else {
             vo.setFirstName(SecurityHelper.sanitizeHTML(vo.getFirstName()));
             if (vo.getFirstName().isEmpty()) {
                 multipleMessagesException.addMessage(
-                        "FirstName length must be greater than 0");
+                        "user.firstName.empty");
             }
         }
         if (vo.getLastName() == null) {
             multipleMessagesException.addMessage(
-                    "Null lastName in the provided UserVo");
+                    "user.lastName.null");
         } else {
             vo.setLastName(SecurityHelper.sanitizeHTML(vo.getLastName()));
             if (vo.getLastName().isEmpty()) {
                 multipleMessagesException.addMessage(
-                        "LastName length must be greater than 0");
+                        "user.lastName.empty");
             }
         }
         if (vo.getUserName() == null) {
             multipleMessagesException.addMessage(
-                    "Null userName in the provided UserVo");
+                    "user.userName.null");
         } else {
             vo.setUserName(SecurityHelper.sanitizeHTML(vo.getUserName()));
-            if (vo.getUserName().length() > MAX_USERNAME_LENGTH || vo.
-                    getUserName().length() < MIN_USERNAME_LENGTH) {
+            if (vo.getUserName().length() < MIN_USERNAME_LENGTH) {
                 multipleMessagesException.addMessage(
-                        "Invalid userName length in the provided UserVo");
+                        "user.userName.tooShort");
+            } else if (vo.getUserName().length() > MAX_USERNAME_LENGTH) {
+                multipleMessagesException.addMessage(
+                        "user.userName.tooLong");
             }
         }
         if (vo.getPassword() == null) {
             multipleMessagesException.addMessage(
-                    "Null password in the provided UserVo");
+                    "user.password.null");
         } else {
             vo.setUserName(SecurityHelper.sanitizeHTML(vo.getUserName()));
-            if (vo.getPassword().length() > MAX_USER_PASSWORD_LENGTH || vo.
-                    getPassword().length() < MIN_USER_PASSWORD_LENGTH) {
+            if (vo.getPassword().length() < MIN_USER_PASSWORD_LENGTH) {
                 multipleMessagesException.addMessage(
-                        "Invalid password length in the provided UserVo");
+                        "user.password.tooShort");
+            } else if (vo.getPassword().length() > MAX_USER_PASSWORD_LENGTH) {
+                multipleMessagesException.addMessage(
+                        "user.password.tooLong");
             }
         }
         if (vo.getProgramsId() == null) {
             multipleMessagesException.addMessage(
-                    "Null programsId in the provided UserVo");
+                    "user.programsId.null");
         } else if (vo.getProgramsId().isEmpty()) {
             multipleMessagesException.addMessage(
-                    "programsId cannot be empity");
+                    "user.programsId.empty");
         } else {
             for (Long programId : vo.getProgramsId()) {
                 if (programId == null) {
                     multipleMessagesException.addMessage(
-                            "Any element in programsId cannot be null");
+                            "user.programsId.element.null");
                 } else if (getDaoFactory().getProgramDao().getById(em, programId) ==
                         null) {
                     multipleMessagesException.addMessage(
-                            "An element in programsId cannot be found");
+                            "user.programsId.element.notFound");
                 }
             }
         }
         if (vo.getRole() == null) {
-            multipleMessagesException.addMessage("Rol cannot be null");
+            multipleMessagesException.addMessage("user.role.null");
         }
     }
 

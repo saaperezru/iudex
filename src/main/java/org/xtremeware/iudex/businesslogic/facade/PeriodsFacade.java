@@ -28,7 +28,11 @@ public class PeriodsFacade extends AbstractFacade {
         } catch (DataBaseException e) {
             getServiceFactory().createLogService().error(e.getMessage(), e);
             if (em != null && tx != null) {
-                tx.rollback();
+                try {
+                    tx.rollback();
+                } catch (Exception ex) {
+                    getServiceFactory().createLogService().error(ex.getMessage(), ex);
+                }
             }
             throw e;
         } finally {
@@ -67,7 +71,11 @@ public class PeriodsFacade extends AbstractFacade {
         } catch (DataBaseException e) {
             getServiceFactory().createLogService().error(e.getMessage(), e);
             if (em != null && tx != null) {
-                tx.rollback();
+                try {
+                    tx.rollback();
+                } catch (Exception ex) {
+                    getServiceFactory().createLogService().error(ex.getMessage(), ex);
+                }
             }
             throw e;
         } catch (Exception e) {

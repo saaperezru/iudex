@@ -124,6 +124,10 @@ public class UsersService extends CrudService<UserVo, UserEntity> {
         if (vo.getRole() == null) {
             multipleMessagesException.addMessage("user.role.null");
         }
+        
+        if(!multipleMessagesException.getMessages().isEmpty()){
+            throw multipleMessagesException;
+        }
     }
 
     @Override

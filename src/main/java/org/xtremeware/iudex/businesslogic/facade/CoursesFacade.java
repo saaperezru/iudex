@@ -103,7 +103,7 @@ public class CoursesFacade extends AbstractFacade {
         return list;
     }
 
-    public CourseVo addCourse(long professorId, long subjectId, long periodId) throws MultipleMessagesException {
+    public CourseVo addCourse(long professorId, long subjectId, long periodId) throws MultipleMessagesException, Exception {
         CourseVo createdVo = null;
         EntityManager em = null;
         EntityTransaction tx = null;
@@ -121,14 +121,16 @@ public class CoursesFacade extends AbstractFacade {
             tx.commit();
         } catch (MultipleMessagesException e) {
             throw e;
-        } catch (DataBaseException e) {
-            getServiceFactory().createLogService().error(e.getMessage(), e);
-            if (em != null && tx != null) {
-                tx.rollback();
-            }
         } catch (Exception e) {
             getServiceFactory().createLogService().error(e.getMessage(), e);
-            
+            if (em != null && tx != null) {
+                try {
+                    tx.rollback();
+                } catch (Exception ex) {
+                    getServiceFactory().createLogService().error(ex.getMessage(), ex);
+                }
+            }
+            throw  e;
         } finally {
             if (em != null) {
                 em.clear();
@@ -148,10 +150,14 @@ public class CoursesFacade extends AbstractFacade {
             getServiceFactory().createCoursesService().remove(em, courseId);
             tx.commit();
         } catch (Exception e) {
-            if (em != null && tx != null) {
-                tx.rollback();
-            }
             getServiceFactory().createLogService().error(e.getMessage(), e);
+            if (em != null && tx != null) {
+                try {
+                    tx.rollback();
+                } catch (Exception ex) {
+                    getServiceFactory().createLogService().error(ex.getMessage(), ex);
+                }
+            }
             throw e;
         } finally {
             if (em != null) {
@@ -190,7 +196,7 @@ public class CoursesFacade extends AbstractFacade {
         return voVw;
     }
 
-    public CourseRatingVo rateCourse(long courseId, long userId, float value) throws MultipleMessagesException {
+    public CourseRatingVo rateCourse(long courseId, long userId, float value) throws MultipleMessagesException, Exception {
         EntityManager em = null;
         EntityTransaction tx = null;
         CourseRatingVo rating = null;
@@ -218,10 +224,15 @@ public class CoursesFacade extends AbstractFacade {
         } catch (MultipleMessagesException ex) {
             throw ex;
         } catch (Exception e) {
-            if (em != null && tx != null) {
-                tx.rollback();
-            }
             getServiceFactory().createLogService().error(e.getMessage(), e);
+            if (em != null && tx != null) {
+                try {
+                    tx.rollback();
+                } catch (Exception ex) {
+                    getServiceFactory().createLogService().error(ex.getMessage(), ex);
+                }
+            }
+            throw  e;
         } finally {
             if (em != null) {
                 em.clear();

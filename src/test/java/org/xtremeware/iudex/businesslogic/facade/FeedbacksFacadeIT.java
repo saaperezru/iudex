@@ -31,9 +31,15 @@ public class FeedbacksFacadeIT {
     public void setUp() {
         entityManager = TestHelper.createEntityManager();
     }
+    
+    @After
+    public void tearDown() {
+        entityManager.clear();
+        entityManager.close();
+    }
 
     @Test
-    public void BL_9_1() throws MultipleMessagesException {
+    public void BL_9_1() throws MultipleMessagesException, Exception {
         FeedbacksFacade ff = Config.getInstance().getFacadeFactory().
                 getFeedbacksFacade();
         FeedbackVo fv = ff.addFeedback(1L, "EL programa es muy lento", Calendar.getInstance().getTime());
@@ -46,7 +52,7 @@ public class FeedbacksFacadeIT {
     }
 
     @Test
-    public void BL_9_2() {
+    public void BL_9_2() throws Exception {
         FeedbacksFacade ff = Config.getInstance().getFacadeFactory().
                 getFeedbacksFacade();
         FeedbackVo fv = null;

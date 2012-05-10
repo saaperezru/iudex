@@ -1,6 +1,8 @@
 package org.xtremeware.iudex.businesslogic.facade;
 
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 import javax.persistence.EntityManager;
 import org.junit.*;
 import static org.junit.Assert.*;
@@ -26,10 +28,6 @@ public class ProgramsFacadeIT {
         TestHelper.initializeDatabase();
     }
 
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
     @Before
     public void setUp() {
         entityManager = TestHelper.createEntityManager();
@@ -37,13 +35,15 @@ public class ProgramsFacadeIT {
 
     @After
     public void tearDown() {
+        entityManager.clear();
+        entityManager.close();
     }
 
     /**
      * Test successfully insert of a period
      */
     @Test
-    public void testBL_26_1() throws MultipleMessagesException {
+    public void testBL_26_1() throws MultipleMessagesException, Exception {
         String name = TestHelper.randomString(50);
         ProgramsFacade programsFacade = Config.getInstance().getFacadeFactory().getProgramsFacade();
         ProgramVo programVo = programsFacade.addProgram(name);
@@ -53,7 +53,7 @@ public class ProgramsFacadeIT {
     }
 
     @Test()
-    public void testBL_26_2() {
+    public void testBL_26_2() throws Exception {
         ProgramsFacade programsFacade = Config.getInstance().getFacadeFactory().getProgramsFacade();
         String[] expectedMessages = new String[]{
             "program.name.null"};
@@ -78,6 +78,36 @@ public class ProgramsFacadeIT {
         } catch (MultipleMessagesException ex) {
             TestHelper.checkExceptionMessages(ex, expectedMessages);
         }
+    }
+    
+    @Test
+    public void BL_29_1() throws Exception {
+        String name = TestHelper.randomString(10);
+        Set<String> names = new TreeSet<String>();
+        ProgramsFacade programsFacade = Config.getInstance().getFacadeFactory().getProgramsFacade();
+        names.add(name);
+        assertNotNull(programsFacade.addProgram(name));
+        
+        names.add("PRE"+name);
+        assertNotNull(programsFacade.addProgram("PRE"+name));
+        
+        names.add(name+"POS");
+        assertNotNull(programsFacade.addProgram(name+"POS"));
+        
+        names.add("PRE"+name+"POS");
+        assertNotNull(programsFacade.addProgram("PRE"+name+"POS"));
+        
+        List<ProgramVo> pvs  = programsFacade.getProgramsAutocomplete(name);
+        for (ProgramVo pv : pvs) {
+            ProgramVo result = entityManager.createQuery(
+                    "SELECT p FROM Program p WHERE p.id =:id", ProgramEntity.class).
+                    setParameter("id", pv.getId()).getSingleResult().toVo();
+            assertNotNull(result);
+            assertEquals(result.getId(), pv.getId());
+            assertEquals(result.getName(), pv.getName());
+            assertTrue(names.contains(pv.getName()));
+        }
+        assertEquals(names.size(), pvs.size());
     }
 
     @Test
@@ -150,34 +180,4 @@ public class ProgramsFacadeIT {
         int size = entityManager.createQuery("SELECT COUNT(p) FROM Program p", Long.class).getSingleResult().intValue();
         assertEquals(size, pvs.size());
     }
-//
-////    @Test
-////    public void test3_2() throws InvalidVoException {
-////        String name = "ECONOMÍA";
-////        ProgramsFacade programsFacade = Config.getInstance().getFacadeFactory().getProgramsFacade();
-////        ProgramVo programVo = programsFacade.addProgram(name);
-////
-////        assertEquals(null, programVo);
-////    }
-//    @Test(expected = NoResultException.class)
-//    public void test4() throws InvalidVoException, Exception {
-//        ProgramsFacade programsFacade = Config.getInstance().getFacadeFactory().getProgramsFacade();
-//        long id = 2539;
-//        programsFacade.removeProgram(id);
-//        Object singleResult = entityManager.createQuery("SELECT p FROM Program p WHERE p.id = :id").
-//                setParameter("id", id).getSingleResult();
-//    }
-//
-//    @Test()
-//    public void test5() throws InvalidVoException, Exception {
-//        ProgramsFacade programsFacade = Config.getInstance().getFacadeFactory().getProgramsFacade();
-//        List<ProgramVo> programVos = programsFacade.listPrograms();
-//        for (ProgramVo programVo : programVos) {
-//            ProgramVo result = (ProgramVo) ((Entity) entityManager.createQuery("SELECT p FROM Program p WHERE p.id = :id").
-//                    setParameter("id", programVo.getId()).getSingleResult()).toVo();
-//            assertTrue(programVo.equals(result));
-//        }
-//        int size = entityManager.createQuery("SELECT COUNT(p) FROM Program p", Long.class).getSingleResult().intValue();
-//        assertEquals(size, programVos.size());
-//    }
 }

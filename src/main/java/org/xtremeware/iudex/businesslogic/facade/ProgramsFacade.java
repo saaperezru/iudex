@@ -1,8 +1,6 @@
 package org.xtremeware.iudex.businesslogic.facade;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
@@ -28,8 +26,13 @@ public class ProgramsFacade extends AbstractFacade {
         } catch (Exception e) {
             getServiceFactory().createLogService().error(e.getMessage(), e);
             if (em != null && tx != null) {
-                tx.rollback();
+                try {
+                    tx.rollback();
+                } catch (Exception ex) {
+                    getServiceFactory().createLogService().error(ex.getMessage(), ex);
+                }
             }
+            throw  e;
         } finally {
             if (em != null) {
                 em.clear();
@@ -46,7 +49,7 @@ public class ProgramsFacade extends AbstractFacade {
      * @return Returns null if there is a problem while persisting (logs all
      * errors) and throws an exception if data isn't valid.
      */
-    public ProgramVo addProgram(String name) throws MultipleMessagesException {
+    public ProgramVo addProgram(String name) throws MultipleMessagesException, Exception {
         ProgramVo createdVo = null;
         ProgramVo vo = new ProgramVo();
         vo.setName(name);
@@ -63,8 +66,13 @@ public class ProgramsFacade extends AbstractFacade {
         } catch (Exception e) {
             getServiceFactory().createLogService().error(e.getMessage(), e);
             if (em != null && tx != null) {
-                tx.rollback();
+                try {
+                    tx.rollback();
+                } catch (Exception ex) {
+                    getServiceFactory().createLogService().error(ex.getMessage(), ex);
+                }
             }
+            throw e;
         } finally {
             if (em != null) {
                 em.clear();
@@ -74,15 +82,12 @@ public class ProgramsFacade extends AbstractFacade {
         return createdVo;
     }
 
-    public Map<Long, String> getProgramsAutocomplete(String name) throws Exception {
+    public List<ProgramVo> getProgramsAutocomplete(String name) throws Exception {
         EntityManager em = null;
-        Map<Long, String> map = new HashMap<Long, String>();
+        List<ProgramVo> programs = null;
         try {
             em = getEntityManagerFactory().createEntityManager();
-            List<ProgramVo> programs = getServiceFactory().createProgramsService().getByNameLike(em, name);
-            for (ProgramVo p : programs) {
-                map.put(p.getId(), p.getName());
-            }
+            programs = getServiceFactory().createProgramsService().getByNameLike(em, name);
 
         } catch (Exception e) {
             getServiceFactory().createLogService().error(e.getMessage(), e);
@@ -93,7 +98,7 @@ public class ProgramsFacade extends AbstractFacade {
                 em.close();
             }
         }
-        return map;
+        return programs;
     }
 
     public List<ProgramVo> listPrograms() {

@@ -70,7 +70,7 @@ public class CommentsService {
      * @throws InvalidVoException in case the business rules are violated
      */
     public void validateVo(EntityManager em, CommentVo vo) throws
-            ExternalServiceConnectionException, MultipleMessagesException, DataBaseException {
+             MultipleMessagesException, DataBaseException {
 
         MultipleMessagesException multipleMessageException = new MultipleMessagesException();
 

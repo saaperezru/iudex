@@ -2,17 +2,12 @@
  */
 package org.xtremeware.iudex.businesslogic.facade;
 
-import java.io.FileReader;
-import java.sql.DriverManager;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Properties;
 import java.util.Set;
 import junit.framework.AssertionFailedError;
-import org.h2.tools.RunScript;
 import org.junit.*;
 import static org.junit.Assert.*;
-import org.xtremeware.iudex.businesslogic.InvalidVoException;
 import org.xtremeware.iudex.helper.Config;
 import org.xtremeware.iudex.presentation.vovw.CourseVoVwFull;
 import org.xtremeware.iudex.presentation.vovw.ProfessorVoVwSmall;

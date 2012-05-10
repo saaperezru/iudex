@@ -34,6 +34,12 @@ public class CommentsFacadeIT {
     public void setUp() {
         entityManager = TestHelper.createEntityManager();
     }
+    
+    @After
+    public void tearDown() {
+        entityManager.clear();
+        entityManager.close();
+    }
 
     /**
      * Test of addComment method, of class CommentsFacade.
@@ -163,7 +169,7 @@ public class CommentsFacadeIT {
     }
 
     @Test
-    public void test_BL_7_1() throws MultipleMessagesException {
+    public void test_BL_7_1() throws MultipleMessagesException, Exception {
         Long commmendId = 2L;
         Long userId = 2L;
         int value = 1;
@@ -185,7 +191,7 @@ public class CommentsFacadeIT {
     }
 
     @Test
-    public void test_BL_7_2() throws MultipleMessagesException {
+    public void test_BL_7_2() throws MultipleMessagesException, Exception {
         Long commmendId = 5L;
         Long userId = 1L;
         int value = 1;
@@ -203,7 +209,7 @@ public class CommentsFacadeIT {
     }
 
     @Test
-    public void test_BL_7_3() throws MultipleMessagesException {
+    public void test_BL_7_3() throws MultipleMessagesException, Exception {
         Long commmendId = 2L;
         Long userId = 1L;
         int value = 1;
@@ -225,7 +231,7 @@ public class CommentsFacadeIT {
     }
 
     @Test
-    public void test_BL_7_4() throws MultipleMessagesException {
+    public void test_BL_7_4() throws MultipleMessagesException, Exception {
         Long commmendId = 2L;
         Long userId = 3L;
         int value = 1;
@@ -273,7 +279,7 @@ public class CommentsFacadeIT {
     }
 
     @Test
-    public void test_BL_23_1() throws DataBaseException {
+    public void test_BL_23_1() throws DataBaseException, Exception {
         CommentsFacade commentsFacade = Config.getInstance().getFacadeFactory().
                 getCommentsFacade();
         Long id = 1L;
@@ -282,7 +288,7 @@ public class CommentsFacadeIT {
                 "SELECT COUNT(c) FROM Comment c WHERE c.course.id = :id",
                 Long.class).
                 setParameter("id", id).getSingleResult().intValue();
-        assertEquals(2, size);
+        assertEquals(3, size);
         for (CommentVoVwFull cvvf : commentsByCourseId) {
             CommentVo result = entityManager.createQuery(
                     "SELECT c FROM Comment c WHERE c.id = :id",
@@ -302,7 +308,7 @@ public class CommentsFacadeIT {
     }
 
     @Test
-    public void test_BL_23_2() throws DataBaseException {
+    public void test_BL_23_2() throws DataBaseException, Exception {
         CommentsFacade commentsFacade = Config.getInstance().getFacadeFactory().
                 getCommentsFacade();
         Long id = 0L;

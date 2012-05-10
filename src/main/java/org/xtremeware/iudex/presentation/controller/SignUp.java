@@ -101,7 +101,7 @@ public class SignUp {
         this.programs = programs;
     }
 
-    public String signUp() throws IOException {
+    public String signUp() throws IOException, Exception {
 
         FacesContext fc = FacesContext.getCurrentInstance();
         if (authCheck.isLoggedIn()) {

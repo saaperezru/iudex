@@ -40,7 +40,11 @@ public class CommentsFacade extends AbstractFacade {
         } catch (Exception e) {
             getServiceFactory().createLogService().error(e.getMessage(), e);
             if (em != null && tx != null) {
-                tx.rollback();
+                try {
+                    tx.rollback();
+                } catch (Exception ex) {
+                    getServiceFactory().createLogService().error(ex.getMessage(), ex);
+                }
             }
         } finally {
             if (em != null) {
@@ -52,7 +56,7 @@ public class CommentsFacade extends AbstractFacade {
 
     }
 
-    public void removeComment(long commentId) throws DataBaseException {
+    public void removeComment(long commentId) throws Exception {
         EntityManager em = null;
         EntityTransaction tx = null;
         try {
@@ -61,10 +65,14 @@ public class CommentsFacade extends AbstractFacade {
             tx.begin();
             getServiceFactory().createCommentsService().remove(em, commentId);
             tx.commit();
-        } catch (DataBaseException e) {
+        } catch (Exception e) {
             getServiceFactory().createLogService().error(e.getMessage(), e);
             if (em != null && tx != null) {
-                tx.rollback();
+                try {
+                    tx.rollback();
+                } catch (Exception ex) {
+                    getServiceFactory().createLogService().error(ex.getMessage(), ex);
+                }
             }
             throw e;
         } finally {
@@ -76,7 +84,7 @@ public class CommentsFacade extends AbstractFacade {
     }
 
     public List<CommentVoVwFull> getCommentsByCourseId(long courseId) throws
-            DataBaseException {
+            Exception {
         EntityManager em = null;
         EntityTransaction tx = null;
         List<CommentVoVwFull> result = new ArrayList<CommentVoVwFull>();
@@ -93,9 +101,7 @@ public class CommentsFacade extends AbstractFacade {
                 if (!users.containsKey(c.getUserId())) {
                     UserVo vo = getServiceFactory().createUsersService().getById(
                             em, c.getUserId());
-                    UserVoVwSmall uservo = new UserVoVwSmall(courseId, vo.
-                            getFirstName() + " " + vo.getLastName(), vo.
-                            getUserName());
+                    UserVoVwSmall uservo = new UserVoVwSmall(courseId, vo.getFirstName() + " " + vo.getLastName(), vo.getUserName());
                     uservo = users.put(c.getUserId(), uservo);
                 }
                 if (c.isAnonymous()) {
@@ -105,10 +111,14 @@ public class CommentsFacade extends AbstractFacade {
                 }
             }
 
-        } catch (DataBaseException e) {
+        } catch (Exception e) {
             getServiceFactory().createLogService().error(e.getMessage(), e);
             if (em != null && tx != null) {
-                tx.rollback();
+                try{
+                    tx.rollback();
+                }catch(Exception ex){
+                    getServiceFactory().createLogService().error(ex.getMessage(), ex);
+                }
             }
             throw e;
         } finally {
@@ -159,7 +169,7 @@ public class CommentsFacade extends AbstractFacade {
     }
 
     public CommentRatingVo rateComment(long commentId, long userId, int value)
-            throws MultipleMessagesException {
+            throws MultipleMessagesException, Exception {
         EntityManager em = null;
         EntityTransaction tx = null;
         CommentRatingVo rating = null;
@@ -188,8 +198,13 @@ public class CommentsFacade extends AbstractFacade {
         } catch (Exception e) {
             getServiceFactory().createLogService().error(e.getMessage(), e);
             if (em != null && tx != null) {
-                tx.rollback();
+                try{
+                    tx.rollback();
+                }catch(Exception ex){
+                    getServiceFactory().createLogService().error(ex.getMessage(), ex);
+                }
             }
+            throw e;
         } finally {
             if (em != null) {
                 em.clear();

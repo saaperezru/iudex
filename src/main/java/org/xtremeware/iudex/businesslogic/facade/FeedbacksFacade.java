@@ -71,7 +71,7 @@ public class FeedbacksFacade extends AbstractFacade {
         return list;
     }
 
-    public FeedbackVo addFeedback(long feedbackType, String content, Date date) throws MultipleMessagesException {
+    public FeedbackVo addFeedback(long feedbackType, String content, Date date) throws MultipleMessagesException, Exception {
         FeedbackVo createdVo = null;
         FeedbackVo vo = new FeedbackVo();
         vo.setContent(content);
@@ -90,8 +90,13 @@ public class FeedbacksFacade extends AbstractFacade {
         } catch (Exception e) {
             getServiceFactory().createLogService().error(e.getMessage(), e);
             if (em != null && tx != null) {
-                tx.rollback();
+                try {
+                    tx.rollback();
+                } catch (Exception ex) {
+                    getServiceFactory().createLogService().error(ex.getMessage(), ex);
+                }
             }
+            throw  e;
         } finally {
             if (em != null) {
                 em.clear();
@@ -99,6 +104,5 @@ public class FeedbacksFacade extends AbstractFacade {
             }
         }
         return createdVo;
-
     }
 }

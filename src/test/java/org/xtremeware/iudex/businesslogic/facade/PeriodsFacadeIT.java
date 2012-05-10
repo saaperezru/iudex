@@ -34,6 +34,12 @@ public class PeriodsFacadeIT {
 
         entityManager = TestHelper.createEntityManager();
     }
+    
+    @After
+    public void tearDown() {
+        entityManager.clear();
+        entityManager.close();
+    }
 
     /**
      * Test successfully insert of a period

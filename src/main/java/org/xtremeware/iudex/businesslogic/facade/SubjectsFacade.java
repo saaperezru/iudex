@@ -86,7 +86,7 @@ public class SubjectsFacade extends AbstractFacade {
         SubjectRatingVo rating = null;
         try {
             SubjectRatingVo vo = new SubjectRatingVo();
-            vo.setEvaluetedObjectId(subjectId);
+            vo.setEvaluatedObjectId(subjectId);
             vo.setUser(userId);
             vo.setValue(value);
 
@@ -100,8 +100,11 @@ public class SubjectsFacade extends AbstractFacade {
             } else {
                 //Otherwise update the existing one
                 //But first verify bussines rules
-                getServiceFactory().createSubjectRatingsService().validateVo(em, vo);
-                rating.setValue(value);
+                if (value != rating.getEvaluatedObjectId()) {
+                    getServiceFactory().createSubjectRatingsService().validateVo(em, vo);
+                    rating.setValue(value);
+                    getServiceFactory().createSubjectRatingsService().update(em, rating);
+                }
             }
             tx.commit();
 
@@ -126,17 +129,18 @@ public class SubjectsFacade extends AbstractFacade {
         return rating;
     }
 
-    public SubjectVo addSubject(String name, String description) throws MultipleMessagesException, Exception {
+    public SubjectVo addSubject(Long id, String name, String description) throws MultipleMessagesException, Exception {
         SubjectVo createdVo = null;
         SubjectVo vo = new SubjectVo();
         vo.setName(name);
         vo.setDescription(description);
+        vo.setId(id);
         EntityManager em = null;
         EntityTransaction tx = null;
         try {
             em = getEntityManagerFactory().createEntityManager();
             tx = em.getTransaction();
-            tx.commit();
+            tx.begin();
             createdVo = getServiceFactory().createSubjectsService().create(em, vo);
             tx.commit();
         } catch (MultipleMessagesException e) {

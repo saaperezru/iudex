@@ -35,9 +35,9 @@ public class SubjectRatingsService extends CrudService<SubjectRatingVo, SubjectR
         if (vo.getValue() > 1 || vo.getValue() < -1) {
             multipleMessageException.addMessage("subjectRating.value.invalidRating");
         }
-        if (vo.getEvaluetedObjectId() == null) {
+        if (vo.getEvaluatedObjectId() == null) {
             multipleMessageException.addMessage("subjectRating.subjectId.null");
-        } else if (getDaoFactory().getSubjectDao().getById(em, vo.getEvaluetedObjectId()) == null) {
+        } else if (getDaoFactory().getSubjectDao().getById(em, vo.getEvaluatedObjectId()) == null) {
             multipleMessageException.addMessage("subjectRating.subjectId.element.notFound");
         }
         if (vo.getUser() == null) {
@@ -57,7 +57,7 @@ public class SubjectRatingsService extends CrudService<SubjectRatingVo, SubjectR
         SubjectRatingEntity entity = new SubjectRatingEntity();
         entity.setId(vo.getId());
         entity.setSubject(getDaoFactory().getSubjectDao().getById(em,
-                vo.getEvaluetedObjectId()));
+                vo.getEvaluatedObjectId()));
         entity.setUser(getDaoFactory().getUserDao().getById(em, vo.getUser()));
         entity.setValue(vo.getValue());
         return entity;

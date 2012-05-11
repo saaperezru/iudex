@@ -56,11 +56,11 @@ public class CommentRatingsService extends CrudService<CommentRatingVo, CommentR
                     "commentRating.null");
             throw multipleMessageException;
         }
-        if (vo.getEvaluetedObjectId() == null) {
+        if (vo.getEvaluatedObjectId() == null) {
             multipleMessageException.addMessage(
                     "commentRating.commentId.null");
         } else if (getDaoFactory().getCommentDao().getById(em, vo.
-                getEvaluetedObjectId()) == null) {
+                getEvaluatedObjectId()) == null) {
             multipleMessageException.addMessage(
                     "commentRating.commentId.element.notFound");
         }
@@ -104,7 +104,7 @@ public class CommentRatingsService extends CrudService<CommentRatingVo, CommentR
         commentRatingEntity.setUser(this.getDaoFactory().getUserDao().getById(em,
                 vo.getUser()));
         commentRatingEntity.setComment(this.getDaoFactory().getCommentDao().
-                getById(em, vo.getEvaluetedObjectId()));
+                getById(em, vo.getEvaluatedObjectId()));
 
         return commentRatingEntity;
     }

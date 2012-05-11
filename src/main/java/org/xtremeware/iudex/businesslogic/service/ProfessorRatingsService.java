@@ -47,11 +47,11 @@ public class ProfessorRatingsService extends CrudService<ProfessorRatingVo, Prof
                     "int Value in the provided ProfessorRatingVo" +
                      " must be less than 1 and greater than -1");
         }
-        if (vo.getEvaluetedObjectId() == null) {
+        if (vo.getEvaluatedObjectId() == null) {
             multipleMessageException.addMessage(
                     "Long professorId in the provided ProfessorRatingVo cannot be null");
         } else if (getDaoFactory().getProfessorDao().getById(em, vo.
-                getEvaluetedObjectId()) == null) {
+                getEvaluatedObjectId()) == null) {
             multipleMessageException.addMessage(
                     "Long professorId in the provided ProfessorRatingVo must " +
                      "correspond to an existing subject entity in the database");
@@ -80,7 +80,7 @@ public class ProfessorRatingsService extends CrudService<ProfessorRatingVo, Prof
         ProfessorRatingEntity entity = new ProfessorRatingEntity();
         entity.setId(vo.getId());
         entity.setProfessor(getDaoFactory().getProfessorDao().getById(em, vo.
-                getEvaluetedObjectId()));
+                getEvaluatedObjectId()));
         entity.setUser(getDaoFactory().getUserDao().getById(em, vo.getUser()));
         entity.setValue(vo.getValue());
         return entity;

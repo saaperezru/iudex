@@ -2,14 +2,17 @@ package org.xtremeware.iudex.presentation.vovw;
 
 import java.util.Date;
 import org.xtremeware.iudex.vo.CommentVo;
+import org.xtremeware.iudex.vo.RatingSummaryVo;
 
 public class CommentVoVwFull {
 
 	private CommentVo vo;
 	private UserVoVwSmall user;
+	private RatingSummaryVo rating;
 
-	public CommentVoVwFull(CommentVo vo, UserVoVwSmall user) {
+	public CommentVoVwFull(CommentVo vo, UserVoVwSmall user,RatingSummaryVo rating) {
 		this.vo = vo;
+		this.rating = rating;
 		if (vo.isAnonymous()) {
 			this.user = null;
 		} else {
@@ -38,8 +41,12 @@ public class CommentVoVwFull {
 		return vo.getId();
 	}
 
-	public Float getRating() {
+	public Float getCourseRating() {
 		return vo.getRating();
+	}
+
+	public RatingSummaryVo getRating(){
+		return rating;
 	}
 
 	public UserVoVwSmall getUser() {

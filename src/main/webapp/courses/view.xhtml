@@ -12,12 +12,38 @@
     <ui:define name="content">
 
 	    <div class="row-fluid">
-        <div class="span3">
-          <div class="well sidebar-nav span3" style="position: fixed;">
+        <div class="span4">
+          <div class="well sidebar-nav span4 fixed-navbar" >
 
+		  <div class="row-fluid">
+			  <div class="span9 " style="overflow:hidden; margin-top: 30px; text-align: center;">
+				  <h1 class="fittext-subject">#{viewCourse.course.subject.name}</h1>
+			  </div>
+			  <div class="span3 cuadro-promedio" >
+				  <div class="row span12" >
+					  <center> 
+						  <h3 class="fittext-rating">PROMEDIO</h3>
+					  </center>
 
+				  </div>
+				  <div class="row span12" >
+					  <div class="span6" style="margin-top: 10%;">
+						  <h1 class="fittext-subject" style="text-align: left; ">#{viewCourse.course.ratingAverage}</h1>
+					  </div>
+					  <div class="span6">
+					  <img style="vertical-align: middle;" src="../resources/images/star.png" />
+					  </div>
+				  </div>
+				  <div class="row span12">
+					  <span>
+					  #{viewCourse.course.ratingCount} personas han votado
+					  </span>
+				  </div>
+			  </div>
+		  </div>
+		  <div class="row span12">
 	  <div class="professor-photo" >
-		  <a href=""><img src="#{viewCourse.professor.imageUrl}"/></a>
+		  <a href=""><img src=""/></a>
               <span class="vote-prof">
                 <div></div>
               </span>
@@ -26,21 +52,20 @@
                 <li class="downvote-prof"><a href="#" class="icon-thumbs-down"></a></li>
               </ul>
               <div>
-		      <h5><a href="professors/view.html?id=#{viewCourse.professor.id}">#{viewCourse.course.professor.fullName}</a></h5>
+		      <h5><a href="professors/view.html?id=#{viewCourse.course.professor.id}">#{viewCourse.course.professor.fullName}</a></h5>
               </div>
             </div>
-
+                  </div>
 
 
           </div><!--/.well -->
         </div><!--/span-->
-        <div class="span7">
+        <div class="span8">
 		<ui:repeat var="comment" value="#{viewCourse.comments}" varStatus="status">
 	<!-- Beginning of comment -->
         <div class="row-fluid">
-	<div class="comment-container span12">
-          <div class="comment">
-            <div class="comment-text span12">
+          <div class="comment span12">
+            <div class="comment-container span12">
               <div class="comment-rating">
 		      Calificación del curso : 
                 <span class="icon-star"></span>
@@ -48,26 +73,25 @@
                 <span class="icon-star-empty"></span>
               </div>
               <div class="comment-photo thumbnail">
-                <img src="http://placekitten.com/140/140" alt="profesor x" />
+                <img src="../resources/images/anonymous.jpg" alt="profesor x" />
                 <h5>#{comment.user.name}</h5>
                 <p>CARRERA</p>
               </div>
               <p>
 		      #{comment.content}
               </p>
+	      <div class="vote">
+	        <div class="vote-wrapper"><a href="#" class="upvote "></a></div>
+                <div class="vote-wrapper"><span class="vote-count">#{comment.rating.positive-comment.rating.negative}</span></div>
+                <div class="vote-wrapper"><a href="#" class="downvote "></a></div>
+              </div>
             </div>
-            <div class="comment-photo"></div>
             <div class="comment-report">
               <span class=""><a href="#">Reportar comentario</a></span>
             </div>
-               <div class="vote">
-                <a href="#" class="upvote "></a>
-                <span class="vote-count">1337</span>
-                <a href="#" class="downvote "></a>
-              </div>
+               
 	  </div>
 
-         </div>
 	</div><!--/row-->
 	<!-- Ending of comment -->
 		</ui:repeat>

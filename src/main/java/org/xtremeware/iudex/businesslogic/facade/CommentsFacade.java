@@ -88,9 +88,9 @@ public class CommentsFacade extends AbstractFacade {
                     uservo = users.put(c.getUserId(), uservo);
                 }
                 if (c.isAnonymous()) {
-                    result.add(new CommentVoVwFull(c, null));
+                    result.add(new CommentVoVwFull(c, null,getCommentRatingSummary(c.getId())));
                 } else {
-                    result.add(new CommentVoVwFull(c, users.get(c.getId())));
+                    result.add(new CommentVoVwFull(c, users.get(c.getId()),getCommentRatingSummary(c.getId())));
                 }
             }
 

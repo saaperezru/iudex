@@ -1,11 +1,11 @@
 package org.xtremeware.iudex.presentation.controller;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import javax.faces.application.ConfigurableNavigationHandler;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
 import org.xtremeware.iudex.helper.Config;
 import org.xtremeware.iudex.presentation.vovw.CommentVoVwFull;
 import org.xtremeware.iudex.presentation.vovw.CourseVoVwFull;
@@ -70,14 +70,16 @@ public class ViewCourse {
 	public void preRenderView() {
 		try {
 			course = Config.getInstance().getFacadeFactory().getCoursesFacade().getCourse(id);
-			comments = Config.getInstance().getFacadeFactory().getCommentsFacade().getCommentsByCourseId(id);
-			System.out.println("For course id : " + course.getId());
-			for (CommentVoVwFull comment : comments) {
-				System.out.println(comment.getContent());
+			if (course == null){
+				((ConfigurableNavigationHandler) FacesContext.getCurrentInstance().getApplication().getNavigationHandler()).performNavigation("notfound");
 			}
+			comments = Config.getInstance().getFacadeFactory().getCommentsFacade().getCommentsByCourseId(id);
+			professor = Config.getInstance().getFacadeFactory().getProfessorsFacade().getProfessor(course.getSubject().getId());
+			subject = Config.getInstance().getFacadeFactory().getSubjectsFacade().getSubject(course.getProfessor().getId());
 
 		} catch (Exception ex) {
 			Config.getInstance().getServiceFactory().createLogService().error(ex.getMessage(), ex);
+			((ConfigurableNavigationHandler) FacesContext.getCurrentInstance().getApplication().getNavigationHandler()).performNavigation("notfound");
 		}
 	}
 }

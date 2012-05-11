@@ -22,6 +22,8 @@ public class ConfigurationVariablesHelper {
     public static final String MAX_COMMENT_LENGTH = "comment.maxCommentLength";
     public static final String MAX_COMMENTS_PER_DAY = "comment.maxCommentsPerDay";
     public static final String MAX_PROFESSOR_NAME_LENGTH = "professor.maxProfessorNameLength";
+    public static final String MAX_SUBJECT_NAME_LENGTH = "subject.maxNameLength";
+    public static final String MAX_SUBJECT_DESCRIPTION_LENGTH = "subject.maxDescriptionLength";
     public static final String RECAPTCHA_PRIVATE_KEY = "security.reCaptchaPrivateKey";
     public static final String RECAPTCHA_PUBLIC_KEY = "security.reCaptchaPublicKey";
     public static final String MAILING_SMTP_SERVER = "mailing.smtpServer";

@@ -14,11 +14,11 @@ import org.xtremeware.iudex.vo.SubjectRatingVo;
 import org.xtremeware.iudex.vo.SubjectVo;
 
 public class SubjectsFacade extends AbstractFacade {
-
+    
     public SubjectsFacade(ServiceFactory serviceFactory, EntityManagerFactory emFactory) {
         super(serviceFactory, emFactory);
     }
-
+    
     public Map<Long, String> getSubjectsAutocomplete(String name) throws Exception {
         EntityManager em = null;
         Map<Long, String> map = new HashMap<Long, String>();
@@ -28,7 +28,7 @@ public class SubjectsFacade extends AbstractFacade {
             for (SubjectVo s : subjects) {
                 map.put(s.getId(), s.getName());
             }
-
+            
         } catch (Exception e) {
             getServiceFactory().createLogService().error(e.getMessage(), e);
             throw e;
@@ -40,14 +40,14 @@ public class SubjectsFacade extends AbstractFacade {
         }
         return map;
     }
-
+    
     public SubjectRatingVo getSubjectRatingByUserId(long subjectId, long userId) throws Exception {
         EntityManager em = null;
         SubjectRatingVo subject = null;
         try {
             em = getEntityManagerFactory().createEntityManager();
             subject = getServiceFactory().createSubjectRatingsService().getBySubjectIdAndUserId(em, subjectId, userId);
-
+            
         } catch (Exception e) {
             getServiceFactory().createLogService().error(e.getMessage(), e);
             throw e;
@@ -59,15 +59,15 @@ public class SubjectsFacade extends AbstractFacade {
         }
         return subject;
     }
-
+    
     public RatingSummaryVo getSubjectsRatingSummary(long subjectId) throws Exception {
-
+        
         EntityManager em = null;
         RatingSummaryVo summary = null;
         try {
             em = getEntityManagerFactory().createEntityManager();
             summary = getServiceFactory().createSubjectRatingsService().getSummary(em, subjectId);
-
+            
         } catch (Exception e) {
             getServiceFactory().createLogService().error(e.getMessage(), e);
             throw e;
@@ -79,7 +79,7 @@ public class SubjectsFacade extends AbstractFacade {
         }
         return summary;
     }
-
+    
     public SubjectRatingVo rateSubject(long userId, long subjectId, int value) throws MultipleMessagesException, Exception {
         EntityManager em = null;
         EntityTransaction tx = null;
@@ -89,7 +89,7 @@ public class SubjectsFacade extends AbstractFacade {
             vo.setEvaluatedObjectId(subjectId);
             vo.setUser(userId);
             vo.setValue(value);
-
+            
             em = getEntityManagerFactory().createEntityManager();
             tx = em.getTransaction();
             tx.begin();
@@ -107,7 +107,7 @@ public class SubjectsFacade extends AbstractFacade {
                 }
             }
             tx.commit();
-
+            
         } catch (MultipleMessagesException ex) {
             throw ex;
         } catch (Exception e) {
@@ -128,7 +128,7 @@ public class SubjectsFacade extends AbstractFacade {
         }
         return rating;
     }
-
+    
     public SubjectVo addSubject(Long id, String name, String description) throws MultipleMessagesException, Exception {
         SubjectVo createdVo = null;
         SubjectVo vo = new SubjectVo();
@@ -163,7 +163,7 @@ public class SubjectsFacade extends AbstractFacade {
         }
         return createdVo;
     }
-
+    
     public void removeSubject(long id) throws Exception {
         EntityManager em = null;
         EntityTransaction tx = null;
@@ -190,7 +190,45 @@ public class SubjectsFacade extends AbstractFacade {
             }
         }
     }
-
+    
+    public SubjectVo updateSubject(Long id, String name, String description) throws MultipleMessagesException, Exception {
+        
+        SubjectVo subject = null;
+        EntityManager em = null;
+        EntityTransaction tx = null;
+        
+        try {
+            em = getEntityManagerFactory().createEntityManager();
+            tx = em.getTransaction();
+            tx.begin();
+            subject = new SubjectVo();
+            subject.setId(id);
+            subject.setName(name);
+            subject.setDescription(description);
+            subject = getServiceFactory().createSubjectsService().update(em, subject);
+            tx.commit();
+        } catch (MultipleMessagesException ex) {
+            throw ex;
+        } catch (Exception e) {
+            getServiceFactory().createLogService().error(e.getMessage(), e);
+            if (em != null && tx != null) {
+                try {
+                    tx.rollback();
+                } catch (Exception ex) {
+                    getServiceFactory().createLogService().error(ex.getMessage(), ex);
+                }
+            }
+            throw e;
+        } finally {
+            if (em != null) {
+                em.clear();
+                em.close();
+            }
+        }
+        
+        return subject;
+    }
+    
     public SubjectVoVwFull getSubject(long subjectId) throws Exception {
         EntityManager em = null;
         SubjectVoVwFull voVw = null;
@@ -199,7 +237,7 @@ public class SubjectsFacade extends AbstractFacade {
             SubjectVo vo = getServiceFactory().createSubjectsService().getById(em, subjectId);
             RatingSummaryVo summary = getServiceFactory().createSubjectRatingsService().getSummary(em, subjectId);
             voVw = new SubjectVoVwFull(vo, summary);
-
+            
         } catch (Exception e) {
             getServiceFactory().createLogService().error(e.getMessage(), e);
             throw e;

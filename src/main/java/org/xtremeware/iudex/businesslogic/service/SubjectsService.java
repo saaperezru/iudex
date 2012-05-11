@@ -39,7 +39,7 @@ public class SubjectsService extends CrudService<SubjectVo, SubjectEntity> {
 
     /**
      * Validate the provided SubjectVo, if the SubjectVo is not correct the
-     * methods throws an exception
+     * method throws an exception
      *
      * @param em EntityManager
      * @param vo SubjectVo
@@ -55,13 +55,20 @@ public class SubjectsService extends CrudService<SubjectVo, SubjectEntity> {
         }
         if (vo.getId() == null) {
             multipleMessageException.addMessage("subject.id.null");
-        }else{
-            vo.setDescription(SecurityHelper.sanitizeHTML(vo.getDescription()));
+        } else {
+            vo.setId(Math.abs(vo.getId()));
+        }
+
+        if (vo.getDescription() == null) {
+            vo.setDescription("");
+        }
+
+        vo.setDescription(SecurityHelper.sanitizeHTML(vo.getDescription()));
         if (vo.getDescription().length() > MAX_SUBJECT_DESCRIPTION_LENGTH) {
             multipleMessageException.addMessage("subject.description.tooLong");
         }
-        }
-        if (vo.getName().equals("") || vo.getName() == null) {
+
+        if (vo.getName() == null || vo.getName().equals("")) {
             multipleMessageException.addMessage("subject.name.null");
         } else {
             vo.setName(SecurityHelper.sanitizeHTML(vo.getName()));

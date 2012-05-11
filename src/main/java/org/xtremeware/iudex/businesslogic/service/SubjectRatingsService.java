@@ -97,11 +97,11 @@ public class SubjectRatingsService extends CrudService<SubjectRatingVo, SubjectR
             long subjectId, long userId)
             throws DataBaseException {
         SubjectRatingEntity subjectRatingEntity = getDaoFactory().getSubjectRatingDao().getBySubjectIdAndUserId(em, subjectId, userId);
-        
-        if(subjectRatingEntity==null){
+
+        if (subjectRatingEntity == null) {
             return null;
         }
-        
+
         return subjectRatingEntity.toVo();
     }
 

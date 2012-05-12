@@ -15,17 +15,19 @@ import org.xtremeware.iudex.vo.ProfessorVo;
 public class ProfessorsService extends CrudService<ProfessorVo, ProfessorEntity> {
 
     private final int MAX_PROFESSOR_NAME_LENGTH;
+    private final int MAX_PROFESSOR_DECRIPTION_LENGTH;
 
     public ProfessorsService(AbstractDaoFactory daoFactory) throws
             ExternalServiceConnectionException {
-        super(daoFactory, new SimpleCreate<ProfessorEntity>(daoFactory.
-                getProfessorDao()),
+        super(daoFactory, new SimpleCreate<ProfessorEntity>(daoFactory.getProfessorDao()),
                 new SimpleRead<ProfessorEntity>(daoFactory.getProfessorDao()),
                 new SimpleUpdate<ProfessorEntity>(daoFactory.getProfessorDao()),
                 new ProfessorsRemove(daoFactory));
         MAX_PROFESSOR_NAME_LENGTH =
                 Integer.parseInt(ConfigurationVariablesHelper.getVariable(
                 ConfigurationVariablesHelper.MAX_PROFESSOR_NAME_LENGTH));
+        MAX_PROFESSOR_DECRIPTION_LENGTH = Integer.parseInt(ConfigurationVariablesHelper.getVariable(
+                ConfigurationVariablesHelper.MAX_PROFESSOR_DECRIPTION_LENGTH));
     }
 
     public List<ProfessorVo> getByNameLike(EntityManager em, String name)
@@ -52,68 +54,98 @@ public class ProfessorsService extends CrudService<ProfessorVo, ProfessorEntity>
     @Override
     public void validateVo(EntityManager em, ProfessorVo vo)
             throws ExternalServiceConnectionException, MultipleMessagesException {
-        if (em == null) {
-            throw new IllegalArgumentException("EntityManager em cannot be null");
-        }
+
         MultipleMessagesException multipleMessageException =
                 new MultipleMessagesException();
         if (vo == null) {
-            multipleMessageException.addMessage("Null ProfessorVo");
+            multipleMessageException.addMessage("professor.null");
             throw multipleMessageException;
         }
         if (vo.getFirstName() == null) {
             multipleMessageException.addMessage(
-                    "String firstName in the provided ProgramVo cannot be null");
+                    "professor.firstName.null");
         } else {
             vo.setFirstName(SecurityHelper.sanitizeHTML(vo.getFirstName()));
             if (vo.getFirstName().length() > MAX_PROFESSOR_NAME_LENGTH) {
                 multipleMessageException.addMessage(
-                        "String firstName length must be less than " +
-                         String.valueOf(MAX_PROFESSOR_NAME_LENGTH));
+                        "professor.firstName.tooLong");
+            }
+            if (vo.getFirstName().isEmpty()) {
+                multipleMessageException.addMessage(
+                        "professor.firstName.empty");
             }
         }
         if (vo.getLastName() == null) {
             multipleMessageException.addMessage(
-                    "String lastName in the provided ProgramVo cannot be null");
+                    "professor.lastName.null");
         } else {
             vo.setLastName(SecurityHelper.sanitizeHTML(vo.getLastName()));
             if (vo.getLastName().length() > MAX_PROFESSOR_NAME_LENGTH) {
                 multipleMessageException.addMessage(
-                        "String lastName length must be less than " +
-                         String.valueOf(MAX_PROFESSOR_NAME_LENGTH));
+                        "professor.lastName.tooLong");
+            }
+            if (vo.getLastName().isEmpty()) {
+                multipleMessageException.addMessage(
+                        "professor.lastName.empty");
             }
         }
         if (vo.getDescription() == null) {
             multipleMessageException.addMessage(
-                    "String description in the provided ProgramVo cannot be null");
+                    "professor.description.null");
         } else {
             vo.setDescription(SecurityHelper.sanitizeHTML(vo.getDescription()));
+            if (vo.getDescription().length() > MAX_PROFESSOR_DECRIPTION_LENGTH) {
+                multipleMessageException.addMessage(
+                        "professor.description.tooLong");
+            }
+            if (vo.getDescription().isEmpty()) {
+                multipleMessageException.addMessage(
+                        "professor.description.empty");
+            }
         }
 
         if (vo.getEmail() == null) {
             multipleMessageException.addMessage(
-                    "String email in the provided ProgramVo cannot be null");
-        } else if (vo.getEmail().length() > 0 &&
-                !ValidityHelper.isValidEmail(vo.getEmail())) {
+                    "professor.email.null");
+        } else if (vo.getEmail().isEmpty()) {
             multipleMessageException.addMessage(
-                    "Strng email in the provided ProgramVo must be a valid email address");
-        }
+                    "professor.email.empty");
+        } else if (!ValidityHelper.isValidEmail(vo.getEmail())) {
+            multipleMessageException.addMessage(
+                    "professor.email.invalidEmail");
+            }
         if (vo.getImageUrl() == null) {
             multipleMessageException.addMessage(
-                    "String imageUrl in the provided ProgramVo cannot be null");
-        } else if (vo.getImageUrl().length() > 0 &&
-                !ValidityHelper.isValidUrl(vo.getImageUrl())) {
-            multipleMessageException.addMessage(
-                    "String imageUrl in the provided ProgamVo must be a valid URL");
+                    "professor.imageUrl.null");
+        } else if (!vo.getImageUrl().isEmpty()) {
+            String imageUrl = vo.getImageUrl();
+            if (!vo.getImageUrl().substring(0, 7).equalsIgnoreCase("http://")&& 
+                    !vo.getImageUrl().substring(0, 8).equalsIgnoreCase("https://")){
+                imageUrl = "http://"+imageUrl;
+            }
+            if (!ValidityHelper.isValidUrl(imageUrl)) {
+                multipleMessageException.addMessage(
+                        "professor.imageUrl.invalidImage");
+            }
         }
         if (vo.getWebsite() == null) {
             multipleMessageException.addMessage(
-                    "String website in the provided ProgramVo cannot be null");
-        } else if (vo.getWebsite().length() > 0 &&
-                !ValidityHelper.isValidUrl(vo.getWebsite())) {
+                    "professor.website.null");
+        } else if (vo.getWebsite().isEmpty()) {
             multipleMessageException.addMessage(
-                    "String website in provided ProgramVo must be a valid URL");
+                    "professor.website.empty");
+        } else {
+            String website = vo.getWebsite();
+            if (!vo.getWebsite().substring(0, 7).equalsIgnoreCase("http://")&& 
+                    !vo.getWebsite().substring(0, 8).equalsIgnoreCase("https://")){
+                website = "http://"+website;
+            }
+            if (!ValidityHelper.isValidUrl(website)) {
+                multipleMessageException.addMessage(
+                        "professor.website.invalidWebsite");
+            }
         }
+
         if (!multipleMessageException.getMessages().isEmpty()) {
             throw multipleMessageException;
         }

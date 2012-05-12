@@ -42,11 +42,12 @@ public class FeedbacksFacadeIT {
     public void BL_9_1() throws MultipleMessagesException, Exception {
         FeedbacksFacade ff = Config.getInstance().getFacadeFactory().
                 getFeedbacksFacade();
-        FeedbackVo fv = ff.addFeedback(1L, "EL programa es muy lento", Calendar.getInstance().getTime());
+        String feedback = TestHelper.randomString(50);
+        FeedbackVo fv = ff.addFeedback(1L, feedback, Calendar.getInstance().getTime());
         assertNotNull(fv);
         assertNotNull(fv.getId());
         assertTrue(fv.getFeedbackTypeId() == 1L);
-        assertEquals("EL programa es muy lento", fv.getContent());
+        assertEquals(feedback, fv.getContent());
         int size = entityManager.createQuery("SELECT COUNT(p) FROM Feedback p WHERE p.id =:id", Long.class).setParameter("id", fv.getId()).getSingleResult().intValue();
         assertEquals(1, size);
     }
@@ -129,6 +130,14 @@ public class FeedbacksFacadeIT {
             int size = entityManager.createQuery("SELECT COUNT(p) FROM Feedback p WHERE p.type.id =:id", Long.class).setParameter("id", id).getSingleResult().intValue();
             assertEquals(size, fvs.size());
         }
+    }
+    
+    @Test
+    public void BL_9_4_1() throws Exception {
+        FeedbacksFacade ff = Config.getInstance().getFacadeFactory().
+                getFeedbacksFacade();
+        List<FeedbackVo> fvs = ff.getFeedbacksByFeedbackType(Long.MAX_VALUE);
+        assertNull(fvs);
     }
 
     @Test

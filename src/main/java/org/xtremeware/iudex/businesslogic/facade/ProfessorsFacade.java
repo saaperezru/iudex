@@ -46,7 +46,7 @@ public class ProfessorsFacade extends AbstractFacade {
         try {
             em = getEntityManagerFactory().createEntityManager();
             tx = em.getTransaction();
-            tx.commit();
+            tx.begin();
             createdVo = getServiceFactory().createProfessorsService().create(em, vo);
             tx.commit();
         } catch (MultipleMessagesException e) {
@@ -128,16 +128,7 @@ public class ProfessorsFacade extends AbstractFacade {
             em = getEntityManagerFactory().createEntityManager();
             tx = em.getTransaction();
             tx.begin();
-            rating = getServiceFactory().createProfessorRatingsService().getByProfessorIdAndUserId(em, professorId, userId);
-            //If there is no existing record in the database, create it
-            if (rating == null) {
-                rating = getServiceFactory().createProfessorRatingsService().create(em, vo);
-            } else {
-                //Otherwise update the existing one
-                //But first verify bussines rules
-                getServiceFactory().createProfessorRatingsService().validateVo(em, vo);
-                rating.setValue(value);
-            }
+            rating = getServiceFactory().createProfessorRatingsService().create(em, vo);
             tx.commit();
 
         } catch (MultipleMessagesException ex) {
@@ -167,9 +158,10 @@ public class ProfessorsFacade extends AbstractFacade {
         try {
             em = getEntityManagerFactory().createEntityManager();
             ProfessorVo vo = getServiceFactory().createProfessorsService().getById(em, professorId);
-            RatingSummaryVo summary = getServiceFactory().createProfessorRatingsService().getSummary(em, professorId);
-            voVw = new ProfessorVoVwFull(vo, summary);
-
+            if (vo != null) {
+                RatingSummaryVo summary = getServiceFactory().createProfessorRatingsService().getSummary(em, professorId);
+                voVw = new ProfessorVoVwFull(vo, summary);
+            }
         } catch (Exception e) {
             getServiceFactory().createLogService().error(e.getMessage(), e);
             throw e;

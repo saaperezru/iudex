@@ -34,7 +34,7 @@ public class CommentsFacadeIT {
     public void setUp() {
         entityManager = TestHelper.createEntityManager();
     }
-    
+
     @After
     public void tearDown() {
         entityManager.clear();
@@ -45,7 +45,7 @@ public class CommentsFacadeIT {
      * Test of addComment method, of class CommentsFacade.
      */
     @Test
-    public void test_BL_5_1() throws 
+    public void test_BL_5_1() throws
             MultipleMessagesException, MaxCommentsLimitReachedException {
         CommentVo commentVo = new CommentVo();
         commentVo.setAnonymous(true);
@@ -62,9 +62,9 @@ public class CommentsFacadeIT {
         commentVo.setId(result.getId());
         assertTrue(result.equals(commentVo));
     }
-    
+
     @Test
-    public void test_BL_5_2_1() throws MultipleMessagesException,
+    public void test_BL_5_2() throws
             MaxCommentsLimitReachedException {
         CommentsFacade commentsFacade = Config.getInstance().getFacadeFactory().
                 getCommentsFacade();
@@ -91,8 +91,6 @@ public class CommentsFacadeIT {
         } catch (MultipleMessagesException ex) {
             TestHelper.checkExceptionMessages(ex, expectedMessages);
         }
-        commentVo.setContent(
-                "Entrada muy larga, muy muy largaEntrada muy larga, muy muy larga");
         commentVo.setCourseId(10L);
         commentVo.setDate(new Date());
         commentVo.setRating(Float.MAX_VALUE);
@@ -192,13 +190,42 @@ public class CommentsFacadeIT {
 
     @Test
     public void test_BL_7_2() throws MultipleMessagesException, Exception {
-        Long commmendId = 5L;
-        Long userId = 1L;
-        int value = 1;
         CommentsFacade commentsFacade = Config.getInstance().getFacadeFactory().
                 getCommentsFacade();
+
+        Long commmendId = Long.MAX_VALUE;
+        Long userId = Long.MAX_VALUE;
+        int value = Integer.MAX_VALUE;
+
         String[] expectedMessages = new String[]{
-            "commentRating.commentId.element.notFound"
+            "commentRating.commentId.element.notFound",
+            "commentRating.value.invalidValue",
+            "commentRating.userId.element.notFound"
+        };
+        try {
+            CommentRatingVo commentRatingVo = commentsFacade.rateComment(
+                    commmendId, userId, value);
+        } catch (MultipleMessagesException ex) {
+            TestHelper.checkExceptionMessages(ex, expectedMessages);
+        }
+
+        commmendId = Long.MAX_VALUE;
+        userId = Long.MAX_VALUE;
+        value = Integer.MAX_VALUE;
+
+        try {
+            CommentRatingVo commentRatingVo = commentsFacade.rateComment(
+                    commmendId, userId, value);
+        } catch (MultipleMessagesException ex) {
+            TestHelper.checkExceptionMessages(ex, expectedMessages);
+        }
+
+        commmendId = 0L;
+        userId = 0L;
+        value = 0;
+        expectedMessages = new String[]{
+            "commentRating.commentId.element.notFound",
+            "commentRating.userId.element.notFound"
         };
         try {
             CommentRatingVo commentRatingVo = commentsFacade.rateComment(

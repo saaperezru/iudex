@@ -16,12 +16,14 @@ public class ConfigurationVariablesHelper {
     private PropertiesConfiguration config;
     public static final String MIN_USERNAME_LENGTH = "user.minUserNameLength";
     public static final String MAX_USERNAME_LENGTH = "user.maxUserNameLength";
+   
     public static final String MAX_USER_PASSWORD_LENGTH = "user.maxUserPasswordLength";
     public static final String MIN_USER_PASSWORD_LENGTH = "user.minUserPasswordLength";
     public static final String MAX_NUMBER_OF_AUTHENTICATION_FAILURES = "user.maxNumberOfAuthenticationFailures";
     public static final String MAX_COMMENT_LENGTH = "comment.maxCommentLength";
     public static final String MAX_COMMENTS_PER_DAY = "comment.maxCommentsPerDay";
     public static final String MAX_PROFESSOR_NAME_LENGTH = "professor.maxProfessorNameLength";
+    public static final String MAX_PROFESSOR_DECRIPTION_LENGTH = "professor.maxProfessorDescriptionLength";
     public static final String RECAPTCHA_PRIVATE_KEY = "security.reCaptchaPrivateKey";
     public static final String RECAPTCHA_PUBLIC_KEY = "security.reCaptchaPublicKey";
     public static final String MAILING_SMTP_SERVER = "mailing.smtpServer";

@@ -74,7 +74,7 @@ public class CommentRatingsService extends CrudService<CommentRatingVo, CommentR
         }
         if (vo.getValue() < -1 || vo.getValue() > 1) {
             multipleMessageException.addMessage(
-                    "commentRating.value.InvalidValue");
+                    "commentRating.value.invalidValue");
         }
 
         if (!multipleMessageException.getMessages().isEmpty()) {

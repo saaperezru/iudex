@@ -4,6 +4,8 @@
  */
 package org.xtremeware.iudex.businesslogic.facade;
 
+import java.util.HashMap;
+import java.util.Map;
 import javax.persistence.EntityManager;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -14,6 +16,7 @@ import org.xtremeware.iudex.helper.ConfigurationVariablesHelper;
 import org.xtremeware.iudex.helper.DataBaseException;
 import org.xtremeware.iudex.helper.MultipleMessagesException;
 import org.xtremeware.iudex.presentation.vovw.SubjectVoVwFull;
+import org.xtremeware.iudex.vo.RatingSummaryVo;
 import org.xtremeware.iudex.vo.SubjectRatingVo;
 import org.xtremeware.iudex.vo.SubjectVo;
 
@@ -271,8 +274,8 @@ public class SubjectsFacadeIT {
 
     @Test
     public void test_BL_17_1() throws Exception {
-        Long subjectId = 2016025L;
-        String newSubjectName = "INTRODUCCION A LA AUDITORIA FINANCIERA";
+        Long subjectId = 2033859L;
+        String newSubjectName = "INTRODUCCION A LAS FINANZAS";
         String newSubjectDescription = "Se bajo la exigencia del curso.";
         subjectsFacade.updateSubject(subjectId, newSubjectName, newSubjectDescription);
 
@@ -282,8 +285,8 @@ public class SubjectsFacadeIT {
         assertEquals(subject.getName(), newSubjectName);
         assertEquals(subject.getDescription(), newSubjectDescription);
 
-        subjectId = 2019855L;
-        newSubjectName = "AUDITORIAS DE SEGURIDAD VIAL";
+        subjectId = 2039461L;
+        newSubjectName = "SEGURIDAD VIAL";
         newSubjectDescription = "Se tratan temas sobre auditorias de seguridad vial";
         subjectsFacade.updateSubject(subjectId, newSubjectName, newSubjectDescription);
 
@@ -293,8 +296,8 @@ public class SubjectsFacadeIT {
         assertEquals(subject.getName(), newSubjectName);
         assertEquals(subject.getDescription(), newSubjectDescription);
 
-        subjectId = 2016702L;
-        newSubjectName = "INGENIERIA DE SOFTWARE";
+        subjectId = 2039372L;
+        newSubjectName = "SOFTWARE";
         newSubjectDescription = "Los dos cursos se condensaron en uno solo.";
         subjectsFacade.updateSubject(subjectId, newSubjectName, newSubjectDescription);
 
@@ -308,7 +311,7 @@ public class SubjectsFacadeIT {
     @Test
     public void test_BL_17_2() throws MultipleMessagesException, Exception {
         Long subjectId = 2016722L;
-        String newSubjectName = "INGENIERIA DE SOFTWARE";
+        String newSubjectName = "SOFTWARE";
         String newSubjectDescription = "Los dos cursos se condensaron en uno solo.";
 
         SubjectVo subject = subjectsFacade.updateSubject(subjectId, newSubjectName, newSubjectDescription);
@@ -367,7 +370,7 @@ public class SubjectsFacadeIT {
     @Test
     public void test_BL_18_1() throws Exception {
 
-        Long[] subjects = {2019772L};
+        Long[] subjects = {2023859L, 2029461L, 2029372L};
 
         for (Long i : subjects) {
             subjectsFacade.removeSubject(i);
@@ -378,11 +381,66 @@ public class SubjectsFacadeIT {
 
     @Test
     public void test_BL_18_2() throws Exception {
-        try {
-            Long subjectId = 2016722L;
-            subjectsFacade.removeSubject(subjectId);
-            fail();
-        } catch (DataBaseException ex) {
+        Long[] subjects = {2016722L, 9283792L, 7409261L, 7583632L};
+        for (Long subjectId : subjects) {
+            try {
+                subjectsFacade.removeSubject(subjectId);
+                fail();
+            } catch (DataBaseException ex) {
+            }
         }
+    }
+
+    @Test
+    public void test_BL_29_1() throws Exception {
+        String string;
+        Map<Long, String> map;
+
+        string = "GeNi";
+        map = subjectsFacade.getSubjectsAutocomplete(string);
+
+        assertEquals(map.size(), 2);
+        assertEquals("INGENIERIA DE SOFTWARE II", map.get(2016702L));
+        assertEquals("INGENIERIA DE SOFTWARE AVANZADA", map.get(2019772L));
+
+
+        string = "De";
+        map = subjectsFacade.getSubjectsAutocomplete(string);
+
+        assertEquals(map.size(), 3);
+        assertEquals("INGENIERIA DE SOFTWARE II", map.get(2016702L));
+        assertEquals("INGENIERIA DE SOFTWARE AVANZADA", map.get(2019772L));
+        assertEquals("AUDITORIAS DE SEGURIDAD VIAL", map.get(2019855L));
+
+        string = "rIa";
+        map = subjectsFacade.getSubjectsAutocomplete(string);
+
+        assertEquals(map.size(), 5);
+        assertEquals("INGENIERIA DE SOFTWARE II", map.get(2016702L));
+        assertEquals("INGENIERIA DE SOFTWARE AVANZADA", map.get(2019772L));
+        assertEquals("AUDITORIAS DE SEGURIDAD VIAL", map.get(2019855L));
+        assertEquals("AUDITORIA FINANCIERA I", map.get(2016025L));
+        assertEquals("AUDITORIA TRIBUTARIA", map.get(2021814L));
+
+    }
+
+    @Test
+    public void test_BL_30_1() throws Exception {
+        RatingSummaryVo ratingSummary;
+
+        ratingSummary = subjectsFacade.getSubjectsRatingSummary(2044356L);
+        assertEquals(ratingSummary.getPositive(), 2);
+        assertEquals(ratingSummary.getNegative(), 1);
+
+        ratingSummary = subjectsFacade.getSubjectsRatingSummary(2042911L);
+        assertEquals(ratingSummary.getPositive(), 1);
+        assertEquals(ratingSummary.getNegative(), 2);
+    }
+
+    @Test
+    public void test_BL_30_2() throws Exception {
+
+        assertNull(subjectsFacade.getSubjectsRatingSummary(3372983L));
+
     }
 }

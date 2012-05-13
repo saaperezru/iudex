@@ -18,7 +18,7 @@ public abstract class CrudDao<E extends Entity> implements CrudDaoInterface<E> {
      * @return The received entity after being persisted
      */
     @Override
-    public E persist(EntityManager em, E entity) throws DataBaseException{
+    public E persist(EntityManager em, E entity) throws DataBaseException {
         checkEntityManager(em);
         try {
             em.persist(entity);
@@ -61,9 +61,8 @@ public abstract class CrudDao<E extends Entity> implements CrudDaoInterface<E> {
         checkEntityManager(em);
         E entity = getById(em, id);
         if (entity == null) {
-            throw new DataBaseException("No entity found for id " + String.
-                    valueOf(id) +
-                    "while triying to delete the associated record");
+            throw new DataBaseException("No entity found for id " + String.valueOf(id)
+                    + "while triying to delete the associated record");
         }
         try {
             em.remove(entity);

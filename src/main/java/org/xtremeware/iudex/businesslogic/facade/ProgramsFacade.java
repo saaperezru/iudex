@@ -69,6 +69,9 @@ public class ProgramsFacade extends AbstractFacade {
     public List<ProgramVo> getProgramsAutocomplete(String name) throws Exception {
         EntityManager em = null;
         List<ProgramVo> programs = null;
+        if(name == null){
+            return null;
+        }
         try {
             em = getEntityManagerFactory().createEntityManager();
             programs = getServiceFactory().createProgramsService().getByNameLike(em, name);

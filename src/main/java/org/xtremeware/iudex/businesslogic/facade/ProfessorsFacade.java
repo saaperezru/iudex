@@ -22,6 +22,9 @@ public class ProfessorsFacade extends AbstractFacade {
     public Map<Long, String> getProfessorsAutocomplete(String name) throws Exception {
         EntityManager em = null;
         Map<Long, String> map = new HashMap<Long, String>();
+        if(name == null){
+            return null;
+        }
         try {
             em = getEntityManagerFactory().createEntityManager();
             List<ProfessorVo> professors = getServiceFactory().createProfessorsService().getByNameLike(em, name);
@@ -47,6 +50,27 @@ public class ProfessorsFacade extends AbstractFacade {
             tx = em.getTransaction();
             tx.begin();
             createdVo = getServiceFactory().createProfessorsService().create(em, vo);
+            tx.commit();
+        } catch (Exception e) {
+            getServiceFactory().createLogService().error(e.getMessage(), e);
+            FacadesHelper.checkException(e, MultipleMessagesException.class);
+            FacadesHelper.checkExceptionAndRollback(em, tx, e, DuplicityException.class);
+            FacadesHelper.rollbackTransaction(em, tx, e);
+        } finally {
+            FacadesHelper.closeEntityManager(em);
+        }
+        return createdVo;
+    }
+    
+    public ProfessorVo editProfessor(ProfessorVo vo) throws MultipleMessagesException, Exception {
+        ProfessorVo createdVo = null;
+        EntityManager em = null;
+        EntityTransaction tx = null;
+        try {
+            em = getEntityManagerFactory().createEntityManager();
+            tx = em.getTransaction();
+            tx.begin();
+            createdVo = getServiceFactory().createProfessorsService().update(em, vo);
             tx.commit();
         } catch (Exception e) {
             getServiceFactory().createLogService().error(e.getMessage(), e);

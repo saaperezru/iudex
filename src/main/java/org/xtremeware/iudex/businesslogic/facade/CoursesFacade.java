@@ -34,6 +34,9 @@ public class CoursesFacade extends AbstractFacade {
     public List<CourseVoVwFull> search(String query) {
         EntityManager em = null;
         List<CourseVoVwFull> list = new ArrayList<CourseVoVwFull>();
+        if(query == null){
+            return null;
+        }
         if (!query.isEmpty()) {
 
             Set<Long> coursesIds = new HashSet<Long>();

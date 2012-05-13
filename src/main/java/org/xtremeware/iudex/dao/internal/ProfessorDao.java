@@ -27,7 +27,7 @@ public class ProfessorDao extends CrudDao<ProfessorEntity> implements ProfessorD
             throws DataBaseException {
         checkEntityManager(em);
         try {
-            return em.createNamedQuery("getProfessorByNameLike", ProfessorEntity.class).setParameter("name", name).getResultList();
+            return em.createNamedQuery("getProfessorByNameLike", ProfessorEntity.class).setParameter("name", "%"+name+"%").getResultList();
         } catch (Exception e) {
             throw new DataBaseException(e.getMessage(), e.getCause());
         }

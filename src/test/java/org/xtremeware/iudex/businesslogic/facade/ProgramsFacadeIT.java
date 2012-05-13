@@ -126,43 +126,48 @@ public class ProgramsFacadeIT {
         Long id = 2532L;
         try {
             programsFacade.removeProgram(id);
-        } catch (DataBaseException ex) {
+        } catch (Exception ex) {
+            assertEquals(RuntimeException.class, ex.getClass());
             assertEquals("No entity found for id "
                     + String.valueOf(id)
-                    + "while triying to delete the associated record", ex.getMessage());
+                    + "while triying to delete the associated record", ex.getCause().getMessage());
         }
 
         id = 2541L;
         try {
             programsFacade.removeProgram(id);
-        } catch (DataBaseException ex) {
+        } catch (Exception ex) {
+            assertEquals(RuntimeException.class, ex.getClass());
             assertEquals("No entity found for id "
                     + String.valueOf(id)
-                    + "while triying to delete the associated record", ex.getMessage());
+                    + "while triying to delete the associated record", ex.getCause().getMessage());
         }
         id = Long.MAX_VALUE;
         try {
             programsFacade.removeProgram(id);
-        } catch (DataBaseException ex) {
+        } catch (Exception ex) {
+            assertEquals(RuntimeException.class, ex.getClass());
             assertEquals("No entity found for id "
                     + String.valueOf(id)
-                    + "while triying to delete the associated record", ex.getMessage());
+                    + "while triying to delete the associated record", ex.getCause().getMessage());
         }
         id = Long.MIN_VALUE;
         try {
             programsFacade.removeProgram(id);
-        } catch (DataBaseException ex) {
+        } catch (Exception ex) {
+            assertEquals(RuntimeException.class, ex.getClass());
             assertEquals("No entity found for id "
                     + String.valueOf(id)
-                    + "while triying to delete the associated record", ex.getMessage());
+                    + "while triying to delete the associated record", ex.getCause().getMessage());
         }
         id = 0L;
         try {
             programsFacade.removeProgram(id);
-        } catch (DataBaseException ex) {
+        } catch (Exception ex) {
+            assertEquals(RuntimeException.class, ex.getClass());
             assertEquals("No entity found for id "
                     + String.valueOf(id)
-                    + "while triying to delete the associated record", ex.getMessage());
+                    + "while triying to delete the associated record", ex.getCause().getMessage());
         }
     }
 

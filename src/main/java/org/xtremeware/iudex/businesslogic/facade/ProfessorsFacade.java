@@ -23,7 +23,7 @@ public class ProfessorsFacade extends AbstractFacade {
         EntityManager em = null;
         Map<Long, String> map = new HashMap<Long, String>();
         if(name == null){
-            return null;
+            return map;
         }
         try {
             em = getEntityManagerFactory().createEntityManager();

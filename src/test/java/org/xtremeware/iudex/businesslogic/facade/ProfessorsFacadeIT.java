@@ -546,6 +546,9 @@ public class ProfessorsFacadeIT {
         assertTrue(professorsAutocomplete.containsKey(id2));
         assertEquals("Pre"+firstName+" "+lastName+"Pos", professorsAutocomplete.get(id2));
         
+        professorsAutocomplete = pf.getProfessorsAutocomplete(null);
+        assertTrue(professorsAutocomplete.isEmpty());
+        
     }
 
     @Test
@@ -558,7 +561,7 @@ public class ProfessorsFacadeIT {
         assertTrue(professorsAutocomplete.isEmpty());
         
         professorsAutocomplete = pf.getProfessorsAutocomplete(null);
-        assertNull(professorsAutocomplete);
+        assertTrue(professorsAutocomplete.isEmpty());
     }
 
     @Test

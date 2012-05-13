@@ -1,5 +1,6 @@
 package org.xtremeware.iudex.businesslogic.facade;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -70,7 +71,7 @@ public class ProgramsFacade extends AbstractFacade {
         EntityManager em = null;
         List<ProgramVo> programs = null;
         if(name == null){
-            return null;
+            return new ArrayList<ProgramVo>();
         }
         try {
             em = getEntityManagerFactory().createEntityManager();

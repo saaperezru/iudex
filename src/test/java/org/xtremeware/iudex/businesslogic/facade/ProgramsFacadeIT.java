@@ -109,6 +109,9 @@ public class ProgramsFacadeIT {
             assertTrue(names.contains(pv.getName()));
         }
         assertEquals(names.size(), pvs.size());
+        
+        pvs  = programsFacade.getProgramsAutocomplete(null);
+        assertTrue(pvs.isEmpty());
     }
 
     @Test

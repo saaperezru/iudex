@@ -18,51 +18,32 @@ public class SubjectRatingsService extends CrudService<SubjectRatingVo, SubjectR
 
     public SubjectRatingsService(AbstractDaoFactory daoFactory) {
         super(daoFactory,
-                new SimpleCreate<SubjectRatingEntity>(daoFactory.
-                getSubjectRatingDao()),
-                new SimpleRead<SubjectRatingEntity>(daoFactory.
-                getSubjectRatingDao()),
-                new SimpleUpdate<SubjectRatingEntity>(daoFactory.
-                getSubjectRatingDao()),
-                new SimpleRemove<SubjectRatingEntity>(daoFactory.
-                getSubjectRatingDao()));
+                new SimpleCreate<SubjectRatingEntity>(daoFactory.getSubjectRatingDao()),
+                new SimpleRead<SubjectRatingEntity>(daoFactory.getSubjectRatingDao()),
+                new SimpleUpdate<SubjectRatingEntity>(daoFactory.getSubjectRatingDao()),
+                new SimpleRemove<SubjectRatingEntity>(daoFactory.getSubjectRatingDao()));
     }
 
     @Override
     public void validateVo(EntityManager em, SubjectRatingVo vo) throws
             MultipleMessagesException, DataBaseException {
-        if (em == null) {
-            throw new IllegalArgumentException("EntityManager em cannot be null");
-        }
-        MultipleMessagesException multipleMessageException =
-                new MultipleMessagesException();
+        MultipleMessagesException multipleMessageException = new MultipleMessagesException();
         if (vo == null) {
-            multipleMessageException.addMessage(
-                    "Null SubjectRatingVo");
+            multipleMessageException.addMessage("subjectRating.null");
             throw multipleMessageException;
         }
         if (vo.getValue() > 1 || vo.getValue() < -1) {
-            multipleMessageException.addMessage(
-                    "int Value in the provided SubjectRatingVo must be less " +
-                    "than 1 and greater than -1");
+            multipleMessageException.addMessage("subjectRating.value.invalidRating");
         }
-        if (vo.getEvaluetedObjectId() == null) {
-            multipleMessageException.addMessage(
-                    "Long subjectId in the provided SubjectRatingVo cannot be null");
-        } else if (getDaoFactory().getSubjectDao().getById(em, vo.
-                getEvaluetedObjectId()) == null) {
-            multipleMessageException.addMessage(
-                    "Long subjectId in the provided SubjectRatingVo must " +
-                    "correspond to an existing subject entity in the database");
+        if (vo.getEvaluatedObjectId() == null) {
+            multipleMessageException.addMessage("subjectRating.subjectId.null");
+        } else if (getDaoFactory().getSubjectDao().getById(em, vo.getEvaluatedObjectId()) == null) {
+            multipleMessageException.addMessage("subjectRating.subjectId.element.notFound");
         }
         if (vo.getUser() == null) {
-            multipleMessageException.addMessage(
-                    "Long userId in the provided SubjectRatingVo cannot be null");
-        } else if (getDaoFactory().getUserDao().getById(em, vo.getUser()) ==
-                null) {
-            multipleMessageException.addMessage(
-                    "Long userId in the provided SubjectRatingVo must " +
-                    "correspond to an existing user entity in the database");
+            multipleMessageException.addMessage("subjectRating.userId.null");
+        } else if (getDaoFactory().getUserDao().getById(em, vo.getUser()) == null) {
+            multipleMessageException.addMessage("subjectRating.userId.element.notFound");
         }
         if (!multipleMessageException.getMessages().isEmpty()) {
             throw multipleMessageException;
@@ -76,7 +57,7 @@ public class SubjectRatingsService extends CrudService<SubjectRatingVo, SubjectR
         SubjectRatingEntity entity = new SubjectRatingEntity();
         entity.setId(vo.getId());
         entity.setSubject(getDaoFactory().getSubjectDao().getById(em,
-                vo.getUser()));
+                vo.getEvaluatedObjectId()));
         entity.setUser(getDaoFactory().getUserDao().getById(em, vo.getUser()));
         entity.setValue(vo.getValue());
         return entity;
@@ -115,8 +96,13 @@ public class SubjectRatingsService extends CrudService<SubjectRatingVo, SubjectR
     public SubjectRatingVo getBySubjectIdAndUserId(EntityManager em,
             long subjectId, long userId)
             throws DataBaseException {
-        return getDaoFactory().getSubjectRatingDao().getBySubjectIdAndUserId(em,
-                subjectId, userId).toVo();
+        SubjectRatingEntity subjectRatingEntity = getDaoFactory().getSubjectRatingDao().getBySubjectIdAndUserId(em, subjectId, userId);
+
+        if (subjectRatingEntity == null) {
+            return null;
+        }
+
+        return subjectRatingEntity.toVo();
     }
 
     /**

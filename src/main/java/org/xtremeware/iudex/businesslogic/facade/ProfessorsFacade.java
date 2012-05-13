@@ -97,7 +97,7 @@ public class ProfessorsFacade extends AbstractFacade {
         ProfessorRatingVo rating = null;
         try {
             ProfessorRatingVo vo = new ProfessorRatingVo();
-            vo.setEvaluetedObjectId(professorId);
+            vo.setEvaluatedObjectId(professorId);
             vo.setUser(userId);
             vo.setValue(value);
 

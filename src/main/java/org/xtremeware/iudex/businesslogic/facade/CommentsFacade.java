@@ -142,7 +142,7 @@ public class CommentsFacade extends AbstractFacade {
                     getByCommentIdAndUserId(em, commentId, userId);
             if (rating == null) {
                 rating = new CommentRatingVo();
-                rating.setEvaluetedObjectId(commentId);
+                rating.setEvaluatedObjectId(commentId);
                 rating.setUser(userId);
                 rating.setValue(value);
                 rating = getServiceFactory().createCommentRatingService().create(

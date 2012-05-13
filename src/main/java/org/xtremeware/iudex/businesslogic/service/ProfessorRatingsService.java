@@ -43,11 +43,11 @@ public class ProfessorRatingsService extends CrudService<ProfessorRatingVo, Prof
             multipleMessageException.addMessage(
                     "professorRating.value.invalidValue");
         }
-        if (vo.getEvaluetedObjectId() == null) {
+        if (vo.getEvaluatedObjectId() == null) {
             multipleMessageException.addMessage(
                     "professorRating.professorId.null");
         } else if (getDaoFactory().getProfessorDao().getById(em, vo.
-                getEvaluetedObjectId()) == null) {
+                getEvaluatedObjectId()) == null) {
             multipleMessageException.addMessage(
                     "professorRating.professorId.element.notFound");
         }
@@ -73,7 +73,7 @@ public class ProfessorRatingsService extends CrudService<ProfessorRatingVo, Prof
         ProfessorRatingEntity entity = new ProfessorRatingEntity();
         entity.setId(vo.getId());
         entity.setProfessor(getDaoFactory().getProfessorDao().getById(em, vo.
-                getEvaluetedObjectId()));
+                getEvaluatedObjectId()));
         entity.setUser(getDaoFactory().getUserDao().getById(em, vo.getUser()));
         entity.setValue(vo.getValue());
         return entity;

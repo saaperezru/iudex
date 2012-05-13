@@ -49,7 +49,6 @@ public class ProfessorRatingDao extends CrudDao<ProfessorRatingEntity>
     public ProfessorRatingEntity getByProfessorIdAndUserId(EntityManager em, long professorId, long userId)
             throws DataBaseException {
         checkEntityManager(em);
-
         try {
             return em.createNamedQuery("getRatingByProfessorIdAndUserId", ProfessorRatingEntity.class).
                     setParameter("professor", professorId).setParameter("user", userId).getSingleResult();

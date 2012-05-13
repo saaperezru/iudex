@@ -1,6 +1,7 @@
 package org.xtremeware.iudex.businesslogic.service;
 
 import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.businesslogic.service.createimplementations.UsersCreate;
 import org.xtremeware.iudex.businesslogic.service.readimplementations.SimpleRead;
@@ -124,8 +125,8 @@ public class UsersService extends CrudService<UserVo, UserEntity> {
         if (vo.getRole() == null) {
             multipleMessagesException.addMessage("user.role.null");
         }
-        
-        if(!multipleMessagesException.getMessages().isEmpty()){
+
+        if (!multipleMessagesException.getMessages().isEmpty()) {
             throw multipleMessagesException;
         }
     }
@@ -145,20 +146,39 @@ public class UsersService extends CrudService<UserVo, UserEntity> {
         userEntity.setRole(vo.getRole());
         userEntity.setActive(vo.isActive());
 
-        ArrayList<ProgramEntity> arrayList = new ArrayList<ProgramEntity>();
-        for (Long programId : vo.getProgramsId()) {
-            arrayList.add(this.getDaoFactory().getProgramDao().getById(em,
-                    programId));
+        List<Long> programsId = vo.getProgramsId();
+        if (programsId != null) {
+            List<ProgramEntity> arrayList = new ArrayList<ProgramEntity>();
+            for (Long programId : programsId) {
+                arrayList.add(this.getDaoFactory().getProgramDao().getById(em,
+                        programId));
+            }
+            userEntity.setPrograms(arrayList);
         }
 
-        userEntity.setPrograms(arrayList);
         return userEntity;
     }
 
     public UserVo authenticate(EntityManager em, String userName,
             String password)
             throws InactiveUserException, ExternalServiceConnectionException,
-            DataBaseException {
+            DataBaseException, MultipleMessagesException {
+        MultipleMessagesException exception = new MultipleMessagesException();
+        if (userName == null) {
+            exception.addMessage("user.userName.null");
+        } else if (userName.isEmpty()) {
+            exception.addMessage("user.userName.empty");
+        }
+        if (password == null) {
+            exception.addMessage("user.password.null");
+        } else if (password.isEmpty()) {
+            exception.addMessage("user.password.empty");
+        }
+
+        if (!exception.getMessages().isEmpty()) {
+            throw exception;
+        }
+
         userName = SecurityHelper.sanitizeHTML(userName);
         password = SecurityHelper.sanitizeHTML(password);
         password = SecurityHelper.hashPassword(password);
@@ -168,8 +188,7 @@ public class UsersService extends CrudService<UserVo, UserEntity> {
             return null;
         } else {
             if (!user.isActive()) {
-                throw new InactiveUserException("The user " + user.getUserName() +
-                        " is still inactive.");
+                throw new InactiveUserException("user.inactive");
             } else {
                 return user.toVo();
             }

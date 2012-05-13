@@ -1,7 +1,6 @@
 package org.xtremeware.iudex.dao;
 
 import javax.persistence.EntityManager;
-import org.xtremeware.iudex.businesslogic.DuplicityException;
 import org.xtremeware.iudex.entity.Entity;
 import org.xtremeware.iudex.helper.DataBaseException;
 
@@ -12,7 +11,7 @@ import org.xtremeware.iudex.helper.DataBaseException;
 public interface CrudDaoInterface<E extends Entity> {
 
     public E persist(EntityManager em, E entity)
-            throws DataBaseException, DuplicityException;
+            throws DataBaseException;
 
     public E merge(EntityManager em, E entity)
             throws DataBaseException;

@@ -2,6 +2,7 @@
  */
 package org.xtremeware.iudex.businesslogic.facade;
 
+import org.xtremeware.iudex.businesslogic.helper.FacadesTestHelper;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -31,7 +32,7 @@ public class CoursesFacadeIT {
     @BeforeClass
     public static void setUpClass() throws Exception {
 
-        TestHelper.initializeDatabase();
+        FacadesTestHelper.initializeDatabase();
 
         RatingSummaryVo rating = new RatingSummaryVo();
         rating.setPositive(3);

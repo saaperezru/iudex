@@ -1,0 +1,78 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+    <h:head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/xhtml; charset=utf-8" />
+        <meta name="description" content="" />
+        <meta name="keywords" content="" />
+        <meta name="author" content="" />
+        <h:outputStylesheet library="bootstrap" name="css/bootstrap.min.css" />
+        <h:outputStylesheet library="bootstrap" name="css/bootstrap-responsive.min.css" />
+        <h:outputStylesheet library="css" name="style.css" />
+    </h:head>
+    <h:body>
+
+        <!--navbar-->
+        <div class="navbar navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container-fluid offset1 span10">
+                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </a>
+                    <h:link outcome="home" class="brand" value="IUDEX" />
+                    <c:if test="#{authCheck.loggedIn}">
+                        <div class="btn-group pull-right">
+                            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                                <i class="icon-user"></i>User name
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="#">Perfil</a></li>
+                                <li class="divider"></li>
+                                <li><a href="#">Cerrar sesión</a></li>
+                            </ul>
+                        </div>
+                    </c:if>
+                    <div class="nav-collapse">
+                        <ul class="nav">
+                            <li><a href="#about">Acerca de</a></li>
+                            <li><a href="#contact">Contacto</a></li>
+                        </ul>
+                    </div><!--/.nav-collapse -->
+                </div>
+            </div>
+        </div>
+        <!--end navbar-->
+        <!--content-->
+        <div class="container-fluid">
+            <div class="offset1 span10">
+                <ui:insert name="content">
+
+                </ui:insert>
+            </div>
+        </div>
+
+        <!-- footer -->
+        <div class="container-fluid">
+            <div class="offset1 span10">
+                <hr />
+                <p>
+                    © Xtremeware 2012
+                </p>
+            </div>
+        </div>
+        <!--end content-->
+        <h:outputScript library="jquery" name="jquery-1.7.2.min.js" />
+        <h:outputScript library="bootstrap" name="js/bootstrap.min.js" />
+        <h:outputScript library="bootstrap" name="js/bootstrap-tooltip.js" />
+        <script>
+            jQuery(".inline-error").tooltip();
+        </script>
+    </h:body>
+</html>

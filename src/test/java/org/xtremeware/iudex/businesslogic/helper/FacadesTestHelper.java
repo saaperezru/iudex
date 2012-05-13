@@ -1,4 +1,4 @@
-package org.xtremeware.iudex.businesslogic.facade;
+package org.xtremeware.iudex.businesslogic.helper;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -8,13 +8,12 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Properties;
 import java.util.Random;
-import javax.persistence.EntityManager;
-import javax.persistence.Persistence;
+import javax.persistence.EntityManagerFactory;
 import org.h2.tools.RunScript;
 import static org.junit.Assert.assertTrue;
 import org.xtremeware.iudex.helper.MultipleMessagesException;
 
-public class TestHelper {
+public class FacadesTestHelper {
 
     private static boolean init = false;
 
@@ -44,7 +43,7 @@ public class TestHelper {
         return new BigInteger(length * 5, new Random()).toString(32);
     }
     
-    public static EntityManager createEntityManager(){
-        return Persistence.createEntityManagerFactory("org.xtremeware.iudex_local").createEntityManager();
+    public static EntityManagerFactory createEntityManagerFactory() {
+        return javax.persistence.Persistence.createEntityManagerFactory("org.xtremeware.iudex_local");
     }
 }

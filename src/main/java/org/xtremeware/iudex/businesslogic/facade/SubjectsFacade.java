@@ -23,12 +23,13 @@ public class SubjectsFacade extends AbstractFacade {
         EntityManager em = null;
         Map<Long, String> map = new HashMap<Long, String>();
         try {
-            em = getEntityManagerFactory().createEntityManager();
-            List<SubjectVo> subjects = getServiceFactory().createSubjectsService().getByNameLike(em, name);
-            for (SubjectVo s : subjects) {
-                map.put(s.getId(), s.getName());
+            if (name != null) {
+                em = getEntityManagerFactory().createEntityManager();
+                List<SubjectVo> subjects = getServiceFactory().createSubjectsService().getByNameLike(em, name);
+                for (SubjectVo s : subjects) {
+                    map.put(s.getId(), s.getName());
+                }
             }
-
         } catch (Exception e) {
             getServiceFactory().createLogService().error(e.getMessage(), e);
             throw e;

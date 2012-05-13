@@ -4,7 +4,6 @@
  */
 package org.xtremeware.iudex.businesslogic.facade;
 
-import java.util.HashMap;
 import java.util.Map;
 import javax.persistence.EntityManager;
 import static org.junit.Assert.*;
@@ -75,7 +74,6 @@ public class SubjectsFacadeIT {
         Long subjectId = 2021815L;
         Long userId = 2L;
 
-        SubjectRatingVo subjectRatingVo;
         try {
             subjectsFacade.rateSubject(userId, subjectId, 0);
             fail();
@@ -84,7 +82,6 @@ public class SubjectsFacadeIT {
             assertEquals(ex.getMessages().get(0),
                     "subjectRating.subjectId.element.notFound");
         }
-
     }
 
     @Test
@@ -240,7 +237,7 @@ public class SubjectsFacadeIT {
             fail();
 
         } catch (MultipleMessagesException ex) {
-            assertTrue(ex.getMessages().size() == 2);
+            assertEquals(ex.getMessages().size(), 2);
             assertTrue(ex.getMessages().contains("subject.description.tooLong"));
             assertTrue(ex.getMessages().contains("subject.name.tooLong"));
         }
@@ -318,6 +315,13 @@ public class SubjectsFacadeIT {
 
         assertNull(subject);
 
+        try {
+            subjectsFacade.updateSubject(null, null, null);
+        } catch (MultipleMessagesException e) {
+            assertEquals(e.getMessages().size(), 2);
+            assertTrue(e.getMessages().contains("subject.id.null"));
+            assertTrue(e.getMessages().contains("subject.name.null"));
+        }
     }
 
     @Test
@@ -326,7 +330,7 @@ public class SubjectsFacadeIT {
             subjectsFacade.updateSubject(null, null, null);
             fail();
         } catch (MultipleMessagesException ex) {
-            assertTrue(ex.getMessages().size() == 2);
+            assertEquals(ex.getMessages().size(), 2);
             assertTrue(ex.getMessages().contains("subject.id.null"));
             assertTrue(ex.getMessages().contains("subject.name.null"));
         }
@@ -340,7 +344,7 @@ public class SubjectsFacadeIT {
             fail();
 
         } catch (MultipleMessagesException ex) {
-            assertTrue(ex.getMessages().size() == 2);
+            assertEquals(ex.getMessages().size(), 2);
             assertTrue(ex.getMessages().contains("subject.description.tooLong"));
             assertTrue(ex.getMessages().contains("subject.name.tooLong"));
         }
@@ -422,6 +426,11 @@ public class SubjectsFacadeIT {
         assertEquals("AUDITORIA FINANCIERA I", map.get(2016025L));
         assertEquals("AUDITORIA TRIBUTARIA", map.get(2021814L));
 
+    }
+
+    @Test
+    public void test_BL_29_2() throws Exception {
+        assertEquals(subjectsFacade.getSubjectsAutocomplete(null).size(), 0);
     }
 
     @Test

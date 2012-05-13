@@ -103,7 +103,6 @@ public class SubjectsFacade extends AbstractFacade {
                 }
             }
             tx.commit();
-
         } catch (Exception e) {
             getServiceFactory().createLogService().error(e.getMessage(), e);
             FacadesHelper.checkException(e, MultipleMessagesException.class);
@@ -176,23 +175,14 @@ public class SubjectsFacade extends AbstractFacade {
             subject.setDescription(description);
             subject = getServiceFactory().createSubjectsService().update(em, subject);
             tx.commit();
-        } catch (MultipleMessagesException ex) {
-            throw ex;
+        
         } catch (Exception e) {
             getServiceFactory().createLogService().error(e.getMessage(), e);
-            if (em != null && tx != null) {
-                try {
-                    tx.rollback();
-                } catch (Exception ex) {
-                    getServiceFactory().createLogService().error(ex.getMessage(), ex);
-                }
-            }
-            throw e;
-        } finally {
-            if (em != null) {
-                em.clear();
-                em.close();
-            }
+            FacadesHelper.checkException(e, MultipleMessagesException.class);
+            FacadesHelper.checkExceptionAndRollback(em, tx, e, DuplicityException.class);
+            FacadesHelper.rollbackTransaction(em, tx, e);
+        }finally {
+            FacadesHelper.closeEntityManager(em);
         }
         
         return subject;

@@ -16,6 +16,7 @@ import org.xtremeware.iudex.helper.MultipleMessagesException;
 import org.xtremeware.iudex.presentation.vovw.SubjectVoVwFull;
 import org.xtremeware.iudex.vo.SubjectRatingVo;
 import org.xtremeware.iudex.vo.SubjectVo;
+import org.xtremeware.iudex.businesslogic.helper.FacadesTestHelper;
 
 /**
  *
@@ -31,12 +32,12 @@ public class SubjectsFacadeIT {
 
     @BeforeClass
     public static void setUpClass() throws Exception {
-        TestHelper.initializeDatabase();
+        FacadesTestHelper.initializeDatabase();
     }
 
     @Before
     public void setUp() {
-        entityManager = TestHelper.createEntityManager();
+        entityManager = FacadesTestHelper.createEntityManagerFactory().createEntityManager();
     }
 
     @Test
@@ -177,7 +178,7 @@ public class SubjectsFacadeIT {
         assertEquals(subjectVoVw.getDescription(), subjectDescription);
 
         subjectId = 5555555L;
-        subjectName = TestHelper.randomString(Integer.parseInt(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAX_SUBJECT_NAME_LENGTH)));
+        subjectName = FacadesTestHelper.randomString(Integer.parseInt(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAX_SUBJECT_NAME_LENGTH)));
         subjectDescription = "";
         String injectedJavascriptCode = "<script type=" + '"' + "text/javascript" + '"' + ">document.getElementById(" + '"' + "demo" + '"' + ").innerHTML=Date();</script>";
 
@@ -192,7 +193,7 @@ public class SubjectsFacadeIT {
 
         subjectId = 7654321L;
         subjectName = "A";
-        subjectDescription = TestHelper.randomString(Integer.parseInt(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAX_SUBJECT_DESCRIPTION_LENGTH)));
+        subjectDescription = FacadesTestHelper.randomString(Integer.parseInt(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAX_SUBJECT_DESCRIPTION_LENGTH)));
 
         subjectId = subjectsFacade.addSubject(subjectId, subjectName, subjectDescription).getId();
 
@@ -229,8 +230,8 @@ public class SubjectsFacadeIT {
         }
 
         try {
-            String tooLongName = TestHelper.randomString(Integer.parseInt(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAX_SUBJECT_NAME_LENGTH)) + 1);
-            String tooLongDescription = TestHelper.randomString(Integer.parseInt(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAX_SUBJECT_DESCRIPTION_LENGTH)) + 1);
+            String tooLongName = FacadesTestHelper.randomString(Integer.parseInt(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAX_SUBJECT_NAME_LENGTH)) + 1);
+            String tooLongDescription = FacadesTestHelper.randomString(Integer.parseInt(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAX_SUBJECT_DESCRIPTION_LENGTH)) + 1);
 
             subjectsFacade.addSubject(Long.MIN_VALUE, tooLongName, tooLongDescription);
 
@@ -254,7 +255,7 @@ public class SubjectsFacadeIT {
 
         try {
             String injectedCodeInName = "<h1>Los profesores son unos tiranos</h1>";
-            String tooLongDescription = TestHelper.randomString(Integer.parseInt(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAX_SUBJECT_DESCRIPTION_LENGTH)) + 1);
+            String tooLongDescription = FacadesTestHelper.randomString(Integer.parseInt(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAX_SUBJECT_DESCRIPTION_LENGTH)) + 1);
             subjectsFacade.addSubject(null, injectedCodeInName, tooLongDescription);
             fail();
         } catch (MultipleMessagesException ex) {
@@ -329,8 +330,8 @@ public class SubjectsFacadeIT {
         }
 
         try {
-            String tooLongName = TestHelper.randomString(Integer.parseInt(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAX_SUBJECT_NAME_LENGTH)) + 1);
-            String tooLongDescription = TestHelper.randomString(Integer.parseInt(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAX_SUBJECT_DESCRIPTION_LENGTH)) + 1);
+            String tooLongName = FacadesTestHelper.randomString(Integer.parseInt(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAX_SUBJECT_NAME_LENGTH)) + 1);
+            String tooLongDescription = FacadesTestHelper.randomString(Integer.parseInt(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAX_SUBJECT_DESCRIPTION_LENGTH)) + 1);
 
             subjectsFacade.updateSubject(Long.MIN_VALUE, tooLongName, tooLongDescription);
 
@@ -354,7 +355,7 @@ public class SubjectsFacadeIT {
 
         try {
             String injectedCodeInName = "<h1>Los profesores son unos tiranos</h1>";
-            String tooLongDescription = TestHelper.randomString(Integer.parseInt(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAX_SUBJECT_DESCRIPTION_LENGTH)) + 1);
+            String tooLongDescription = FacadesTestHelper.randomString(Integer.parseInt(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAX_SUBJECT_DESCRIPTION_LENGTH)) + 1);
             subjectsFacade.updateSubject(null, injectedCodeInName, tooLongDescription);
             fail();
         } catch (MultipleMessagesException ex) {

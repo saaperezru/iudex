@@ -9,6 +9,7 @@ import org.xtremeware.iudex.helper.Config;
 import org.xtremeware.iudex.helper.MultipleMessagesException;
 import org.xtremeware.iudex.vo.ProfessorRatingVo;
 import org.xtremeware.iudex.vo.ProfessorVo;
+import org.xtremeware.iudex.businesslogic.helper.FacadesTestHelper;
 
 /**
  *
@@ -23,12 +24,12 @@ public class ProfessorsFacadeIT {
 
     @BeforeClass
     public static void setUpClass() throws Exception {
-        TestHelper.initializeDatabase();
+        FacadesTestHelper.initializeDatabase();
     }
 
     @Before
     public void setUp() {
-        entityManager = TestHelper.createEntityManager();
+        entityManager = FacadesTestHelper.createEntityManagerFactory().createEntityManager();
     }
 
     @After
@@ -59,7 +60,7 @@ public class ProfessorsFacadeIT {
         try {
             ProfessorRatingVo rateProfessor = pf.rateProfessor(professorId, userId, value);
         } catch (MultipleMessagesException ex) {
-            TestHelper.checkExceptionMessages(ex, expectedMessages);
+            FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
         }
 
         professorId = Long.MIN_VALUE;
@@ -68,7 +69,7 @@ public class ProfessorsFacadeIT {
         try {
             ProfessorRatingVo rateProfessor = pf.rateProfessor(professorId, userId, value);
         } catch (MultipleMessagesException ex) {
-            TestHelper.checkExceptionMessages(ex, expectedMessages);
+            FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
         }
 
         professorId = 0L;
@@ -81,7 +82,7 @@ public class ProfessorsFacadeIT {
         try {
             ProfessorRatingVo rateProfessor = pf.rateProfessor(professorId, userId, value);
         } catch (MultipleMessagesException ex) {
-            TestHelper.checkExceptionMessages(ex, expectedMessages);
+            FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
         }
     }
 
@@ -125,9 +126,9 @@ public class ProfessorsFacadeIT {
     public void testBL_13_1() throws MultipleMessagesException, Exception {
         ProfessorsFacade pf = Config.getInstance().getFacadeFactory().getProfessorsFacade();
         ProfessorVo pv = new ProfessorVo();
-        pv.setDescription(TestHelper.randomString(50));
-        pv.setFirstName(TestHelper.randomString(50));
-        pv.setLastName(TestHelper.randomString(50));
+        pv.setDescription(FacadesTestHelper.randomString(50));
+        pv.setFirstName(FacadesTestHelper.randomString(50));
+        pv.setLastName(FacadesTestHelper.randomString(50));
         pv.setEmail("jdbermeol@gmail.com");
         pv.setImageUrl("www.ing.unal.edu.co/progsfac/civil_agricola/images/stories/Civil__Agricola/Profesores/villarreal.meglan.adela.png");
         pv.setWebsite("www.docentes.unal.edu.co/avillarrealme");
@@ -147,7 +148,7 @@ public class ProfessorsFacadeIT {
         try {
             pv = pf.addProfessor(null);
         } catch (MultipleMessagesException ex) {
-            TestHelper.checkExceptionMessages(ex, expectedMessages);
+            FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
         }
 
         pv = new ProfessorVo();
@@ -168,12 +169,12 @@ public class ProfessorsFacadeIT {
         try {
             pv = pf.addProfessor(pv);
         } catch (MultipleMessagesException ex) {
-            TestHelper.checkExceptionMessages(ex, expectedMessages);
+            FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
         }
         
-        pv.setDescription(TestHelper.randomString(2001));
-        pv.setFirstName(TestHelper.randomString(51));
-        pv.setLastName(TestHelper.randomString(51));
+        pv.setDescription(FacadesTestHelper.randomString(2001));
+        pv.setFirstName(FacadesTestHelper.randomString(51));
+        pv.setLastName(FacadesTestHelper.randomString(51));
         pv.setEmail("");
         pv.setImageUrl("");
         pv.setWebsite("");
@@ -187,15 +188,15 @@ public class ProfessorsFacadeIT {
         try {
             pv = pf.addProfessor(pv);
         } catch (MultipleMessagesException ex) {
-            TestHelper.checkExceptionMessages(ex, expectedMessages);
+            FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
         }
         
         pv.setDescription("");
         pv.setFirstName("");
         pv.setLastName("");
-        pv.setEmail(TestHelper.randomString(51));
-        pv.setImageUrl(TestHelper.randomString(51));
-        pv.setWebsite(TestHelper.randomString(51));
+        pv.setEmail(FacadesTestHelper.randomString(51));
+        pv.setImageUrl(FacadesTestHelper.randomString(51));
+        pv.setWebsite(FacadesTestHelper.randomString(51));
 
         expectedMessages = new String[]{
             "professor.firstName.empty",
@@ -207,7 +208,7 @@ public class ProfessorsFacadeIT {
         try {
             pv = pf.addProfessor(pv);
         } catch (MultipleMessagesException ex) {
-            TestHelper.checkExceptionMessages(ex, expectedMessages);
+            FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
         }
     }
 
@@ -216,9 +217,9 @@ public class ProfessorsFacadeIT {
         
         ProfessorsFacade pf = Config.getInstance().getFacadeFactory().getProfessorsFacade();
         ProfessorVo pv = new ProfessorVo();
-        pv.setDescription(TestHelper.randomString(50));
-        pv.setFirstName(TestHelper.randomString(50));
-        pv.setLastName(TestHelper.randomString(50));
+        pv.setDescription(FacadesTestHelper.randomString(50));
+        pv.setFirstName(FacadesTestHelper.randomString(50));
+        pv.setLastName(FacadesTestHelper.randomString(50));
         pv.setEmail("jdbermeol@gmail.com");
         pv.setImageUrl("www.ing.unal.edu.co/progsfac/civil_agricola/images/stories/Civil__Agricola/Profesores/villarreal.meglan.adela.png");
         pv.setWebsite("www.docentes.unal.edu.co/avillarrealme");

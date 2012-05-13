@@ -32,7 +32,7 @@ public class PeriodsFacadeIT {
     @Before
     public void setUp() {
 
-        entityManager = TestHelper.createEntityManager();
+        entityManager = FacadesTestHelper.createEntityManagerFactory().createEntityManager();
     }
     
     @After
@@ -75,14 +75,14 @@ public class PeriodsFacadeIT {
         try {
             PeriodVo periodVo = periodsFacade.addPeriod(2012, 4);
         } catch (MultipleMessagesException ex) {
-            TestHelper.checkExceptionMessages(ex, expectedMessages);
+            FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
         }
         expectedMessages = new String[]{
             "period.year.invalidYear"};
         try {
             PeriodVo periodVo = periodsFacade.addPeriod(-1, 3);
         } catch (MultipleMessagesException ex) {
-            TestHelper.checkExceptionMessages(ex, expectedMessages);
+            FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
         }
         expectedMessages = new String[]{
             "period.year.invalidYear",
@@ -90,7 +90,7 @@ public class PeriodsFacadeIT {
         try {
             PeriodVo periodVo = periodsFacade.addPeriod(-1, 0);
         } catch (MultipleMessagesException ex) {
-            TestHelper.checkExceptionMessages(ex, expectedMessages);
+            FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
         }
         expectedMessages = new String[]{
             "period.semester.invalidSemester"};
@@ -98,7 +98,7 @@ public class PeriodsFacadeIT {
             PeriodVo periodVo = periodsFacade.addPeriod(Integer.MAX_VALUE,
                     Integer.MAX_VALUE);
         } catch (MultipleMessagesException ex) {
-            TestHelper.checkExceptionMessages(ex, expectedMessages);
+            FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
         }
         expectedMessages = new String[]{
             "period.year.invalidYear",
@@ -107,7 +107,7 @@ public class PeriodsFacadeIT {
             PeriodVo periodVo = periodsFacade.addPeriod(Integer.MIN_VALUE,
                     Integer.MIN_VALUE);
         } catch (MultipleMessagesException ex) {
-            TestHelper.checkExceptionMessages(ex, expectedMessages);
+            FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
         }
     }
 

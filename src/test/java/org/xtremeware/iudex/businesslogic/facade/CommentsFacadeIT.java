@@ -34,7 +34,7 @@ public class CommentsFacadeIT {
 
     @Before
     public void setUp() {
-        entityManager = TestHelper.createEntityManager();
+        entityManager = FacadesTestHelper.createEntityManagerFactory().createEntityManager();
     }
 
     @After
@@ -92,13 +92,13 @@ public class CommentsFacadeIT {
         try {
             result = commentsFacade.addComment(commentVo);
         } catch (MultipleMessagesException ex) {
-            TestHelper.checkExceptionMessages(ex, expectedMessages);
+            FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
         }
         commentVo.setCourseId(10L);
         commentVo.setDate(new Date());
         commentVo.setRating(Float.MAX_VALUE);
         commentVo.setUserId(100L);
-        commentVo.setContent(TestHelper.randomString(2001));
+        commentVo.setContent(FacadesTestHelper.randomString(2001));
         expectedMessages = new String[]{
             "comment.rating.invalidRating",
             "comment.courseId.element.notFound",
@@ -107,7 +107,7 @@ public class CommentsFacadeIT {
         try {
             result = commentsFacade.addComment(commentVo);
         } catch (MultipleMessagesException ex) {
-            TestHelper.checkExceptionMessages(ex, expectedMessages);
+            FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
         }
         commentVo.setCourseId(Long.MAX_VALUE);
         commentVo.setUserId(Long.MAX_VALUE);
@@ -121,7 +121,7 @@ public class CommentsFacadeIT {
         try {
             result = commentsFacade.addComment(commentVo);
         } catch (MultipleMessagesException ex) {
-            TestHelper.checkExceptionMessages(ex, expectedMessages);
+            FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
         }
         commentVo.setCourseId(Long.MIN_VALUE);
         commentVo.setUserId(Long.MIN_VALUE);
@@ -135,7 +135,7 @@ public class CommentsFacadeIT {
         try {
             result = commentsFacade.addComment(commentVo);
         } catch (MultipleMessagesException ex) {
-            TestHelper.checkExceptionMessages(ex, expectedMessages);
+            FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
         }
     }
 
@@ -210,7 +210,7 @@ public class CommentsFacadeIT {
             CommentRatingVo commentRatingVo = commentsFacade.rateComment(
                     commmendId, userId, value);
         } catch (MultipleMessagesException ex) {
-            TestHelper.checkExceptionMessages(ex, expectedMessages);
+            FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
         }
 
         commmendId = Long.MAX_VALUE;
@@ -221,7 +221,7 @@ public class CommentsFacadeIT {
             CommentRatingVo commentRatingVo = commentsFacade.rateComment(
                     commmendId, userId, value);
         } catch (MultipleMessagesException ex) {
-            TestHelper.checkExceptionMessages(ex, expectedMessages);
+            FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
         }
 
         commmendId = 0L;
@@ -235,7 +235,7 @@ public class CommentsFacadeIT {
             CommentRatingVo commentRatingVo = commentsFacade.rateComment(
                     commmendId, userId, value);
         } catch (MultipleMessagesException ex) {
-            TestHelper.checkExceptionMessages(ex, expectedMessages);
+            FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
         }
     }
 

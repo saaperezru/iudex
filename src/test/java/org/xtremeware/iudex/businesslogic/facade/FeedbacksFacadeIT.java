@@ -10,6 +10,7 @@ import org.xtremeware.iudex.helper.Config;
 import org.xtremeware.iudex.helper.MultipleMessagesException;
 import org.xtremeware.iudex.vo.FeedbackTypeVo;
 import org.xtremeware.iudex.vo.FeedbackVo;
+import org.xtremeware.iudex.businesslogic.helper.FacadesTestHelper;
 
 /**
  *
@@ -24,12 +25,12 @@ public class FeedbacksFacadeIT {
 
     @BeforeClass
     public static void setUpClass() throws Exception {
-        TestHelper.initializeDatabase();
+        FacadesTestHelper.initializeDatabase();
     }
 
     @Before
     public void setUp() {
-        entityManager = TestHelper.createEntityManager();
+        entityManager = FacadesTestHelper.createEntityManagerFactory().createEntityManager();
     }
     
     @After
@@ -42,7 +43,7 @@ public class FeedbacksFacadeIT {
     public void BL_9_1() throws MultipleMessagesException, Exception {
         FeedbacksFacade ff = Config.getInstance().getFacadeFactory().
                 getFeedbacksFacade();
-        String feedback = TestHelper.randomString(50);
+        String feedback = FacadesTestHelper.randomString(50);
         FeedbackVo fv = ff.addFeedback(1L, feedback, Calendar.getInstance().getTime());
         assertNotNull(fv);
         assertNotNull(fv.getId());
@@ -64,7 +65,7 @@ public class FeedbacksFacadeIT {
         try {
             fv = ff.addFeedback(0L, null, null);
         } catch (MultipleMessagesException ex) {
-            TestHelper.checkExceptionMessages(ex, expectedMessages);
+            FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
         }
         expectedMessages = new String[]{
             "feedback.date.null",
@@ -73,16 +74,16 @@ public class FeedbacksFacadeIT {
         try {
             fv = ff.addFeedback(Long.MAX_VALUE, "", null);
         } catch (MultipleMessagesException ex) {
-            TestHelper.checkExceptionMessages(ex, expectedMessages);
+            FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
         }
         expectedMessages = new String[]{
             "feedback.date.null",
             "feedback.content.tooLong",
             "feedback.feedbackTypeId.element.notFound"};
         try {
-            fv = ff.addFeedback(Long.MIN_VALUE, TestHelper.randomString(2001), null);
+            fv = ff.addFeedback(Long.MIN_VALUE, FacadesTestHelper.randomString(2001), null);
         } catch (MultipleMessagesException ex) {
-            TestHelper.checkExceptionMessages(ex, expectedMessages);
+            FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
         }
         assertNull(fv);
 

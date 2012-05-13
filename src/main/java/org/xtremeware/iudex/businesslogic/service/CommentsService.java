@@ -159,7 +159,6 @@ public class CommentsService {
             DataBaseException, MaxCommentsLimitReachedException, DuplicityException, DataBaseException {
         validateVo(em, vo);
 
-        MultipleMessagesException multipleMessageException = new MultipleMessagesException();
         if (checkUserCommentsCounter(em, vo.getUserId()) >= MAX_COMMENTS_PER_DAY) {
             throw new MaxCommentsLimitReachedException("Maximum comments per day reached");
         }

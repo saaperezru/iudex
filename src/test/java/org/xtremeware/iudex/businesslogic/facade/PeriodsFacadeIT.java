@@ -1,9 +1,11 @@
 package org.xtremeware.iudex.businesslogic.facade;
 
+import org.xtremeware.iudex.businesslogic.helper.FacadesTestHelper;
 import java.util.List;
 import javax.persistence.EntityManager;
 import static org.junit.Assert.*;
 import org.junit.*;
+import org.xtremeware.iudex.businesslogic.DuplicityException;
 import org.xtremeware.iudex.businesslogic.InvalidVoException;
 import org.xtremeware.iudex.entity.Entity;
 import org.xtremeware.iudex.helper.Config;
@@ -24,7 +26,7 @@ public class PeriodsFacadeIT {
 
     @BeforeClass
     public static void setUpClass() throws Exception {
-        TestHelper.initializeDatabase();
+        FacadesTestHelper.initializeDatabase();
     }
 
     @Before
@@ -44,7 +46,7 @@ public class PeriodsFacadeIT {
      */
     @Test
     public void test_BL_20_1()
-            throws MultipleMessagesException, DataBaseException {
+            throws MultipleMessagesException, DataBaseException, DuplicityException {
         int year = 2012;
         int semester = 3;
         PeriodsFacade periodsFacade = Config.getInstance().getFacadeFactory().
@@ -65,7 +67,7 @@ public class PeriodsFacadeIT {
 
     @Test()
     public void test_BL_20_2()
-            throws DataBaseException {
+            throws DataBaseException, DuplicityException {
         PeriodsFacade periodsFacade = Config.getInstance().getFacadeFactory().
                 getPeriodsFacade();
         String[] expectedMessages = new String[]{
@@ -118,19 +120,19 @@ public class PeriodsFacadeIT {
             periodVo = periodsFacade.addPeriod(2008, 1);
         } catch (Exception ex) {
             assertEquals(null, periodVo);
-            assertEquals(DataBaseException.class, ex.getClass());
+            assertEquals(DuplicityException.class, ex.getClass());
         }
         try {
             periodVo = periodsFacade.addPeriod(2008, 2);
         } catch (Exception ex) {
             assertEquals(null, periodVo);
-            assertEquals(DataBaseException.class, ex.getClass());
+            assertEquals(DuplicityException.class, ex.getClass());
         }
         try {
             periodsFacade.addPeriod(2009, 1);
         } catch (Exception ex) {
             assertEquals(null, periodVo);
-            assertEquals(DataBaseException.class, ex.getClass());
+            assertEquals(DuplicityException.class, ex.getClass());
         }
     }
 
@@ -154,9 +156,9 @@ public class PeriodsFacadeIT {
         try {
             periodsFacade.removePeriod(id);
         } catch (Exception ex) {
-            assertEquals(DataBaseException.class, ex.getClass());
+            assertEquals(RuntimeException.class, ex.getClass());
             assertEquals("No entity found for id " + String.valueOf(id)
-                    + "while triying to delete the associated record", ex.getMessage());
+                    + "while triying to delete the associated record", ex.getCause().getMessage());
             int size = entityManager.createQuery(
                     "SELECT COUNT(p) FROM Course p WHERE period.id = :id",
                     Long.class).setParameter("id", id).getSingleResult().
@@ -167,9 +169,9 @@ public class PeriodsFacadeIT {
         try {
             periodsFacade.removePeriod(id);
         } catch (Exception ex) {
-            assertEquals(DataBaseException.class, ex.getClass());
+            assertEquals(RuntimeException.class, ex.getClass());
             assertEquals("No entity found for id " + String.valueOf(id)
-                    + "while triying to delete the associated record", ex.getMessage());
+                    + "while triying to delete the associated record", ex.getCause().getMessage());
             int size = entityManager.createQuery(
                     "SELECT COUNT(p) FROM Course p WHERE period.id = :id",
                     Long.class).setParameter("id", id).getSingleResult().
@@ -180,9 +182,9 @@ public class PeriodsFacadeIT {
         try {
             periodsFacade.removePeriod(id);
         } catch (Exception ex) {
-            assertEquals(DataBaseException.class, ex.getClass());
+            assertEquals(RuntimeException.class, ex.getClass());
             assertEquals("No entity found for id " + String.valueOf(id)
-                    + "while triying to delete the associated record", ex.getMessage());
+                    + "while triying to delete the associated record", ex.getCause().getMessage());
             int size = entityManager.createQuery(
                     "SELECT COUNT(p) FROM Course p WHERE period.id = :id",
                     Long.class).setParameter("id", id).getSingleResult().
@@ -193,9 +195,9 @@ public class PeriodsFacadeIT {
         try {
             periodsFacade.removePeriod(id);
         } catch (Exception ex) {
-            assertEquals(DataBaseException.class, ex.getClass());
+            assertEquals(RuntimeException.class, ex.getClass());
             assertEquals("No entity found for id " + String.valueOf(id)
-                    + "while triying to delete the associated record", ex.getMessage());
+                    + "while triying to delete the associated record", ex.getCause().getMessage());
             int size = entityManager.createQuery(
                     "SELECT COUNT(p) FROM Course p WHERE period.id = :id",
                     Long.class).setParameter("id", id).getSingleResult().

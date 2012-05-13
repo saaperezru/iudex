@@ -1,7 +1,5 @@
 package org.xtremeware.iudex.presentation.controller;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
@@ -17,7 +15,7 @@ public class AccountConfirmation {
 
     @ManagedProperty(value = "#{param['key']}")
     private String key;
-    private String message;
+    private boolean confirmed;
 
     public String getKey() {
         return key;
@@ -25,26 +23,26 @@ public class AccountConfirmation {
 
     public void setKey(String key) {
         this.key = key;
+        System.out.println("setKey");
+        checkConfirmation();
     }
 
-    public String getMessage() {
-        return message;
+    public boolean isConfirmed() {
+        return confirmed;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setConfirmed(boolean confirmed) {
+        this.confirmed = confirmed;
     }
 
-    public void preRenderView() {
+    private void checkConfirmation() {
         if (key != null) {
-            try {
-                if (Config.getInstance().getFacadeFactory().getUsersFacade().activateUser(key) != null) {
-                    message = "Confirmación exitosa";
-                    return;
-                }
-            } catch (Exception ex) {
+            if (Config.getInstance().getFacadeFactory().getUsersFacade().
+                    activateUser(key) != null) {
+                confirmed = true;
+                return;
             }
         }
-        message = "No se pudo confirmar la clave";
+        confirmed = false;
     }
 }

@@ -6,6 +6,8 @@ import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
+import org.xtremeware.iudex.businesslogic.DuplicityException;
+import org.xtremeware.iudex.businesslogic.helper.FacadesHelper;
 import org.xtremeware.iudex.businesslogic.service.ServiceFactory;
 import org.xtremeware.iudex.helper.MultipleMessagesException;
 import org.xtremeware.iudex.presentation.vovw.ProfessorVoVwFull;
@@ -29,12 +31,9 @@ public class ProfessorsFacade extends AbstractFacade {
 
         } catch (Exception e) {
             getServiceFactory().createLogService().error(e.getMessage(), e);
-            throw e;
+            throw new RuntimeException(e);
         } finally {
-            if (em != null) {
-                em.clear();
-                em.close();
-            }
+            FacadesHelper.closeEntityManager(em);
         }
         return map;
     }
@@ -49,23 +48,13 @@ public class ProfessorsFacade extends AbstractFacade {
             tx.begin();
             createdVo = getServiceFactory().createProfessorsService().create(em, vo);
             tx.commit();
-        } catch (MultipleMessagesException e) {
-            throw e;
         } catch (Exception e) {
             getServiceFactory().createLogService().error(e.getMessage(), e);
-            if (em != null && tx != null) {
-                try {
-                    tx.rollback();
-                } catch (Exception ex) {
-                    getServiceFactory().createLogService().error(ex.getMessage(), ex);
-                }
-            }
-            throw e;
+            FacadesHelper.checkException(e, MultipleMessagesException.class);
+            FacadesHelper.checkExceptionAndRollback(em, tx, e, DuplicityException.class);
+            FacadesHelper.rollbackTransaction(em, tx, e);
         } finally {
-            if (em != null) {
-                em.clear();
-                em.close();
-            }
+            FacadesHelper.closeEntityManager(em);
         }
         return createdVo;
     }
@@ -81,19 +70,9 @@ public class ProfessorsFacade extends AbstractFacade {
             tx.commit();
         } catch (Exception e) {
             getServiceFactory().createLogService().error(e.getMessage(), e);
-            if (em != null && tx != null) {
-                try {
-                    tx.rollback();
-                } catch (Exception ex) {
-                    getServiceFactory().createLogService().error(ex.getMessage(), ex);
-                }
-            }
-            throw e;
+            FacadesHelper.rollbackTransaction(em, tx, e);
         } finally {
-            if (em != null) {
-                em.clear();
-                em.close();
-            }
+            FacadesHelper.closeEntityManager(em);
         }
     }
 
@@ -105,12 +84,9 @@ public class ProfessorsFacade extends AbstractFacade {
             rating = getServiceFactory().createProfessorRatingsService().getByProfessorIdAndUserId(em, professorId, userId);
         } catch (Exception e) {
             getServiceFactory().createLogService().error(e.getMessage(), e);
-            throw e;
+            throw new RuntimeException(e);
         } finally {
-            if (em != null) {
-                em.clear();
-                em.close();
-            }
+            FacadesHelper.closeEntityManager(em);
         }
         return rating;
     }
@@ -131,23 +107,13 @@ public class ProfessorsFacade extends AbstractFacade {
             rating = getServiceFactory().createProfessorRatingsService().create(em, vo);
             tx.commit();
 
-        } catch (MultipleMessagesException ex) {
-            throw ex;
         } catch (Exception e) {
             getServiceFactory().createLogService().error(e.getMessage(), e);
-            if (em != null && tx != null) {
-                try {
-                    tx.rollback();
-                } catch (Exception ex) {
-                    getServiceFactory().createLogService().error(ex.getMessage(), ex);
-                }
-            }
-            throw e;
+            FacadesHelper.checkException(e, MultipleMessagesException.class);
+            FacadesHelper.checkExceptionAndRollback(em, tx, e, DuplicityException.class);
+            FacadesHelper.rollbackTransaction(em, tx, e);
         } finally {
-            if (em != null) {
-                em.clear();
-                em.close();
-            }
+            FacadesHelper.closeEntityManager(em);
         }
         return rating;
     }
@@ -164,12 +130,9 @@ public class ProfessorsFacade extends AbstractFacade {
             }
         } catch (Exception e) {
             getServiceFactory().createLogService().error(e.getMessage(), e);
-            throw e;
+            throw new RuntimeException(e);
         } finally {
-            if (em != null) {
-                em.clear();
-                em.close();
-            }
+            FacadesHelper.closeEntityManager(em);
         }
         return voVw;
     }
@@ -183,12 +146,9 @@ public class ProfessorsFacade extends AbstractFacade {
 
         } catch (Exception e) {
             getServiceFactory().createLogService().error(e.getMessage(), e);
-            throw e;
+            throw new RuntimeException(e);
         } finally {
-            if (em != null) {
-                em.clear();
-                em.close();
-            }
+            FacadesHelper.closeEntityManager(em);
         }
         return summary;
     }

@@ -3,15 +3,12 @@ package org.xtremeware.iudex.businesslogic.facade;
 import javax.persistence.EntityManager;
 import org.junit.*;
 import static org.junit.Assert.*;
+import org.xtremeware.iudex.businesslogic.DuplicityException;
 import org.xtremeware.iudex.entity.ProfessorEntity;
 import org.xtremeware.iudex.helper.Config;
-import org.xtremeware.iudex.helper.DataBaseException;
 import org.xtremeware.iudex.helper.MultipleMessagesException;
-import org.xtremeware.iudex.helper.ValidityHelper;
-import org.xtremeware.iudex.presentation.vovw.ProfessorVoVwFull;
 import org.xtremeware.iudex.vo.ProfessorRatingVo;
 import org.xtremeware.iudex.vo.ProfessorVo;
-import org.xtremeware.iudex.vo.RatingSummaryVo;
 
 /**
  *
@@ -225,10 +222,12 @@ public class ProfessorsFacadeIT {
         pv.setEmail("jdbermeol@gmail.com");
         pv.setImageUrl("www.ing.unal.edu.co/progsfac/civil_agricola/images/stories/Civil__Agricola/Profesores/villarreal.meglan.adela.png");
         pv.setWebsite("www.docentes.unal.edu.co/avillarrealme");
-        pv = pf.addProfessor(pv);
 
-        ProfessorVo result = entityManager.createQuery("SELECT p FROM Professor p WHERE p.id = :id", ProfessorEntity.class).setParameter("id", pv.getId()).getSingleResult().toVo();
-        assertTrue(result.equals(pv));
+        try {
+            pv = pf.addProfessor(pv);
+        } catch (Exception ex) {
+            assertEquals(DuplicityException.class, ex.getClass());
+        }   
     }
 //
 //    @Test

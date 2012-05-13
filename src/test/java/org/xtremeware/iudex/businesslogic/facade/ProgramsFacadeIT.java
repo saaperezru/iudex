@@ -1,5 +1,6 @@
 package org.xtremeware.iudex.businesslogic.facade;
 
+import org.xtremeware.iudex.businesslogic.helper.FacadesTestHelper;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -25,7 +26,7 @@ public class ProgramsFacadeIT {
 
     @BeforeClass
     public static void setUpClass() throws Exception {
-        TestHelper.initializeDatabase();
+        FacadesTestHelper.initializeDatabase();
     }
 
     @Before

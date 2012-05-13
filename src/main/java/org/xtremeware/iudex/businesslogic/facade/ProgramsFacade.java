@@ -4,6 +4,8 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
+import org.xtremeware.iudex.businesslogic.DuplicityException;
+import org.xtremeware.iudex.businesslogic.helper.FacadesHelper;
 import org.xtremeware.iudex.businesslogic.service.ServiceFactory;
 import org.xtremeware.iudex.helper.MultipleMessagesException;
 import org.xtremeware.iudex.vo.ProgramVo;
@@ -25,19 +27,9 @@ public class ProgramsFacade extends AbstractFacade {
             tx.commit();
         } catch (Exception e) {
             getServiceFactory().createLogService().error(e.getMessage(), e);
-            if (em != null && tx != null) {
-                try {
-                    tx.rollback();
-                } catch (Exception ex) {
-                    getServiceFactory().createLogService().error(ex.getMessage(), ex);
-                }
-            }
-            throw  e;
+            FacadesHelper.rollbackTransaction(em, tx, e);
         } finally {
-            if (em != null) {
-                em.clear();
-                em.close();
-            }
+            FacadesHelper.closeEntityManager(em);
         }
     }
 
@@ -65,19 +57,11 @@ public class ProgramsFacade extends AbstractFacade {
             throw e;
         } catch (Exception e) {
             getServiceFactory().createLogService().error(e.getMessage(), e);
-            if (em != null && tx != null) {
-                try {
-                    tx.rollback();
-                } catch (Exception ex) {
-                    getServiceFactory().createLogService().error(ex.getMessage(), ex);
-                }
-            }
-            throw e;
+            FacadesHelper.checkException(e, MultipleMessagesException.class);
+            FacadesHelper.checkExceptionAndRollback(em, tx, e, DuplicityException.class);
+            FacadesHelper.rollbackTransaction(em, tx, e);
         } finally {
-            if (em != null) {
-                em.clear();
-                em.close();
-            }
+            FacadesHelper.closeEntityManager(em);
         }
         return createdVo;
     }
@@ -91,31 +75,24 @@ public class ProgramsFacade extends AbstractFacade {
 
         } catch (Exception e) {
             getServiceFactory().createLogService().error(e.getMessage(), e);
-            throw e;
+            throw new RuntimeException(e);
         } finally {
-            if (em != null) {
-                em.clear();
-                em.close();
-            }
+           FacadesHelper.closeEntityManager(em);
         }
         return programs;
     }
 
     public List<ProgramVo> listPrograms() {
         EntityManager em = null;
-        EntityTransaction tx = null;
         List<ProgramVo> list = null;
         try {
             em = getEntityManagerFactory().createEntityManager();
-            tx = em.getTransaction();
             list = getServiceFactory().createProgramsService().getAll(em);
         } catch (Exception e) {
             getServiceFactory().createLogService().error(e.getMessage(), e);
+            throw new RuntimeException(e);
         } finally {
-            if (em != null) {
-                em.clear();
-                em.close();
-            }
+            FacadesHelper.closeEntityManager(em);
         }
         return list;
     }

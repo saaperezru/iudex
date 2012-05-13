@@ -10,6 +10,7 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.xtremeware.iudex.businesslogic.DuplicityException;
 import org.xtremeware.iudex.helper.Config;
 import org.xtremeware.iudex.helper.ConfigurationVariablesHelper;
 import org.xtremeware.iudex.helper.DataBaseException;
@@ -268,6 +269,12 @@ public class SubjectsFacadeIT {
 
     @Test
     public void test_BL_16_3() throws MultipleMessagesException, Exception {
+        try{
+            subjectsFacade.addSubject(2016702L, "Algoritmos", null);
+            fail();
+        }catch(Exception ex){
+            assertEquals(RuntimeException.class, ex.getClass());
+        }
     }
 
     @Test

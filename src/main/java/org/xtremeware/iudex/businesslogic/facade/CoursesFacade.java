@@ -6,7 +6,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import org.xtremeware.iudex.businesslogic.service.ServiceFactory;
 import org.xtremeware.iudex.helper.DataBaseException;
-import org.xtremeware.iudex.helper.MultipleMessageException;
+import org.xtremeware.iudex.helper.MultipleMessagesException;
 import org.xtremeware.iudex.presentation.vovw.CourseVoVwFull;
 import org.xtremeware.iudex.presentation.vovw.ProfessorVoVwSmall;
 import org.xtremeware.iudex.presentation.vovw.SubjectVoVwSmall;
@@ -103,7 +103,7 @@ public class CoursesFacade extends AbstractFacade {
         return list;
     }
 
-    public CourseVo addCourse(long professorId, long subjectId, long periodId) throws MultipleMessageException {
+    public CourseVo addCourse(long professorId, long subjectId, long periodId) throws MultipleMessagesException {
         CourseVo createdVo = null;
         EntityManager em = null;
         EntityTransaction tx = null;
@@ -119,7 +119,7 @@ public class CoursesFacade extends AbstractFacade {
             tx.begin();
             createdVo = getServiceFactory().createCoursesService().create(em, vo);
             tx.commit();
-        } catch (MultipleMessageException e) {
+        } catch (MultipleMessagesException e) {
             throw e;
         } catch (DataBaseException e) {
             getServiceFactory().createLogService().error(e.getMessage(), e);
@@ -190,7 +190,7 @@ public class CoursesFacade extends AbstractFacade {
         return voVw;
     }
 
-    public CourseRatingVo rateCourse(long courseId, long userId, float value) throws MultipleMessageException {
+    public CourseRatingVo rateCourse(long courseId, long userId, float value) throws MultipleMessagesException {
         EntityManager em = null;
         EntityTransaction tx = null;
         CourseRatingVo rating = null;
@@ -215,7 +215,7 @@ public class CoursesFacade extends AbstractFacade {
             }
             tx.commit();
 
-        } catch (MultipleMessageException ex) {
+        } catch (MultipleMessagesException ex) {
             throw ex;
         } catch (Exception e) {
             if (em != null && tx != null) {

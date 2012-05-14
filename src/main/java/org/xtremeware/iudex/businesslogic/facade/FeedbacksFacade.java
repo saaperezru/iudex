@@ -6,7 +6,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import org.xtremeware.iudex.businesslogic.service.ServiceFactory;
-import org.xtremeware.iudex.helper.MultipleMessageException;
+import org.xtremeware.iudex.helper.MultipleMessagesException;
 import org.xtremeware.iudex.vo.FeedbackTypeVo;
 import org.xtremeware.iudex.vo.FeedbackVo;
 
@@ -36,7 +36,7 @@ public class FeedbacksFacade extends AbstractFacade {
 		return list;
 	}
 
-	public FeedbackVo addFeedback(long feedbackType, String content, Date date) throws MultipleMessageException{
+	public FeedbackVo addFeedback(long feedbackType, String content, Date date) throws MultipleMessagesException{
 		FeedbackVo createdVo = null;
 		FeedbackVo vo = new FeedbackVo();
 		vo.setContent(content);
@@ -50,7 +50,7 @@ public class FeedbacksFacade extends AbstractFacade {
 			tx.begin();
 			createdVo = getServiceFactory().createFeedbacksService().create(em, vo);
 			tx.commit();
-		} catch (MultipleMessageException e) {
+		} catch (MultipleMessagesException e) {
 			throw e;
 		} catch (Exception e) {
 			if (em != null && tx != null) {

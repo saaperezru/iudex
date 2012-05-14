@@ -7,7 +7,6 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpServletRequest;
 import org.xtremeware.iudex.businesslogic.facade.CoursesFacade;
 import org.xtremeware.iudex.helper.Config;
 import org.xtremeware.iudex.presentation.vovw.CourseVoVwFull;
@@ -52,10 +51,8 @@ public class Search {
     public String getResults(){
         FacesContext fc = FacesContext.getCurrentInstance();
         Map<String, String> params = fc.getExternalContext().getRequestParameterMap();
-        System.out.println("query1="+query+"---");
         if(params.get("searchForm:query") != null)
             this.query = params.get("searchForm:query");
-        System.out.println("query2="+query+"---");
         CoursesFacade coursesFacade = Config.getInstance().getFacadeFactory().getCoursesFacade();
         try{
             courses = coursesFacade.search(this.query);

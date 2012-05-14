@@ -8,13 +8,15 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.annotation.WebInitParam;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.xtremeware.iudex.helper.Role;
 
 /**
  *
  * @author healarconr
  */
 @WebFilter(filterName = "SecurityFilter", urlPatterns = {"/*"}, initParams = {
-    @WebInitParam(name = "permissions", value = "/META-INF/permissions.properties"),
+    @WebInitParam(name = "permissions", value =
+    "/META-INF/permissions.properties"),
     @WebInitParam(name = "denyByDefault", value = "true"),
     @WebInitParam(name = "anybody", value = "ALL")})
 // TODO: Use the standard logger in this filter
@@ -30,13 +32,21 @@ public class SecurityFilter implements Filter {
     public SecurityFilter() {
     }
 
-    private void checkAuthorization(ServletRequest request, ServletResponse response)
+    private void checkAuthorization(ServletRequest request,
+            ServletResponse response)
             throws IOException, ServletException {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         String requestUri = httpServletRequest.getRequestURI();
         String contextPath = httpServletRequest.getContextPath();
         String path;
-        String role = (String) httpServletRequest.getSession().getAttribute(ROLE_SESSION_KEY);
+        Role role = (Role) httpServletRequest.getSession().
+                getAttribute(ROLE_SESSION_KEY);
+        String roleName;
+        if (role != null) {
+            roleName = role.toString();
+        } else {
+            roleName = "";
+        }
 
         if (!contextPath.equals("")) {
             path = requestUri.substring(contextPath.length());
@@ -52,7 +62,8 @@ public class SecurityFilter implements Filter {
             if (path.matches(key)) {
                 String[] allowedRoles = permissions.get(key);
                 for (String allowedRole : allowedRoles) {
-                    if (allowedRole.equals(role) || allowedRole.equals(anybody)) {
+                    if (allowedRole.equals(roleName) || allowedRole.equals(
+                            anybody)) {
                         allowedAccess = true;
                         break checkCycle;
                     }
@@ -61,7 +72,8 @@ public class SecurityFilter implements Filter {
         }
 
         if (!allowedAccess && denyByDefault) {
-            ((HttpServletResponse) response).sendError(HttpURLConnection.HTTP_UNAUTHORIZED);
+            ((HttpServletResponse) response).sendError(
+                    HttpURLConnection.HTTP_UNAUTHORIZED);
         }
     }
 
@@ -106,19 +118,22 @@ public class SecurityFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) {
         this.filterConfig = filterConfig;
-        denyByDefault = Boolean.parseBoolean(filterConfig.getInitParameter("denyByDefault"));
+        denyByDefault = Boolean.parseBoolean(filterConfig.getInitParameter(
+                "denyByDefault"));
         anybody = filterConfig.getInitParameter("anybody");
         try {
             Properties properties = new Properties();
             permissions = new HashMap<String, String[]>();
 
-            properties.load(getClass().getResourceAsStream(filterConfig.getInitParameter("permissions")));
+            properties.load(getClass().getResourceAsStream(filterConfig.
+                    getInitParameter("permissions")));
             Enumeration enumeration = properties.propertyNames();
             String key;
 
             while (enumeration.hasMoreElements()) {
                 key = (String) enumeration.nextElement();
-                permissions.put(key, properties.getProperty(key).replace(" ", "").split(","));
+                permissions.put(key, properties.getProperty(key).replace(" ", "").
+                        split(","));
             }
         } catch (IOException ex) {
             // PENDING! Log this exception

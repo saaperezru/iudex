@@ -8,7 +8,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import org.xtremeware.iudex.businesslogic.InvalidVoException;
 import org.xtremeware.iudex.businesslogic.service.ServiceFactory;
-import org.xtremeware.iudex.helper.MultipleMessageException;
+import org.xtremeware.iudex.helper.MultipleMessagesException;
 import org.xtremeware.iudex.presentation.vovw.SubjectVoVwFull;
 import org.xtremeware.iudex.vo.RatingSummaryVo;
 import org.xtremeware.iudex.vo.SubjectRatingVo;
@@ -81,7 +81,7 @@ public class SubjectsFacade extends AbstractFacade {
 		return summary;
 	}
 
-	public SubjectRatingVo rateSubject(long userId, long subjectId, int value) throws MultipleMessageException {
+	public SubjectRatingVo rateSubject(long userId, long subjectId, int value) throws MultipleMessagesException {
 		EntityManager em = null;
 		EntityTransaction tx = null;
 		SubjectRatingVo rating = null;
@@ -106,7 +106,7 @@ public class SubjectsFacade extends AbstractFacade {
 			}
 			tx.commit();
 
-		} catch (MultipleMessageException ex) {
+		} catch (MultipleMessagesException ex) {
 			throw ex;
 		} catch (Exception e) {
 			if (em != null && tx != null) {
@@ -122,7 +122,7 @@ public class SubjectsFacade extends AbstractFacade {
 		return rating;
 	}
 
-	public SubjectVo addSubject(String name, String description) throws MultipleMessageException {
+	public SubjectVo addSubject(String name, String description) throws MultipleMessagesException {
 		SubjectVo createdVo = null;
 		SubjectVo vo = new SubjectVo();
 		vo.setName(name);
@@ -135,7 +135,7 @@ public class SubjectsFacade extends AbstractFacade {
 			tx.commit();
 			createdVo = getServiceFactory().createSubjectsService().create(em, vo);
 			tx.commit();
-		} catch (MultipleMessageException e) {
+		} catch (MultipleMessagesException e) {
 			throw e;
 		} catch (Exception e) {
 			if (em != null && tx != null) {

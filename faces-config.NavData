@@ -4,15 +4,14 @@
     <Scope Scope="Project">
         <Node id="subjects/view.xhtml" x="150" y="600" zoom="true"/>
         <Node id="courses/view.xhtml" x="900" y="150" zoom="true"/>
-        <Node id="resources/iudex/authCheck.xhtml" x="150" y="450" zoom="true"/>
         <Node id="index.xhtml" x="1150" y="150" zoom="true"/>
+        <Node id="resources/iudex/authCheck.xhtml" x="150" y="450" zoom="true"/>
         <Node id="confirm.xhtml" x="400" y="300" zoom="true"/>
         <Node id="search.xhtml" x="150" y="150" zoom="true"/>
         <Node id="resources/iudex/thumbs.xhtml" x="650" y="300" zoom="true"/>
         <Node id="professors/view.xhtml" x="150" y="300" zoom="true"/>
-        <Node id="templates/template.xhtml" x="400" y="150" zoom="true"/>
-        <Node id="accountConfirmation.xhtml" x="650" y="150" zoom="true"/>
         <Node id="registrationComplete.xhtml" x="400" y="450" zoom="true"/>
+        <Node id="accountConfirmation.xhtml" x="650" y="150" zoom="true"/>
     </Scope>
     <Scope Scope="All Faces Configurations"/>
 </Scene>

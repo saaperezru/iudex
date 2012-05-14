@@ -1,17 +1,17 @@
 package org.xtremeware.iudex.businesslogic.service;
 
-import org.xtremeware.iudex.businesslogic.service.removeimplementations.PeriodRemove;
-import org.xtremeware.iudex.businesslogic.service.updateimplementations.SimpleUpdate;
-import org.xtremeware.iudex.businesslogic.service.readimplementations.SimpleRead;
-import org.xtremeware.iudex.businesslogic.service.createimplementations.SimpleCreate;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.businesslogic.InvalidVoException;
+import org.xtremeware.iudex.businesslogic.service.createimplementations.SimpleCreate;
+import org.xtremeware.iudex.businesslogic.service.readimplementations.SimpleRead;
+import org.xtremeware.iudex.businesslogic.service.removeimplementations.PeriodRemove;
+import org.xtremeware.iudex.businesslogic.service.updateimplementations.SimpleUpdate;
 import org.xtremeware.iudex.dao.AbstractDaoFactory;
 import org.xtremeware.iudex.entity.PeriodEntity;
 import org.xtremeware.iudex.helper.DataBaseException;
-import org.xtremeware.iudex.helper.MultipleMessageException;
+import org.xtremeware.iudex.helper.MultipleMessagesException;
 import org.xtremeware.iudex.vo.PeriodVo;
 
 /**
@@ -20,7 +20,7 @@ import org.xtremeware.iudex.vo.PeriodVo;
  * @author juan
  */
 public class PeriodsService extends CrudService<PeriodVo, PeriodEntity> {
-    
+
     private final int MIN_YEAR = 1000;
     private final int MIN_SEMESTER = 1;
     private final int MAX_SEMESTER = 3;
@@ -68,25 +68,26 @@ public class PeriodsService extends CrudService<PeriodVo, PeriodEntity> {
      * @throws InvalidVoException in case the business rules are violated
      */
     @Override
-    public void validateVo(EntityManager em, PeriodVo vo) 
-            throws MultipleMessageException {
+    public void validateVo(EntityManager em, PeriodVo vo)
+            throws MultipleMessagesException {
         if (em == null) {
             throw new IllegalArgumentException("EntityManager em cannot be null");
         }
-        MultipleMessageException multipleMessageException = new MultipleMessageException();
+        MultipleMessagesException multipleMessageException =
+                new MultipleMessagesException();
         if (vo == null) {
-            multipleMessageException.getExceptions().add(new InvalidVoException("Null PeriodVo"));
+            multipleMessageException.addMessage("Null PeriodVo");
             throw multipleMessageException;
         }
         if (vo.getSemester() < MIN_SEMESTER || vo.getSemester() > MAX_SEMESTER) {
-            multipleMessageException.getExceptions().add(new InvalidVoException(
-                    "Int Semester in the provided PeriodVo must be greater than 1 and less than 3"));
+            multipleMessageException.addMessage(
+                    "Int Semester in the provided PeriodVo must be greater than 1 and less than 3");
         }
         if (vo.getYear() < MIN_YEAR) {
-            multipleMessageException.getExceptions().add(new InvalidVoException(
-                    "Int Year in the provided PeriodVo must be possitive"));
+            multipleMessageException.addMessage(
+                    "Int Year in the provided PeriodVo must be possitive");
         }
-        if (!multipleMessageException.getExceptions().isEmpty()) {
+        if (!multipleMessageException.getMessages().isEmpty()) {
             throw multipleMessageException;
         }
     }
@@ -100,8 +101,8 @@ public class PeriodsService extends CrudService<PeriodVo, PeriodEntity> {
      * @throws InvalidVoException
      */
     @Override
-    public PeriodEntity voToEntity(EntityManager em, PeriodVo vo) 
-            throws MultipleMessageException {
+    public PeriodEntity voToEntity(EntityManager em, PeriodVo vo)
+            throws MultipleMessagesException {
 
         validateVo(em, vo);
 

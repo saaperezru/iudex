@@ -1,91 +1,151 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
-                template="./templates/template.xhtml"
+                template="WEB-INF/templates/template.xhtml"
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:c="http://java.sun.com/jsp/jstl/core"
-                xmlns:f="http://java.sun.com/jsf/core">
-	
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:iudex="http://java.sun.com/jsf/composite/iudex">
+
     <ui:define name="content">
-	    <div class="offset2 row-fluid">
-        <div class = "span4" style=" background-image: url(resources/images/bg-1.jpg); background-repeat: no-repeat; border-radius: 10px;">
-            <div style="padding: 120px 30px; color: white;">
-                <h1 style="font-size: 36pt;">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</h1>
-                <h2 style="font-size: 26pt;">Integer facilisis sapien vel metus pellentesque eu auctor.</h2>
+        <div class="row-fluid">
+            <div class="span12 well">
+                <div class="big-media"></div>
             </div>
         </div>
-        <div class= "span4" style="line-height: 25px;">
-            <c:choose>
-                <c:when test="#{!authCheck.loggedIn}">
-                    <div class="panel">
-                        <h:form id="loginForm">
-                            <div class="message">
-                                <h:messages for="loginForm" />
-                            </div>
-                            <table style="width: 100%;">
-                                <tr>
-                                    <td><label for="userName">Usuario</label></td>
-                                    <td><h:inputText id="userName" value="#{login.userName}" style="width: 90%"/></td>
-                                </tr>
-                                <tr>
-                                    <td><label for="password">Clave</label></td>
-                                    <td><h:inputSecret id="password" value="#{login.password}" style="width: 90%"/></td>
-                                </tr>
-                            </table>
-                            <p style="text-align: right; margin-bottom: 0;">
-                                <h:commandButton action="#{authCheck.login}" value="Acceder" />
-                            </p>
-                        </h:form>
+        <div class="row-fluid">
+            <div class="span7">
+                <div class="row-fluid">
+                    <div class="span3">
+                        <div class="share-icon"></div>
                     </div>
-                    <br/>
-                    <div class="panel">
-                        <h:form id="signUpForm">
-                            <h2 style="text-align: center;">¿No tienes cuenta? Regístrate</h2>
-                            <div class="message">
-                                <h:messages />
-                            </div>
-                            <table style="width: 100%;">
-                                <tr>
-                                    <td><label for="userName">Usuario</label></td>
-                                    <td><h:inputText id="userName" value="#{signUp.userName}" style="width: 90%;" /></td>
-                                </tr>
-                                <tr>
-                                    <td><label for="password">Clave</label></td>
-                                    <td><h:inputSecret id="password" value="#{signUp.password}" style="width: 90%;" /></td>
-                                </tr>
-                                <tr>
-                                    <td><label for="name">Nombres</label></td>
-                                    <td><h:inputText id="name" value="#{signUp.firstName}" style="width: 90%;"/></td>
-                                </tr>
-                                <tr>
-                                    <td><label for="lastName">Apellidos</label></td>
-                                    <td><h:inputText id="lastName" value="#{signUp.lastName}" style="width: 90%;"/></td>
-                                </tr>
-                                <tr>
-                                    <td><label for="program">Carrera</label></td>
-                                    <td><h:selectOneMenu id="program" value="#{signUp.programId}" style="width: 100%;" >
-                                            <f:selectItem itemLabel="" />
-                                            <f:selectItems value="#{signUp.programs}" />
-                                        </h:selectOneMenu></td>
-                                </tr>
-                            </table>
-                            <p style="text-align: right; margin-bottom: 0;">
-                                <h:commandButton action="#{signUp.signUp}" value="Registrarse" />
-                            </p>
-                        </h:form>            
+                    <div class="span9">
+                        <h2>Comparte</h2>
+                        <p>Comparte tu opinión acerca de un profesor o un curso de forma anónima.</p>
+                        <p>Así el resto de tus amigos sabrá si un profesor es «rajón», no sabe enseñar, llega tarde a clase o tiene metodologías.</p>
                     </div>
-                </c:when>
-                <c:otherwise>
-                    <h:form>
-                        <p style="text-align: right;">
-                            <h:commandButton action="#{authCheck.logout}" value="Cerrar sesión" />
-                        </p>
-                        <br/>
-                    </h:form>
-                </c:otherwise>
-            </c:choose>
-        </div>
-	    </div>
-    </ui:define>
+                </div>
+                <div class="row-fluid">
+                    <div class="span3">
+                        <div class="comment-icon"></div>
+                    </div>
+                    <div class="span9">
+                        <h2>Comenta</h2>
+                        <p>Comenta acerca de los temas que más te gustan de un profesor o de una materia.</p>
+                    </div>
+                </div>
+                <div class="row-fluid">
+                    <div class="span3">
+                        <div class="rate-icon"></div>
+                    </div>
+                    <div class="span9">
+                        <h2>Califica</h2>
+                        <p>Califica profesores, cursos y materias.</p>
+                        <p>Con esto ayudas a otros a seleccionar los mejores profesores y materias, a la vez que recibes los mejores consejos acerca de profesores y materias importantes para tu desarrollo profesional.</p>
+                    </div>
+                </div>
+            </div>
+            <c:if test="#{!user.loggedIn}">
+                <div class="span5">
+                    <div class="row-fluid">
+                        <div class="span12">
+                            <h:form id="loginForm" class="form-horizontal well">
+                                <fieldset>
+                                    <legend>Iniciar sesión</legend>
+                                    <h:messages for="loginForm" class="alert alert-error"/>
+                                    <div class="control-group">
+                                        <label class="control-label span3" for="userName">Usuario</label>
+                                        <div class="controls span9">
+                                            <h:inputText id="userName" value="#{login.userName}" required="true">
+                                                <f:validateLength maximum="20" />
+                                            </h:inputText>
+                                            <iudex:inlineError key="loginForm:userName" />
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <label class="control-label span3" for="password">Contraseña</label>
+                                        <div class="controls span9">
+                                            <h:inputSecret id="password" value="#{login.password}" required="true">
+                                                <f:validateLength minimum="8" maximum="18" /> 
+                                            </h:inputSecret>
+                                            <iudex:inlineError key="loginForm:password" />
+                                        </div>
+                                    </div>
+                                    <center>
+                                        <span>
+                                            <h:commandButton action="#{login.logIn()}" value="Acceder" class="btn btn-success" />
+                                        </span>
+                                    </center>
+                                </fieldset>
+                            </h:form>
+                        </div>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="span12">
+                            <h:form id="signUpForm" class="form-horizontal well">
+                                <fieldset>
+                                    <legend>Registrarme</legend>
+                                    <h:messages for="signUpForm" class="alert alert-error"/>
+                                    <div class="control-group #{viewHelper.addErrorClass('signUpForm:userName')}">
+                                        <label class="control-label span3" for="userName">Usuario</label>
+                                        <div class="controls span9">
+                                            <h:inputText id="userName" value="#{signUp.userName}" required="true" maxlength="20">
+                                                <f:validateLength maximum="20" />
+                                            </h:inputText>
+                                            <iudex:inlineError key="signUpForm:userName" />
+                                        </div>
+                                    </div>
+                                    <div class="control-group #{viewHelper.addErrorClass('signUpForm:password')}">
+                                        <label class="control-label span3" for="password">Contraseña</label>
+                                        <div class="controls span9">
+                                            <h:inputSecret id="password" value="#{signUp.password}" required="true" maxlength="18">
+                                                <f:validateLength minimum="8" maximum="18" /> 
+                                            </h:inputSecret>
+                                            <iudex:inlineError key="signUpForm:password" />
+                                        </div>
+                                    </div>
 
+                                    <div class="control-group #{viewHelper.addErrorClass('signUpForm:name')}" for="name">
+                                        <label for="name" class="control-label span3">Nombres</label>
+                                        <div class="controls span9">
+                                            <h:inputText id="name" value="#{signUp.firstName}" required="true" maxlength="50">
+                                                <f:validateLength maximum="50" />
+                                            </h:inputText>
+                                            <iudex:inlineError key="signUpForm:name" />
+                                        </div>
+                                    </div>
+                                    <div class="control-group #{viewHelper.addErrorClass('signUpForm:lastName')}" for="name">
+                                        <label for="lastName" class="control-label span3">Apellidos</label>
+                                        <div class="controls span9">
+                                            <h:inputText id="lastName" value="#{signUp.lastName}" required="true" maxlength="50">
+                                                <f:validateLength maximum="50" />
+                                            </h:inputText>
+                                            <iudex:inlineError key="signUpForm:lastName" />
+                                        </div>
+                                    </div>
+
+                                    <div class="control-group #{viewHelper.addErrorClass('signUpForm:program')}">
+                                        <label class="control-label span3" for="program">Carrera</label>
+                                        <div class="controls span9">
+                                            <h:selectOneMenu id="program" value="#{signUp.programId}" required="true">
+                                                <f:selectItem itemLabel="" />
+                                                <f:selectItems value="#{signUp.programs}" />
+                                                <f:validateLongRange minimum="1" />
+                                            </h:selectOneMenu>
+                                            <iudex:inlineError key="signUpForm:program" />
+                                        </div>
+                                    </div>
+                                    <center>
+                                        <span>
+                                            <h:commandButton action="#{signUp.signUp}" value="Registrarme" class="btn btn-success"/>
+                                        </span>
+                                    </center>
+                                </fieldset>
+                            </h:form>
+                        </div>
+                    </div>
+                </div>
+            </c:if>
+        </div>
+    </ui:define>
 </ui:composition>

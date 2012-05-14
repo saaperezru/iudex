@@ -27,4 +27,13 @@
             <to-view-id>/index.xhtml</to-view-id>
         </navigation-case>
     </navigation-rule>
+    
+    <navigation-rule>
+        <from-view-id>/seach.xhtml</from-view-id>
+        <navigation-case>
+            <from-action>#{search.getResults()}</from-action>
+            <from-outcome>success</from-outcome>
+            <to-view-id>/search.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
 </faces-config>

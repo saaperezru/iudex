@@ -1,10 +1,10 @@
 package org.xtremeware.iudex.presentation.controller;
 
+import java.io.Serializable;
 import java.util.List;
 import javax.faces.application.ConfigurableNavigationHandler;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.RequestScoped;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import org.xtremeware.iudex.helper.Config;
 import org.xtremeware.iudex.presentation.vovw.CommentVoVwFull;
@@ -17,21 +17,24 @@ import org.xtremeware.iudex.presentation.vovw.SubjectVoVwFull;
  * @author healarconr
  */
 @ManagedBean
-@RequestScoped
-public class ViewCourse {
+@ViewScoped
+public class ViewCourse implements Serializable{
+
+	public ViewCourse(){
+		 id = Long.valueOf(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id"));
+	}
 
 	private CourseVoVwFull course;
 	private List<CommentVoVwFull> comments;
 	private ProfessorVoVwFull professor;
 	private SubjectVoVwFull subject;
-	@ManagedProperty(value = "#{param['id']}")
-	private long id;
+	private Long id;
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -68,18 +71,20 @@ public class ViewCourse {
 	}
 
 	public void preRenderView() {
-		try {
-			course = Config.getInstance().getFacadeFactory().getCoursesFacade().getCourse(id);
-			if (course == null){
+		if (id != null) {
+
+			try {
+				course = Config.getInstance().getFacadeFactory().getCoursesFacade().getCourse(id);
+				if (course == null) {
+					((ConfigurableNavigationHandler) FacesContext.getCurrentInstance().getApplication().getNavigationHandler()).performNavigation("notfound");
+				}
+				professor = Config.getInstance().getFacadeFactory().getProfessorsFacade().getProfessor(course.getSubject().getId());
+				subject = Config.getInstance().getFacadeFactory().getSubjectsFacade().getSubject(course.getProfessor().getId());
+				comments = Config.getInstance().getFacadeFactory().getCommentsFacade().getCommentsByCourseId(id);
+			} catch (Exception ex) {
+				Config.getInstance().getServiceFactory().createLogService().error(ex.getMessage(), ex);
 				((ConfigurableNavigationHandler) FacesContext.getCurrentInstance().getApplication().getNavigationHandler()).performNavigation("notfound");
 			}
-			comments = Config.getInstance().getFacadeFactory().getCommentsFacade().getCommentsByCourseId(id);
-			professor = Config.getInstance().getFacadeFactory().getProfessorsFacade().getProfessor(course.getSubject().getId());
-			subject = Config.getInstance().getFacadeFactory().getSubjectsFacade().getSubject(course.getProfessor().getId());
-
-		} catch (Exception ex) {
-			Config.getInstance().getServiceFactory().createLogService().error(ex.getMessage(), ex);
-			((ConfigurableNavigationHandler) FacesContext.getCurrentInstance().getApplication().getNavigationHandler()).performNavigation("notfound");
 		}
 	}
 }

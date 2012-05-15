@@ -2,8 +2,9 @@
 package org.xtremeware.iudex.presentation.vovw;
 
 import org.xtremeware.iudex.vo.CourseVo;
+import org.xtremeware.iudex.vo.ValueObject;
 
-public class CourseVoVwFull {
+public class CourseVoVwFull implements ValueObject{
 
 	private CourseVo vo;
 	private SubjectVoVwSmall subjectVo;

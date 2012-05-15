@@ -2,8 +2,9 @@ package org.xtremeware.iudex.presentation.vovw;
 
 import org.xtremeware.iudex.vo.ProfessorVo;
 import org.xtremeware.iudex.vo.RatingSummaryVo;
+import org.xtremeware.iudex.vo.ValueObject;
 
-public class ProfessorVoVwFull {
+public class ProfessorVoVwFull implements ValueObject{
 
 	private ProfessorVo vo;
 	private RatingSummaryVo ratingSummary;

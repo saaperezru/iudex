@@ -26,4 +26,10 @@
     <welcome-file-list>
         <welcome-file>index.xhtml</welcome-file>
     </welcome-file-list>
+    <context-param>
+    <param-name>
+        org.apache.myfaces.NUMBER_OF_VIEWS_IN_SESSION
+    </param-name>
+    <param-value>1</param-value>
+</context-param>
 </web-app>

@@ -34,7 +34,8 @@
 
           </div><!--/.well -->
         </div><!--/span-->
-        <div class="span7">
+        <div class="span8">
+		<h:form id="voteForm">
 		<ui:repeat var="comment" value="#{viewCourse.comments}" varStatus="status">
 	<!-- Beginning of comment -->
         <div class="row-fluid">
@@ -55,6 +56,14 @@
               <p>
 		      #{comment.content}
               </p>
+	      <div class="vote">
+		      <div class="vote-wrapper"><h:commandLink action="#{rating.votePositiveComment(comment)}" class="upvote"><f:ajax event="action" execute="@form" render="voteCount"/></h:commandLink> <f:param name="id" value="#{viewCourse.course.id}" /></div>
+		      <h:panelGroup id="voteCount" class="vote-wrapper">
+	      		<h:outputText  class="vote-count" value="#{comment.rating.positive-comment.rating.negative}"/>
+		      </h:panelGroup>
+		      <div class="vote-wrapper"><h:commandLink action="#{rating.voteNegativeComment(comment)}" class="downvote"><f:ajax event="action" execute="@form" render="voteCount"/>                            <f:param name="id" value="#{viewCourse.course.id}" />
+</h:commandLink></div>
+              </div>
             </div>
             <div class="comment-photo"></div>
             <div class="comment-report">
@@ -71,8 +80,15 @@
 	</div><!--/row-->
 	<!-- Ending of comment -->
 		</ui:repeat>
+		</h:form>
         </div><!--/span-->
       </div><!--/row-->
     </ui:define>
+	<!--fitText code-->
+	<script type="text/javascript">
+	$(".fittext-subject").fitText(1.2, { minFontSize: '100px', maxFontSize: '280px' });
+	$(".fittext-rating").fitText(1.2, { minFontSize: '65px', maxFontSize: '80px' });
+	</script>
+	<!-- End of fitText code-->
 
 </ui:composition>

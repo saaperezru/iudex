@@ -10,10 +10,7 @@ import org.xtremeware.iudex.businesslogic.service.removeimplementations.Subjects
 import org.xtremeware.iudex.businesslogic.service.updateimplementations.SimpleUpdate;
 import org.xtremeware.iudex.dao.AbstractDaoFactory;
 import org.xtremeware.iudex.entity.SubjectEntity;
-import org.xtremeware.iudex.helper.DataBaseException;
-import org.xtremeware.iudex.helper.ExternalServiceConnectionException;
-import org.xtremeware.iudex.helper.MultipleMessagesException;
-import org.xtremeware.iudex.helper.SecurityHelper;
+import org.xtremeware.iudex.helper.*;
 import org.xtremeware.iudex.vo.SubjectVo;
 
 /**
@@ -21,6 +18,9 @@ import org.xtremeware.iudex.vo.SubjectVo;
  * @author josebermeo
  */
 public class SubjectsService extends CrudService<SubjectVo, SubjectEntity> {
+
+    public final int MAX_SUBJECT_NAME_LENGTH;
+    public final int MAX_SUBJECT_DESCRIPTION_LENGTH;
 
     /**
      * SubjectsService constructor
@@ -33,11 +33,13 @@ public class SubjectsService extends CrudService<SubjectVo, SubjectEntity> {
                 new SimpleRead<SubjectEntity>(daoFactory.getSubjectDao()),
                 new SimpleUpdate<SubjectEntity>(daoFactory.getSubjectDao()),
                 new SubjectsRemove(daoFactory));
+        MAX_SUBJECT_NAME_LENGTH = Integer.parseInt(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAX_SUBJECT_NAME_LENGTH));
+        MAX_SUBJECT_DESCRIPTION_LENGTH = Integer.parseInt(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAX_SUBJECT_DESCRIPTION_LENGTH));
     }
 
     /**
      * Validate the provided SubjectVo, if the SubjectVo is not correct the
-     * methods throws an exception
+     * method throws an exception
      *
      * @param em EntityManager
      * @param vo SubjectVo
@@ -46,34 +48,35 @@ public class SubjectsService extends CrudService<SubjectVo, SubjectEntity> {
     @Override
     public void validateVo(EntityManager em, SubjectVo vo)
             throws ExternalServiceConnectionException, MultipleMessagesException {
-        if (em == null) {
-            throw new IllegalArgumentException("EntityManager em cannot be null");
-        }
         MultipleMessagesException multipleMessageException = new MultipleMessagesException();
         if (vo == null) {
-            multipleMessageException.addMessage("Null SubjectVo");
+            multipleMessageException.addMessage("subject.null");
             throw multipleMessageException;
         }
-        if (vo.getName() == null) {
-            multipleMessageException.addMessage(
-                    "Null name in the provided SubjectVo");
+        if (vo.getId() == null) {
+            multipleMessageException.addMessage("subject.id.null");
+        } else {
+            vo.setId(Math.abs(vo.getId()));
+        }
+
+        if (vo.getDescription() == null) {
+            vo.setDescription("");
+        }
+
+        vo.setDescription(SecurityHelper.sanitizeHTML(vo.getDescription()));
+        if (vo.getDescription().length() > MAX_SUBJECT_DESCRIPTION_LENGTH) {
+            multipleMessageException.addMessage("subject.description.tooLong");
+        }
+
+        if (vo.getName() == null || vo.getName().equals("")) {
+            multipleMessageException.addMessage("subject.name.null");
         } else {
             vo.setName(SecurityHelper.sanitizeHTML(vo.getName()));
-            if (vo.getName().length() > 50) {
-                multipleMessageException.addMessage(
-                        "Invalid name length in the provided SubjectVo");
+            if (vo.getName().length() > MAX_SUBJECT_NAME_LENGTH) {
+                multipleMessageException.addMessage("subject.name.tooLong");
             }
         }
-        if (vo.getDescription() == null) {
-            multipleMessageException.addMessage(
-                    "Null description in the provided SubjectVo");
-        } else {
-            vo.setDescription(SecurityHelper.sanitizeHTML(vo.getDescription()));
-            if (vo.getDescription().length() > 2000) {
-                multipleMessageException.addMessage(
-                        "Invalid description length in the provided SubjectVo");
-            }
-        }
+
         if (!multipleMessageException.getMessages().isEmpty()) {
             throw multipleMessageException;
         }

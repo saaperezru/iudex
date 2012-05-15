@@ -95,7 +95,7 @@ public class UsersService extends CrudService<UserVo, UserEntity> {
             multipleMessagesException.addMessage(
                     "user.password.null");
         } else {
-            vo.setPassword(SecurityHelper.sanitizeHTML(vo.getPassword()));
+            vo.setUserName(SecurityHelper.sanitizeHTML(vo.getUserName()));
             if (vo.getPassword().length() < MIN_USER_PASSWORD_LENGTH) {
                 multipleMessagesException.addMessage(
                         "user.password.tooShort");

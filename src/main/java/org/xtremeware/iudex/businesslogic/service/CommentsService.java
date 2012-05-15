@@ -3,6 +3,7 @@ package org.xtremeware.iudex.businesslogic.service;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
+import org.xtremeware.iudex.businesslogic.DuplicityException;
 import org.xtremeware.iudex.businesslogic.InvalidVoException;
 import org.xtremeware.iudex.dao.AbstractDaoFactory;
 import org.xtremeware.iudex.entity.CommentEntity;
@@ -70,57 +71,54 @@ public class CommentsService {
      * @throws InvalidVoException in case the business rules are violated
      */
     public void validateVo(EntityManager em, CommentVo vo) throws
-            ExternalServiceConnectionException, MultipleMessagesException, DataBaseException {
-        if (em == null) {
-            throw new IllegalArgumentException("EntityManager em cannot be null");
-        }
+             MultipleMessagesException, DataBaseException {
 
         MultipleMessagesException multipleMessageException = new MultipleMessagesException();
 
         if (vo == null) {
             multipleMessageException.addMessage(
-                    "Null CommentVo");
+                    "comment.null");
             throw multipleMessageException;
         }
 
         if (vo.getContent() == null) {
             multipleMessageException.addMessage(
-                    "String Content in the provided CommentVo cannot be null");
+                    "comment.content.null");
         } else {
             vo.setContent(SecurityHelper.sanitizeHTML(vo.getContent()));
             if (vo.getContent().length() < 1 || vo.getContent().length() > MAX_COMMENT_LENGTH) {
                 multipleMessageException.addMessage(
-                        "String Content length in the provided CommentVo must be grater or equal than 1 and less or equal than " + MAX_COMMENT_LENGTH);
+                        "comment.content.invalidSize");
             }
         }
 
         if (vo.getCourseId() == null) {
             multipleMessageException.addMessage(
-                    "Long CourseId in the provided CommentVo cannot be null");
+                    "comment.courseId.null");
         } else if (getDaoFactory().getCourseDao().getById(em, vo.getCourseId()) == null) {
             multipleMessageException.addMessage(
-                    "Long CourseID in the provided CommentVo does not have matches with existent courses");
+                    "comment.courseId.element.notFound");
         }
 
         if (vo.getDate() == null) {
             multipleMessageException.addMessage(
-                    "Date Date in the provided CommentVo cannot be null");
+                    "comment.date.null");
         }
 
         if (vo.getUserId() == null) {
             multipleMessageException.addMessage(
-                    "Long UserId in the provided CommentVo cannot be null");
+                    "comment.userId.null");
         } else if (getDaoFactory().getUserDao().getById(em, vo.getUserId()) == null) {
             multipleMessageException.addMessage(
-                    "Long UserId in the provided CommentVo does not have matches with existent users");
+                    "comment.userId.element.notFound");
         }
 
         if (vo.getRating() == null) {
             multipleMessageException.addMessage(
-                    "Float Rating in the provided CommentVo cannot be null");
+                    "comment.rating.null");
         } else if (vo.getRating() < 0.0F || vo.getRating() > 5.0F) {
             multipleMessageException.addMessage(
-                    "Float Rating in the provided CommentVo must be greater or equal than 0.0 and less or equal than 5.0");
+                    "comment.rating.invalidRating");
         }
 
         if (!multipleMessageException.getMessages().isEmpty()) {
@@ -158,10 +156,9 @@ public class CommentsService {
 
     public CommentVo create(EntityManager em, CommentVo vo)
             throws MultipleMessagesException, ExternalServiceConnectionException,
-            DataBaseException, MaxCommentsLimitReachedException {
+            DataBaseException, MaxCommentsLimitReachedException, DuplicityException, DataBaseException {
         validateVo(em, vo);
 
-        MultipleMessagesException multipleMessageException = new MultipleMessagesException();
         if (checkUserCommentsCounter(em, vo.getUserId()) >= MAX_COMMENTS_PER_DAY) {
             throw new MaxCommentsLimitReachedException("Maximum comments per day reached");
         }

@@ -1,10 +1,10 @@
 package org.xtremeware.iudex.businesslogic.service;
 
-import javax.persistence.EntityManager;
-import org.xtremeware.iudex.businesslogic.DuplicityException;
-import org.xtremeware.iudex.businesslogic.service.crudinterfaces.CreateInterface;
 import org.xtremeware.iudex.businesslogic.service.crudinterfaces.ReadInterface;
 import org.xtremeware.iudex.businesslogic.service.crudinterfaces.RemoveInterface;
+import org.xtremeware.iudex.businesslogic.service.crudinterfaces.CreateInterface;
+import javax.persistence.EntityManager;
+import org.xtremeware.iudex.businesslogic.DuplicityException;
 import org.xtremeware.iudex.businesslogic.service.crudinterfaces.UpdateInterface;
 import org.xtremeware.iudex.dao.AbstractDaoFactory;
 import org.xtremeware.iudex.entity.Entity;

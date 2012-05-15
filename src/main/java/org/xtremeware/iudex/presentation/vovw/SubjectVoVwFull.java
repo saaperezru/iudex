@@ -6,35 +6,36 @@ import org.xtremeware.iudex.vo.ValueObject;
 
 public class SubjectVoVwFull implements ValueObject{
 
-	private SubjectVo vo;
-	private RatingSummaryVo ratingSummary;
+    private SubjectVo vo;
+    private RatingSummaryVo ratingSummary;
 
-	public SubjectVoVwFull(SubjectVo vo, RatingSummaryVo ratingSummary) {
-		this.vo = vo;
-		this.ratingSummary = ratingSummary;
-	}
+    public SubjectVoVwFull(SubjectVo vo, RatingSummaryVo ratingSummary) {
+        this.vo = vo;
+        this.ratingSummary = ratingSummary;
+    }
 
-	@Override
-	public String toString() {
-		return "SubjectVoVwFull{" + vo.toString() + "ratingSummary=" + ratingSummary + '}';
-	}
+    @Override
+    public String toString() {
+        return "SubjectVoVwFull{" + vo.toString() + "ratingSummary=" + ratingSummary + '}';
+    }
 
-	public RatingSummaryVo getRatingSummary() {
-		return ratingSummary;
-	}
+    public RatingSummaryVo getRatingSummary() {
+        return ratingSummary;
+    }
 
-	public String getDescription() {
-		return vo.getDescription();
-	}
+    public String getDescription() {
+        return vo.getDescription();
+    }
 
-	public Long getId() {
-		return vo.getId();
-	}
+    public SubjectVo getVo() {
+        return vo;
+    }
 
-	public String getName() {
-		return vo.getName();
-	}
+    public Long getId() {
+        return vo.getId();
+    }
 
-
-	
+    public String getName() {
+        return vo.getName();
+    }
 }

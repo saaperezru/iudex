@@ -3,12 +3,14 @@ package org.xtremeware.iudex.entity;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.*;
+import org.xtremeware.iudex.helper.SecurityHelper;
 import org.xtremeware.iudex.vo.FeedbackVo;
 
 @javax.persistence.Entity(name = "Feedback")
 @NamedQueries({
     @NamedQuery(name = "getByTypeId", query = "SELECT f FROM Feedback f WHERE f.type.id = :feedbackTypeId"),
-    @NamedQuery(name = "getFeedbackByContentLike", query = "SELECT f FROM Feedback f WHERE f.content = :query")
+    @NamedQuery(name = "getFeedbackByContentLike", query = "SELECT f FROM Feedback f WHERE f.content = :query"),
+    @NamedQuery(name = "getAllFeedbacks", query = "SELECT f FROM Feedback f")
 })
 @Table(name = "FEEDBACK")
 public class FeedbackEntity implements Serializable, Entity<FeedbackVo> {
@@ -34,7 +36,7 @@ public class FeedbackEntity implements Serializable, Entity<FeedbackVo> {
 
         vo.setId(id);
         vo.setFeedbackTypeId(type.getId());
-        vo.setContent(content);
+        vo.setContent(SecurityHelper.sanitizeHTML(content));
         vo.setDate(date);
 
         return vo;

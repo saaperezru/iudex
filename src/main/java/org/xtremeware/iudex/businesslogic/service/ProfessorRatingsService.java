@@ -1,10 +1,9 @@
 package org.xtremeware.iudex.businesslogic.service;
 
+import org.xtremeware.iudex.businesslogic.service.createimplementations.ProfessorRatingCreate;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
-import org.xtremeware.iudex.businesslogic.InvalidVoException;
-import org.xtremeware.iudex.businesslogic.service.createimplementations.SimpleCreate;
 import org.xtremeware.iudex.businesslogic.service.readimplementations.SimpleRead;
 import org.xtremeware.iudex.businesslogic.service.removeimplementations.SimpleRemove;
 import org.xtremeware.iudex.businesslogic.service.updateimplementations.SimpleUpdate;
@@ -19,7 +18,7 @@ public class ProfessorRatingsService extends CrudService<ProfessorRatingVo, Prof
 
     public ProfessorRatingsService(AbstractDaoFactory daoFactory) {
         super(daoFactory,
-                new SimpleCreate<ProfessorRatingEntity>(daoFactory.
+                new ProfessorRatingCreate(daoFactory.
                 getProfessorRatingDao()),
                 new SimpleRead<ProfessorRatingEntity>(daoFactory.
                 getProfessorRatingDao()),
@@ -32,39 +31,33 @@ public class ProfessorRatingsService extends CrudService<ProfessorRatingVo, Prof
     @Override
     public void validateVo(EntityManager em, ProfessorRatingVo vo)
             throws MultipleMessagesException, DataBaseException {
-        if (em == null) {
-            throw new IllegalArgumentException("EntityManager em cannot be null");
-        }
+        
         MultipleMessagesException multipleMessageException =
                 new MultipleMessagesException();
         if (vo == null) {
             multipleMessageException.addMessage(
-                    "Null ProfessorRatingVo");
+                    "professorRating.null");
             throw multipleMessageException;
         }
         if (vo.getValue() > 1 || vo.getValue() < -1) {
             multipleMessageException.addMessage(
-                    "int Value in the provided ProfessorRatingVo" +
-                     " must be less than 1 and greater than -1");
+                    "professorRating.value.invalidValue");
         }
-        if (vo.getEvaluetedObjectId() == null) {
+        if (vo.getEvaluatedObjectId() == null) {
             multipleMessageException.addMessage(
-                    "Long professorId in the provided ProfessorRatingVo cannot be null");
+                    "professorRating.professorId.null");
         } else if (getDaoFactory().getProfessorDao().getById(em, vo.
-                getEvaluetedObjectId()) == null) {
+                getEvaluatedObjectId()) == null) {
             multipleMessageException.addMessage(
-                    "Long professorId in the provided ProfessorRatingVo must " +
-                     "correspond to an existing subject entity in the database");
+                    "professorRating.professorId.element.notFound");
         }
         if (vo.getUser() == null) {
             multipleMessageException.addMessage(
-                    "Long userId in the provided ProfessorRatingVo cannot be null");
+                    "professorRating.userId.null");
         } else if (getDaoFactory().getUserDao().getById(em, vo.getUser()) ==
                 null) {
             multipleMessageException.addMessage(
-                    "Long userId in the provided ProfessorRatingVo" +
-                    
-                    " must correspond to an existing user entity in the database");
+                    "professorRating.userId.element.notFound");
         }
         if (!multipleMessageException.getMessages().isEmpty()) {
             throw multipleMessageException;
@@ -80,7 +73,7 @@ public class ProfessorRatingsService extends CrudService<ProfessorRatingVo, Prof
         ProfessorRatingEntity entity = new ProfessorRatingEntity();
         entity.setId(vo.getId());
         entity.setProfessor(getDaoFactory().getProfessorDao().getById(em, vo.
-                getEvaluetedObjectId()));
+                getEvaluatedObjectId()));
         entity.setUser(getDaoFactory().getUserDao().getById(em, vo.getUser()));
         entity.setValue(vo.getValue());
         return entity;
@@ -119,8 +112,14 @@ public class ProfessorRatingsService extends CrudService<ProfessorRatingVo, Prof
     public ProfessorRatingVo getByProfessorIdAndUserId(EntityManager em,
             long professorId, long userId)
             throws DataBaseException {
-        return getDaoFactory().getProfessorRatingDao().getByProfessorIdAndUserId(
-                em, professorId, userId).toVo();
+        ProfessorRatingEntity pre = getDaoFactory().getProfessorRatingDao().getByProfessorIdAndUserId(
+                em, professorId, userId);
+        if(pre == null){
+            return null;
+        } else {
+            return pre.toVo();
+        }
+        
     }
 
     /**

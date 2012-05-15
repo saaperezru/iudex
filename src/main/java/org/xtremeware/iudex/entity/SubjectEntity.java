@@ -2,6 +2,7 @@ package org.xtremeware.iudex.entity;
 
 import java.io.Serializable;
 import javax.persistence.*;
+import org.xtremeware.iudex.helper.SecurityHelper;
 import org.xtremeware.iudex.vo.SubjectVo;
 
 @javax.persistence.Entity(name = "Subject")
@@ -25,8 +26,8 @@ public class SubjectEntity implements Serializable, Entity<SubjectVo> {
     public SubjectVo toVo() {
         SubjectVo vo = new SubjectVo();
         vo.setId(this.getId());
-        vo.setName(this.getName());
-        vo.setDescription(this.getDescription());
+        vo.setName(SecurityHelper.sanitizeHTML(this.getName()));
+        vo.setDescription(SecurityHelper.sanitizeHTML(this.getDescription()));
         return vo;
     }
 

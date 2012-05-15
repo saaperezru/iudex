@@ -70,22 +70,20 @@ public class PeriodsService extends CrudService<PeriodVo, PeriodEntity> {
     @Override
     public void validateVo(EntityManager em, PeriodVo vo)
             throws MultipleMessagesException {
-        if (em == null) {
-            throw new IllegalArgumentException("EntityManager em cannot be null");
-        }
+        
         MultipleMessagesException multipleMessageException =
                 new MultipleMessagesException();
         if (vo == null) {
-            multipleMessageException.addMessage("Null PeriodVo");
+            multipleMessageException.addMessage("period.null");
             throw multipleMessageException;
         }
         if (vo.getSemester() < MIN_SEMESTER || vo.getSemester() > MAX_SEMESTER) {
             multipleMessageException.addMessage(
-                    "Int Semester in the provided PeriodVo must be greater than 1 and less than 3");
+                    "period.semester.invalidSemester");
         }
         if (vo.getYear() < MIN_YEAR) {
             multipleMessageException.addMessage(
-                    "Int Year in the provided PeriodVo must be possitive");
+                    "period.year.invalidYear");
         }
         if (!multipleMessageException.getMessages().isEmpty()) {
             throw multipleMessageException;

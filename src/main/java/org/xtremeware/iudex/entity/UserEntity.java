@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
 import org.xtremeware.iudex.helper.Role;
+import org.xtremeware.iudex.helper.SecurityHelper;
 import org.xtremeware.iudex.vo.UserVo;
 
 @javax.persistence.Entity(name = "User")
@@ -53,10 +54,10 @@ public class UserEntity implements Serializable, Entity<UserVo> {
     public UserVo toVo() {
         UserVo vo = new UserVo();
         vo.setId(getId());
-        vo.setFirstName(getFirstName());
-        vo.setLastName(getLastName());
-        vo.setUserName(getUserName());
-        vo.setPassword(getPassword());
+        vo.setFirstName(SecurityHelper.sanitizeHTML(getFirstName()));
+        vo.setLastName(SecurityHelper.sanitizeHTML(getLastName()));
+        vo.setUserName(SecurityHelper.sanitizeHTML(getUserName()));
+        vo.setPassword(SecurityHelper.sanitizeHTML(getPassword()));
         vo.setRole(getRole());
         ArrayList<Long> programsId = new ArrayList<Long>();
         for (ProgramEntity program : getPrograms()) {
@@ -142,10 +143,12 @@ public class UserEntity implements Serializable, Entity<UserVo> {
         this.firstName = firstName;
     }
 
+    @Override
     public Long getId() {
         return id;
     }
 
+    @Override
     public void setId(Long id) {
         this.id = id;
     }

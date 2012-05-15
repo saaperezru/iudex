@@ -4,8 +4,9 @@ import java.util.*;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
+import org.xtremeware.iudex.businesslogic.DuplicityException;
+import org.xtremeware.iudex.businesslogic.helper.FacadesHelper;
 import org.xtremeware.iudex.businesslogic.service.ServiceFactory;
-import org.xtremeware.iudex.helper.DataBaseException;
 import org.xtremeware.iudex.helper.MultipleMessagesException;
 import org.xtremeware.iudex.presentation.vovw.CourseVoVwFull;
 import org.xtremeware.iudex.presentation.vovw.ProfessorVoVwSmall;
@@ -33,6 +34,9 @@ public class CoursesFacade extends AbstractFacade {
     public List<CourseVoVwFull> search(String query) {
         EntityManager em = null;
         List<CourseVoVwFull> list = new ArrayList<CourseVoVwFull>();
+        if(query == null){
+            return null;
+        }
         if (!query.isEmpty()) {
 
             Set<Long> coursesIds = new HashSet<Long>();
@@ -93,17 +97,15 @@ public class CoursesFacade extends AbstractFacade {
 
             } catch (Exception e) {
                 getServiceFactory().createLogService().error(e.getMessage(), e);
+                throw new RuntimeException(e);
             } finally {
-                if (em != null) {
-                    em.clear();
-                    em.close();
-                }
+                FacadesHelper.closeEntityManager(em);
             }
         }
         return list;
     }
 
-    public CourseVo addCourse(long professorId, long subjectId, long periodId) throws MultipleMessagesException {
+    public CourseVo addCourse(long professorId, long subjectId, long periodId) throws MultipleMessagesException, Exception {
         CourseVo createdVo = null;
         EntityManager em = null;
         EntityTransaction tx = null;
@@ -121,19 +123,13 @@ public class CoursesFacade extends AbstractFacade {
             tx.commit();
         } catch (MultipleMessagesException e) {
             throw e;
-        } catch (DataBaseException e) {
-            getServiceFactory().createLogService().error(e.getMessage(), e);
-            if (em != null && tx != null) {
-                tx.rollback();
-            }
         } catch (Exception e) {
             getServiceFactory().createLogService().error(e.getMessage(), e);
-            
+            FacadesHelper.checkException(e, MultipleMessagesException.class);
+            FacadesHelper.checkExceptionAndRollback(em, tx, e, DuplicityException.class);
+            FacadesHelper.rollbackTransaction(em, tx, e);
         } finally {
-            if (em != null) {
-                em.clear();
-                em.close();
-            }
+            FacadesHelper.closeEntityManager(em);
         }
         return createdVo;
     }
@@ -148,20 +144,14 @@ public class CoursesFacade extends AbstractFacade {
             getServiceFactory().createCoursesService().remove(em, courseId);
             tx.commit();
         } catch (Exception e) {
-            if (em != null && tx != null) {
-                tx.rollback();
-            }
             getServiceFactory().createLogService().error(e.getMessage(), e);
-            throw e;
+            FacadesHelper.rollbackTransaction(em, tx, e);
         } finally {
-            if (em != null) {
-                em.clear();
-                em.close();
-            }
+            FacadesHelper.closeEntityManager(em);
         }
     }
 
-    public CourseVoVwFull getCourse(long courseId) throws Exception {
+    public CourseVoVwFull getCourse(long courseId) {
         EntityManager em = null;
         CourseVoVwFull voVw = null;
         try {
@@ -180,17 +170,14 @@ public class CoursesFacade extends AbstractFacade {
 
         } catch (Exception e) {
             getServiceFactory().createLogService().error(e.getMessage(), e);
-            throw e;
+            throw new RuntimeException(e);
         } finally {
-            if (em != null) {
-                em.clear();
-                em.close();
-            }
+            FacadesHelper.closeEntityManager(em);
         }
         return voVw;
     }
 
-    public CourseRatingVo rateCourse(long courseId, long userId, float value) throws MultipleMessagesException {
+    public CourseRatingVo rateCourse(long courseId, long userId, float value) throws MultipleMessagesException, Exception {
         EntityManager em = null;
         EntityTransaction tx = null;
         CourseRatingVo rating = null;
@@ -214,25 +201,19 @@ public class CoursesFacade extends AbstractFacade {
                 rating.setValue(value);
             }
             tx.commit();
-
-        } catch (MultipleMessagesException ex) {
-            throw ex;
         } catch (Exception e) {
-            if (em != null && tx != null) {
-                tx.rollback();
-            }
             getServiceFactory().createLogService().error(e.getMessage(), e);
+            FacadesHelper.checkException(e, MultipleMessagesException.class);
+            FacadesHelper.checkExceptionAndRollback(em, tx, e, DuplicityException.class);
+            FacadesHelper.rollbackTransaction(em, tx, e);
         } finally {
-            if (em != null) {
-                em.clear();
-                em.close();
-            }
+            FacadesHelper.closeEntityManager(em);
         }
         return rating;
 
     }
 
-    public CourseRatingVo getCourseRatingByUserId(long courseId, long userId) throws Exception {
+    public CourseRatingVo getCourseRatingByUserId(long courseId, long userId) {
         EntityManager em = null;
         CourseRatingVo rating = null;
         try {
@@ -240,12 +221,9 @@ public class CoursesFacade extends AbstractFacade {
             rating = getServiceFactory().createCourseRatingsService().getByCourseIdAndUserId(em, courseId, userId);
         } catch (Exception e) {
             getServiceFactory().createLogService().error(e.getMessage(), e);
-            throw e;
+            throw new RuntimeException(e);
         } finally {
-            if (em != null) {
-                em.clear();
-                em.close();
-            }
+            FacadesHelper.closeEntityManager(em);
         }
         return rating;
     }
@@ -275,11 +253,9 @@ public class CoursesFacade extends AbstractFacade {
 
         } catch (Exception e) {
             getServiceFactory().createLogService().error(e.getMessage(), e);
+            throw new RuntimeException(e);
         } finally {
-            if (em != null) {
-                em.clear();
-                em.close();
-            }
+            FacadesHelper.closeEntityManager(em);
         }
         return list;
     }
@@ -305,11 +281,9 @@ public class CoursesFacade extends AbstractFacade {
 
         } catch (Exception e) {
             getServiceFactory().createLogService().error(e.getMessage(), e);
+            throw new RuntimeException(e);
         } finally {
-            if (em != null) {
-                em.clear();
-                em.close();
-            }
+            FacadesHelper.closeEntityManager(em);
         }
         return list;
     }

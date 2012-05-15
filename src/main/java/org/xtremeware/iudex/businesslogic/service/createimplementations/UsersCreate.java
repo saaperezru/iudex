@@ -2,13 +2,14 @@ package org.xtremeware.iudex.businesslogic.service.createimplementations;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import javax.persistence.EntityManager;
-import org.xtremeware.iudex.businesslogic.service.crudinterfaces.CreateInterface;
 import org.xtremeware.iudex.dao.AbstractDaoFactory;
 import org.xtremeware.iudex.entity.ConfirmationKeyEntity;
 import org.xtremeware.iudex.entity.UserEntity;
 import org.xtremeware.iudex.helper.DataBaseException;
 import org.xtremeware.iudex.helper.SecurityHelper;
+import javax.persistence.EntityManager;
+import org.xtremeware.iudex.businesslogic.DuplicityException;
+import org.xtremeware.iudex.businesslogic.service.crudinterfaces.CreateInterface;
 
 /**
  *
@@ -22,7 +23,7 @@ public class UsersCreate implements CreateInterface<UserEntity> {
     }
 
     @Override
-    public UserEntity create(EntityManager em, UserEntity entity) throws DataBaseException {
+    public UserEntity create(EntityManager em, UserEntity entity) throws DataBaseException, DuplicityException {
         //It is not possible to create users that are already active
         entity.setActive(false);
         //Hash password

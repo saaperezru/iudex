@@ -2,13 +2,16 @@ package org.xtremeware.iudex.entity;
 
 import java.io.Serializable;
 import javax.persistence.*;
+import org.xtremeware.iudex.helper.SecurityHelper;
 import org.xtremeware.iudex.vo.ProfessorVo;
 
 @javax.persistence.Entity(name = "Professor")
 @NamedQueries({
-	@NamedQuery(name="getProfessorByNameLike",query="SELECT p FROM Professor p WHERE UPPER(p.firstName) LIKE :name OR UPPER(p.lastName) LIKE :name")
+    @NamedQuery(name = "getProfessorByNameLike", query = "SELECT p FROM Professor p WHERE UPPER(p.firstName) LIKE :name OR UPPER(p.lastName) LIKE :name")
 })
-@Table(name = "PROFESSOR")
+@Table(name = "PROFESSOR",
+uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"FIRST_NAMES", "LAST_NAMES"})})
 public class ProfessorEntity implements Serializable, Entity<ProfessorVo> {
 
     private static final long serialVersionUID = 1L;
@@ -20,25 +23,25 @@ public class ProfessorEntity implements Serializable, Entity<ProfessorVo> {
     private String firstName;
     @Column(name = "LAST_NAMES", length = 50, nullable = false)
     private String lastName;
-    @Column(name = "URL_IMAGE", length = 255)
+    @Column(name = "URL_IMAGE", length = 255, unique = true)
     private String website;
-    @Column(name = "URL_WEB", length = 255)
+    @Column(name = "URL_WEB", length = 255, unique = true)
     private String imageUrl;
     @Column(name = "DESCRIPTION", length = 2000)
     private String description;
-    @Column(name = "E_MAIL", length = 50)
+    @Column(name = "E_MAIL", length = 50, unique = true)
     private String email;
 
     @Override
     public ProfessorVo toVo() {
         ProfessorVo vo = new ProfessorVo();
         vo.setId(this.getId());
-        vo.setFirstName(this.getFirstName());
-        vo.setLastName(this.getLastName());
-        vo.setWebsite(this.getWebsite());
-        vo.setImageUrl(this.getImageUrl());
-        vo.setDescription(this.getDescription());
-        vo.setEmail(this.getEmail());
+        vo.setFirstName(SecurityHelper.sanitizeHTML(this.getFirstName()));
+        vo.setLastName(SecurityHelper.sanitizeHTML(this.getLastName()));
+        vo.setWebsite(SecurityHelper.sanitizeHTML(this.getWebsite()));
+        vo.setImageUrl(SecurityHelper.sanitizeHTML(this.getImageUrl()));
+        vo.setDescription(SecurityHelper.sanitizeHTML(this.getDescription()));
+        vo.setEmail(SecurityHelper.sanitizeHTML(this.getEmail()));
         return vo;
     }
 

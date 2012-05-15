@@ -31,23 +31,24 @@ public class ProgramsService extends CrudService<ProgramVo, ProgramEntity> {
     @Override
     public void validateVo(EntityManager em, ProgramVo vo)
             throws ExternalServiceConnectionException, MultipleMessagesException {
-        if (em == null) {
-            throw new IllegalArgumentException("EntityManager em cannot be null");
-        }
-        MultipleMessagesException multipleMessageException =
-                new MultipleMessagesException();
+        
+        MultipleMessagesException multipleMessageException = new MultipleMessagesException();
         if (vo == null) {
-            multipleMessageException.addMessage("Null ProgramVo");
+            multipleMessageException.addMessage("program.null");
             throw multipleMessageException;
         }
         if (vo.getName() == null) {
             multipleMessageException.addMessage(
-                    "String message in the provided ProgramVo cannot be null");
+                    "program.name.null");
         } else {
             vo.setName(SecurityHelper.sanitizeHTML(vo.getName()));
             if (vo.getName().length() > MAX_PROGRAMNAME_LENGTH) {
                 multipleMessageException.addMessage(
-                        "Program name too large");
+                        "program.name.tooLong");
+            }
+            if (vo.getName().isEmpty()) {
+                multipleMessageException.addMessage(
+                        "program.name.tooShort");
             }
         }
         if (!multipleMessageException.getMessages().isEmpty()) {

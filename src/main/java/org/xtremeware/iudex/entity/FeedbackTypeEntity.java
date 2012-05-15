@@ -2,12 +2,16 @@ package org.xtremeware.iudex.entity;
 
 import java.io.Serializable;
 import javax.persistence.*;
+import org.xtremeware.iudex.helper.SecurityHelper;
 import org.xtremeware.iudex.vo.FeedbackTypeVo;
 
 @javax.persistence.Entity(name = "FeedbackType")
 @NamedQueries({
     @NamedQuery(name = "getFeedbackTypeByName", query = "SELECT ft FROM FeedbackType ft WHERE ft.name = :name"),
     @NamedQuery(name = "getAllFeedbackType", query = "SELECT ft FROM FeedbackType ft")})
+@Table(name = "TYPE_FEEDBACK",
+uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"NAME"})})
 public class FeedbackTypeEntity implements Serializable, Entity<FeedbackTypeVo> {
 
     private static final long serialVersionUID = 1L;
@@ -22,7 +26,7 @@ public class FeedbackTypeEntity implements Serializable, Entity<FeedbackTypeVo> 
     public FeedbackTypeVo toVo() {
         FeedbackTypeVo vo = new FeedbackTypeVo();
         vo.setId(this.getId());
-        vo.setName(this.getName());
+        vo.setName(SecurityHelper.sanitizeHTML(this.getName()));
         return vo;
     }
 

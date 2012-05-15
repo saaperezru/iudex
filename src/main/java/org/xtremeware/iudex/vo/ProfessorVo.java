@@ -104,7 +104,7 @@ public class ProfessorVo extends IdentifiableValueObject<Long> implements ValueO
     }
 
     public String getEmail() {
-        return website;
+        return email;
     }
 
     public void setEmail(String email) {

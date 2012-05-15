@@ -3,9 +3,11 @@ package org.xtremeware.iudex.presentation.controller;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.faces.application.ConfigurableNavigationHandler;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
 import org.xtremeware.iudex.helper.Config;
 import org.xtremeware.iudex.presentation.vovw.CommentVoVwFull;
 import org.xtremeware.iudex.presentation.vovw.CourseVoVwFull;
@@ -61,9 +63,10 @@ public class ViewSubject {
     public void preRenderView() {
 		try {
 			subject = Config.getInstance().getFacadeFactory().getSubjectsFacade().getSubject(id);
-			
+			if (subject==null){
+				((ConfigurableNavigationHandler) FacesContext.getCurrentInstance().getApplication().getNavigationHandler()).performNavigation("notfound");
+			}
 			for (CourseVoVwFull c :Config.getInstance().getFacadeFactory().getCoursesFacade().getBySubjectId(id)){
-				System.out.println(c.getId());
 				courses.add(new courseInfo(c, Config.getInstance().getFacadeFactory().getCommentsFacade().getCommentsByCourseId(c.getId())));
 			}
 		} catch (Exception ex) {

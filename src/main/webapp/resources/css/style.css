@@ -1,6 +1,7 @@
 body {
         padding-top: 60px;
         padding-bottom: 40px;
+	/*background-color: #F4F4F4;*/
 }
 .search-box {
 	text-align: right;
@@ -10,6 +11,32 @@ body {
 	margin-left: 15px;
 	width: 30%;
 	min-width: 300px;
+}
+
+.fixed-navbar{
+	position: fixed;
+	top : 7%;
+	height: 86%;
+	bottom : 7%;
+}
+
+#feedback {
+	display: block;
+	text-align: center;
+	vertical-align: central;
+	position : fixed;
+	bottom: 0px;
+	right: 0px;
+	height: 5px;
+	width: 80px;
+	background-color: green;
+	color: white;
+/*	-webkit-transform: rotate(-90deg); 
+	-moz-transform: rotate(-90deg);	*/
+}
+
+#feedback:hover{
+	height: 60px;
 }
 
 #header .logo {
@@ -80,12 +107,17 @@ a.thumb-down {
         border-radius: 4px;
         margin-top: 20px;
         margin-bottom: 20px;
+	display: inline-block
 }
-.comment-rating, .vote , .comment-text, .comment-photo{
+.vote , .comment-text, .comment-photo{
         display: inline-block;
 }
+.comment-rating{
+	font-size: 20px;
+	margin-bottom: 10px;
+}
 .comment-photo{
-        float:right;
+        float:left;
 }
 .professor-photo{
 }
@@ -209,31 +241,60 @@ div.professor-photo ul.actions li.downvote-prof a {
 }
 .upvote{
 	background-image: url(../resources/images/arrow-up.png);
-	display: block;
+	display: inline-block;
 	top : 0px;
-	left: -74px;
+	right : 3px;
 	position: absolute;
 	width: 64px;
 	height: 64px;
 }
 .downvote{
 	background-image: url(../resources/images/arrow-down.png);
-	display: block;
+	display: inline-block;
 	position: absolute;
 	bottom: 0px;
-	left: -74px;
+	right : 3px;
 	width: 64px;
 	height: 64px;
 }
 .vote-count{
 	position: absolute;
 	top: 50%;
-	left: -66px;
+	right : 3px;
+	font-size: 20px;
+	text-align: center;
+	width: 64px;
+}
+.comment-container > p{
+	padding-left: 130px;
+	padding-right: 64px;
 	font-size: 20px;
 }
-.comment-container{
-	padding-left: 70px;
+.cuadro-promedio{
+	/*round corners*/
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	border-radius: 10px; /* future proofing */
+	-khtml-border-radius: 10px; /* for old Konqueror browsers */
+	/* end round corners*/
+	background-color: white;
+	padding-top: 2%;
 }
-.comment-text > p{
-	font-size: 20px;
+.comment-photo > img{
+	height : 110px;
+	width:100px;
+}
+
+.vote-wrapper{
+    opacity : 0.4;
+    filter: alpha(opacity=40); 
+    background-color: #000;
+}
+.vote-wrapper:hover{
+    opacity : 1;
+    filter: alpha(opacity=100); 
+    background-color: #000;
+}
+.vote{
+	float:right;
 }

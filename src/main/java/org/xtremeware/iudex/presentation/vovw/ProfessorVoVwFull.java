@@ -8,6 +8,8 @@ public class ProfessorVoVwFull implements ValueObject{
 
 	private ProfessorVo vo;
 	private RatingSummaryVo ratingSummary;
+	//TODO: Get this from a centralized place
+	private static final String defaultImageUrl = "../resources/professor.png";
 
 	public ProfessorVoVwFull(ProfessorVo vo, RatingSummaryVo ratingSummary) {
 		this.vo = vo;
@@ -40,6 +42,10 @@ public class ProfessorVoVwFull implements ValueObject{
 	}
 
 	public String getImageUrl() {
+		String url = vo.getImageUrl();
+		if ( url == null){
+			return defaultImageUrl;
+		}
 		return vo.getImageUrl();
 	}
 

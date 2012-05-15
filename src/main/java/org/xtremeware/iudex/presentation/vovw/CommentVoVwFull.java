@@ -54,6 +54,7 @@ public class CommentVoVwFull implements ValueObject{
 		return vo.getRating();
 	}
 
+
 	public UserVoVwSmall getUser() {
 		return user;
 	}

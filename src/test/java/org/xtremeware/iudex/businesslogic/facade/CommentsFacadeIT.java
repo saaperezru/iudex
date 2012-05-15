@@ -281,7 +281,7 @@ public class CommentsFacadeIT {
             }
             assertEquals(result.getContent(),cvvf.getContent());
             assertEquals(result.getId(),cvvf.getId());
-            assertEquals(result.getRating(),cvvf.getRating());
+            assertEquals(result.getRating(),cvvf.getCourseRating());
         }
         
     }

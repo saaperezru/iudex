@@ -1,0 +1,18 @@
+<ui:composition 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    template="../WEB-INF/templates/error.xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:iudex="http://java.sun.com/jsf/composite/iudex">
+
+    <ui:define name="header">
+        <h1>Esto no debería pasar</h1>
+        <br/>
+        <p>Si fuimos nosotros te pedimos disculpas, pero si fuiste tu lo sabremos.</p>
+    </ui:define>
+
+    <ui:define name="content">
+        <iudex:stackTrace/>
+    </ui:define>
+
+</ui:composition>

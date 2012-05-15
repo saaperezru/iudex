@@ -1,9 +1,9 @@
 package org.xtremeware.iudex.businesslogic.service.createimplementations;
 
-import org.xtremeware.iudex.businesslogic.service.crudinterfaces.CreateInterface;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import javax.persistence.EntityManager;
+import org.xtremeware.iudex.businesslogic.service.crudinterfaces.CreateInterface;
 import org.xtremeware.iudex.dao.AbstractDaoFactory;
 import org.xtremeware.iudex.entity.ConfirmationKeyEntity;
 import org.xtremeware.iudex.entity.UserEntity;
@@ -31,6 +31,7 @@ public class UsersCreate implements CreateInterface<UserEntity> {
         ConfirmationKeyEntity confirmationKeyEntity = new ConfirmationKeyEntity();
         //Set expiration date for one day after creation
         Calendar expiration = new GregorianCalendar();
+        // TODO: The expiration period should be configurable
         expiration.add(Calendar.DAY_OF_MONTH, 1);
         confirmationKeyEntity.setExpirationDate(expiration.getTime());
         confirmationKeyEntity.setConfirmationKey(SecurityHelper.generateConfirmationKey());
@@ -43,7 +44,6 @@ public class UsersCreate implements CreateInterface<UserEntity> {
         getDaoFactory().getConfirmationKeyDao().persist(em, confirmationKeyEntity);
 
         return entity;
-        
     }
 
     private AbstractDaoFactory getDaoFactory() {

@@ -1,18 +1,18 @@
 package org.xtremeware.iudex.businesslogic.service;
 
-import org.xtremeware.iudex.businesslogic.service.updateimplementations.SimpleUpdate;
-import org.xtremeware.iudex.businesslogic.service.removeimplementations.SubjectsRemove;
-import org.xtremeware.iudex.businesslogic.service.readimplementations.SimpleRead;
-import org.xtremeware.iudex.businesslogic.service.createimplementations.SimpleCreate;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.businesslogic.InvalidVoException;
+import org.xtremeware.iudex.businesslogic.service.createimplementations.SimpleCreate;
+import org.xtremeware.iudex.businesslogic.service.readimplementations.SimpleRead;
+import org.xtremeware.iudex.businesslogic.service.removeimplementations.SubjectsRemove;
+import org.xtremeware.iudex.businesslogic.service.updateimplementations.SimpleUpdate;
 import org.xtremeware.iudex.dao.AbstractDaoFactory;
 import org.xtremeware.iudex.entity.SubjectEntity;
 import org.xtremeware.iudex.helper.DataBaseException;
 import org.xtremeware.iudex.helper.ExternalServiceConnectionException;
-import org.xtremeware.iudex.helper.MultipleMessageException;
+import org.xtremeware.iudex.helper.MultipleMessagesException;
 import org.xtremeware.iudex.helper.SecurityHelper;
 import org.xtremeware.iudex.vo.SubjectVo;
 
@@ -45,36 +45,36 @@ public class SubjectsService extends CrudService<SubjectVo, SubjectEntity> {
      */
     @Override
     public void validateVo(EntityManager em, SubjectVo vo)
-            throws ExternalServiceConnectionException, MultipleMessageException {
+            throws ExternalServiceConnectionException, MultipleMessagesException {
         if (em == null) {
             throw new IllegalArgumentException("EntityManager em cannot be null");
         }
-        MultipleMessageException multipleMessageException = new MultipleMessageException();
+        MultipleMessagesException multipleMessageException = new MultipleMessagesException();
         if (vo == null) {
-            multipleMessageException.getExceptions().add(new InvalidVoException("Null SubjectVo"));
+            multipleMessageException.addMessage("Null SubjectVo");
             throw multipleMessageException;
         }
         if (vo.getName() == null) {
-            multipleMessageException.getExceptions().add(new InvalidVoException(
-                    "Null name in the provided SubjectVo"));
+            multipleMessageException.addMessage(
+                    "Null name in the provided SubjectVo");
         } else {
             vo.setName(SecurityHelper.sanitizeHTML(vo.getName()));
             if (vo.getName().length() > 50) {
-                multipleMessageException.getExceptions().add(new InvalidVoException(
-                        "Invalid name length in the provided SubjectVo"));
+                multipleMessageException.addMessage(
+                        "Invalid name length in the provided SubjectVo");
             }
         }
         if (vo.getDescription() == null) {
-            multipleMessageException.getExceptions().add(new InvalidVoException(
-                    "Null description in the provided SubjectVo"));
+            multipleMessageException.addMessage(
+                    "Null description in the provided SubjectVo");
         } else {
             vo.setDescription(SecurityHelper.sanitizeHTML(vo.getDescription()));
             if (vo.getDescription().length() > 2000) {
-                multipleMessageException.getExceptions().add(new InvalidVoException(
-                        "Invalid description length in the provided SubjectVo"));
+                multipleMessageException.addMessage(
+                        "Invalid description length in the provided SubjectVo");
             }
         }
-        if (!multipleMessageException.getExceptions().isEmpty()) {
+        if (!multipleMessageException.getMessages().isEmpty()) {
             throw multipleMessageException;
         }
     }
@@ -89,7 +89,7 @@ public class SubjectsService extends CrudService<SubjectVo, SubjectEntity> {
      */
     @Override
     public SubjectEntity voToEntity(EntityManager em, SubjectVo vo)
-            throws ExternalServiceConnectionException, MultipleMessageException {
+            throws ExternalServiceConnectionException, MultipleMessagesException {
 
         validateVo(em, vo);
 

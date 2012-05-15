@@ -14,29 +14,34 @@ import javax.servlet.http.HttpServletResponse;
  * @author healarconr
  */
 @WebFilter(filterName = "SecurityFilter", urlPatterns = {"/*"}, initParams = {
-    @WebInitParam(name = "permissions", value = "/META-INF/permissions.properties"),
+    @WebInitParam(name = "permissions", value =
+    "/META-INF/permissions.properties"),
     @WebInitParam(name = "denyByDefault", value = "true"),
     @WebInitParam(name = "anybody", value = "ALL")})
 // TODO: Use the standard logger in this filter
 public class SecurityFilter implements Filter {
 
-    // TODO: Get this value from a centralized config
-    private static final String ROLE_SESSION_KEY = "role";
     private FilterConfig filterConfig = null;
     private Map<String, String[]> permissions = null;
     private boolean denyByDefault = true;
     private String anybody = null;
 
-    public SecurityFilter() {
-    }
-
-    private void checkAuthorization(ServletRequest request, ServletResponse response)
+    private boolean checkAuthorization(ServletRequest request,
+            ServletResponse response)
             throws IOException, ServletException {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         String requestUri = httpServletRequest.getRequestURI();
         String contextPath = httpServletRequest.getContextPath();
         String path;
-        String role = (String) httpServletRequest.getSession().getAttribute(ROLE_SESSION_KEY);
+        User user = (User) httpServletRequest.getSession().
+                getAttribute("user");
+
+        String roleName;
+        if (user != null && user.isLoggedIn()) {
+            roleName = user.getRole().toString();
+        } else {
+            roleName = "";
+        }
 
         if (!contextPath.equals("")) {
             path = requestUri.substring(contextPath.length());
@@ -52,7 +57,8 @@ public class SecurityFilter implements Filter {
             if (path.matches(key)) {
                 String[] allowedRoles = permissions.get(key);
                 for (String allowedRole : allowedRoles) {
-                    if (allowedRole.equals(role) || allowedRole.equals(anybody)) {
+                    if (allowedRole.equals(roleName) || allowedRole.equals(
+                            anybody)) {
                         allowedAccess = true;
                         break checkCycle;
                     }
@@ -61,7 +67,11 @@ public class SecurityFilter implements Filter {
         }
 
         if (!allowedAccess && denyByDefault) {
-            ((HttpServletResponse) response).sendError(HttpURLConnection.HTTP_UNAUTHORIZED);
+            ((HttpServletResponse) response).sendError(
+                    HttpURLConnection.HTTP_UNAUTHORIZED);
+            return false;
+        } else {
+            return true;
         }
     }
 
@@ -79,9 +89,9 @@ public class SecurityFilter implements Filter {
             FilterChain chain)
             throws IOException, ServletException {
 
-        checkAuthorization(request, response);
-
-        chain.doFilter(request, response);
+        if (checkAuthorization(request, response)) {
+            chain.doFilter(request, response);
+        }
     }
 
     /**
@@ -106,19 +116,22 @@ public class SecurityFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) {
         this.filterConfig = filterConfig;
-        denyByDefault = Boolean.parseBoolean(filterConfig.getInitParameter("denyByDefault"));
+        denyByDefault = Boolean.parseBoolean(filterConfig.getInitParameter(
+                "denyByDefault"));
         anybody = filterConfig.getInitParameter("anybody");
         try {
             Properties properties = new Properties();
             permissions = new HashMap<String, String[]>();
 
-            properties.load(getClass().getResourceAsStream(filterConfig.getInitParameter("permissions")));
+            properties.load(getClass().getResourceAsStream(filterConfig.
+                    getInitParameter("permissions")));
             Enumeration enumeration = properties.propertyNames();
             String key;
 
             while (enumeration.hasMoreElements()) {
                 key = (String) enumeration.nextElement();
-                permissions.put(key, properties.getProperty(key).replace(" ", "").split(","));
+                permissions.put(key, properties.getProperty(key).replace(" ", "").
+                        split(","));
             }
         } catch (IOException ex) {
             // PENDING! Log this exception

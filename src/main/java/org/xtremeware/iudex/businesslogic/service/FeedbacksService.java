@@ -12,7 +12,7 @@ import org.xtremeware.iudex.dao.AbstractDaoFactory;
 import org.xtremeware.iudex.entity.FeedbackEntity;
 import org.xtremeware.iudex.helper.DataBaseException;
 import org.xtremeware.iudex.helper.ExternalServiceConnectionException;
-import org.xtremeware.iudex.helper.MultipleMessageException;
+import org.xtremeware.iudex.helper.MultipleMessagesException;
 import org.xtremeware.iudex.helper.SecurityHelper;
 import org.xtremeware.iudex.vo.FeedbackVo;
 
@@ -45,38 +45,41 @@ public class FeedbacksService extends CrudService<FeedbackVo, FeedbackEntity> {
      */
     @Override
     public void validateVo(EntityManager em, FeedbackVo vo)
-            throws ExternalServiceConnectionException, MultipleMessageException, DataBaseException {
+            throws ExternalServiceConnectionException, MultipleMessagesException,
+            DataBaseException {
         if (em == null) {
             throw new IllegalArgumentException("EntityManager em cannot be null");
         }
-        MultipleMessageException multipleMessageException = new MultipleMessageException();
+        MultipleMessagesException multipleMessageException =
+                new MultipleMessagesException();
         if (vo == null) {
-            multipleMessageException.getExceptions().add(new InvalidVoException(
-                    "Null FeedbackVo"));
+            multipleMessageException.addMessage(
+                    "Null FeedbackVo");
             throw multipleMessageException;
         }
         if (vo.getFeedbackTypeId() == null) {
-            multipleMessageException.getExceptions().add(new InvalidVoException(
-                    "Null feedbackTypeId in the provided FeedbackVo"));
-        } else if (getDaoFactory().getFeedbackTypeDao().getById(em, vo.getFeedbackTypeId()) == null) {
-            multipleMessageException.getExceptions().add(new InvalidVoException(
-                    "No such FeedbackType associated whit FeedbackVo.FeedbackTypeId"));
+            multipleMessageException.addMessage(
+                    "Null feedbackTypeId in the provided FeedbackVo");
+        } else if (getDaoFactory().getFeedbackTypeDao().getById(em, vo.
+                getFeedbackTypeId()) == null) {
+            multipleMessageException.addMessage(
+                    "No such FeedbackType associated whit FeedbackVo.FeedbackTypeId");
         }
         if (vo.getDate() == null) {
-            multipleMessageException.getExceptions().add(new InvalidVoException(
-                    "Null date in the provided FeedbackVo"));
+            multipleMessageException.addMessage(
+                    "Null date in the provided FeedbackVo");
         }
         if (vo.getContent() == null) {
-            multipleMessageException.getExceptions().add(new InvalidVoException(
-                    "Invalid content in the the provided FeedbackVo"));
+            multipleMessageException.addMessage(
+                    "Invalid content in the the provided FeedbackVo");
         } else {
             vo.setContent(SecurityHelper.sanitizeHTML(vo.getContent()));
             if (vo.getContent().length() > 2000) {
-                multipleMessageException.getExceptions().add(new InvalidVoException(
-                        "Invalid content length in the provided FeedbackVo"));
+                multipleMessageException.addMessage(
+                        "Invalid content length in the provided FeedbackVo");
             }
         }
-        if (!multipleMessageException.getExceptions().isEmpty()) {
+        if (!multipleMessageException.getMessages().isEmpty()) {
             throw multipleMessageException;
         }
     }
@@ -93,7 +96,7 @@ public class FeedbacksService extends CrudService<FeedbackVo, FeedbackEntity> {
     @Override
     public FeedbackEntity voToEntity(EntityManager em, FeedbackVo vo)
             throws ExternalServiceConnectionException,
-            MultipleMessageException, DataBaseException {
+            MultipleMessagesException, DataBaseException {
 
         validateVo(em, vo);
 
@@ -102,7 +105,8 @@ public class FeedbacksService extends CrudService<FeedbackVo, FeedbackEntity> {
         feedbackEntity.setDate(vo.getDate());
         feedbackEntity.setId(vo.getId());
 
-        feedbackEntity.setType(getDaoFactory().getFeedbackTypeDao().getById(em, vo.getFeedbackTypeId()));
+        feedbackEntity.setType(getDaoFactory().getFeedbackTypeDao().getById(em,
+                vo.getFeedbackTypeId()));
 
         return feedbackEntity;
     }
@@ -114,10 +118,11 @@ public class FeedbacksService extends CrudService<FeedbackVo, FeedbackEntity> {
      * @param query String with the search parameter
      * @return A list of FeedbackVo
      */
-    public List<FeedbackVo> search(EntityManager em, String query) 
+    public List<FeedbackVo> search(EntityManager em, String query)
             throws ExternalServiceConnectionException, DataBaseException {
         query = SecurityHelper.sanitizeHTML(query);
-        List<FeedbackEntity> feedbackEntitys = getDaoFactory().getFeedbackDao().getByContentLike(em, query);
+        List<FeedbackEntity> feedbackEntitys = getDaoFactory().getFeedbackDao().
+                getByContentLike(em, query);
         if (feedbackEntitys.isEmpty()) {
             return null;
         }

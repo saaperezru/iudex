@@ -7,7 +7,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import org.xtremeware.iudex.businesslogic.service.ServiceFactory;
 import org.xtremeware.iudex.helper.DataBaseException;
-import org.xtremeware.iudex.helper.MultipleMessageException;
+import org.xtremeware.iudex.helper.MultipleMessagesException;
 import org.xtremeware.iudex.vo.PeriodVo;
 
 public class PeriodsFacade extends AbstractFacade {
@@ -49,7 +49,7 @@ public class PeriodsFacade extends AbstractFacade {
      * errors) and throws an exception if data isn't valid.
      */
     public PeriodVo addPeriod(int year, int semester) 
-            throws MultipleMessageException, DataBaseException {
+            throws MultipleMessagesException, DataBaseException {
         PeriodVo createdVo = null;
         PeriodVo vo = new PeriodVo();
         vo.setYear(year);
@@ -62,7 +62,7 @@ public class PeriodsFacade extends AbstractFacade {
             tx.begin();
             createdVo = getServiceFactory().createPeriodsService().create(em, vo);
             tx.commit();
-        } catch (MultipleMessageException e) {
+        } catch (MultipleMessagesException e) {
             throw e;
         } catch (DataBaseException e) {
             getServiceFactory().createLogService().error(e.getMessage(), e);

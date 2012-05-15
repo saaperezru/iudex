@@ -3,19 +3,16 @@ package org.xtremeware.iudex.presentation.controller;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.model.SelectItem;
-import org.xtremeware.iudex.businesslogic.InvalidVoException;
-import org.xtremeware.iudex.businesslogic.facade.ProgramsFacade;
+import org.xtremeware.iudex.businesslogic.DuplicityException;
 import org.xtremeware.iudex.businesslogic.facade.UsersFacade;
 import org.xtremeware.iudex.helper.Config;
-import org.xtremeware.iudex.helper.MultipleMessageException;
+import org.xtremeware.iudex.helper.MultipleMessagesException;
 import org.xtremeware.iudex.helper.Role;
-import org.xtremeware.iudex.vo.ProgramVo;
+import org.xtremeware.iudex.presentation.helper.ViewHelper;
 import org.xtremeware.iudex.vo.UserVo;
 
 /**
@@ -31,9 +28,8 @@ public class SignUp {
     private String firstName;
     private String lastName;
     private Long programId;
-    private List<SelectItem> programs;
-    @ManagedProperty(value = "#{authCheck}")
-    private AuthCheck authCheck;
+    @ManagedProperty(value = "#{user}")
+    private User user;
 
     public String getLastName() {
         return lastName;
@@ -75,58 +71,43 @@ public class SignUp {
         this.userName = userName;
     }
 
-    public AuthCheck getAuthCheck() {
-        return authCheck;
+    public User getUser() {
+        return user;
     }
 
-    public void setAuthCheck(AuthCheck authCheck) {
-        this.authCheck = authCheck;
-    }
-
-    public List<SelectItem> getPrograms() {
-        if (programs == null) {
-            programs = new ArrayList<SelectItem>();
-            ProgramsFacade programsFacade = Config.getInstance().getFacadeFactory().getProgramsFacade();
-            List<ProgramVo> programsList = programsFacade.listPrograms();
-            if (programsList != null) {
-                for (ProgramVo vo : programsList) {
-                    programs.add(new SelectItem(vo.getId(), vo.getName()));
-                }
-            }
-        }
-        return programs;
-    }
-
-    public void setPrograms(List<SelectItem> programs) {
-        this.programs = programs;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public String signUp() throws IOException {
 
         FacesContext fc = FacesContext.getCurrentInstance();
-        if (authCheck.isLoggedIn()) {
+        if (user.isLoggedIn()) {
             fc.getExternalContext().responseSendError(401, "");
-            // TODO: Is return needed?
+            return null;
         }
-        UsersFacade usersFacade = Config.getInstance().getFacadeFactory().getUsersFacade();
-        UserVo user = new UserVo();
-        user.setUserName(getUserName());
-        user.setPassword(getPassword());
-        user.setFirstName(getFirstName());
-        user.setLastName(getLastName());
+        UsersFacade usersFacade = Config.getInstance().getFacadeFactory().
+                getUsersFacade();
+        UserVo userVo = new UserVo();
+        userVo.setUserName(getUserName());
+        userVo.setPassword(getPassword());
+        userVo.setFirstName(getFirstName());
+        userVo.setLastName(getLastName());
         List<Long> programsList = new ArrayList<Long>();
         if (programId != null) {
             programsList.add(programId);
         }
-        user.setProgramsId(programsList);
-        user.setRole(Role.STUDENT);
+        userVo.setProgramsId(programsList);
+        userVo.setRole(Role.STUDENT);
         try {
-            usersFacade.addUser(user);
+            usersFacade.addUser(userVo);
             return "success";
-        } catch (MultipleMessageException ex) {
-            fc.addMessage("signUpForm", new FacesMessage(ex.getMessage()));
-	    Config.getInstance().getServiceFactory().createLogService().error(ex.getMessage(),ex);
+        } catch (DuplicityException ex) {
+            fc.addMessage("signUpForm", ViewHelper.getExceptionFacesMessage(ex));
             return "failure";
-	}
+        } catch (MultipleMessagesException ex) {
+            fc.addMessage("signUpForm", ViewHelper.getExceptionFacesMessage(ex));
+            return "failure";
+        }
     }
 }

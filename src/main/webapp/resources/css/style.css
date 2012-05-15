@@ -39,11 +39,46 @@ body {
 	height: 60px;
 }
 
-#header .logo {
-	background-image: url(../resources/images/iudex.png);
-	background-repeat: no-repeat;
-	width: 150px;
-	height: 93px;
+div.big-media {
+    background-image: url(../resources/images/big-media.png);
+    background-repeat: no-repeat;
+    background-position-x: center;
+    height: 340px;
+}
+
+div.share-icon {
+    background-image: url(../resources/images/share.png);
+    background-position: center top;
+    background-repeat: no-repeat;
+    height: 128px;
+}
+
+div.comment-icon {
+    background-image: url(../resources/images/comment.png);
+    background-position: center top;
+    background-repeat: no-repeat;
+    height: 128px;
+}
+
+div.rate-icon {
+    background-image: url(../resources/images/rate.png);
+    background-position: center top;
+    background-repeat: no-repeat;
+    height: 128px;
+}
+
+ul.alert {
+    margin-left: 0;
+    padding-left: 30px;
+}
+
+.navbar form {
+    margin-bottom: 0;
+}
+
+pre.stack-trace {
+    padding: 20px;
+    background-color: white;
 }
 
 .panel {
@@ -55,18 +90,7 @@ body {
 	padding: 30px;
 	border: solid 1px #cccccc;
 }
-
-input[type=text], input[type=password], select, textarea {
-	padding: 3px 6px;
-	border-radius: 5px;
-	border: solid 1px #cccccc;
-	background-color: white;
-}
-
-input[type=submit], input[type=buton]{
-	padding: 3px 7px;
-}
-
+/*
 label:not(.no-dots):after, dt:after {
 	content: ":";
 }
@@ -78,6 +102,7 @@ dt {
 dd {
 	padding-left: 20px;
 }
+*/
 
 .subject, .professor {
 	margin-bottom: 10px;

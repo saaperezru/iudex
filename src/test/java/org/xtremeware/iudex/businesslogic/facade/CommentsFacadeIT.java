@@ -41,9 +41,7 @@ public class CommentsFacadeIT {
     @Before
     public void setUp() {
 
-        EntityManagerFactory entityManagerFactory = Persistence.
-                createEntityManagerFactory("org.xtremeware.iudex_local");
-        entityManager = entityManagerFactory.createEntityManager();
+        entityManager = FacadesTestHelper.createEntityManagerFactory().createEntityManager();
 
     }
 
@@ -65,7 +63,7 @@ public class CommentsFacadeIT {
         commentVo.setCourseId(4L);
         commentVo.setDate(new Date(100L));
         commentVo.setRating(3F);
-        commentVo.setUserId(1L);
+        commentVo.setUserId(2L);
         CommentsFacade commentsFacade = Config.getInstance().getFacadeFactory().
                 getCommentsFacade();
         CommentVo result = commentsFacade.addComment(commentVo);

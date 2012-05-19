@@ -23,11 +23,11 @@ public class CourseRatingDao extends CrudDao<CourseRatingEntity> implements Cour
      * courseId
      */
     @Override
-    public List<CourseRatingEntity> getByCourseId(EntityManager em, Long courseId)
+    public List<CourseRatingEntity> getByCourseId(EntityManager entityManager, Long courseId)
             throws DataBaseException {
-        checkEntityManager(em);
+        checkEntityManager(entityManager);
         try {
-            return em.createNamedQuery("getCourseRatingByCourseId", CourseRatingEntity.class).setParameter("courseId", courseId).getResultList();
+            return entityManager.createNamedQuery("getCourseRatingByCourseId", CourseRatingEntity.class).setParameter("courseId", courseId).getResultList();
         } catch (Exception e) {
             throw new DataBaseException(e.getMessage(), e.getCause());
         }
@@ -37,17 +37,17 @@ public class CourseRatingDao extends CrudDao<CourseRatingEntity> implements Cour
      * Returns a CourseRating entity which have the given course and user mapped
      * by the respective Id.
      *
-     * @param em the entity manager
+     * @param entityManager the entity manager
      * @param courseId id of the course
      * @param userId id of the user
      * @return CourseRatingEntity with the indicated user and course
      */
     @Override
-    public CourseRatingEntity getByCourseIdAndUserId(EntityManager em,
+    public CourseRatingEntity getByCourseIdAndUserId(EntityManager entityManager,
             Long courseId, Long userId) throws DataBaseException {
-        checkEntityManager(em);
+        checkEntityManager(entityManager);
         try {
-            return em.createNamedQuery("getCourseRatingByCourseIdAndUserId", CourseRatingEntity.class).
+            return entityManager.createNamedQuery("getCourseRatingByCourseIdAndUserId", CourseRatingEntity.class).
                     setParameter("courseId", courseId).setParameter("userId", userId).getSingleResult();
         } catch (NoResultException noResultException) {
             return null;
@@ -60,17 +60,17 @@ public class CourseRatingDao extends CrudDao<CourseRatingEntity> implements Cour
      * Returns a list of CourseRating entities which has the same indicated
      * user.
      *
-     * @param em the entity manager
+     * @param entityManager the entity manager
      * @param userId id of the user
      * @return a list of CourseRating entities with a course identified by
      * userId
      */
     @Override
-    public List<CourseRatingEntity> getByUserId(EntityManager em, Long userId)
+    public List<CourseRatingEntity> getByUserId(EntityManager entityManager, Long userId)
             throws DataBaseException {
-        checkEntityManager(em);
+        checkEntityManager(entityManager);
         try {
-            return em.createNamedQuery("getCourseRatingByUserId", CourseRatingEntity.class).setParameter("userId", userId).getResultList();
+            return entityManager.createNamedQuery("getCourseRatingByUserId", CourseRatingEntity.class).setParameter("userId", userId).getResultList();
         } catch (Exception e) {
             throw new DataBaseException(e.getMessage(), e.getCause());
         }

@@ -44,9 +44,9 @@ public class SubjectRatingsService extends CrudService<SubjectRatingVo, SubjectR
         } else if (getDaoFactory().getSubjectDao().getById(em, vo.getEvaluatedObjectId()) == null) {
             multipleMessageException.addMessage("subjectRating.subjectId.element.notFound");
         }
-        if (vo.getUser() == null) {
+        if (vo.getUserId() == null) {
             multipleMessageException.addMessage("subjectRating.userId.null");
-        } else if (getDaoFactory().getUserDao().getById(em, vo.getUser()) == null) {
+        } else if (getDaoFactory().getUserDao().getById(em, vo.getUserId()) == null) {
             multipleMessageException.addMessage("subjectRating.userId.element.notFound");
         }
         if (!multipleMessageException.getMessages().isEmpty()) {
@@ -62,7 +62,7 @@ public class SubjectRatingsService extends CrudService<SubjectRatingVo, SubjectR
         entity.setId(vo.getId());
         entity.setSubject(getDaoFactory().getSubjectDao().getById(em,
                 vo.getEvaluatedObjectId()));
-        entity.setUser(getDaoFactory().getUserDao().getById(em, vo.getUser()));
+        entity.setUser(getDaoFactory().getUserDao().getById(em, vo.getUserId()));
         entity.setValue(vo.getValue());
         return entity;
     }
@@ -80,7 +80,7 @@ public class SubjectRatingsService extends CrudService<SubjectRatingVo, SubjectR
             throws DataBaseException {
         List<SubjectRatingVo> list = new ArrayList<SubjectRatingVo>();
         for (SubjectRatingEntity rating : getDaoFactory().getSubjectRatingDao().
-                getBySubjectId(em, subjectId)) {
+                getByEvaluatedObjectId(em, subjectId)) {
             list.add(rating.toVo());
         }
         return list;
@@ -100,7 +100,8 @@ public class SubjectRatingsService extends CrudService<SubjectRatingVo, SubjectR
     public SubjectRatingVo getBySubjectIdAndUserId(EntityManager em,
             long subjectId, long userId)
             throws DataBaseException {
-        SubjectRatingEntity subjectRatingEntity = getDaoFactory().getSubjectRatingDao().getBySubjectIdAndUserId(em, subjectId, userId);
+        SubjectRatingEntity subjectRatingEntity = getDaoFactory().getSubjectRatingDao().
+                getByEvaluatedObjectIdAndUserId(em, subjectId, userId);
 
         if (subjectRatingEntity == null) {
             return null;

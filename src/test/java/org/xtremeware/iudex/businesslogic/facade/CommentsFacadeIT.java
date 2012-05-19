@@ -191,7 +191,7 @@ public class CommentsFacadeIT {
         assertNotNull(commentRatingVo.getId());
         assertEquals(value, commentRatingVo.getValue());
         assertEquals(commmendId, commentRatingVo.getEvaluatedObjectId());
-        assertEquals(userId, commentRatingVo.getUser());
+        assertEquals(userId, commentRatingVo.getUserId());
         int size = entityManager.createQuery(
                 "SELECT COUNT(c) FROM CommentRating c WHERE c.id = :id",
                 Long.class).
@@ -259,12 +259,12 @@ public class CommentsFacadeIT {
         assertNotNull(commentRatingVo);
         assertEquals(value, commentRatingVo.getValue());
         assertEquals(commmendId, commentRatingVo.getEvaluatedObjectId());
-        assertEquals(userId, commentRatingVo.getUser());
+        assertEquals(userId, commentRatingVo.getUserId());
         value = -1;
         CommentRatingVo result = commentsFacade.rateComment(commmendId, userId,
                 value);
         assertEquals(commentRatingVo.getId(), result.getId());
-        assertEquals(commentRatingVo.getUser(), result.getUser());
+        assertEquals(commentRatingVo.getUserId(), result.getUserId());
         assertEquals(commentRatingVo.getEvaluatedObjectId(), result.getEvaluatedObjectId());
         assertEquals(value, result.getValue());
     }
@@ -281,12 +281,12 @@ public class CommentsFacadeIT {
         assertNotNull(commentRatingVo);
         assertEquals(value, commentRatingVo.getValue());
         assertEquals(commmendId, commentRatingVo.getEvaluatedObjectId());
-        assertEquals(userId, commentRatingVo.getUser());
+        assertEquals(userId, commentRatingVo.getUserId());
         value = 1;
         CommentRatingVo result = commentsFacade.rateComment(commmendId, userId,
                 value);
         assertEquals(commentRatingVo.getId(), result.getId());
-        assertEquals(commentRatingVo.getUser(), result.getUser());
+        assertEquals(commentRatingVo.getUserId(), result.getUserId());
         assertEquals(commentRatingVo.getEvaluatedObjectId(), result.getEvaluatedObjectId());
         assertEquals(commentRatingVo.getValue(), result.getValue());
     }
@@ -374,7 +374,7 @@ public class CommentsFacadeIT {
                 getCommentRatingByUserId(commentId, userId);
         assertNotNull(commentRatingByUserId);
         assertEquals(commentId, commentRatingByUserId.getEvaluatedObjectId());
-        assertEquals(userId, commentRatingByUserId.getUser());
+        assertEquals(userId, commentRatingByUserId.getUserId());
         int value =
                 entityManager.createQuery(
                 "SELECT c.value FROM CommentRating c WHERE c.comment.id = :commentId AND c.user.id = :userId",

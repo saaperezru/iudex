@@ -17,17 +17,17 @@ public class ProfessorDao extends CrudDao<ProfessorEntity> implements ProfessorD
     /**
      * Professors finder according to a required name
      *
-     * @param em the entity manager
+     * @param entityManager the entity manager
      * @param name Professor's first-name or last-name
      * @return List of professors whose first-name or last-name are equal to the
      * specified
      */
     @Override
-    public List<ProfessorEntity> getByNameLike(EntityManager em, String name)
+    public List<ProfessorEntity> getByNameLike(EntityManager entityManager, String name)
             throws DataBaseException {
-        checkEntityManager(em);
+        checkEntityManager(entityManager);
         try {
-            return em.createNamedQuery("getProfessorByNameLike", ProfessorEntity.class).setParameter("name", "%"+name+"%").getResultList();
+            return entityManager.createNamedQuery("getProfessorByNameLike", ProfessorEntity.class).setParameter("name", "%"+name+"%").getResultList();
         } catch (Exception e) {
             throw new DataBaseException(e.getMessage(), e.getCause());
         }

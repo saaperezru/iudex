@@ -6,18 +6,18 @@ import org.xtremeware.iudex.vo.ProfessorRatingVo;
 
 @javax.persistence.Entity(name = "ProfessorRating")
 @NamedQueries({
-    @NamedQuery(name = "getRatingByProfessorId",
-    query = "SELECT r FROM ProfessorRating r WHERE r.professor.id = :professor"),
-    @NamedQuery(name = "getRatingByProfessorIdAndUserId",
-    query = "SELECT r FROM ProfessorRating r WHERE r.professor.id = :professor AND r.user.id = :user"),
-    @NamedQuery(name = "getRatingByUserId",
-    query = "SELECT r FROM ProfessorRating r WHERE r.user.id = :user"),
+    @NamedQuery(name = "getProfessorRatingByProfessorId",
+    query = "SELECT r FROM ProfessorRating r WHERE r.professor.id = :evaluatedObjectId"),
+    @NamedQuery(name = "getProfessorRatingByProfessorIdAndUserId",
+    query = "SELECT r FROM ProfessorRating r WHERE r.professor.id = :evaluatedObjectId AND r.user.id = :userId"),
+    @NamedQuery(name = "getProfessorRatingByUserId",
+    query = "SELECT r FROM ProfessorRating r WHERE r.user.id = :userId"),
     @NamedQuery(name = "countPositiveProfessorRating",
     query = "SELECT COUNT (result) FROM ProfessorRating result "
-    + "WHERE result.professor.id = :professorId AND result.value = 1"),
+    + "WHERE result.professor.id = :evaluatedObjectId AND result.value = 1"),
     @NamedQuery(name = "countNegativeProfessorRating",
     query = "SELECT COUNT (result) FROM ProfessorRating result "
-    + "WHERE result.professor.id = :professorId AND result.value = -1")})
+    + "WHERE result.professor.id = :evaluatedObjectId AND result.value = -1")})
 @Table(name = "PROFESSOR_RATING")
 public class ProfessorRatingEntity implements Serializable, Entity<ProfessorRatingVo> {
 
@@ -41,7 +41,7 @@ public class ProfessorRatingEntity implements Serializable, Entity<ProfessorRati
 
         vo.setId(getId());
         vo.setEvaluatedObjectId(getProfessor().getId());
-        vo.setUser(getUser().getId());
+        vo.setUserId(getUser().getId());
         vo.setValue(getValue());
 
         return vo;

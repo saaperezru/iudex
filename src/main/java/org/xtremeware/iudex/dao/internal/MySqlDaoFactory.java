@@ -1,20 +1,9 @@
 package org.xtremeware.iudex.dao.internal;
 
-import org.xtremeware.iudex.dao.AbstractDaoFactory;
-import org.xtremeware.iudex.dao.CommentDaoInterface;
-import org.xtremeware.iudex.dao.CommentRatingDaoInterface;
-import org.xtremeware.iudex.dao.ConfirmationKeyDaoInterface;
-import org.xtremeware.iudex.dao.CourseDaoInterface;
-import org.xtremeware.iudex.dao.CourseRatingDaoInterface;
-import org.xtremeware.iudex.dao.FeedbackDaoInterface;
-import org.xtremeware.iudex.dao.FeedbackTypeDaoInterface;
-import org.xtremeware.iudex.dao.PeriodDaoInterface;
-import org.xtremeware.iudex.dao.ProfessorDaoInterface;
-import org.xtremeware.iudex.dao.ProfessorRatingDaoInterface;
-import org.xtremeware.iudex.dao.ProgramDaoInterface;
-import org.xtremeware.iudex.dao.SubjectDaoInterface;
-import org.xtremeware.iudex.dao.SubjectRatingDaoInterface;
-import org.xtremeware.iudex.dao.UserDaoInterface;
+import org.xtremeware.iudex.dao.*;
+import org.xtremeware.iudex.entity.CommentRatingEntity;
+import org.xtremeware.iudex.entity.ProfessorRatingEntity;
+import org.xtremeware.iudex.entity.SubjectRatingEntity;
 
 /**
  * DAO factory for a MySQL persistence unit
@@ -24,7 +13,7 @@ import org.xtremeware.iudex.dao.UserDaoInterface;
 public class MySqlDaoFactory implements AbstractDaoFactory {
 
     private CommentDaoInterface commentDao;
-    private CommentRatingDaoInterface commentRatingDao;
+    private BinaryRatingDaoInterface<CommentRatingEntity> commentRatingDao;
     private ConfirmationKeyDaoInterface confirmationKeyDao;
     private CourseDaoInterface courseDao;
     private CourseRatingDaoInterface courseRatingDao;
@@ -32,10 +21,10 @@ public class MySqlDaoFactory implements AbstractDaoFactory {
     private FeedbackTypeDaoInterface feedbackTypeDao;
     private PeriodDaoInterface periodDao;
     private ProfessorDaoInterface professorDao;
-    private ProfessorRatingDaoInterface professorRatingDao;
+    private BinaryRatingDaoInterface<ProfessorRatingEntity> professorRatingDao;
     private ProgramDaoInterface programDao;
     private SubjectDaoInterface subjectDao;
-    private SubjectRatingDaoInterface subjectRatingDao;
+    private BinaryRatingDaoInterface<SubjectRatingEntity> subjectRatingDao;
     private UserDaoInterface userDao;
     private static MySqlDaoFactory instance;
 
@@ -58,7 +47,7 @@ public class MySqlDaoFactory implements AbstractDaoFactory {
     }
 
     @Override
-    public CommentRatingDaoInterface getCommentRatingDao() {
+    public BinaryRatingDaoInterface<CommentRatingEntity> getCommentRatingDao() {
         if (commentRatingDao == null) {
             commentRatingDao = new CommentRatingDao();
         }
@@ -122,7 +111,7 @@ public class MySqlDaoFactory implements AbstractDaoFactory {
     }
 
     @Override
-    public ProfessorRatingDaoInterface getProfessorRatingDao() {
+    public BinaryRatingDaoInterface<ProfessorRatingEntity> getProfessorRatingDao() {
         if (professorRatingDao == null) {
             professorRatingDao = new ProfessorRatingDao();
         }
@@ -146,7 +135,7 @@ public class MySqlDaoFactory implements AbstractDaoFactory {
     }
 
     @Override
-    public SubjectRatingDaoInterface getSubjectRatingDao() {
+    public BinaryRatingDaoInterface<SubjectRatingEntity> getSubjectRatingDao() {
         if (subjectRatingDao == null) {
             subjectRatingDao = new SubjectRatingDao();
         }

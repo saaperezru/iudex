@@ -64,10 +64,10 @@ public class CommentRatingsService extends CrudService<CommentRatingVo, CommentR
             multipleMessageException.addMessage(
                     "commentRating.commentId.element.notFound");
         }
-        if (vo.getUser() == null) {
+        if (vo.getUserId() == null) {
             multipleMessageException.addMessage(
                     "commentRating.userId.null");
-        } else if (getDaoFactory().getUserDao().getById(em, vo.getUser()) ==
+        } else if (getDaoFactory().getUserDao().getById(em, vo.getUserId()) ==
                 null) {
             multipleMessageException.addMessage(
                     "commentRating.userId.element.notFound");
@@ -102,7 +102,7 @@ public class CommentRatingsService extends CrudService<CommentRatingVo, CommentR
         commentRatingEntity.setValue(vo.getValue());
 
         commentRatingEntity.setUser(this.getDaoFactory().getUserDao().getById(em,
-                vo.getUser()));
+                vo.getUserId()));
         commentRatingEntity.setComment(this.getDaoFactory().getCommentDao().
                 getById(em, vo.getEvaluatedObjectId()));
 
@@ -121,7 +121,7 @@ public class CommentRatingsService extends CrudService<CommentRatingVo, CommentR
     public CommentRatingVo getByCommentIdAndUserId(EntityManager em,
             long commentId, long userId) throws DataBaseException {
         CommentRatingEntity commentRatingEntity = this.getDaoFactory().
-                getCommentRatingDao().getByCommentIdAndUserId(em, commentId,
+                getCommentRatingDao().getByEvaluatedObjectIdAndUserId(em, commentId,
                 userId);
         if (commentRatingEntity == null) {
             return null;

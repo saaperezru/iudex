@@ -11,17 +11,17 @@ public abstract class CrudDao<E extends Entity> implements CrudDaoInterface<E> {
 
     /**
      * Returns the same received Entity after being persisted in the
-     * EntityManager em
+     * EntityManager entityManager
      *
-     * @param em EntityManager with which the entity will be persisted
+     * @param entityManager EntityManager with which the entity will be persisted
      * @param entity Entity that will be persisted
      * @return The received entity after being persisted
      */
     @Override
-    public E persist(EntityManager em, E entity) throws DataBaseException {
-        checkEntityManager(em);
+    public E persist(EntityManager entityManager, E entity) throws DataBaseException {
+        checkEntityManager(entityManager);
         try {
-            em.persist(entity);
+            entityManager.persist(entity);
         } catch (PersistenceException ex) {
             // TODO: Resolve this hibernate coupling
             if (ex.getCause() instanceof ConstraintViolationException) {
@@ -35,17 +35,17 @@ public abstract class CrudDao<E extends Entity> implements CrudDaoInterface<E> {
     }
 
     /**
-     * Returns the received Entity after being merged in the EntityManager em
+     * Returns the received Entity after being merged in the EntityManager entityManager
      *
-     * @param em EntityManager with which the entity will be persisted
+     * @param entityManager EntityManager with which the entity will be persisted
      * @param entity Entity that will be merged
      * @return The received entity after being merged and persisted
      */
     @Override
-    public E merge(EntityManager em, E entity) throws DataBaseException {
-        checkEntityManager(em);
+    public E merge(EntityManager entityManager, E entity) throws DataBaseException {
+        checkEntityManager(entityManager);
         try {
-            return em.merge(entity);
+            return entityManager.merge(entity);
         } catch (Exception e) {
             throw new DataBaseException(e.getMessage(), e.getCause());
         }
@@ -54,18 +54,18 @@ public abstract class CrudDao<E extends Entity> implements CrudDaoInterface<E> {
     /**
      * Deletes the entity identified by id within the received EntityManager
      *
-     * @param em EntityManager with which the entity will be deleted
+     * @param entityManager EntityManager with which the entity will be deleted
      */
     @Override
-    public void remove(EntityManager em, long id) throws DataBaseException {
-        checkEntityManager(em);
-        E entity = getById(em, id);
+    public void remove(EntityManager entityManager, long id) throws DataBaseException {
+        checkEntityManager(entityManager);
+        E entity = getById(entityManager, id);
         if (entity == null) {
             throw new DataBaseException("No entity found for id " + String.valueOf(id)
                     + "while triying to delete the associated record");
         }
         try {
-            em.remove(entity);
+            entityManager.remove(entity);
         } catch (Exception e) {
             throw new DataBaseException(e.getMessage(), e.getCause());
         }
@@ -75,15 +75,15 @@ public abstract class CrudDao<E extends Entity> implements CrudDaoInterface<E> {
     /**
      * Returns an Entity whose Id is equal to the received id.
      *
-     * @param em EntityManager within which the entity will be searched
+     * @param entityManager EntityManager within which the entity will be searched
      * @param entity Entity that will be searched
      * @return The received entity after being merged and persisted
      */
     @Override
-    public E getById(EntityManager em, long id) throws DataBaseException {
-        checkEntityManager(em);
+    public E getById(EntityManager entityManager, long id) throws DataBaseException {
+        checkEntityManager(entityManager);
         try {
-            return (E) em.find(getEntityClass(), id);
+            return (E) entityManager.find(getEntityClass(), id);
         } catch (Exception e) {
             throw new DataBaseException(e.getMessage(), e.getCause());
         }
@@ -91,8 +91,8 @@ public abstract class CrudDao<E extends Entity> implements CrudDaoInterface<E> {
 
     }
 
-    protected void checkEntityManager(EntityManager em) {
-        if (em == null) {
+    protected void checkEntityManager(EntityManager entityManager) {
+        if (entityManager == null) {
             throw new IllegalArgumentException("EntityManager em cannot be null");
         }
     }

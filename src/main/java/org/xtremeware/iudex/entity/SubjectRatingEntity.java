@@ -8,19 +8,19 @@ import org.xtremeware.iudex.vo.SubjectRatingVo;
 @NamedQueries({
     @NamedQuery(name = "getSubjectRatingBySubjectId",
     query = "SELECT result FROM SubjectRating result "
-    + "WHERE result.subject.id = :subjectId"),
+    + "WHERE result.subject.id = :evaluatedObjectId"),
     @NamedQuery(name = "getSubjectRatingBySubjectIdAndUserId",
     query = "SELECT result FROM SubjectRating result "
-    + "WHERE result.subject.id = :subjectId AND result.user.id = :userId"),
-    @NamedQuery(name = "getSubjectRatingByUserId",
+    + "WHERE result.subject.id = :evaluatedObjectId AND result.user.id = :userId"),
+    @NamedQuery(name = "getSubjectRatingByIdUser",
     query = "SELECT result FROM SubjectRating result "
     + "WHERE result.user.id = :user"),
     @NamedQuery(name = "countPositiveSubjectRating",
     query = "SELECT COUNT (result) FROM SubjectRating result "
-    + "WHERE result.subject.id = :subjectId AND result.value = 1"),
+    + "WHERE result.subject.id = :evaluatedObjectId AND result.value = 1"),
     @NamedQuery(name = "countNegativeSubjectRating",
     query = "SELECT COUNT (result) FROM SubjectRating result "
-    + "WHERE result.subject.id = :subjectId AND result.value = -1")
+    + "WHERE result.subject.id = :evaluatedObjectId AND result.value = -1")
 })
 @Table(name = "SUBJECT_RATING")
 public class SubjectRatingEntity implements Serializable, Entity<SubjectRatingVo> {
@@ -45,7 +45,7 @@ public class SubjectRatingEntity implements Serializable, Entity<SubjectRatingVo
 
         vo.setId(this.getId());
         vo.setEvaluatedObjectId(this.getSubject().getId());
-        vo.setUser(this.getUser().getId());
+        vo.setUserId(this.getUser().getId());
         vo.setValue(this.getValue());
 
         return vo;

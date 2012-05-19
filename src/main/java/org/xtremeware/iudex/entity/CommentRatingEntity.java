@@ -8,17 +8,17 @@ import org.xtremeware.iudex.vo.CommentRatingVo;
 @NamedQueries({
     @NamedQuery(name = "getCommentRatingByCommentId",
     query = "SELECT result FROM CommentRating result "
-    + "WHERE result.comment.id = :commentId"),
+    + "WHERE result.comment.id = :evaluatedObjectId"),
     @NamedQuery(name = "getCommentRatingByCommentIdAndUserId",
     query = "SELECT result FROM CommentRating result "
-    + "WHERE result.comment.id = :commentId AND result.user.id = :userId"),
+    + "WHERE result.comment.id = :evaluatedObjectId AND result.user.id = :userId"),
     @NamedQuery(name = "getCommentRatingByUserId",
     query = "SELECT result FROM CommentRating result "
     + "WHERE result.user.id = :userId"),
     @NamedQuery(name = "countPositiveCommentRating", query = "SELECT COUNT(result) FROM CommentRating result "
-    + "WHERE result.comment.id = :commentId AND result.value = 1"),
+    + "WHERE result.comment.id = :evaluatedObjectId AND result.value = 1"),
     @NamedQuery(name = "countNegativeCommentRating", query = "SELECT COUNT(result) FROM CommentRating result "
-    + "WHERE result.comment.id = :commentId AND result.value = -1")
+    + "WHERE result.comment.id = :evaluatedObjectId AND result.value = -1")
 })
 @Table(name = "COMMENT_RATING")
 public class CommentRatingEntity implements Serializable, Entity<CommentRatingVo> {
@@ -42,7 +42,7 @@ public class CommentRatingEntity implements Serializable, Entity<CommentRatingVo
         CommentRatingVo vo = new CommentRatingVo();
         vo.setId(getId());
         vo.setEvaluatedObjectId(getComment().getId());
-        vo.setUser(getUser().getId());
+        vo.setUserId(getUser().getId());
         vo.setValue(getValue());
         return vo;
     }

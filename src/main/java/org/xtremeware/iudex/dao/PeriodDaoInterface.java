@@ -18,28 +18,28 @@ public interface PeriodDaoInterface extends CrudDaoInterface<PeriodEntity> {
      * @param em the entity manager
      * @return a list with all the periods
      */
-    public List<PeriodEntity> getAll(EntityManager em)
+    public List<PeriodEntity> getAll(EntityManager entityManager)
             throws DataBaseException;
 
     /**
      * Returns a list of period entities which year is equal to the year
      * argument
      *
-     * @param em the entity manager
+     * @param entityManager the entity manager
      * @param year the year
      * @return a list of matched period entities
      */
-    public List<PeriodEntity> getByYear(EntityManager em, int year)
+    public List<PeriodEntity> getByYear(EntityManager entityManager, int year)
             throws DataBaseException;
 
     /**
      * Returns a period entity which year and semester match the given arguments
      *
-     * @param em the entity manager
+     * @param entityManager the entity manager
      * @param year the year
      * @param semester the semester
      * @return the matched period entity or null if there is no such entity
      */
-    public PeriodEntity getByYearAndSemester(EntityManager em, int year, int semester)
-            throws DataBaseException;
+    public PeriodEntity getByYearAndSemester(EntityManager entityManager, int year,
+            int semester) throws DataBaseException;
 }

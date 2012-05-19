@@ -15,13 +15,13 @@ public interface FeedbackTypeDaoInterface extends CrudDaoInterface<FeedbackTypeE
     /**
      * Returns a feedback type entity which name matches the given name
      *
-     * @param em the entity manager
+     * @param entityManager the entity manager
      * @param name the name
      * @return a feedback type entity
      */
-    public FeedbackTypeEntity getByName(EntityManager em, String name)
+    public FeedbackTypeEntity getByName(EntityManager entityManager, String name)
             throws DataBaseException;
 
-    public List<FeedbackTypeEntity> getAll(EntityManager em)
+    public List<FeedbackTypeEntity> getAll(EntityManager entityManager)
             throws DataBaseException;
 }

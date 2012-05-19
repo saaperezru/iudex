@@ -7,7 +7,8 @@ import org.xtremeware.iudex.vo.ProfessorVo;
 
 @javax.persistence.Entity(name = "Professor")
 @NamedQueries({
-    @NamedQuery(name = "getProfessorByNameLike", query = "SELECT p FROM Professor p WHERE UPPER(p.firstName) LIKE :name OR UPPER(p.lastName) LIKE :name")
+    @NamedQuery(name = "getProfessorByNameLike",
+    query = "SELECT p FROM Professor p WHERE UPPER(p.firstName) LIKE :name OR UPPER(p.lastName) LIKE :name")
 })
 @Table(name = "PROFESSOR",
 uniqueConstraints = {

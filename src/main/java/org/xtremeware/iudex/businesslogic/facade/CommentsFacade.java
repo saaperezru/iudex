@@ -13,6 +13,7 @@ import org.xtremeware.iudex.businesslogic.service.ServiceFactory;
 import org.xtremeware.iudex.helper.MultipleMessagesException;
 import org.xtremeware.iudex.presentation.vovw.CommentVoVwFull;
 import org.xtremeware.iudex.presentation.vovw.UserVoVwSmall;
+import org.xtremeware.iudex.presentation.vovw.VoVwFactory;
 import org.xtremeware.iudex.vo.*;
 
 public class CommentsFacade extends AbstractFacade {
@@ -66,26 +67,28 @@ public class CommentsFacade extends AbstractFacade {
 
     public List<CommentVoVwFull> getCommentsByCourseId(long courseId) {
         EntityManager em = null;
-        List<CommentVoVwFull> result = new ArrayList<CommentVoVwFull>();
+        List<CommentVoVwFull> commentVoVwFulls = new ArrayList<CommentVoVwFull>();
         try {
             em = getEntityManagerFactory().createEntityManager();
 
             List<CommentVo> comments = getServiceFactory().createCommentsService().
                     getByCourseId(em, courseId);
+
             HashMap<Long, UserVoVwSmall> users =
                     new HashMap<Long, UserVoVwSmall>();
 
-            for (CommentVo c : comments) {
-                if (!users.containsKey(c.getUserId())) {
-                    UserVo vo = getServiceFactory().createUsersService().getById(
-                            em, c.getUserId());
-                    UserVoVwSmall uservo = new UserVoVwSmall(courseId, vo.getFirstName() + " " + vo.getLastName(), vo.getUserName());
-                    uservo = users.put(c.getUserId(), uservo);
+            for (CommentVo commentVo : comments) {
+                if (!users.containsKey(commentVo.getUserId())) {
+                    users.put(commentVo.getUserId(), VoVwFactory.getUserVoVwSmall(courseId,
+                            getServiceFactory().createUsersService().getById(em,
+                            commentVo.getUserId())));
                 }
-                if (c.isAnonymous()) {
-                    result.add(new CommentVoVwFull(c, null,getCommentRatingSummary(c.getId())));
+                if (commentVo.isAnonymous()) {
+                    commentVoVwFulls.add(VoVwFactory.getCommentVoVwFull(commentVo,
+                            null, getCommentRatingSummary(commentVo.getId())));
                 } else {
-                    result.add(new CommentVoVwFull(c, users.get(c.getId()),getCommentRatingSummary(c.getId())));
+                    commentVoVwFulls.add(VoVwFactory.getCommentVoVwFull(commentVo,
+                            users.get(commentVo.getId()), getCommentRatingSummary(commentVo.getId())));
                 }
             }
 
@@ -95,7 +98,7 @@ public class CommentsFacade extends AbstractFacade {
         } finally {
             FacadesHelper.closeEntityManager(em);
         }
-        return result;
+        return commentVoVwFulls;
     }
 
     public RatingSummaryVo getCommentRatingSummary(long commentId) {
@@ -114,7 +117,7 @@ public class CommentsFacade extends AbstractFacade {
         return summary;
     }
 
-    public CommentRatingVo getCommentRatingByUserId(long commentId, long userId){
+    public CommentRatingVo getCommentRatingByUserId(long commentId, long userId) {
         EntityManager em = null;
         CommentRatingVo rating = null;
         try {
@@ -144,7 +147,7 @@ public class CommentsFacade extends AbstractFacade {
             if (rating == null) {
                 rating = new CommentRatingVo();
                 rating.setEvaluatedObjectId(commentId);
-                rating.setUser(userId);
+                rating.setUserId(userId);
                 rating.setValue(value);
                 rating = getServiceFactory().createCommentRatingService().create(
                         em, rating);

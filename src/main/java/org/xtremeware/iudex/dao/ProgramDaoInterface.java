@@ -14,13 +14,13 @@ public interface ProgramDaoInterface extends CrudDaoInterface<ProgramEntity> {
     /**
      * Search a program which name contains the given parameter name
      *
-     * @param em the entity manager
+     * @param entityManager the entity manager
      * @param name
      * @return Return a list of programEntity objects
      */
-    public List<ProgramEntity> getByNameLike(EntityManager em, String name) throws
+    public List<ProgramEntity> getByNameLike(EntityManager entityManager, String name) throws
             DataBaseException;
 
-    public List<ProgramEntity> getAll(EntityManager em) throws
+    public List<ProgramEntity> getAll(EntityManager entityManager) throws
             DataBaseException;
 }

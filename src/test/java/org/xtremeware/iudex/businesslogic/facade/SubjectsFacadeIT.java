@@ -61,7 +61,7 @@ public class SubjectsFacadeIT {
                     userId);
 
             assertNotNull(subjectRatingVo);
-            assertEquals(subjectRatingVo.getUser(),
+            assertEquals(subjectRatingVo.getUserId(),
                     userId);
             assertEquals(subjectRatingVo.getEvaluatedObjectId(),
                     subjects[i]);

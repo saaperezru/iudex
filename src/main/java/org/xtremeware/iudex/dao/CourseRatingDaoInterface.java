@@ -15,35 +15,35 @@ public interface CourseRatingDaoInterface extends CrudDaoInterface<CourseRatingE
      * Returns a list of CourseRating entities which has the same indicated
      * course.
      *
-     * @param em the entity manager
+     * @param entityManager the entity manager
      * @param courseId id of the course
      * @return a list of CourseRating entities with a course identified by
      * courseId
      */
-    public List<CourseRatingEntity> getByCourseId(EntityManager em, Long courseId)
+    public List<CourseRatingEntity> getByCourseId(EntityManager entityManager, Long courseId)
             throws DataBaseException;
 
     /**
      * Returns a CourseRating entity which have the given course and user mapped
      * by the respective Id.
      *
-     * @param em the entity manager
+     * @param entityManager the entity manager
      * @param courseId id of the course
      * @param userId id of the user
      * @return CourseRatingEntity with the indicated user and course
      */
-    public CourseRatingEntity getByCourseIdAndUserId(EntityManager em, Long courseId, Long userId)
+    public CourseRatingEntity getByCourseIdAndUserId(EntityManager entityManager, Long courseId, Long userId)
             throws DataBaseException;
 
     /**
      * Returns a list of CourseRating entities which has the same indicated
      * user.
      *
-     * @param em the entity manager
+     * @param entityManager the entity manager
      * @param userId id of the user
      * @return a list of CourseRating entities with a course identified by
      * userId
      */
-    public List<CourseRatingEntity> getByUserId(EntityManager em, Long userId)
+    public List<CourseRatingEntity> getByUserId(EntityManager entityManager, Long userId)
             throws DataBaseException;
 }

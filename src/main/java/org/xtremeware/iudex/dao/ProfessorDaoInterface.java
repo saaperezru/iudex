@@ -15,21 +15,21 @@ public interface ProfessorDaoInterface extends CrudDaoInterface<ProfessorEntity>
     /**
      * Professors finder according to a required name
      *
-     * @param em the entity manager
+     * @param entityManager the entity manager
      * @param name Professor's first-name or last-name
      * @return List of professors whose first-name or last-name are equal to the
      * specified
      */
-    public List<ProfessorEntity> getByNameLike(EntityManager em, String name)
+    public List<ProfessorEntity> getByNameLike(EntityManager entityManager, String name)
             throws DataBaseException;
 
     /**
      * Professors finder according to the subjects they offer
      *
-     * @param em the entity manager
+     * @param entityManager the entity manager
      * @param subjectId The ID of the required subject
      * @return A list of professors that impart the subject
      */
-    public List<ProfessorEntity> getBySubjectId(EntityManager em, long subjectId)
+    public List<ProfessorEntity> getBySubjectId(EntityManager entityManager, long subjectId)
             throws DataBaseException;
 }

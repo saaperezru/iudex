@@ -7,8 +7,10 @@ import org.xtremeware.iudex.vo.FeedbackTypeVo;
 
 @javax.persistence.Entity(name = "FeedbackType")
 @NamedQueries({
-    @NamedQuery(name = "getFeedbackTypeByName", query = "SELECT ft FROM FeedbackType ft WHERE ft.name = :name"),
-    @NamedQuery(name = "getAllFeedbackType", query = "SELECT ft FROM FeedbackType ft")})
+    @NamedQuery(name = "getFeedbackTypeByName",
+    query = "SELECT ft FROM FeedbackType ft WHERE ft.name = :name"),
+    @NamedQuery(name = "getAllFeedbackType",
+    query = "SELECT ft FROM FeedbackType ft")})
 @Table(name = "TYPE_FEEDBACK",
 uniqueConstraints = {
     @UniqueConstraint(columnNames = {"NAME"})})
@@ -32,7 +34,6 @@ public class FeedbackTypeEntity implements Serializable, Entity<FeedbackTypeVo> 
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof FeedbackTypeEntity)) {
             return false;
         }

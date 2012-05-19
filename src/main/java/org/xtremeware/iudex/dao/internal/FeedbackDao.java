@@ -18,28 +18,28 @@ public class FeedbackDao extends CrudDao<FeedbackEntity> implements FeedbackDaoI
      * Returns a list of Feedback with a type corresponding to the specified
      * feedbackTypeId
      *
-     * @param em EntityManager with which the entities will be searched
+     * @param entityManager EntityManager with which the entities will be searched
      * @param feedbackTypeId Feedback type identifier to look for in feedback
      * entities.
      * @return The list of found feedbacks.
      */
     @Override
-    public List<FeedbackEntity> getByTypeId(EntityManager em, long feedbackTypeId)
+    public List<FeedbackEntity> getByTypeId(EntityManager entityManager, long feedbackTypeId)
             throws DataBaseException {
-        checkEntityManager(em);
+        checkEntityManager(entityManager);
         try {
-            return em.createNamedQuery("getByTypeId", FeedbackEntity.class).setParameter("feedbackTypeId", feedbackTypeId).getResultList();
+            return entityManager.createNamedQuery("getByTypeId", FeedbackEntity.class).setParameter("feedbackTypeId", feedbackTypeId).getResultList();
         } catch (Exception e) {
             throw new DataBaseException(e.getMessage(), e.getCause());
         }
     }
 
     @Override
-    public List<FeedbackEntity> getByContentLike(EntityManager em, String query)
+    public List<FeedbackEntity> getByContentLike(EntityManager entityManager, String query)
             throws DataBaseException {
-        checkEntityManager(em);
+        checkEntityManager(entityManager);
         try {
-            return em.createNamedQuery("getFeedbackByContentLike", FeedbackEntity.class).setParameter("query", "%" + query + "%").getResultList();
+            return entityManager.createNamedQuery("getFeedbackByContentLike", FeedbackEntity.class).setParameter("query", "%" + query + "%").getResultList();
         } catch (Exception e) {
             throw new DataBaseException(e.getMessage(), e.getCause());
         }
@@ -51,10 +51,10 @@ public class FeedbackDao extends CrudDao<FeedbackEntity> implements FeedbackDaoI
     }
 
     @Override
-    public List<FeedbackEntity> getAll(EntityManager em) throws DataBaseException {
-        checkEntityManager(em);
+    public List<FeedbackEntity> getAll(EntityManager entityManager) throws DataBaseException {
+        checkEntityManager(entityManager);
         try {
-            return em.createNamedQuery("getAllFeedbacks", FeedbackEntity.class).getResultList();
+            return entityManager.createNamedQuery("getAllFeedbacks", FeedbackEntity.class).getResultList();
         } catch (Exception e) {
             throw new DataBaseException(e.getMessage(), e.getCause());
         }

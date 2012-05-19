@@ -15,16 +15,16 @@ public class ConfirmationKeyDao extends CrudDao<ConfirmationKeyEntity> implement
     /**
      * Returns a ConfirmationKey entity which key matched with the given string.
      *
-     * @param em the entity manager
+     * @param entityManager the entity manager
      * @param confirmationKey key reference for the search
      * @return the ConfirmationKey entity wit the given key
      */
     @Override
-    public ConfirmationKeyEntity getByConfirmationKey(EntityManager em, String confirmationKey) 
+    public ConfirmationKeyEntity getByConfirmationKey(EntityManager entityManager, String confirmationKey) 
             throws DataBaseException {
-        checkEntityManager(em);
+        checkEntityManager(entityManager);
         try {
-            return em.createNamedQuery("getByConfirmationKey", ConfirmationKeyEntity.class).
+            return entityManager.createNamedQuery("getByConfirmationKey", ConfirmationKeyEntity.class).
                     setParameter("confirmationKey", confirmationKey).getSingleResult();
         } catch (NoResultException noResultException) {
             return null;

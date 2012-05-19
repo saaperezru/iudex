@@ -191,7 +191,8 @@ public class CommentsService {
      * @param id id of the comment
      */
     public void remove(EntityManager em, long id) throws DataBaseException {
-        List<CommentRatingEntity> ratings = getDaoFactory().getCommentRatingDao().getByCommentId(em, id);
+        List<CommentRatingEntity> ratings = getDaoFactory().getCommentRatingDao().getByEvaluatedObjectId(em, id);
+                
 
         for (CommentRatingEntity rating : ratings) {
             getDaoFactory().getCommentRatingDao().remove(em, rating.getId());

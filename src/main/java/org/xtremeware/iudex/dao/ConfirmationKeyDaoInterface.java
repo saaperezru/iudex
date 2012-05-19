@@ -14,10 +14,10 @@ public interface ConfirmationKeyDaoInterface extends CrudDaoInterface<Confirmati
     /**
      * Returns a ConfirmationKey entity which key matched with the given string.
      *
-     * @param em the entity manager
+     * @param entityManager the entity manager
      * @param confirmationKey key reference for the search
      * @return the ConfirmationKey entity wit the given key
      */
-    public ConfirmationKeyEntity getByConfirmationKey(EntityManager em, String confirmationKey)
-            throws DataBaseException;
+    public ConfirmationKeyEntity getByConfirmationKey(EntityManager entityManager,
+            String confirmationKey) throws DataBaseException;
 }

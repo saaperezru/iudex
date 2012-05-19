@@ -1,5 +1,9 @@
 package org.xtremeware.iudex.dao;
 
+import org.xtremeware.iudex.entity.CommentRatingEntity;
+import org.xtremeware.iudex.entity.ProfessorRatingEntity;
+import org.xtremeware.iudex.entity.SubjectRatingEntity;
+
 /**
  *
  * @author healarconr
@@ -8,7 +12,7 @@ public interface AbstractDaoFactory {
 
     public CommentDaoInterface getCommentDao();
 
-    public CommentRatingDaoInterface getCommentRatingDao();
+    public BinaryRatingDaoInterface<CommentRatingEntity> getCommentRatingDao();
 
     public ConfirmationKeyDaoInterface getConfirmationKeyDao();
 
@@ -24,13 +28,13 @@ public interface AbstractDaoFactory {
 
     public ProfessorDaoInterface getProfessorDao();
 
-    public ProfessorRatingDaoInterface getProfessorRatingDao();
+    public BinaryRatingDaoInterface<ProfessorRatingEntity> getProfessorRatingDao();
 
     public ProgramDaoInterface getProgramDao();
 
     public SubjectDaoInterface getSubjectDao();
 
-    public SubjectRatingDaoInterface getSubjectRatingDao();
+    public BinaryRatingDaoInterface<SubjectRatingEntity> getSubjectRatingDao();
 
     public UserDaoInterface getUserDao();
 }

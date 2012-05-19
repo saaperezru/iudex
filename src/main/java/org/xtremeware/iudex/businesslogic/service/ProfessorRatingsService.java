@@ -51,10 +51,10 @@ public class ProfessorRatingsService extends CrudService<ProfessorRatingVo, Prof
             multipleMessageException.addMessage(
                     "professorRating.professorId.element.notFound");
         }
-        if (vo.getUser() == null) {
+        if (vo.getUserId() == null) {
             multipleMessageException.addMessage(
                     "professorRating.userId.null");
-        } else if (getDaoFactory().getUserDao().getById(em, vo.getUser()) ==
+        } else if (getDaoFactory().getUserDao().getById(em, vo.getUserId()) ==
                 null) {
             multipleMessageException.addMessage(
                     "professorRating.userId.element.notFound");
@@ -74,7 +74,7 @@ public class ProfessorRatingsService extends CrudService<ProfessorRatingVo, Prof
         entity.setId(vo.getId());
         entity.setProfessor(getDaoFactory().getProfessorDao().getById(em, vo.
                 getEvaluatedObjectId()));
-        entity.setUser(getDaoFactory().getUserDao().getById(em, vo.getUser()));
+        entity.setUser(getDaoFactory().getUserDao().getById(em, vo.getUserId()));
         entity.setValue(vo.getValue());
         return entity;
     }
@@ -91,7 +91,7 @@ public class ProfessorRatingsService extends CrudService<ProfessorRatingVo, Prof
             throws DataBaseException {
         ArrayList<ProfessorRatingVo> list = new ArrayList<ProfessorRatingVo>();
         for (ProfessorRatingEntity entity : getDaoFactory().
-                getProfessorRatingDao().getByProfessorId(em, professorId)) {
+                getProfessorRatingDao().getByEvaluatedObjectId(em, professorId)) {
             list.add(entity.toVo());
         }
         return list;
@@ -112,8 +112,8 @@ public class ProfessorRatingsService extends CrudService<ProfessorRatingVo, Prof
     public ProfessorRatingVo getByProfessorIdAndUserId(EntityManager em,
             long professorId, long userId)
             throws DataBaseException {
-        ProfessorRatingEntity pre = getDaoFactory().getProfessorRatingDao().getByProfessorIdAndUserId(
-                em, professorId, userId);
+        ProfessorRatingEntity pre = getDaoFactory().getProfessorRatingDao().
+                getByEvaluatedObjectIdAndUserId(em, professorId, userId);
         if(pre == null){
             return null;
         } else {

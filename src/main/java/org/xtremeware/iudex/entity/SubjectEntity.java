@@ -7,8 +7,10 @@ import org.xtremeware.iudex.vo.SubjectVo;
 
 @javax.persistence.Entity(name = "Subject")
 @NamedQueries({
-    @NamedQuery(name = "getSubjectsByNameLike", query = "SELECT s FROM Subject s WHERE UPPER(s.name) LIKE :name"),
-    @NamedQuery(name = "getSubjectsByProfessorId", query = "SELECT DISTINCT c.subject FROM Course c WHERE c.professor.id = :professorId")
+    @NamedQuery(name = "getSubjectsByNameLike",
+    query = "SELECT s FROM Subject s WHERE UPPER(s.name) LIKE :name"),
+    @NamedQuery(name = "getSubjectsByProfessorId",
+    query = "SELECT DISTINCT c.subject FROM Course c WHERE c.professor.id = :professorId")
 })
 @Table(name = "SUBJECT")
 public class SubjectEntity implements Serializable, Entity<SubjectVo> {

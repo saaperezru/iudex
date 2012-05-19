@@ -18,14 +18,14 @@ public class PeriodDao extends CrudDao<PeriodEntity> implements PeriodDaoInterfa
     /**
      * Returns the list of all periods entities
      *
-     * @param em the entity manager
+     * @param entityManager the entity manager
      * @return a list with all the periods
      */
     @Override
-    public List<PeriodEntity> getAll(EntityManager em) throws DataBaseException {
-        checkEntityManager(em);
+    public List<PeriodEntity> getAll(EntityManager entityManager) throws DataBaseException {
+        checkEntityManager(entityManager);
         try {
-            return em.createNamedQuery("getAllPeriods", PeriodEntity.class).getResultList();
+            return entityManager.createNamedQuery("getAllPeriods", PeriodEntity.class).getResultList();
         } catch (Exception e) {
             throw new DataBaseException(e.getMessage(), e.getCause());
         }
@@ -35,16 +35,16 @@ public class PeriodDao extends CrudDao<PeriodEntity> implements PeriodDaoInterfa
      * Returns a list of period entities which year is equal to the year
      * argument
      *
-     * @param em the entity manager
+     * @param entityManager the entity manager
      * @param year the year
      * @return a list of matched period entities
      */
     @Override
-    public List<PeriodEntity> getByYear(EntityManager em, int year)
+    public List<PeriodEntity> getByYear(EntityManager entityManager, int year)
             throws DataBaseException {
-        checkEntityManager(em);
+        checkEntityManager(entityManager);
         try {
-            return em.createNamedQuery("getPeriodsByYear", PeriodEntity.class).setParameter("year", year).getResultList();
+            return entityManager.createNamedQuery("getPeriodsByYear", PeriodEntity.class).setParameter("year", year).getResultList();
         } catch (Exception e) {
             throw new DataBaseException(e.getMessage(), e.getCause());
         }
@@ -53,17 +53,17 @@ public class PeriodDao extends CrudDao<PeriodEntity> implements PeriodDaoInterfa
     /**
      * Returns a period entity which year and semester match the given arguments
      *
-     * @param em the entity manager
+     * @param entityManager the entity manager
      * @param year the year
      * @param semester the semester
      * @return the matched period entity or null if there is no such entity
      */
     @Override
-    public PeriodEntity getByYearAndSemester(EntityManager em, int year, int semester)
+    public PeriodEntity getByYearAndSemester(EntityManager entityManager, int year, int semester)
             throws DataBaseException {
-        checkEntityManager(em);
+        checkEntityManager(entityManager);
         try {
-            return em.createNamedQuery("getPeriodByYearAndSemester", PeriodEntity.class).setParameter("year", year).setParameter("semester", semester).getSingleResult();
+            return entityManager.createNamedQuery("getPeriodByYearAndSemester", PeriodEntity.class).setParameter("year", year).setParameter("semester", semester).getSingleResult();
         } catch (NoResultException ex) {
             return null;
         } catch (Exception e) {

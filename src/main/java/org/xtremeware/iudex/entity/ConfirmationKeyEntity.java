@@ -13,22 +13,19 @@ query = "SELECT result FROM ConfirmationKey result "
 @Table(name = "CONFIRMATION_KEY")
 public class ConfirmationKeyEntity implements Serializable, Entity<ConfirmationKeyVo> {
 
-	private static final long serialVersionUID = 1L;
-	@Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "ID_CONFIRMATION_KEY")
-	private Long id;
-        
-        @Temporal(javax.persistence.TemporalType.DATE)
-	@Column(name = "EXPIRATION_DATE", nullable = false)
-	private Date expirationDate;
-	
-        @Column(name = "CONFIRMATION_KEY", length = 64, nullable = false)
-	private String confirmationKey;
-	
-        @OneToOne
-	@JoinColumn(name="ID_USER_", nullable= false, unique= true)
-	private UserEntity user;
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID_CONFIRMATION_KEY")
+    private Long id;
+    @Temporal(javax.persistence.TemporalType.DATE)
+    @Column(name = "EXPIRATION_DATE", nullable = false)
+    private Date expirationDate;
+    @Column(name = "CONFIRMATION_KEY", length = 64, nullable = false)
+    private String confirmationKey;
+    @OneToOne
+    @JoinColumn(name = "ID_USER_", nullable = false, unique = true)
+    private UserEntity user;
 
     @Override
     public ConfirmationKeyVo toVo() {
@@ -45,7 +42,9 @@ public class ConfirmationKeyEntity implements Serializable, Entity<ConfirmationK
         if (obj == null) {
             return false;
         }
-
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
         final ConfirmationKeyEntity other = (ConfirmationKeyEntity) obj;
         if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
             return false;

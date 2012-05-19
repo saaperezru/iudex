@@ -570,8 +570,7 @@ public class UsersFacadeIT {
         user.setFirstName(FacadesTestHelper.randomString(10));
         user.setLastName(FacadesTestHelper.randomString(10));
         user.setUserName(FacadesTestHelper.randomString(MAX_USERNAME_LENGTH + 1));
-        user.setPassword(FacadesTestHelper.randomString(MAX_USER_PASSWORD_LENGTH +
-                1));
+        user.setPassword(FacadesTestHelper.randomString(MAX_USER_PASSWORD_LENGTH +1));
         List<Long> programsId = user.getProgramsId();
         programsId.add(null);
 

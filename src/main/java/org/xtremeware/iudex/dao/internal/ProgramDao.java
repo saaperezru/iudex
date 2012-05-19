@@ -15,15 +15,16 @@ public class ProgramDao extends CrudDao<ProgramEntity> implements ProgramDaoInte
     /**
      * Search a program which name contains the given parameter name
      *
-     * @param em the entity manager
+     * @param entityManager the entity manager
      * @param name
      * @return Return a list of programEntity objects
      */
     @Override
-    public List<ProgramEntity> getByNameLike(EntityManager em, String name) throws DataBaseException {
-        checkEntityManager(em);
+    public List<ProgramEntity> getByNameLike(EntityManager entityManager, String name)
+            throws DataBaseException {
+        checkEntityManager(entityManager);
         try {
-            return em.createNamedQuery("getProgramByNameLike", ProgramEntity.class).
+            return entityManager.createNamedQuery("getProgramByNameLike", ProgramEntity.class).
                     setParameter("name", "%" + name + "%").getResultList();
         } catch (Exception e) {
             throw new DataBaseException(e.getMessage(), e.getCause());
@@ -31,10 +32,11 @@ public class ProgramDao extends CrudDao<ProgramEntity> implements ProgramDaoInte
     }
 
     @Override
-    public List<ProgramEntity> getAll(EntityManager em) throws DataBaseException {
-        checkEntityManager(em);
+    public List<ProgramEntity> getAll(EntityManager entityManager)
+            throws DataBaseException {
+        checkEntityManager(entityManager);
         try {
-            return em.createNamedQuery("getAllPrograms", ProgramEntity.class).
+            return entityManager.createNamedQuery("getAllPrograms", ProgramEntity.class).
                     getResultList();
         } catch (Exception e) {
             throw new DataBaseException(e.getMessage(), e.getCause());

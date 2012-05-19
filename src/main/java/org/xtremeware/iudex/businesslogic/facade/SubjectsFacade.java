@@ -13,6 +13,7 @@ import org.xtremeware.iudex.helper.DataBaseException;
 import org.xtremeware.iudex.helper.ExternalServiceConnectionException;
 import org.xtremeware.iudex.helper.MultipleMessagesException;
 import org.xtremeware.iudex.presentation.vovw.SubjectVoVwFull;
+import org.xtremeware.iudex.presentation.vovw.VoVwFactory;
 import org.xtremeware.iudex.vo.RatingSummaryVo;
 import org.xtremeware.iudex.vo.SubjectRatingVo;
 import org.xtremeware.iudex.vo.SubjectVo;
@@ -24,12 +25,12 @@ public class SubjectsFacade extends AbstractFacade {
     }
 
     public Map<Long, String> getSubjectsAutocomplete(String name) throws Exception {
-        EntityManager em = null;
+        EntityManager entityManager = null;
         Map<Long, String> map = new HashMap<Long, String>();
         try {
             if (name != null) {
-                em = getEntityManagerFactory().createEntityManager();
-                List<SubjectVo> subjects = getServiceFactory().createSubjectsService().getByNameLike(em, name);
+                entityManager = getEntityManagerFactory().createEntityManager();
+                List<SubjectVo> subjects = getServiceFactory().createSubjectsService().getByNameLike(entityManager, name);
                 for (SubjectVo s : subjects) {
                     map.put(s.getId(), s.getName());
                 }
@@ -39,79 +40,79 @@ public class SubjectsFacade extends AbstractFacade {
             FacadesHelper.checkException(e, ExternalServiceConnectionException.class);
             throw new RuntimeException(e);
         } finally {
-            FacadesHelper.closeEntityManager(em);
+            FacadesHelper.closeEntityManager(entityManager);
         }
         return map;
     }
 
     public SubjectRatingVo getSubjectRatingByUserId(long subjectId, long userId) throws Exception {
-        EntityManager em = null;
+        EntityManager entityManager = null;
         SubjectRatingVo subject = null;
         try {
-            em = getEntityManagerFactory().createEntityManager();
-            subject = getServiceFactory().createSubjectRatingsService().getBySubjectIdAndUserId(em, subjectId, userId);
+            entityManager = getEntityManagerFactory().createEntityManager();
+            subject = getServiceFactory().createSubjectRatingsService().getBySubjectIdAndUserId(entityManager, subjectId, userId);
 
         } catch (Exception e) {
             getServiceFactory().createLogService().error(e.getMessage(), e);
             throw new RuntimeException(e);
         } finally {
-            FacadesHelper.closeEntityManager(em);
+            FacadesHelper.closeEntityManager(entityManager);
         }
         return subject;
     }
 
     public RatingSummaryVo getSubjectsRatingSummary(long subjectId) throws Exception {
 
-        EntityManager em = null;
+        EntityManager entityManager = null;
         RatingSummaryVo summary = null;
         try {
-            em = getEntityManagerFactory().createEntityManager();
-            if (getServiceFactory().createSubjectsService().getById(em, subjectId) != null) {
-                summary = getServiceFactory().createSubjectRatingsService().getSummary(em, subjectId);
+            entityManager = getEntityManagerFactory().createEntityManager();
+            if (getServiceFactory().createSubjectsService().getById(entityManager, subjectId) != null) {
+                summary = getServiceFactory().createSubjectRatingsService().getSummary(entityManager, subjectId);
             }
         } catch (Exception e) {
             getServiceFactory().createLogService().error(e.getMessage(), e);
             throw new RuntimeException(e);
         } finally {
-            FacadesHelper.closeEntityManager(em);
+            FacadesHelper.closeEntityManager(entityManager);
         }
         return summary;
     }
 
     public SubjectRatingVo rateSubject(long userId, long subjectId, int value) throws MultipleMessagesException, Exception {
-        EntityManager em = null;
+        EntityManager entityManager = null;
         EntityTransaction tx = null;
         SubjectRatingVo rating = null;
         try {
             SubjectRatingVo vo = new SubjectRatingVo();
             vo.setEvaluatedObjectId(subjectId);
-            vo.setUser(userId);
+            vo.setUserId(userId);
             vo.setValue(value);
 
-            em = getEntityManagerFactory().createEntityManager();
-            tx = em.getTransaction();
+            entityManager = getEntityManagerFactory().createEntityManager();
+            tx = entityManager.getTransaction();
             tx.begin();
-            rating = getServiceFactory().createSubjectRatingsService().getBySubjectIdAndUserId(em, subjectId, userId);
+            rating = getServiceFactory().createSubjectRatingsService().getBySubjectIdAndUserId(entityManager, subjectId, userId);
             //If there is no existing record in the database, create it
             if (rating == null) {
-                rating = getServiceFactory().createSubjectRatingsService().create(em, vo);
+                rating = getServiceFactory().createSubjectRatingsService().create(entityManager, vo);
             } else {
                 //Otherwise update the existing one
                 //But first verify bussines rules
                 if (value != rating.getEvaluatedObjectId()) {
-                    getServiceFactory().createSubjectRatingsService().validateVo(em, vo);
+                    getServiceFactory().createSubjectRatingsService().validateVo(entityManager, vo);
                     rating.setValue(value);
-                    getServiceFactory().createSubjectRatingsService().update(em, rating);
+                    getServiceFactory().createSubjectRatingsService().update(entityManager, rating);
                 }
             }
             tx.commit();
         } catch (Exception e) {
             getServiceFactory().createLogService().error(e.getMessage(), e);
             FacadesHelper.checkException(e, MultipleMessagesException.class);
-            FacadesHelper.checkExceptionAndRollback(em, tx, e, DuplicityException.class);
-            FacadesHelper.rollbackTransaction(em, tx, e);
+            FacadesHelper.checkExceptionAndRollback(entityManager, tx, e, DuplicityException.class);
+            FacadesHelper.rollbackTransaction(entityManager, tx, e);
         } finally {
-            FacadesHelper.closeEntityManager(em);
+            FacadesHelper.closeEntityManager(entityManager);
         }
         return rating;
     }
@@ -122,88 +123,86 @@ public class SubjectsFacade extends AbstractFacade {
         vo.setName(name);
         vo.setDescription(description);
         vo.setId(id);
-        EntityManager em = null;
+        EntityManager entityManager = null;
         EntityTransaction tx = null;
         try {
-            em = getEntityManagerFactory().createEntityManager();
-            tx = em.getTransaction();
+            entityManager = getEntityManagerFactory().createEntityManager();
+            tx = entityManager.getTransaction();
             tx.begin();
-            createdVo = getServiceFactory().createSubjectsService().create(em, vo);
+            createdVo = getServiceFactory().createSubjectsService().create(entityManager, vo);
             tx.commit();
         } catch (MultipleMessagesException e) {
             throw e;
         } catch (Exception e) {
             getServiceFactory().createLogService().error(e.getMessage(), e);
             FacadesHelper.checkException(e, MultipleMessagesException.class);
-            FacadesHelper.checkExceptionAndRollback(em, tx, e, DuplicityException.class);
-            FacadesHelper.rollbackTransaction(em, tx, e);
+            FacadesHelper.checkExceptionAndRollback(entityManager, tx, e, DuplicityException.class);
+            FacadesHelper.rollbackTransaction(entityManager, tx, e);
         } finally {
-            FacadesHelper.closeEntityManager(em);
+            FacadesHelper.closeEntityManager(entityManager);
         }
         return createdVo;
     }
 
     public void removeSubject(long id) throws Exception {
-        EntityManager em = null;
+        EntityManager entityManager = null;
         EntityTransaction tx = null;
         try {
-            em = getEntityManagerFactory().createEntityManager();
-            tx = em.getTransaction();
+            entityManager = getEntityManagerFactory().createEntityManager();
+            tx = entityManager.getTransaction();
             tx.begin();
-            getServiceFactory().createSubjectsService().remove(em, id);
+            getServiceFactory().createSubjectsService().remove(entityManager, id);
             tx.commit();
         } catch (Exception e) {
             getServiceFactory().createLogService().error(e.getMessage(), e);
-            FacadesHelper.checkExceptionAndRollback(em, tx, e, DataBaseException.class);
-            FacadesHelper.rollbackTransaction(em, tx, e);
+            FacadesHelper.checkExceptionAndRollback(entityManager, tx, e, DataBaseException.class);
+            FacadesHelper.rollbackTransaction(entityManager, tx, e);
         } finally {
-            FacadesHelper.closeEntityManager(em);
+            FacadesHelper.closeEntityManager(entityManager);
         }
     }
 
     public SubjectVo updateSubject(Long id, String name, String description) throws MultipleMessagesException, Exception {
 
         SubjectVo subject = null;
-        EntityManager em = null;
+        EntityManager entityManager = null;
         EntityTransaction tx = null;
 
         try {
-            em = getEntityManagerFactory().createEntityManager();
-            tx = em.getTransaction();
+            entityManager = getEntityManagerFactory().createEntityManager();
+            tx = entityManager.getTransaction();
             tx.begin();
             subject = new SubjectVo();
             subject.setId(id);
             subject.setName(name);
             subject.setDescription(description);
-            subject = getServiceFactory().createSubjectsService().update(em, subject);
+            subject = getServiceFactory().createSubjectsService().update(entityManager, subject);
             tx.commit();
         
         } catch (Exception e) {
             getServiceFactory().createLogService().error(e.getMessage(), e);
             FacadesHelper.checkException(e, MultipleMessagesException.class);
-            FacadesHelper.checkExceptionAndRollback(em, tx, e, DuplicityException.class);
-            FacadesHelper.rollbackTransaction(em, tx, e);
+            FacadesHelper.checkExceptionAndRollback(entityManager, tx, e, DuplicityException.class);
+            FacadesHelper.rollbackTransaction(entityManager, tx, e);
         }finally {
-            FacadesHelper.closeEntityManager(em);
+            FacadesHelper.closeEntityManager(entityManager);
         }
 
         return subject;
     }
 
     public SubjectVoVwFull getSubject(long subjectId) throws Exception {
-        EntityManager em = null;
+        EntityManager entityManager = null;
         SubjectVoVwFull voVw = null;
         try {
-            em = getEntityManagerFactory().createEntityManager();
-            SubjectVo vo = getServiceFactory().createSubjectsService().getById(em, subjectId);
-            RatingSummaryVo summary = getServiceFactory().createSubjectRatingsService().getSummary(em, subjectId);
-            voVw = new SubjectVoVwFull(vo, summary);
+            entityManager = getEntityManagerFactory().createEntityManager();
+            voVw = VoVwFactory.getSubjectVoVwFull(getServiceFactory().createSubjectsService().getById(entityManager, subjectId), getServiceFactory().createSubjectRatingsService().getSummary(entityManager, subjectId));
 
         } catch (Exception e) {
             getServiceFactory().createLogService().error(e.getMessage(), e);
             throw new RuntimeException(e);
         } finally {
-            FacadesHelper.closeEntityManager(em);
+            FacadesHelper.closeEntityManager(entityManager);
         }
         return voVw;
     }

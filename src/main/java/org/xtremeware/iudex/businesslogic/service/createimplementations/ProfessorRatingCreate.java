@@ -3,7 +3,7 @@ package org.xtremeware.iudex.businesslogic.service.createimplementations;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.businesslogic.DuplicityException;
 import org.xtremeware.iudex.businesslogic.service.crudinterfaces.CreateInterface;
-import org.xtremeware.iudex.dao.ProfessorRatingDaoInterface;
+import org.xtremeware.iudex.dao.BinaryRatingDaoInterface;
 import org.xtremeware.iudex.entity.ProfessorRatingEntity;
 import org.xtremeware.iudex.helper.DataBaseException;
 
@@ -13,16 +13,17 @@ import org.xtremeware.iudex.helper.DataBaseException;
  */
 public class ProfessorRatingCreate implements CreateInterface<ProfessorRatingEntity> {
 
-    private ProfessorRatingDaoInterface dao;
+    private BinaryRatingDaoInterface<ProfessorRatingEntity> dao;
 
-    public ProfessorRatingCreate(ProfessorRatingDaoInterface dao) {
+    public ProfessorRatingCreate(BinaryRatingDaoInterface<ProfessorRatingEntity> dao) {
         this.dao = dao;
     }
 
     @Override
     public ProfessorRatingEntity create(EntityManager em, ProfessorRatingEntity entity)
             throws DataBaseException, DuplicityException {
-        ProfessorRatingEntity pre = getDao().getByProfessorIdAndUserId(em, entity.getProfessor().getId(),
+        ProfessorRatingEntity pre = getDao().
+                getByEvaluatedObjectIdAndUserId(em, entity.getProfessor().getId(),
                 entity.getUser().getId());
         if (pre == null) {
             getDao().persist(em, entity);
@@ -33,7 +34,7 @@ public class ProfessorRatingCreate implements CreateInterface<ProfessorRatingEnt
         }
     }
 
-    private ProfessorRatingDaoInterface getDao() {
+    private BinaryRatingDaoInterface<ProfessorRatingEntity> getDao() {
         return this.dao;
     }
 }

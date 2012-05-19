@@ -18,15 +18,15 @@ public class FeedbackTypeDao extends CrudDao<FeedbackTypeEntity> implements Feed
     /**
      * Returns a feedback type entity which name matches the given name
      *
-     * @param em the entity manager
+     * @param entityManager the entity manager
      * @param name the name
      * @return a feedback type entity
      */
     @Override
-    public FeedbackTypeEntity getByName(EntityManager em, String name) {
-        checkEntityManager(em);
+    public FeedbackTypeEntity getByName(EntityManager entityManager, String name) {
+        checkEntityManager(entityManager);
         try {
-            return em.createNamedQuery("getFeedbackTypeByName", FeedbackTypeEntity.class).
+            return entityManager.createNamedQuery("getFeedbackTypeByName", FeedbackTypeEntity.class).
                     setParameter("name", name).getSingleResult();
         } catch (NoResultException ex) {
             return null;
@@ -34,11 +34,11 @@ public class FeedbackTypeDao extends CrudDao<FeedbackTypeEntity> implements Feed
     }
 
     @Override
-    public List<FeedbackTypeEntity> getAll(EntityManager em)
+    public List<FeedbackTypeEntity> getAll(EntityManager entityManager)
             throws DataBaseException {
-        checkEntityManager(em);
+        checkEntityManager(entityManager);
         try {
-            return em.createNamedQuery("getAllFeedbackType", FeedbackTypeEntity.class).
+            return entityManager.createNamedQuery("getAllFeedbackType", FeedbackTypeEntity.class).
                     getResultList();
         } catch (Exception e) {
             throw new DataBaseException(e.getMessage(), e.getCause());

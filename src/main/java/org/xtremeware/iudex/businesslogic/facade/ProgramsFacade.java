@@ -18,19 +18,19 @@ public class ProgramsFacade extends AbstractFacade {
     }
 
     public void removeProgram(long id) throws Exception {
-        EntityManager em = null;
+        EntityManager entityManager = null;
         EntityTransaction tx = null;
         try {
-            em = getEntityManagerFactory().createEntityManager();
-            tx = em.getTransaction();
+            entityManager = getEntityManagerFactory().createEntityManager();
+            tx = entityManager.getTransaction();
             tx.begin();
-            getServiceFactory().createProgramsService().remove(em, id);
+            getServiceFactory().createProgramsService().remove(entityManager, id);
             tx.commit();
         } catch (Exception e) {
             getServiceFactory().createLogService().error(e.getMessage(), e);
-            FacadesHelper.rollbackTransaction(em, tx, e);
+            FacadesHelper.rollbackTransaction(entityManager, tx, e);
         } finally {
-            FacadesHelper.closeEntityManager(em);
+            FacadesHelper.closeEntityManager(entityManager);
         }
     }
 
@@ -46,57 +46,57 @@ public class ProgramsFacade extends AbstractFacade {
         ProgramVo createdVo = null;
         ProgramVo vo = new ProgramVo();
         vo.setName(name);
-        EntityManager em = null;
+        EntityManager entityManager = null;
         EntityTransaction tx = null;
         try {
-            em = getEntityManagerFactory().createEntityManager();
-            tx = em.getTransaction();
+            entityManager = getEntityManagerFactory().createEntityManager();
+            tx = entityManager.getTransaction();
             tx.begin();
-            createdVo = getServiceFactory().createProgramsService().create(em, vo);
+            createdVo = getServiceFactory().createProgramsService().create(entityManager, vo);
             tx.commit();
         } catch (MultipleMessagesException e) {
             throw e;
         } catch (Exception e) {
             getServiceFactory().createLogService().error(e.getMessage(), e);
             FacadesHelper.checkException(e, MultipleMessagesException.class);
-            FacadesHelper.checkExceptionAndRollback(em, tx, e, DuplicityException.class);
-            FacadesHelper.rollbackTransaction(em, tx, e);
+            FacadesHelper.checkExceptionAndRollback(entityManager, tx, e, DuplicityException.class);
+            FacadesHelper.rollbackTransaction(entityManager, tx, e);
         } finally {
-            FacadesHelper.closeEntityManager(em);
+            FacadesHelper.closeEntityManager(entityManager);
         }
         return createdVo;
     }
 
     public List<ProgramVo> getProgramsAutocomplete(String name) throws Exception {
-        EntityManager em = null;
+        EntityManager entityManager = null;
         List<ProgramVo> programs = null;
         if(name == null){
             return new ArrayList<ProgramVo>();
         }
         try {
-            em = getEntityManagerFactory().createEntityManager();
-            programs = getServiceFactory().createProgramsService().getByNameLike(em, name);
+            entityManager = getEntityManagerFactory().createEntityManager();
+            programs = getServiceFactory().createProgramsService().getByNameLike(entityManager, name);
 
         } catch (Exception e) {
             getServiceFactory().createLogService().error(e.getMessage(), e);
             throw new RuntimeException(e);
         } finally {
-           FacadesHelper.closeEntityManager(em);
+           FacadesHelper.closeEntityManager(entityManager);
         }
         return programs;
     }
 
     public List<ProgramVo> listPrograms() {
-        EntityManager em = null;
+        EntityManager entityManager = null;
         List<ProgramVo> list = null;
         try {
-            em = getEntityManagerFactory().createEntityManager();
-            list = getServiceFactory().createProgramsService().getAll(em);
+            entityManager = getEntityManagerFactory().createEntityManager();
+            list = getServiceFactory().createProgramsService().getAll(entityManager);
         } catch (Exception e) {
             getServiceFactory().createLogService().error(e.getMessage(), e);
             throw new RuntimeException(e);
         } finally {
-            FacadesHelper.closeEntityManager(em);
+            FacadesHelper.closeEntityManager(entityManager);
         }
         return list;
     }

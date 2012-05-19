@@ -3,140 +3,139 @@ package org.xtremeware.iudex.businesslogic.facade;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
-import org.xtremeware.iudex.businesslogic.InvalidVoException;
+import org.xtremeware.iudex.businesslogic.DuplicityException;
+import org.xtremeware.iudex.businesslogic.helper.FacadesHelper;
 import org.xtremeware.iudex.businesslogic.service.InactiveUserException;
 import org.xtremeware.iudex.businesslogic.service.ServiceFactory;
-import org.xtremeware.iudex.helper.SecurityHelper;
+import org.xtremeware.iudex.helper.MultipleMessagesException;
 import org.xtremeware.iudex.vo.UserVo;
 
 public class UsersFacade extends AbstractFacade {
 
-    public UsersFacade(ServiceFactory serviceFactory, EntityManagerFactory emFactory) {
+    public UsersFacade(ServiceFactory serviceFactory,
+            EntityManagerFactory emFactory) {
         super(serviceFactory, emFactory);
     }
 
     /**
+     * Activates a user in the database using a confirmation key
      *
-     *
-     * @param vo
-     * @return Returns the corresponding
-     * <code>UserVo</code> if and only if the user is active. otherwise returns
-     * null. Throws exceptions if there were problems with the database.
+     * @param confirmationKey the confirmation key
+     * @return the activated user or null if the confirmation key doesn't match
+     * any user
      */
-    public UserVo activateUser(String confirmationKey) throws Exception {
+    public UserVo activateUser(String confirmationKey) {
         EntityManager em = null;
         EntityTransaction tx = null;
-        UserVo userVo = null;
+        UserVo user = null;
         try {
             em = getEntityManagerFactory().createEntityManager();
             tx = em.getTransaction();
             tx.begin();
-            userVo = getServiceFactory().createUsersService().activateAccount(em, confirmationKey);
+            user = getServiceFactory().createUsersService().activateAccount(em,
+                    confirmationKey);
             tx.commit();
-        } catch (Exception e) {
-            if (em != null && tx != null) {
-                tx.rollback();
-            }
-            getServiceFactory().createLogService().error(e.getMessage(), e);
-            throw e;
+        } catch (Exception ex) {
+            getServiceFactory().createLogService().error(ex.getMessage(), ex);
+            FacadesHelper.rollbackTransaction(em, tx, ex);
         } finally {
-            if (em != null) {
-                em.clear();
-                em.close();
-            }
-            return userVo;
+            FacadesHelper.closeEntityManager(em);
         }
+        return user;
     }
 
-    public UserVo addUser(UserVo vo) throws InvalidVoException {
+    /**
+     * Adds a new user to the database. The new user is by default inactive and
+     * the password in the returned user is hashed.
+     *
+     * @param user the user to add
+     * @return the added user
+     * @throws MultipleMessagesException if there are validation problems
+     */
+    public UserVo addUser(UserVo user) throws MultipleMessagesException,
+            DuplicityException {
         EntityManager em = null;
         EntityTransaction tx = null;
+        UserVo newUser = null;
         try {
             em = getEntityManagerFactory().createEntityManager();
             tx = em.getTransaction();
             tx.begin();
-            vo = getServiceFactory().createUsersService().create(em, vo);
+            newUser = getServiceFactory().createUsersService().create(em, user);
             // TODO: The confirmation email message should be configurable
-            getServiceFactory().createMailingService().sendMessage("<a href='http://iudex.j.rsnx.ru/confirm.xhtml?key=" + getServiceFactory().createUsersService().getConfirmationKeyByUserId(em, vo.getId()).getConfirmationKey() + "'>Confirmar registro</a>", "Confirmar registro", vo.getUserName() + "@unal.edu.co");
+            getServiceFactory().createMailingService().sendMessage("<a href='http://iudex.j.rsnx.ru/confirm.xhtml?key=" +
+                    getServiceFactory().createUsersService().
+                    getConfirmationKeyByUserId(em, newUser.getId()).
+                    getConfirmationKey() + "'>Confirmar registro</a>",
+                    "Confirmar registro", user.getUserName() + "@unal.edu.co");
             tx.commit();
-        } catch (InvalidVoException ex) {
-            throw ex;
-        } catch (Exception e) {
-            if (em != null && tx != null) {
-                tx.rollback();
-            }
-            getServiceFactory().createLogService().error(e.getMessage(), e);
+        } catch (Exception ex) {
+            getServiceFactory().createLogService().error(ex.getMessage(), ex);
+            FacadesHelper.checkExceptionAndRollback(em, tx, ex,
+                    DuplicityException.class);
+            FacadesHelper.checkExceptionAndRollback(em, tx, ex,
+                    MultipleMessagesException.class);
+            FacadesHelper.rollbackTransaction(em, tx, ex);
         } finally {
-            if (em != null) {
-                em.clear();
-                em.close();
-            }
+            FacadesHelper.closeEntityManager(em);
         }
-        return vo;
+        return newUser;
     }
 
     /**
+     * Authenticates a user
      *
-     *
-     * @param vo
-     * @return Returns null if there is no user with the provided username and
-     * password and throws an exception if the user is still inactive or if
-     * there are problems with the database.
+     * @param username the user name
+     * @param password the password
+     * @return the authenticated user
+     * @throws InactiveUserException if the user is still inactive
+     * @throws MultipleMessagesException if there are validation problems
      */
-    public UserVo logIn(String username, String password) throws Exception {
+    public UserVo logIn(String username, String password) throws
+            InactiveUserException, MultipleMessagesException {
         EntityManager em = null;
-        EntityTransaction tx = null;
         UserVo user = null;
         try {
             em = getEntityManagerFactory().createEntityManager();
-            user = getServiceFactory().createUsersService().authenticate(em, username, password);
-        } catch (InactiveUserException e) {
-            throw e;
-        } catch (Exception e) {
-            getServiceFactory().createLogService().error(e.getMessage(), e);
-            throw e;
+            user = getServiceFactory().createUsersService().authenticate(em,
+                    username, password);
+        } catch (Exception ex) {
+            getServiceFactory().createLogService().error(ex.getMessage(), ex);
+            FacadesHelper.checkException(ex, InactiveUserException.class);
+            FacadesHelper.checkException(ex, MultipleMessagesException.class);
+            throw new RuntimeException(ex);
         } finally {
-            if (em != null) {
-                em.clear();
-                em.close();
-            }
+            FacadesHelper.closeEntityManager(em);
         }
         return user;
     }
 
     /**
+     * Edits a user. No user can change his user name or role.
      *
-     *
-     * @param vo
-     * @return Returns null if there is a problem while persisting (logs all
-     * errors) and throws an exception if data isn't valid.
+     * @param user the user
+     * @return the updated user
+     * @throws MultipleMessagesException if there are validation problems
      */
-    public UserVo editUser(UserVo vo) throws InvalidVoException {
-
+    public UserVo editUser(UserVo user) throws MultipleMessagesException {
         EntityManager em = null;
         EntityTransaction tx = null;
-        UserVo user = null;
+        UserVo updatedUser = null;
         try {
             em = getEntityManagerFactory().createEntityManager();
             tx = em.getTransaction();
             tx.begin();
-            getServiceFactory().createUsersService().update(em, user);
+            updatedUser = getServiceFactory().createUsersService().update(em,
+                    user);
             tx.commit();
-
-        } catch (InvalidVoException ex) {
-            throw ex;
-        } catch (Exception e) {
-            if (em != null && tx != null) {
-                tx.rollback();
-            }
-            getServiceFactory().createLogService().error(e.getMessage(), e);
+        } catch (Exception ex) {
+            getServiceFactory().createLogService().error(ex.getMessage(), ex);
+            FacadesHelper.checkExceptionAndRollback(em, tx, ex,
+                    MultipleMessagesException.class);
+            FacadesHelper.rollbackTransaction(em, tx, ex);
         } finally {
-            if (em != null) {
-                em.clear();
-                em.close();
-            }
+            FacadesHelper.closeEntityManager(em);
         }
-        return user;
-
+        return updatedUser;
     }
 }

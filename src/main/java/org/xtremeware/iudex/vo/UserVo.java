@@ -3,14 +3,13 @@ package org.xtremeware.iudex.vo;
 import java.util.List;
 import org.xtremeware.iudex.helper.Role;
 
-public class UserVo extends ValueObject {
+public class UserVo extends IdentifiableValueObject<Long> implements ValueObject {
 
-    private Long id;
     private String firstName;
     private String lastName;
     private String userName;
     private String password;
-    private Role rol;
+    private Role role;
     private boolean active;
     private List<Long> programsId;
 
@@ -23,28 +22,35 @@ public class UserVo extends ValueObject {
             return false;
         }
         final UserVo other = (UserVo) obj;
-        if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
+        if (this.id != other.id 
+                && (this.id == null || !this.id.equals(other.id))) {
             return false;
         }
-        if ((this.firstName == null) ? (other.firstName != null) : !this.firstName.equals(other.firstName)) {
+        if ((this.firstName == null) ? (other.firstName != null)
+                : !this.firstName.equals(other.firstName)) {
             return false;
         }
-        if ((this.lastName == null) ? (other.lastName != null) : !this.lastName.equals(other.lastName)) {
+        if ((this.lastName == null) ? (other.lastName != null) 
+                : !this.lastName.equals(other.lastName)) {
             return false;
         }
-        if ((this.userName == null) ? (other.userName != null) : !this.userName.equals(other.userName)) {
+        if ((this.userName == null) ? (other.userName != null) 
+                : !this.userName.equals(other.userName)) {
             return false;
         }
-        if ((this.password == null) ? (other.password != null) : !this.password.equals(other.password)) {
+        if ((this.password == null) ? (other.password != null) 
+                : !this.password.equals(other.password)) {
             return false;
         }
-        if (this.rol != other.rol) {
+        if (this.role != other.role) {
             return false;
         }
         if (this.active != other.active) {
             return false;
         }
-        if (this.programsId != other.programsId && (this.programsId == null || !this.programsId.equals(other.programsId))) {
+        if (this.programsId != other.programsId
+                && (this.programsId == null
+                || !this.programsId.equals(other.programsId))) {
             return false;
         }
         return true;
@@ -58,7 +64,7 @@ public class UserVo extends ValueObject {
         hash = 59 * hash + (this.lastName != null ? this.lastName.hashCode() : 0);
         hash = 59 * hash + (this.userName != null ? this.userName.hashCode() : 0);
         hash = 59 * hash + (this.password != null ? this.password.hashCode() : 0);
-        hash = 59 * hash + (this.rol != null ? this.rol.hashCode() : 0);
+        hash = 59 * hash + (this.role != null ? this.role.hashCode() : 0);
         hash = 59 * hash + (this.active ? 1 : 0);
         hash = 59 * hash + (this.programsId != null ? this.programsId.hashCode() : 0);
         return hash;
@@ -66,7 +72,10 @@ public class UserVo extends ValueObject {
 
     @Override
     public String toString() {
-        return "UserVo{" + "id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", userName=" + userName + ", password=" + password + ", role=" + rol + ", active=" + active + ", programsId=" + programsId + '}';
+        return "UserVo{" + "id=" + id + ", firstName=" + firstName
+                + ", lastName=" + lastName + ", userName=" + userName
+                + ", password=" + password + ", role=" + role + ", active="
+                + active + ", programsId=" + programsId + '}';
     }
 
     public boolean isActive() {
@@ -83,14 +92,6 @@ public class UserVo extends ValueObject {
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getLastName() {
@@ -118,11 +119,11 @@ public class UserVo extends ValueObject {
     }
 
     public Role getRole() {
-        return rol;
+        return role;
     }
 
-    public void setRol(Role rol) {
-        this.rol = rol;
+    public void setRole(Role role) {
+        this.role = role;
     }
 
     public String getUserName() {

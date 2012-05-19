@@ -2,9 +2,8 @@ package org.xtremeware.iudex.vo;
 
 import java.util.Date;
 
-public class FeedbackVo extends ValueObject {
+public class FeedbackVo extends IdentifiableValueObject<Long> implements ValueObject {
 
-    private Long id;
     private Long feedbackTypeId;
     private String content;
     private Date date;
@@ -71,13 +70,4 @@ public class FeedbackVo extends ValueObject {
     public void setFeedbackTypeId(Long feedbackTypeId) {
         this.feedbackTypeId = feedbackTypeId;
     }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-    
 }

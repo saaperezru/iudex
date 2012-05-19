@@ -1,16 +1,10 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.xtremeware.iudex.businesslogic.service;
 
 /**
  *
  * @author juan
  */
-public class InactiveUserException extends Exception{
-
-  
+public class InactiveUserException extends Exception {
 
     public InactiveUserException(Throwable cause) {
         super(cause);
@@ -26,5 +20,4 @@ public class InactiveUserException extends Exception{
 
     public InactiveUserException() {
     }
-    
 }

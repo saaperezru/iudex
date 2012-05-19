@@ -2,9 +2,8 @@ package org.xtremeware.iudex.vo;
 
 import java.util.Date;
 
-public class ConfirmationKeyVo extends ValueObject {
+public class ConfirmationKeyVo extends IdentifiableValueObject<Long> implements ValueObject {
 
-    private Long id;
     private Date expirationDate;
     private String confirmationKey;
     private Long userId;
@@ -45,7 +44,9 @@ public class ConfirmationKeyVo extends ValueObject {
 
     @Override
     public String toString() {
-        return "ConfirmationKeyVo{" + "id=" + id + ", expirationDate=" + expirationDate + ", confirmationKey=" + confirmationKey + ", userId=" + userId + '}';
+        return "ConfirmationKeyVo{" + "id=" + id + ", expirationDate="
+                + expirationDate + ", confirmationKey="
+                + confirmationKey + ", userId=" + userId + '}';
     }
 
     public String getConfirmationKey() {
@@ -62,14 +63,6 @@ public class ConfirmationKeyVo extends ValueObject {
 
     public void setExpirationDate(Date expirationDate) {
         this.expirationDate = expirationDate;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public Long getUserId() {

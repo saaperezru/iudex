@@ -48,7 +48,7 @@ public class SecurityHelper {
 			result = cr.getCleanHTML();
 		} catch (Exception ex) {
 			Config.getInstance().getServiceFactory().createLogService().error(ex.getMessage(), ex);
-			throw new ExternalServiceConnectionException("There was a problem while sanitizing.");
+			throw new ExternalServiceConnectionException("There was a problem while sanitizing", ex);
 		}
 		return result;
 	}

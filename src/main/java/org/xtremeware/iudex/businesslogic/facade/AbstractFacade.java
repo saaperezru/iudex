@@ -1,4 +1,3 @@
-
 package org.xtremeware.iudex.businesslogic.facade;
 
 import javax.persistence.EntityManagerFactory;

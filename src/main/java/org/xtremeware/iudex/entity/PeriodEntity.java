@@ -70,10 +70,12 @@ public class PeriodEntity implements Serializable, Entity<PeriodVo> {
         return "PeriodEntity{" + "id=" + id + ", year=" + year + ", semester=" + semester + '}';
     }
 
+    @Override
     public Long getId() {
         return id;
     }
 
+    @Override
     public void setId(Long id) {
         this.id = id;
     }

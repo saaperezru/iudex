@@ -11,7 +11,7 @@
 
     <!-- IMPLEMENTATION -->
     <cc:implementation>
-        <c:if test="#{authCheck.check(cc.attrs.roles)}">
+        <c:if test="#{user.checkAuth}">
             <cc:insertChildren />
         </c:if>
     </cc:implementation>

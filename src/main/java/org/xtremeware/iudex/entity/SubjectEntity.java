@@ -2,11 +2,12 @@ package org.xtremeware.iudex.entity;
 
 import java.io.Serializable;
 import javax.persistence.*;
+import org.xtremeware.iudex.helper.SecurityHelper;
 import org.xtremeware.iudex.vo.SubjectVo;
 
 @javax.persistence.Entity(name = "Subject")
 @NamedQueries({
-    @NamedQuery(name = "getSubjectsByNameLike", query = "SELECT s FROM Subject s WHERE s.name LIKE :name"),
+    @NamedQuery(name = "getSubjectsByNameLike", query = "SELECT s FROM Subject s WHERE UPPER(s.name) LIKE :name"),
     @NamedQuery(name = "getSubjectsByProfessorId", query = "SELECT DISTINCT c.subject FROM Course c WHERE c.professor.id = :professorId")
 })
 @Table(name = "SUBJECT")
@@ -16,17 +17,17 @@ public class SubjectEntity implements Serializable, Entity<SubjectVo> {
     @Id
     @Column(name = "ID_SUBJECT")
     private Long id;
-    @Column(name = "NAME", nullable=false, length=50, unique= true)
+    @Column(name = "NAME", nullable = false, length = 50, unique = true)
     private String name;
-    @Column(name = "DESCRIPTION", length= 2000)
+    @Column(name = "DESCRIPTION", length = 2000)
     private String description;
 
     @Override
     public SubjectVo toVo() {
         SubjectVo vo = new SubjectVo();
         vo.setId(this.getId());
-        vo.setName(this.getName());
-        vo.setDescription(this.getDescription());
+        vo.setName(SecurityHelper.sanitizeHTML(this.getName()));
+        vo.setDescription(SecurityHelper.sanitizeHTML(this.getDescription()));
         return vo;
     }
 
@@ -65,10 +66,12 @@ public class SubjectEntity implements Serializable, Entity<SubjectVo> {
         this.description = description;
     }
 
+    @Override
     public Long getId() {
         return id;
     }
 
+    @Override
     public void setId(Long id) {
         this.id = id;
     }

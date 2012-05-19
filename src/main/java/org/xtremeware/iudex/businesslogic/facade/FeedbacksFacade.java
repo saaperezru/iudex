@@ -5,65 +5,87 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
-import org.xtremeware.iudex.businesslogic.InvalidVoException;
+import org.xtremeware.iudex.businesslogic.DuplicityException;
+import org.xtremeware.iudex.businesslogic.helper.FacadesHelper;
 import org.xtremeware.iudex.businesslogic.service.ServiceFactory;
+import org.xtremeware.iudex.helper.MultipleMessagesException;
 import org.xtremeware.iudex.vo.FeedbackTypeVo;
 import org.xtremeware.iudex.vo.FeedbackVo;
 
 public class FeedbacksFacade extends AbstractFacade {
 
-	public FeedbacksFacade(ServiceFactory serviceFactory, EntityManagerFactory emFactory) {
-		super(serviceFactory, emFactory);
-	}
+    public FeedbacksFacade(ServiceFactory serviceFactory, EntityManagerFactory emFactory) {
+        super(serviceFactory, emFactory);
+    }
 
-	public List<FeedbackTypeVo> getFeedbackTypes() throws Exception {
-		List<FeedbackTypeVo> list = null;
-		EntityManager em = null;
-		EntityTransaction tx = null;
-		try {
-			em = getEntityManagerFactory().createEntityManager();
-			list = getServiceFactory().createFeedbackTypesService().list(em);
+    public List<FeedbackTypeVo> getFeedbackTypes() throws Exception {
+        List<FeedbackTypeVo> list = null;
+        EntityManager em = null;
+        try {
+            em = getEntityManagerFactory().createEntityManager();
+            list = getServiceFactory().createFeedbackTypesService().list(em);
 
-		} catch (Exception e) {
-			getServiceFactory().createLogService().error(e.getMessage(), e);
-			throw e;
-		} finally {
-			if (em != null) {
-				em.clear();
-				em.close();
-			}
-		}
-		return list;
-	}
+        } catch (Exception e) {
+            getServiceFactory().createLogService().error(e.getMessage(), e);
+            throw new RuntimeException(e);
+        } finally {
+            FacadesHelper.closeEntityManager(em);
+        }
+        return list;
+    }
+    
+    public List<FeedbackVo> getFeedbacksByFeedbackType(long feedbackTypeId) throws Exception {
+        List<FeedbackVo> list = null;
+        EntityManager em = null;
+        try {
+            em = getEntityManagerFactory().createEntityManager();
+            list = getServiceFactory().createFeedbacksService().getFeedbacksByFeedbackType(em,feedbackTypeId);
+        } catch (Exception e) {
+            getServiceFactory().createLogService().error(e.getMessage(), e);
+            throw new RuntimeException(e);
+        } finally {
+            FacadesHelper.closeEntityManager(em);
+        }
+        return list;
+    }
+    
+    public List<FeedbackVo> getAllFeedbacks() throws Exception {
+        List<FeedbackVo> list = null;
+        EntityManager em = null;
+        try {
+            em = getEntityManagerFactory().createEntityManager();
+            list = getServiceFactory().createFeedbacksService().getAllFeedbacks(em);
+        } catch (Exception e) {
+            getServiceFactory().createLogService().error(e.getMessage(), e);
+            throw new RuntimeException(e);
+        } finally {
+            FacadesHelper.closeEntityManager(em);
+        }
+        return list;
+    }
 
-	public FeedbackVo addFeedback(long feedbackType, String content, Date date) throws InvalidVoException{
-		FeedbackVo createdVo = null;
-		FeedbackVo vo = new FeedbackVo();
-		vo.setContent(content);
-		vo.setDate(date);
-		vo.setFeedbackTypeId(feedbackType);
-		EntityManager em = null;
-		EntityTransaction tx = null;
-		try {
-			em = getEntityManagerFactory().createEntityManager();
-			tx = em.getTransaction();
-			tx.begin();
-			createdVo = getServiceFactory().createFeedbacksService().create(em, vo);
-			tx.commit();
-		} catch (InvalidVoException e) {
-			throw e;
-		} catch (Exception e) {
-			if (em != null && tx != null) {
-				tx.rollback();
-			}
-			getServiceFactory().createLogService().error(e.getMessage(), e);
-		} finally {
-			if (em != null) {
-				em.clear();
-				em.close();
-			}
-		}
-		return createdVo;
-
-	}
+    public FeedbackVo addFeedback(long feedbackType, String content, Date date) throws MultipleMessagesException, Exception {
+        FeedbackVo createdVo = null;
+        FeedbackVo vo = new FeedbackVo();
+        vo.setContent(content);
+        vo.setDate(date);
+        vo.setFeedbackTypeId(feedbackType);
+        EntityManager em = null;
+        EntityTransaction tx = null;
+        try {
+            em = getEntityManagerFactory().createEntityManager();
+            tx = em.getTransaction();
+            tx.begin();
+            createdVo = getServiceFactory().createFeedbacksService().create(em, vo);
+            tx.commit();
+        } catch (Exception e) {
+            getServiceFactory().createLogService().error(e.getMessage(), e);
+            FacadesHelper.checkException(e, MultipleMessagesException.class);
+            FacadesHelper.checkExceptionAndRollback(em, tx, e, DuplicityException.class);
+            FacadesHelper.rollbackTransaction(em, tx, e);
+        } finally {
+            FacadesHelper.closeEntityManager(em);
+        }
+        return createdVo;
+    }
 }

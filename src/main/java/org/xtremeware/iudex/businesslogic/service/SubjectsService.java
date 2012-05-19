@@ -4,22 +4,23 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.businesslogic.InvalidVoException;
+import org.xtremeware.iudex.businesslogic.service.createimplementations.SimpleCreate;
+import org.xtremeware.iudex.businesslogic.service.readimplementations.SimpleRead;
+import org.xtremeware.iudex.businesslogic.service.removeimplementations.SubjectsRemove;
+import org.xtremeware.iudex.businesslogic.service.updateimplementations.SimpleUpdate;
 import org.xtremeware.iudex.dao.AbstractDaoFactory;
-import org.xtremeware.iudex.dao.Dao;
-import org.xtremeware.iudex.dao.SubjectDao;
-import org.xtremeware.iudex.entity.CourseEntity;
 import org.xtremeware.iudex.entity.SubjectEntity;
-import org.xtremeware.iudex.entity.SubjectRatingEntity;
-import org.xtremeware.iudex.helper.Config;
-import org.xtremeware.iudex.helper.ExternalServiceConnectionException;
-import org.xtremeware.iudex.helper.SecurityHelper;
+import org.xtremeware.iudex.helper.*;
 import org.xtremeware.iudex.vo.SubjectVo;
 
 /**
  *
  * @author josebermeo
  */
-public class SubjectsService extends SimpleCrudService<SubjectVo, SubjectEntity> {
+public class SubjectsService extends CrudService<SubjectVo, SubjectEntity> {
+
+    public final int MAX_SUBJECT_NAME_LENGTH;
+    public final int MAX_SUBJECT_DESCRIPTION_LENGTH;
 
     /**
      * SubjectsService constructor
@@ -27,44 +28,57 @@ public class SubjectsService extends SimpleCrudService<SubjectVo, SubjectEntity>
      * @param daoFactory
      */
     public SubjectsService(AbstractDaoFactory daoFactory) {
-        super(daoFactory);
+        super(daoFactory,
+                new SimpleCreate<SubjectEntity>(daoFactory.getSubjectDao()),
+                new SimpleRead<SubjectEntity>(daoFactory.getSubjectDao()),
+                new SimpleUpdate<SubjectEntity>(daoFactory.getSubjectDao()),
+                new SubjectsRemove(daoFactory));
+        MAX_SUBJECT_NAME_LENGTH = Integer.parseInt(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAX_SUBJECT_NAME_LENGTH));
+        MAX_SUBJECT_DESCRIPTION_LENGTH = Integer.parseInt(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAX_SUBJECT_DESCRIPTION_LENGTH));
     }
-
-    /**
-     * returns the SubjectDao to be used.
-     *
-     * @return
-     */
-    @Override
-    protected Dao<SubjectEntity> getDao() {
-        return getDaoFactory().getSubjectDao();
-    }
-    
 
     /**
      * Validate the provided SubjectVo, if the SubjectVo is not correct the
-     * methods throws an exception
+     * method throws an exception
      *
      * @param em EntityManager
      * @param vo SubjectVo
      * @throws InvalidVoException
      */
     @Override
-    public void validateVo(EntityManager em, SubjectVo vo) throws InvalidVoException {
+    public void validateVo(EntityManager em, SubjectVo vo)
+            throws ExternalServiceConnectionException, MultipleMessagesException {
+        MultipleMessagesException multipleMessageException = new MultipleMessagesException();
         if (vo == null) {
-            throw new InvalidVoException("Null SubjectVo");
+            multipleMessageException.addMessage("subject.null");
+            throw multipleMessageException;
         }
-        if (vo.getName() == null) {
-            throw new InvalidVoException("Null name in the provided SubjectVo");
+        if (vo.getId() == null) {
+            multipleMessageException.addMessage("subject.id.null");
+        } else {
+            vo.setId(Math.abs(vo.getId()));
         }
+
         if (vo.getDescription() == null) {
-            throw new InvalidVoException("Null description in the provided SubjectVo");
+            vo.setDescription("");
         }
-        if (vo.getName().length() > 50) {
-            throw new InvalidVoException("Invalid name length in the provided SubjectVo");
+
+        vo.setDescription(SecurityHelper.sanitizeHTML(vo.getDescription()));
+        if (vo.getDescription().length() > MAX_SUBJECT_DESCRIPTION_LENGTH) {
+            multipleMessageException.addMessage("subject.description.tooLong");
         }
-        if (vo.getDescription().length() > 2000) {
-            throw new InvalidVoException("Invalid description length in the provided SubjectVo");
+
+        if (vo.getName() == null || vo.getName().equals("")) {
+            multipleMessageException.addMessage("subject.name.null");
+        } else {
+            vo.setName(SecurityHelper.sanitizeHTML(vo.getName()));
+            if (vo.getName().length() > MAX_SUBJECT_NAME_LENGTH) {
+                multipleMessageException.addMessage("subject.name.tooLong");
+            }
+        }
+
+        if (!multipleMessageException.getMessages().isEmpty()) {
+            throw multipleMessageException;
         }
     }
 
@@ -77,45 +91,19 @@ public class SubjectsService extends SimpleCrudService<SubjectVo, SubjectEntity>
      * @throws InvalidVoException
      */
     @Override
-    public SubjectEntity voToEntity(EntityManager em, SubjectVo vo) throws InvalidVoException, ExternalServiceConnectionException {
+    public SubjectEntity voToEntity(EntityManager em, SubjectVo vo)
+            throws ExternalServiceConnectionException, MultipleMessagesException {
 
         validateVo(em, vo);
 
         SubjectEntity subjectEntity = new SubjectEntity();
         subjectEntity.setId(vo.getId());
-        subjectEntity.setName(SecurityHelper.sanitizeHTML(vo.getName()));
-        subjectEntity.setDescription(SecurityHelper.sanitizeHTML(vo.getDescription()));
+        subjectEntity.setName(vo.getName());
+        subjectEntity.setDescription(vo.getDescription());
 
         return subjectEntity;
     }
 
-   /**
-     * Remove the subject and all the subjectRatings and courses associated  to it.
-     * 
-     * @param em entity manager
-     * @param id id of the subject
-     */    
-    @Override
-    public void remove(EntityManager em, long id) {
-            List<SubjectRatingEntity> subjectRatings = getDaoFactory().getSubjectRatingDao().getBySubjectId(em, id);
-                for (SubjectRatingEntity rating : subjectRatings){
-                    getDaoFactory().getSubjectRatingDao().remove(em,rating.getId());
-                }
-            
-            /**
-            * This is a bad implementation, but due to few time, it had to be implemented,
-            * it will be changed for the next release.
-            */
-            List<CourseEntity> courses = getDaoFactory().getCourseDao().getBySubjectId(em, id);
-
-            CoursesService courseService = Config.getInstance().getServiceFactory().createCoursesService();
-            for (CourseEntity course : courses){
-                    courseService.remove(em, course.getId());    
-            } 
-            
-            getDao().remove(em, id);
-    }
-    
     /**
      * Returns a list of SubjectVo according with the search query
      *
@@ -123,11 +111,11 @@ public class SubjectsService extends SimpleCrudService<SubjectVo, SubjectEntity>
      * @param query String with the search parameter
      * @return A list of SubjectVo
      */
-    public List<SubjectVo> search(EntityManager em, String query) {
-        if (query == null) {
-            throw new IllegalArgumentException("Null query for a subject search");
-        }
-        List<SubjectEntity> subjectEntitys = ((SubjectDao) this.getDao()).getByName(em, query);
+    public List<SubjectVo> search(EntityManager em, String query)
+            throws ExternalServiceConnectionException, DataBaseException {
+        query = SecurityHelper.sanitizeHTML(query);
+        List<SubjectEntity> subjectEntitys = getDaoFactory().getSubjectDao().
+                getByName(em, query.toUpperCase());
         if (subjectEntitys.isEmpty()) {
             return null;
         }
@@ -145,14 +133,33 @@ public class SubjectsService extends SimpleCrudService<SubjectVo, SubjectEntity>
      * @param name String with the name of the SubjectVo
      * @return A list if SubjectVo
      */
-    public List<SubjectVo> getByNameLike(EntityManager em, String name) {
-        if (name == null) {
-            throw new IllegalArgumentException("Null name for a subject search");
-        }
-        List<SubjectEntity> subjectEntitys = ((SubjectDao) this.getDao()).getByName(em, name);
+    public List<SubjectVo> getByNameLike(EntityManager em, String name)
+            throws ExternalServiceConnectionException, DataBaseException {
+        name = SecurityHelper.sanitizeHTML(name);
+        List<SubjectEntity> subjectEntitys = getDaoFactory().getSubjectDao().
+                getByName(em, name.toUpperCase());
         if (subjectEntitys.isEmpty()) {
-            return null;
+            return new ArrayList<SubjectVo>();
         }
+        ArrayList<SubjectVo> arrayList = new ArrayList<SubjectVo>();
+        for (SubjectEntity subjectEntity : subjectEntitys) {
+            arrayList.add(subjectEntity.toVo());
+        }
+        return arrayList;
+    }
+
+    /**
+     * Returns a list of SubjectVos that had been taught by the specified
+     * professor.
+     *
+     * @param em EntityManager
+     * @param professorId Professor's id to look for subjects.
+     * @return A list of SubjectVo
+     */
+    public List<SubjectVo> getByProfessorId(EntityManager em, long professorId)
+            throws DataBaseException {
+        List<SubjectEntity> subjectEntitys = getDaoFactory().getSubjectDao().
+                getByProfessorId(em, professorId);
         ArrayList<SubjectVo> arrayList = new ArrayList<SubjectVo>();
         for (SubjectEntity subjectEntity : subjectEntitys) {
             arrayList.add(subjectEntity.toVo());

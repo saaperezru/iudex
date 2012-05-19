@@ -3,6 +3,7 @@ package org.xtremeware.iudex.entity;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.*;
+import org.xtremeware.iudex.helper.SecurityHelper;
 import org.xtremeware.iudex.vo.CommentVo;
 
 @javax.persistence.Entity(name = "Comment")
@@ -11,7 +12,7 @@ import org.xtremeware.iudex.vo.CommentVo;
     @NamedQuery(name = "getCommentsBySubjectId", query = "SELECT c FROM Comment c WHERE c.course.subject.id = :subjectId"),
     @NamedQuery(name = "getCommentsByUserId", query = "SELECT c FROM Comment c WHERE c.user.id = :userId"),
     @NamedQuery(name = "getCommentsByCourseId", query = "SELECT c FROM Comment c WHERE c.course.id = :courseId"),
-    @NamedQuery(name = "getUserCommentsCounter", query = "SELECT COUNT(c) FROM Comment c WHERE c.date = CURRENT_DATE AND c.user.id = :userId")
+    @NamedQuery(name = "getUserCommentsCounter", query = "SELECT COUNT(c) FROM Comment c WHERE c.date >= CURRENT_DATE AND c.user.id = :userId")
 })
 @Table(name = "COMMENT_")
 public class CommentEntity implements Serializable, Entity<CommentVo> {
@@ -41,7 +42,7 @@ public class CommentEntity implements Serializable, Entity<CommentVo> {
     public CommentVo toVo() {
         CommentVo vo = new CommentVo();
         vo.setId(getId());
-        vo.setContent(getContent());
+        vo.setContent(SecurityHelper.sanitizeHTML(getContent()));
         vo.setDate(getDate());
         vo.setUserId(getUser().getId());
         vo.setCourseId(getCourse().getId());
@@ -74,7 +75,9 @@ public class CommentEntity implements Serializable, Entity<CommentVo> {
 
     @Override
     public String toString() {
-        return "CommentEntity{" + "id=" + id + ", content=" + content + ", date=" + date + ", user=" + user + ", course=" + course + ", anonymous=" + anonymous + ", rating=" + rating + '}';
+        return "CommentEntity{" + "id=" + id + ", content=" + content
+                + ", date=" + date + ", user=" + user + ", course=" + course
+                + ", anonymous=" + anonymous + ", rating=" + rating + '}';
     }
 
     public boolean isAnonymous() {
@@ -109,10 +112,12 @@ public class CommentEntity implements Serializable, Entity<CommentVo> {
         this.date = date;
     }
 
+    @Override
     public Long getId() {
         return id;
     }
 
+    @Override
     public void setId(Long id) {
         this.id = id;
     }

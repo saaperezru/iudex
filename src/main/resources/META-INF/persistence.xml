@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<persistence version="1.0" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd">
+<persistence version="2.0" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
   <persistence-unit name="org.xtremeware.iudex_local" transaction-type="RESOURCE_LOCAL">
     <provider>org.hibernate.ejb.HibernatePersistence</provider>
     <class>org.xtremeware.iudex.entity.CommentEntity</class>
@@ -16,14 +16,13 @@
     <class>org.xtremeware.iudex.entity.SubjectEntity</class>
     <class>org.xtremeware.iudex.entity.SubjectRatingEntity</class>
     <class>org.xtremeware.iudex.entity.UserEntity</class>
-    <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
-      <property name="hibernate.connection.username" value="iudex"/>
-      <property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver"/>
-      <property name="hibernate.connection.password" value="IPT9piWX1E"/>
-      <property name="hibernate.connection.url" value="jdbc:mysql://localhost:3306/IUDEX"/>
+      <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/IUDEX"/>
+      <property name="javax.persistence.jdbc.password" value="IPT9piWX1E"/>
+      <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
+      <property name="javax.persistence.jdbc.user" value="iudex"/>
       <property name="hibernate.cache.provider_class" value="org.hibernate.cache.NoCacheProvider"/>
-      <property name="hibernate.hbm2ddl.auto" value="update"/>
+      <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>
     </properties>
   </persistence-unit>
 </persistence>

@@ -2,132 +2,169 @@ package org.xtremeware.iudex.businesslogic.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.persistence.EntityManager;
-import org.xtremeware.iudex.businesslogic.InvalidVoException;
+import org.xtremeware.iudex.businesslogic.service.createimplementations.SimpleCreate;
+import org.xtremeware.iudex.businesslogic.service.readimplementations.SimpleRead;
+import org.xtremeware.iudex.businesslogic.service.removeimplementations.ProfessorsRemove;
+import org.xtremeware.iudex.businesslogic.service.updateimplementations.SimpleUpdate;
 import org.xtremeware.iudex.dao.AbstractDaoFactory;
-import org.xtremeware.iudex.dao.Dao;
-import org.xtremeware.iudex.dao.ProfessorDao;
-import org.xtremeware.iudex.entity.CourseEntity;
 import org.xtremeware.iudex.entity.ProfessorEntity;
-import org.xtremeware.iudex.entity.ProfessorRatingEntity;
 import org.xtremeware.iudex.helper.*;
 import org.xtremeware.iudex.vo.ProfessorVo;
 
-public class ProfessorsService extends SimpleCrudService<ProfessorVo, ProfessorEntity> {
+public class ProfessorsService extends CrudService<ProfessorVo, ProfessorEntity> {
 
-	private final int MAX_PROFESSOR_NAME_LENGTH;
+    private final int MAX_PROFESSOR_NAME_LENGTH;
+    private final int MAX_PROFESSOR_DECRIPTION_LENGTH;
 
-	public ProfessorsService(AbstractDaoFactory daoFactory) throws ExternalServiceConnectionException {
-		super(daoFactory);
-		MAX_PROFESSOR_NAME_LENGTH = Integer.parseInt(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAX_PROFESSOR_NAME_LENGTH));
-	}
+    public ProfessorsService(AbstractDaoFactory daoFactory) throws
+            ExternalServiceConnectionException {
+        super(daoFactory, new SimpleCreate<ProfessorEntity>(daoFactory.getProfessorDao()),
+                new SimpleRead<ProfessorEntity>(daoFactory.getProfessorDao()),
+                new SimpleUpdate<ProfessorEntity>(daoFactory.getProfessorDao()),
+                new ProfessorsRemove(daoFactory));
+        MAX_PROFESSOR_NAME_LENGTH =
+                Integer.parseInt(ConfigurationVariablesHelper.getVariable(
+                ConfigurationVariablesHelper.MAX_PROFESSOR_NAME_LENGTH));
+        MAX_PROFESSOR_DECRIPTION_LENGTH = Integer.parseInt(ConfigurationVariablesHelper.getVariable(
+                ConfigurationVariablesHelper.MAX_PROFESSOR_DECRIPTION_LENGTH));
+    }
 
-	public List<ProfessorVo> getByNameLike(EntityManager em, String name) {
-		ArrayList<ProfessorVo> list = new ArrayList<ProfessorVo>();
-		for (ProfessorEntity professor : ((ProfessorDao) getDao()).getByNameLike(em, name)) {
-			list.add(professor.toVo());
-		}
-		return list;
-	}
+    public List<ProfessorVo> getByNameLike(EntityManager em, String name)
+            throws ExternalServiceConnectionException, DataBaseException {
+        name = SecurityHelper.sanitizeHTML(name);
+        ArrayList<ProfessorVo> list = new ArrayList<ProfessorVo>();
+        for (ProfessorEntity professor : getDaoFactory().getProfessorDao().
+                getByNameLike(em, name.toUpperCase())) {
+            list.add(professor.toVo());
+        }
+        return list;
+    }
 
-	public List<ProfessorVo> getBySubjectId(EntityManager em, long subjectId) {
-		ArrayList<ProfessorVo> list = new ArrayList<ProfessorVo>();
-		for (ProfessorEntity professor : ((ProfessorDao) getDao()).getBySubjectId(em, subjectId)) {
-			list.add(professor.toVo());
-		}
-		return list;
-	}
+    public List<ProfessorVo> getBySubjectId(EntityManager em, long subjectId)
+            throws DataBaseException {
+        ArrayList<ProfessorVo> list = new ArrayList<ProfessorVo>();
+        for (ProfessorEntity professor : getDaoFactory().getProfessorDao().
+                getBySubjectId(em, subjectId)) {
+            list.add(professor.toVo());
+        }
+        return list;
+    }
 
-	@Override
-	protected Dao<ProfessorEntity> getDao() {
-		return getDaoFactory().getProfessorDao();
-	}
+    @Override
+    public void validateVo(EntityManager em, ProfessorVo vo)
+            throws ExternalServiceConnectionException, MultipleMessagesException {
 
-	@Override
-	public void validateVo(EntityManager em, ProfessorVo vo) throws InvalidVoException {
-		if (em == null) {
-			throw new IllegalArgumentException("EntityManager em cannot be null");
-		}
-                if (vo == null) {
-                    throw new InvalidVoException("Null ProfessorVo");
-                }
-		if (vo.getFirstName() == null) {
-			throw new InvalidVoException("String firstName in the provided ProgramVo cannot be null");
-		}
-		if (vo.getLastName() == null) {
-			throw new InvalidVoException("String lastName in the provided ProgramVo cannot be null");
-		}
-		if (vo.getDescription() == null) {
-			throw new InvalidVoException("String description in the provided ProgramVo cannot be null");
-		}
-		if (vo.getEmail() == null) {
-			throw new InvalidVoException("String email in the provided ProgramVo cannot be null");
-		}
-		if (vo.getImageUrl() == null) {
-			throw new InvalidVoException("String imageUrl in the provided ProgramVo cannot be null");
-		}
-		if (vo.getWebsite() == null) {
-			throw new InvalidVoException("String website in the provided ProgramVo cannot be null");
-		}
-		if (vo.getImageUrl().length() > 0 && !ValidityHelper.isValidUrl(vo.getImageUrl())) {
-			throw new InvalidVoException("String imageUrl in the provided ProgamVo must be a valid URL");
-		}
-		if (vo.getEmail().length() > 0 && !ValidityHelper.isValidEmail(vo.getEmail())) {
-			throw new InvalidVoException("Strng email in the provided ProgramVo must be a valid email address");
-		}
-		if (vo.getWebsite().length() > 0 && !ValidityHelper.isValidUrl(vo.getWebsite())) {
-			throw new InvalidVoException("String website in provided ProgramVo must be a valid URL");
-		}
-		if (vo.getFirstName().length() > MAX_PROFESSOR_NAME_LENGTH || vo.getLastName().length() > MAX_PROFESSOR_NAME_LENGTH) {
-			throw new InvalidVoException("String firstName and String lastName length must be less than " + String.valueOf(MAX_PROFESSOR_NAME_LENGTH));
-		}
-	}
+        MultipleMessagesException multipleMessageException =
+                new MultipleMessagesException();
+        if (vo == null) {
+            multipleMessageException.addMessage("professor.null");
+            throw multipleMessageException;
+        }
+        if (vo.getFirstName() == null) {
+            multipleMessageException.addMessage(
+                    "professor.firstName.null");
+        } else {
+            vo.setFirstName(SecurityHelper.sanitizeHTML(vo.getFirstName()));
+            if (vo.getFirstName().length() > MAX_PROFESSOR_NAME_LENGTH) {
+                multipleMessageException.addMessage(
+                        "professor.firstName.tooLong");
+            }
+            if (vo.getFirstName().isEmpty()) {
+                multipleMessageException.addMessage(
+                        "professor.firstName.empty");
+            }
+        }
+        if (vo.getLastName() == null) {
+            multipleMessageException.addMessage(
+                    "professor.lastName.null");
+        } else {
+            vo.setLastName(SecurityHelper.sanitizeHTML(vo.getLastName()));
+            if (vo.getLastName().length() > MAX_PROFESSOR_NAME_LENGTH) {
+                multipleMessageException.addMessage(
+                        "professor.lastName.tooLong");
+            }
+            if (vo.getLastName().isEmpty()) {
+                multipleMessageException.addMessage(
+                        "professor.lastName.empty");
+            }
+        }
+        if (vo.getDescription() == null) {
+            multipleMessageException.addMessage(
+                    "professor.description.null");
+        } else {
+            vo.setDescription(SecurityHelper.sanitizeHTML(vo.getDescription()));
+            if (vo.getDescription().length() > MAX_PROFESSOR_DECRIPTION_LENGTH) {
+                multipleMessageException.addMessage(
+                        "professor.description.tooLong");
+            }
+            if (vo.getDescription().isEmpty()) {
+                multipleMessageException.addMessage(
+                        "professor.description.empty");
+            }
+        }
 
-	@Override
-	public ProfessorEntity voToEntity(EntityManager em, ProfessorVo vo) throws InvalidVoException,ExternalServiceConnectionException {
-		validateVo(em, vo);
-		ProfessorEntity entity = new ProfessorEntity();
-		entity.setId(vo.getId());
-		entity.setEmail(vo.getEmail());
-		try {
-			entity.setDescription(SecurityHelper.sanitizeHTML(vo.getDescription()));
-			entity.setFirstName(SecurityHelper.sanitizeHTML(vo.getFirstName()));
-			entity.setLastName(SecurityHelper.sanitizeHTML(vo.getLastName()));
-		} catch (ExternalServiceConnectionException ex) {
-			throw ex;
-		}
-		entity.setImageUrl(vo.getImageUrl());
-		entity.setWebsite(vo.getWebsite());
-		return entity;
-	}
-        
-      /**
-        * Remove the professor and all the professorRatings and courses associated  to him.
-        * 
-        * @param em entity manager
-        * @param id id of the professor
-        */    
-        @Override
-        public void remove(EntityManager em, long id) {
-                List<ProfessorRatingEntity> professorRatings = getDaoFactory().getProfessorRatingDao().getByProfessorId(em, id);
-                    for (ProfessorRatingEntity rating : professorRatings){
-                        getDaoFactory().getProfessorRatingDao().remove(em,rating.getId());
-                    }
+        if (vo.getEmail() == null) {
+            multipleMessageException.addMessage(
+                    "professor.email.null");
+        } else if (vo.getEmail().isEmpty()) {
+            multipleMessageException.addMessage(
+                    "professor.email.empty");
+        } else if (!ValidityHelper.isValidEmail(vo.getEmail())) {
+            multipleMessageException.addMessage(
+                    "professor.email.invalidEmail");
+            }
+        if (vo.getImageUrl() == null) {
+            multipleMessageException.addMessage(
+                    "professor.imageUrl.null");
+        } else if (!vo.getImageUrl().isEmpty()) {
+            String imageUrl = vo.getImageUrl();
+            if (!vo.getImageUrl().substring(0, 7).equalsIgnoreCase("http://")&& 
+                    !vo.getImageUrl().substring(0, 8).equalsIgnoreCase("https://")){
+                imageUrl = "http://"+imageUrl;
+            }
+            if (!ValidityHelper.isValidUrl(imageUrl)) {
+                multipleMessageException.addMessage(
+                        "professor.imageUrl.invalidImage");
+            }
+        }
+        if (vo.getWebsite() == null) {
+            multipleMessageException.addMessage(
+                    "professor.website.null");
+        } else if (vo.getWebsite().isEmpty()) {
+            multipleMessageException.addMessage(
+                    "professor.website.empty");
+        } else {
+            String website = vo.getWebsite();
+            if (!vo.getWebsite().substring(0, 7).equalsIgnoreCase("http://")&& 
+                    !vo.getWebsite().substring(0, 8).equalsIgnoreCase("https://")){
+                website = "http://"+website;
+            }
+            if (!ValidityHelper.isValidUrl(website)) {
+                multipleMessageException.addMessage(
+                        "professor.website.invalidWebsite");
+            }
+        }
 
-                
-             /**
-              * This is a bad implementation, but due to few time, it had to be implemented,
-              * it will be changed for the next release.
-              */
-                List<CourseEntity> courses = getDaoFactory().getCourseDao().getByProfessorId(em, id);
-                
-                CoursesService courseService = Config.getInstance().getServiceFactory().createCoursesService();
-                for (CourseEntity course : courses){
-                        courseService.remove(em, course.getId());    
-                } 
+        if (!multipleMessageException.getMessages().isEmpty()) {
+            throw multipleMessageException;
+        }
+    }
 
-                getDao().remove(em, id);
-        }        
+    @Override
+    public ProfessorEntity voToEntity(EntityManager em, ProfessorVo vo)
+            throws ExternalServiceConnectionException, MultipleMessagesException {
+        validateVo(em, vo);
+        ProfessorEntity entity = new ProfessorEntity();
+        entity.setId(vo.getId());
+        entity.setEmail(vo.getEmail());
+
+        entity.setDescription(vo.getDescription());
+        entity.setFirstName(vo.getFirstName());
+        entity.setLastName(vo.getLastName());
+
+        entity.setImageUrl(vo.getImageUrl());
+        entity.setWebsite(vo.getWebsite());
+        return entity;
+    }
 }

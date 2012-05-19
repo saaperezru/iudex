@@ -1,0 +1,49 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html">
+    <h:head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/xhtml; charset=utf-8" />
+        <meta name="description" content="" />
+        <meta name="keywords" content="" />
+        <meta name="author" content="" />
+        <link rel="icon" href="#{request.contextPath}/favicon.ico" />
+        <link rel="shortcut" href="#{request.contextPath}/favicon.ico" />
+        <h:outputStylesheet library="bootstrap" name="css/bootstrap.min.css" />
+        <h:outputStylesheet library="bootstrap" name="css/bootstrap-responsive.min.css" />
+        <h:outputStylesheet library="css" name="style.css" />
+    </h:head>
+    <h:body>
+        <div class="container-fluid">
+            <div class="offset1 span10">
+                <div class="hero-unit">
+                    <ui:insert name="header">
+                    </ui:insert>
+                </div>
+            </div>
+            <div class="offset1 span10">
+                <ui:insert name="content">
+                </ui:insert>
+            </div>
+        </div>
+
+        <!-- footer -->
+        <div class="container-fluid">
+            <div class="offset1 span10">
+                <hr />
+                <p>
+                    © Xtremeware 2012
+                </p>
+            </div>
+        </div>
+        <!--end content-->
+        <h:outputScript library="jquery" name="jquery-1.7.2.min.js" />
+        <h:outputScript library="bootstrap" name="js/bootstrap.min.js" />
+        <h:outputScript library="bootstrap" name="js/bootstrap-tooltip.js" />
+        <script>
+            jQuery(".inline-error").tooltip();
+        </script>
+    </h:body>
+</html>

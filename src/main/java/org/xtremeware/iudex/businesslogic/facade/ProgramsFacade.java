@@ -1,17 +1,15 @@
 package org.xtremeware.iudex.businesslogic.facade;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
-import org.xtremeware.iudex.businesslogic.InvalidVoException;
+import org.xtremeware.iudex.businesslogic.DuplicityException;
+import org.xtremeware.iudex.businesslogic.helper.FacadesHelper;
 import org.xtremeware.iudex.businesslogic.service.ServiceFactory;
-import org.xtremeware.iudex.vo.PeriodVo;
+import org.xtremeware.iudex.helper.MultipleMessagesException;
 import org.xtremeware.iudex.vo.ProgramVo;
-import org.xtremeware.iudex.vo.SubjectVo;
 
 public class ProgramsFacade extends AbstractFacade {
 
@@ -29,16 +27,10 @@ public class ProgramsFacade extends AbstractFacade {
             getServiceFactory().createProgramsService().remove(em, id);
             tx.commit();
         } catch (Exception e) {
-            if (em != null && tx != null) {
-                tx.rollback();
-            }
             getServiceFactory().createLogService().error(e.getMessage(), e);
-            throw e;
+            FacadesHelper.rollbackTransaction(em, tx, e);
         } finally {
-            if (em != null) {
-                em.clear();
-                em.close();
-            }
+            FacadesHelper.closeEntityManager(em);
         }
     }
 
@@ -50,7 +42,7 @@ public class ProgramsFacade extends AbstractFacade {
      * @return Returns null if there is a problem while persisting (logs all
      * errors) and throws an exception if data isn't valid.
      */
-    public ProgramVo addProgram(String name) throws InvalidVoException {
+    public ProgramVo addProgram(String name) throws MultipleMessagesException, Exception {
         ProgramVo createdVo = null;
         ProgramVo vo = new ProgramVo();
         vo.setName(name);
@@ -62,64 +54,49 @@ public class ProgramsFacade extends AbstractFacade {
             tx.begin();
             createdVo = getServiceFactory().createProgramsService().create(em, vo);
             tx.commit();
-        } catch (InvalidVoException e) {
+        } catch (MultipleMessagesException e) {
             throw e;
         } catch (Exception e) {
-            if (em != null && tx != null) {
-                tx.rollback();
-            }
             getServiceFactory().createLogService().error(e.getMessage(), e);
+            FacadesHelper.checkException(e, MultipleMessagesException.class);
+            FacadesHelper.checkExceptionAndRollback(em, tx, e, DuplicityException.class);
+            FacadesHelper.rollbackTransaction(em, tx, e);
         } finally {
-            if (em != null) {
-                em.clear();
-                em.close();
-            }
+            FacadesHelper.closeEntityManager(em);
         }
         return createdVo;
     }
 
-    public Map<Long, String> getProgramsAutocomplete(String name) throws Exception {
+    public List<ProgramVo> getProgramsAutocomplete(String name) throws Exception {
         EntityManager em = null;
-        Map<Long, String> map = new HashMap<Long, String>();
+        List<ProgramVo> programs = null;
+        if(name == null){
+            return new ArrayList<ProgramVo>();
+        }
         try {
             em = getEntityManagerFactory().createEntityManager();
-            List<ProgramVo> programs = getServiceFactory().createProgramsService().getByNameLike(em, name);
-            for (ProgramVo p : programs) {
-                map.put(p.getId(), p.getName());
-            }
+            programs = getServiceFactory().createProgramsService().getByNameLike(em, name);
 
         } catch (Exception e) {
             getServiceFactory().createLogService().error(e.getMessage(), e);
-            throw e;
+            throw new RuntimeException(e);
         } finally {
-            if (em != null) {
-                em.clear();
-                em.close();
-            }
+           FacadesHelper.closeEntityManager(em);
         }
-        return map;
+        return programs;
     }
 
     public List<ProgramVo> listPrograms() {
         EntityManager em = null;
-        EntityTransaction tx = null;
         List<ProgramVo> list = null;
         try {
             em = getEntityManagerFactory().createEntityManager();
-            tx = em.getTransaction();
-            tx.begin();
-            list = getServiceFactory().createProgramsService().getByNameLike(em, "gra");
-            tx.commit();
+            list = getServiceFactory().createProgramsService().getAll(em);
         } catch (Exception e) {
-            if (em != null && tx != null) {
-                tx.rollback();
-            }
             getServiceFactory().createLogService().error(e.getMessage(), e);
+            throw new RuntimeException(e);
         } finally {
-            if (em != null) {
-                em.clear();
-                em.close();
-            }
+            FacadesHelper.closeEntityManager(em);
         }
         return list;
     }

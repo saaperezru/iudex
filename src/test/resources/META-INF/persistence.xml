@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.0" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
+  <persistence-unit name="org.xtremeware.iudex_local" transaction-type="RESOURCE_LOCAL">
+    <provider>org.hibernate.ejb.HibernatePersistence</provider>
+    <class>org.xtremeware.iudex.entity.CommentEntity</class>
+    <class>org.xtremeware.iudex.entity.CommentRatingEntity</class>
+    <class>org.xtremeware.iudex.entity.ConfirmationKeyEntity</class>
+    <class>org.xtremeware.iudex.entity.CourseEntity</class>
+    <class>org.xtremeware.iudex.entity.CourseRatingEntity</class>
+    <class>org.xtremeware.iudex.entity.FeedbackEntity</class>
+    <class>org.xtremeware.iudex.entity.FeedbackTypeEntity</class>
+    <class>org.xtremeware.iudex.entity.PeriodEntity</class>
+    <class>org.xtremeware.iudex.entity.ProfessorEntity</class>
+    <class>org.xtremeware.iudex.entity.ProfessorRatingEntity</class>
+    <class>org.xtremeware.iudex.entity.ProgramEntity</class>
+    <class>org.xtremeware.iudex.entity.SubjectEntity</class>
+    <class>org.xtremeware.iudex.entity.SubjectRatingEntity</class>
+    <class>org.xtremeware.iudex.entity.UserEntity</class>
+    <properties>
+      <property name="javax.persistence.jdbc.url" value="jdbc:h2:mem:db1"/>
+      <property name="javax.persistence.jdbc.password" value=""/>
+      <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
+      <property name="javax.persistence.jdbc.user" value="sa"/>
+      <property name="hibernate.cache.provider_class" value="org.hibernate.cache.NoCacheProvider"/>
+      <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
+    </properties>
+  </persistence-unit>
+</persistence>

@@ -6,31 +6,31 @@ package org.xtremeware.iudex.dao;
  */
 public interface AbstractDaoFactory {
 
-    public CommentDao getCommentDao();
+    public CommentDaoInterface getCommentDao();
 
-    public CommentRatingDao getCommentRatingDao();
+    public CommentRatingDaoInterface getCommentRatingDao();
 
-    public ConfirmationKeyDao getConfirmationKeyDao();
+    public ConfirmationKeyDaoInterface getConfirmationKeyDao();
 
-    public CourseDao getCourseDao();
+    public CourseDaoInterface getCourseDao();
 
-    public CourseRatingDao getCourseRatingDao();
+    public CourseRatingDaoInterface getCourseRatingDao();
 
-    public FeedbackDao getFeedbackDao();
+    public FeedbackDaoInterface getFeedbackDao();
 
-    public FeedbackTypeDao getFeedbackTypeDao();
+    public FeedbackTypeDaoInterface getFeedbackTypeDao();
 
-    public PeriodDao getPeriodDao();
+    public PeriodDaoInterface getPeriodDao();
 
-    public ProfessorDao getProfessorDao();
+    public ProfessorDaoInterface getProfessorDao();
 
-    public ProfessorRatingDao getProfessorRatingDao();
+    public ProfessorRatingDaoInterface getProfessorRatingDao();
 
-    public ProgramDao getProgramDao();
+    public ProgramDaoInterface getProgramDao();
 
-    public SubjectDao getSubjectDao();
+    public SubjectDaoInterface getSubjectDao();
 
-    public SubjectRatingDao getSubjectRatingDao();
+    public SubjectRatingDaoInterface getSubjectRatingDao();
 
-    public UserDao getUserDao();
+    public UserDaoInterface getUserDao();
 }

@@ -20,8 +20,9 @@ import org.xtremeware.iudex.vo.CommentRatingVo;
     @NamedQuery(name = "countNegativeCommentRating", query = "SELECT COUNT(result) FROM CommentRating result "
     + "WHERE result.comment.id = :evaluatedObjectId AND result.value = -1")
 })
-@Table(name = "COMMENT_RATING")
-public class CommentRatingEntity implements Serializable, Entity<CommentRatingVo>, RatingEntity {
+@Table( name = "COMMENT_RATING",
+            uniqueConstraints = { @UniqueConstraint( columnNames = { "ID_USER_", "ID_COMMENT_" } ) } )
+public class CommentRatingEntity implements Serializable, Entity<CommentRatingVo> {
 
     private static final long serialVersionUID = 1L;
     @Id

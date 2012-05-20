@@ -50,7 +50,7 @@ public class SubjectsFacade extends AbstractFacade {
         SubjectRatingVo subject = null;
         try {
             entityManager = getEntityManagerFactory().createEntityManager();
-            subject = getServiceFactory().createSubjectRatingsService().getBySubjectIdAndUserId(entityManager, subjectId, userId);
+            subject = getServiceFactory().createSubjectRatingsService().getByEvaluatedObjectAndUserId(entityManager, subjectId, userId);
 
         } catch (Exception e) {
             getServiceFactory().createLogService().error(e.getMessage(), e);
@@ -92,19 +92,7 @@ public class SubjectsFacade extends AbstractFacade {
             entityManager = getEntityManagerFactory().createEntityManager();
             tx = entityManager.getTransaction();
             tx.begin();
-            rating = getServiceFactory().createSubjectRatingsService().getBySubjectIdAndUserId(entityManager, subjectId, userId);
-            //If there is no existing record in the database, create it
-            if (rating == null) {
-                rating = getServiceFactory().createSubjectRatingsService().create(entityManager, vo);
-            } else {
-                //Otherwise update the existing one
-                //But first verify bussines rules
-                if (value != rating.getEvaluatedObjectId()) {
-                    getServiceFactory().createSubjectRatingsService().validateVo(entityManager, vo);
-                    rating.setValue(value);
-                    getServiceFactory().createSubjectRatingsService().update(entityManager, rating);
-                }
-            }
+            rating = getServiceFactory().createSubjectRatingsService().create(entityManager, vo);
             tx.commit();
         } catch (Exception e) {
             getServiceFactory().createLogService().error(e.getMessage(), e);

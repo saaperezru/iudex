@@ -123,7 +123,7 @@ public class CommentsFacade extends AbstractFacade {
         try {
             em = getEntityManagerFactory().createEntityManager();
             rating = getServiceFactory().createCommentRatingService().
-                    getByCommentIdAndUserId(em, commentId, userId);
+                    getByEvaluatedObjectAndUserId(em, commentId, userId);
         } catch (Exception e) {
             getServiceFactory().createLogService().error(e.getMessage(), e);
             throw new RuntimeException(e);
@@ -135,36 +135,28 @@ public class CommentsFacade extends AbstractFacade {
 
     public CommentRatingVo rateComment(long commentId, long userId, int value)
             throws MultipleMessagesException, Exception {
-        EntityManager em = null;
+        EntityManager entityManager = null;
         EntityTransaction tx = null;
         CommentRatingVo rating = null;
         try {
-            em = getEntityManagerFactory().createEntityManager();
-            tx = em.getTransaction();
+            CommentRatingVo vo = new CommentRatingVo();
+            vo.setEvaluatedObjectId(commentId);
+            vo.setUserId(userId);
+            vo.setValue(value);
+
+            entityManager = getEntityManagerFactory().createEntityManager();
+            tx = entityManager.getTransaction();
             tx.begin();
-            rating = getServiceFactory().createCommentRatingService().
-                    getByCommentIdAndUserId(em, commentId, userId);
-            if (rating == null) {
-                rating = new CommentRatingVo();
-                rating.setEvaluatedObjectId(commentId);
-                rating.setUserId(userId);
-                rating.setValue(value);
-                rating = getServiceFactory().createCommentRatingService().create(
-                        em, rating);
-            } else {
-                rating.setValue(value);
-                getServiceFactory().createCommentRatingService().update(em,
-                        rating);
-            }
+            rating = getServiceFactory().createCommentRatingService().create(entityManager, vo);
             tx.commit();
 
         } catch (Exception e) {
             getServiceFactory().createLogService().error(e.getMessage(), e);
             FacadesHelper.checkException(e, MultipleMessagesException.class);
-            FacadesHelper.checkExceptionAndRollback(em, tx, e, DuplicityException.class);
-            FacadesHelper.rollbackTransaction(em, tx, e);
+            FacadesHelper.checkExceptionAndRollback(entityManager, tx, e, DuplicityException.class);
+            FacadesHelper.rollbackTransaction(entityManager, tx, e);
         } finally {
-            FacadesHelper.closeEntityManager(em);
+            FacadesHelper.closeEntityManager(entityManager);
         }
         return rating;
     }

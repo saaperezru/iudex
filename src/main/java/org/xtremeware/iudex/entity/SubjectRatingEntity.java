@@ -23,7 +23,7 @@ import org.xtremeware.iudex.vo.SubjectRatingVo;
     + "WHERE result.subject.id = :evaluatedObjectId AND result.value = -1")
 })
 @Table(name = "SUBJECT_RATING")
-public class SubjectRatingEntity implements Serializable, Entity<SubjectRatingVo> {
+public class SubjectRatingEntity implements Serializable, Entity<SubjectRatingVo>, RatingEntity {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -98,10 +98,12 @@ public class SubjectRatingEntity implements Serializable, Entity<SubjectRatingVo
         this.user = user;
     }
 
+    @Override
     public int getValue() {
         return this.value;
     }
 
+    @Override
     public void setValue(int value) {
         this.value = value;
     }

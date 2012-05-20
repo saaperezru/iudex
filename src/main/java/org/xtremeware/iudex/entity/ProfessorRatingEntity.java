@@ -19,7 +19,7 @@ import org.xtremeware.iudex.vo.ProfessorRatingVo;
     query = "SELECT COUNT (result) FROM ProfessorRating result "
     + "WHERE result.professor.id = :evaluatedObjectId AND result.value = -1")})
 @Table(name = "PROFESSOR_RATING")
-public class ProfessorRatingEntity implements Serializable, Entity<ProfessorRatingVo> {
+public class ProfessorRatingEntity implements Serializable, Entity<ProfessorRatingVo>, RatingEntity {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -98,10 +98,12 @@ public class ProfessorRatingEntity implements Serializable, Entity<ProfessorRati
         this.user = user;
     }
 
+    @Override
     public int getValue() {
         return this.value;
     }
 
+    @Override
     public void setValue(int value) {
         this.value = value;
     }

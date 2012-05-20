@@ -106,7 +106,7 @@ public class ProfessorsFacade extends AbstractFacade {
         ProfessorRatingVo rating = null;
         try {
             entityManager = getEntityManagerFactory().createEntityManager();
-            rating = getServiceFactory().createProfessorRatingsService().getByProfessorIdAndUserId(entityManager, professorId, userId);
+            rating = getServiceFactory().createProfessorRatingsService().getByEvaluatedObjectAndUserId(entityManager, professorId, userId);
         } catch (Exception e) {
             getServiceFactory().createLogService().error(e.getMessage(), e);
             throw new RuntimeException(e);

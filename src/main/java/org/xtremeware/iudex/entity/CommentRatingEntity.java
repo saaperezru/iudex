@@ -21,7 +21,7 @@ import org.xtremeware.iudex.vo.CommentRatingVo;
     + "WHERE result.comment.id = :evaluatedObjectId AND result.value = -1")
 })
 @Table(name = "COMMENT_RATING")
-public class CommentRatingEntity implements Serializable, Entity<CommentRatingVo> {
+public class CommentRatingEntity implements Serializable, Entity<CommentRatingVo>, RatingEntity {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -100,10 +100,12 @@ public class CommentRatingEntity implements Serializable, Entity<CommentRatingVo
         this.user = user;
     }
 
+    @Override
     public int getValue() {
         return value;
     }
 
+    @Override
     public void setValue(int value) {
         this.value = value;
     }

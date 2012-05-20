@@ -7,10 +7,8 @@ import org.xtremeware.iudex.vo.SubjectVo;
 
 @javax.persistence.Entity(name = "Subject")
 @NamedQueries({
-    @NamedQuery(name = "getSubjectsByNameLike",
-    query = "SELECT s FROM Subject s WHERE UPPER(s.name) LIKE :name"),
-    @NamedQuery(name = "getSubjectsByProfessorId",
-    query = "SELECT DISTINCT c.subject FROM Course c WHERE c.professor.id = :professorId")
+    @NamedQuery(name = "getSubjectsByNameLike", query = "SELECT s FROM Subject s WHERE UPPER(s.name) LIKE :name"),
+    @NamedQuery(name = "getSubjectsByProfessorId", query = "SELECT DISTINCT c.subject FROM Course c WHERE c.professor.id = :professorId")
 })
 @Table(name = "SUBJECT")
 public class SubjectEntity implements Serializable, Entity<SubjectVo> {
@@ -22,10 +20,8 @@ public class SubjectEntity implements Serializable, Entity<SubjectVo> {
     private Long id;
     @Column(name = "NAME", nullable = false, length = 50, unique = true)
     private String name;
-    
     @Column(name = "CODE", unique = true)
-    private String code;
-    
+    private int code;
     @Column(name = "DESCRIPTION", length = 2000)
     private String description;
 
@@ -35,6 +31,7 @@ public class SubjectEntity implements Serializable, Entity<SubjectVo> {
         vo.setId(this.getId());
         vo.setName(SecurityHelper.sanitizeHTML(this.getName()));
         vo.setDescription(SecurityHelper.sanitizeHTML(this.getDescription()));
+        vo.setCode(this.getCode());
         return vo;
     }
 
@@ -53,7 +50,7 @@ public class SubjectEntity implements Serializable, Entity<SubjectVo> {
         if ((this.name == null) ? (other.name != null) : !this.name.equals(other.name)) {
             return false;
         }
-        if ((this.code == null) ? (other.code != null) : !this.code.equals(other.code)) {
+        if (this.code != other.code) {
             return false;
         }
         if ((this.description == null) ? (other.description != null) : !this.description.equals(other.description)) {
@@ -64,11 +61,11 @@ public class SubjectEntity implements Serializable, Entity<SubjectVo> {
 
     @Override
     public int hashCode() {
-        int hash = 3;
-        hash = 97 * hash + (this.id != null ? this.id.hashCode() : 0);
-        hash = 97 * hash + (this.name != null ? this.name.hashCode() : 0);
-        hash = 97 * hash + (this.code != null ? this.code.hashCode() : 0);
-        hash = 97 * hash + (this.description != null ? this.description.hashCode() : 0);
+        int hash = 7;
+        hash = 79 * hash + (this.id != null ? this.id.hashCode() : 0);
+        hash = 79 * hash + (this.name != null ? this.name.hashCode() : 0);
+        hash = 79 * hash + this.code;
+        hash = 79 * hash + (this.description != null ? this.description.hashCode() : 0);
         return hash;
     }
 
@@ -76,8 +73,6 @@ public class SubjectEntity implements Serializable, Entity<SubjectVo> {
     public String toString() {
         return "SubjectEntity{" + "id=" + id + ", name=" + name + ", code=" + code + ", description=" + description + '}';
     }
-
-
 
     public String getDescription() {
         return description;
@@ -104,12 +99,12 @@ public class SubjectEntity implements Serializable, Entity<SubjectVo> {
     public void setName(String name) {
         this.name = name;
     }
-    
-    public String getCode() {
+
+    public int getCode() {
         return code;
     }
 
-    public void setCode(String code) {
+    public void setCode(int code) {
         this.code = code;
     }
 }

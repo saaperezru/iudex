@@ -24,8 +24,8 @@ public class VoVwFactory {
                 professorVo.getFirstName() + " " + professorVo.getLastName(), rating);
     }
 
-    public static SubjectVoVwSmall getSubjectVoVwSmall(SubjectVo s, RatingSummaryVo rating) {
-        return new SubjectVoVwSmall(s.getId(), s.getName(), rating);
+    public static SubjectVoVwSmall getSubjectVoVwSmall(SubjectVo subjectVo, RatingSummaryVo rating) {
+        return new SubjectVoVwSmall(subjectVo.getId(), subjectVo.getName(), subjectVo.getCode(), rating);
     }
 
     public static CourseVoVwFull getCourseVoVwFull(CourseVo courseVo, SubjectVoVwSmall subjectVoVwSmall, ProfessorVoVwSmall professorVoVwSmall) {

@@ -1,4 +1,3 @@
-
 package org.xtremeware.iudex.presentation.vovw;
 
 import org.xtremeware.iudex.vo.RatingSummaryVo;
@@ -11,7 +10,7 @@ public class SubjectVoVwSmall implements ValueObject{
         private int code;
 	private RatingSummaryVo ratingSummary;
 
-	public SubjectVoVwSmall(long id, String name, RatingSummaryVo ratingSummary, int code) {
+	public SubjectVoVwSmall(long id, String name, int code ,RatingSummaryVo ratingSummary) {
 		this.id = id;
 		this.name = name;
 		this.ratingSummary = ratingSummary;

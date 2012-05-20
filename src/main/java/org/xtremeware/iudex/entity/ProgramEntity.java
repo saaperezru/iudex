@@ -33,6 +33,7 @@ public class ProgramEntity implements Serializable, Entity<ProgramVo> {
         ProgramVo vo = new ProgramVo();
         vo.setId(this.getId());
         vo.setName(SecurityHelper.sanitizeHTML(this.getName()));
+        vo.setCode(this.getCode());
         return vo;
     }
 

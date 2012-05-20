@@ -45,15 +45,15 @@ public class CoursesFacadeIT {
         rating = new RatingSummaryVo();
         rating.setPositive(4);
         rating.setNegative(0);
-        is2 = new SubjectVoVwSmall(2016702, "INGENIERIA DE SOFTWARE II", rating);
+        is2 = new SubjectVoVwSmall(2016702, "INGENIERIA DE SOFTWARE II",2016702, rating);
         rating = new RatingSummaryVo();
         rating.setPositive(2);
         rating.setNegative(2);
-        isa = new SubjectVoVwSmall(2019772, "INGENIERIA DE SOFTWARE AVANZADA", rating);
+        isa = new SubjectVoVwSmall(2019772, "INGENIERIA DE SOFTWARE AVANZADA",2019772, rating);
         rating = new RatingSummaryVo();
         rating.setPositive(3);
         rating.setNegative(1);
-        afi = new SubjectVoVwSmall(2016025, "AUDITORIA FINANCIERA I", rating);
+        afi = new SubjectVoVwSmall(2016025, "AUDITORIA FINANCIERA I",2016025, rating);
 
         marioIs2 = new CourseVo();
         marioIs2.setId(1L);

@@ -22,7 +22,7 @@ import org.xtremeware.iudex.vo.CommentRatingVo;
 })
 @Table( name = "COMMENT_RATING",
             uniqueConstraints = { @UniqueConstraint( columnNames = { "ID_USER_", "ID_COMMENT_" } ) } )
-public class CommentRatingEntity implements Serializable, Entity<CommentRatingVo> {
+public class CommentRatingEntity implements Serializable, Entity<CommentRatingVo>, RatingEntity {
 
     private static final long serialVersionUID = 1L;
     @Id

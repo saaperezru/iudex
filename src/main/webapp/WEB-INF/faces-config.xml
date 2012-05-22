@@ -35,21 +35,21 @@
         </navigation-case>
     </navigation-rule>
     <navigation-rule>
-	<from-view-id>/courses/view.xhtml</from-view-id>
-	<navigation-case>
-		<from-outcome>notfound</from-outcome>
-		<to-view-id>/notfound.xhtml</to-view-id>
-	</navigation-case>
+        <from-view-id>/courses/view.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>notfound</from-outcome>
+            <to-view-id>/notfound.xhtml</to-view-id>
+        </navigation-case>
     </navigation-rule>
     <navigation-rule>
-	<from-view-id>/subjects/view.xhtml</from-view-id>
-	<navigation-case>
-		<from-outcome>notfound</from-outcome>
-		<to-view-id>/notfound.xhtml</to-view-id>
-	</navigation-case>
+        <from-view-id>/subjects/view.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>notfound</from-outcome>
+            <to-view-id>/notfound.xhtml</to-view-id>
+        </navigation-case>
     </navigation-rule>
     <navigation-rule>
-	<navigation-case>
+        <navigation-case>
             <from-outcome>home</from-outcome>
             <to-view-id>/index.xhtml</to-view-id>
         </navigation-case>

@@ -14,6 +14,7 @@ public class ConfigurationVariablesHelper {
 
     private static ConfigurationVariablesHelper instance;
     private PropertiesConfiguration config;
+    public static final String APP_PATH = "app.path";
     public static final String MIN_USERNAME_LENGTH = "user.minUserNameLength";
     public static final String MAX_USERNAME_LENGTH = "user.maxUserNameLength";
    
@@ -33,6 +34,9 @@ public class ConfigurationVariablesHelper {
     public static final String MAILING_SMTP_USER = "mailing.smtpServerUser";
     public static final String MAILING_SMTP_PASSWORD = "mailing.smtpServerPassword";
     public static final String MAILING_SMTP_PORT = "mailing.smtpServerPort";
+    public static final String MAILING_TEMPLATES_PATH = "mailing.templates.path";
+    public static final String MAILING_TEMPLATES_CONFIRMATION = "mailing.templates.confirmation";
+    public static final String MAILING_TEMPLATES_CONFIRMATION_SUBJECT = "mailing.templates.confirmation.subject";
     public static final String PERIOD_MIN_YEAR = "period.minYear";
     public static final String PERIOD_MAX_YEAR = "period.maxYear";
     public static final String PERIOD_MAX_SEMESTER = "period.maxSemester";

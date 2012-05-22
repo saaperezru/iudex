@@ -9,6 +9,7 @@ import org.xtremeware.iudex.businesslogic.service.updateimplementations.SimpleUp
 import org.xtremeware.iudex.dao.AbstractDaoFactory;
 import org.xtremeware.iudex.entity.CourseRatingEntity;
 import org.xtremeware.iudex.helper.DataBaseException;
+import org.xtremeware.iudex.helper.ExternalServiceConnectionException;
 import org.xtremeware.iudex.helper.MultipleMessagesException;
 import org.xtremeware.iudex.vo.CourseRatingVo;
 
@@ -44,11 +45,8 @@ public class CourseRatingsService extends CrudService<CourseRatingVo, CourseRati
      * @throws InvalidVoException
      */
     @Override
-    public void validateVo(EntityManager em, CourseRatingVo vo) throws
+    public void validateVoForCreation(EntityManager em, CourseRatingVo vo) throws
             DataBaseException, MultipleMessagesException {
-        if (em == null) {
-            throw new IllegalArgumentException("EntityManager em cannot be null");
-        }
         MultipleMessagesException multipleMessageException =
                 new MultipleMessagesException();
         if (vo == null) {
@@ -81,6 +79,17 @@ public class CourseRatingsService extends CrudService<CourseRatingVo, CourseRati
             throw multipleMessageException;
         }
     }
+    
+    @Override
+    public void validateVoForUpdate(EntityManager entityManager, CourseRatingVo valueObject) throws MultipleMessagesException, ExternalServiceConnectionException, DataBaseException {
+        validateVoForCreation(entityManager, valueObject);
+        MultipleMessagesException multipleMessageException =
+                new MultipleMessagesException();
+        if (valueObject.getId() == null) {
+            multipleMessageException.getMessages().add("courseRating.id.null");
+            throw multipleMessageException;
+        }
+    }
 
     /**
      * Returns a CourseRatingEntity using the information in the provided
@@ -94,8 +103,6 @@ public class CourseRatingsService extends CrudService<CourseRatingVo, CourseRati
     @Override
     public CourseRatingEntity voToEntity(EntityManager em, CourseRatingVo vo)
             throws DataBaseException, MultipleMessagesException {
-
-        validateVo(em, vo);
 
         CourseRatingEntity courseRatingEntity = new CourseRatingEntity();
         courseRatingEntity.setId(vo.getId());

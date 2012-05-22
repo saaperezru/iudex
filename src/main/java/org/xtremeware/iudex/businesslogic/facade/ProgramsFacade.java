@@ -42,10 +42,11 @@ public class ProgramsFacade extends AbstractFacade {
      * @return Returns null if there is a problem while persisting (logs all
      * errors) and throws an exception if data isn't valid.
      */
-    public ProgramVo addProgram(String name) throws MultipleMessagesException, Exception {
+    public ProgramVo addProgram(String name,int code) throws MultipleMessagesException, Exception {
         ProgramVo createdVo = null;
         ProgramVo vo = new ProgramVo();
         vo.setName(name);
+        vo.setCode(code);
         EntityManager entityManager = null;
         EntityTransaction tx = null;
         try {

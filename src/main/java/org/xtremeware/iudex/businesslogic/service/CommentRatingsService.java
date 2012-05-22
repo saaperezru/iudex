@@ -7,14 +7,15 @@ import org.xtremeware.iudex.businesslogic.service.removeimplementations.SimpleRe
 import org.xtremeware.iudex.dao.AbstractDaoFactory;
 import org.xtremeware.iudex.entity.CommentRatingEntity;
 import org.xtremeware.iudex.helper.DataBaseException;
+import org.xtremeware.iudex.helper.ExternalServiceConnectionException;
 import org.xtremeware.iudex.helper.MultipleMessagesException;
-import org.xtremeware.iudex.vo.CommentRatingVo;
+import org.xtremeware.iudex.vo.BinaryRatingVo;
 
 /**
  *
  * @author josebermeo
  */
-public class CommentRatingsService extends RatingService<CommentRatingVo, CommentRatingEntity> {
+public class CommentRatingsService extends RatingService<CommentRatingEntity> {
 
     /**
      * CommentRatingsService constructor
@@ -37,33 +38,34 @@ public class CommentRatingsService extends RatingService<CommentRatingVo, Commen
      * @throws InvalidVoException
      */
     @Override
-    public void validateVo(EntityManager em, CommentRatingVo vo)
-            throws MultipleMessagesException, DataBaseException {
+    public void validateVoForCreation(EntityManager entityManager, BinaryRatingVo binaryRatingVo)
+            throws MultipleMessagesException, ExternalServiceConnectionException,
+            DataBaseException {
 
         MultipleMessagesException multipleMessageException =
                 new MultipleMessagesException();
 
-        if (vo == null) {
+        if (binaryRatingVo == null) {
             multipleMessageException.addMessage(
                     "commentRating.null");
             throw multipleMessageException;
         }
-        if (vo.getEvaluatedObjectId() == null) {
+        if (binaryRatingVo.getEvaluatedObjectId() == null) {
             multipleMessageException.addMessage(
                     "commentRating.commentId.null");
-        } else if (getDaoFactory().getCommentDao().getById(em, vo.getEvaluatedObjectId()) == null) {
+        } else if (getDaoFactory().getCommentDao().getById(entityManager, binaryRatingVo.getEvaluatedObjectId()) == null) {
             multipleMessageException.addMessage(
                     "commentRating.commentId.element.notFound");
         }
-        if (vo.getUserId() == null) {
+        if (binaryRatingVo.getUserId() == null) {
             multipleMessageException.addMessage(
                     "commentRating.userId.null");
-        } else if (getDaoFactory().getUserDao().getById(em, vo.getUserId())
+        } else if (getDaoFactory().getUserDao().getById(entityManager, binaryRatingVo.getUserId())
                 == null) {
             multipleMessageException.addMessage(
                     "commentRating.userId.element.notFound");
         }
-        if (vo.getValue() < -1 || vo.getValue() > 1) {
+        if (binaryRatingVo.getValue() < -1 || binaryRatingVo.getValue() > 1) {
             multipleMessageException.addMessage(
                     "commentRating.value.invalidValue");
         }
@@ -83,19 +85,18 @@ public class CommentRatingsService extends RatingService<CommentRatingVo, Commen
      * @throws InvalidVoException
      */
     @Override
-    public CommentRatingEntity voToEntity(EntityManager em, CommentRatingVo vo)
-            throws MultipleMessagesException, DataBaseException {
-
-        validateVo(em, vo);
+    public CommentRatingEntity voToEntity(EntityManager entityManager, BinaryRatingVo binaryRatingVo)
+            throws MultipleMessagesException,
+            ExternalServiceConnectionException, DataBaseException {
 
         CommentRatingEntity commentRatingEntity = new CommentRatingEntity();
-        commentRatingEntity.setId(vo.getId());
-        commentRatingEntity.setValue(vo.getValue());
+        commentRatingEntity.setId(binaryRatingVo.getId());
+        commentRatingEntity.setValue(binaryRatingVo.getValue());
 
-        commentRatingEntity.setUser(this.getDaoFactory().getUserDao().getById(em,
-                vo.getUserId()));
+        commentRatingEntity.setUser(this.getDaoFactory().getUserDao().
+                getById(entityManager,binaryRatingVo.getUserId()));
         commentRatingEntity.setComment(this.getDaoFactory().getCommentDao().
-                getById(em, vo.getEvaluatedObjectId()));
+                getById(entityManager, binaryRatingVo.getEvaluatedObjectId()));
 
         return commentRatingEntity;
     }

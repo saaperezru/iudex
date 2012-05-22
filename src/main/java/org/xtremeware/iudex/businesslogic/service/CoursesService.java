@@ -26,11 +26,8 @@ public class CoursesService extends CrudService<CourseVo, CourseEntity> {
     }
 
     @Override
-    public void validateVo(EntityManager em, CourseVo course) throws
+    public void validateVoForCreation(EntityManager em, CourseVo course) throws
             MultipleMessagesException, DataBaseException {
-        if (em == null) {
-            throw new IllegalArgumentException("EntityManager em cannot be null");
-        }
         MultipleMessagesException multipleMessageException =
                 new MultipleMessagesException();
         if (course == null) {
@@ -85,6 +82,17 @@ public class CoursesService extends CrudService<CourseVo, CourseEntity> {
             throw multipleMessageException;
         }
     }
+    
+    @Override
+    public void validateVoForUpdate(EntityManager entityManager, CourseVo valueObject) throws MultipleMessagesException, ExternalServiceConnectionException, DataBaseException {
+        validateVoForCreation(entityManager, valueObject);
+        MultipleMessagesException multipleMessageException =
+                new MultipleMessagesException();
+        if (valueObject.getId() == null) {
+            multipleMessageException.addMessage("course.id.null");
+            throw multipleMessageException;
+        }
+    }
 
     public List<CourseVo> getByProfessorId(EntityManager em, long professorId)
             throws DataBaseException {
@@ -124,7 +132,8 @@ public class CoursesService extends CrudService<CourseVo, CourseEntity> {
     public CourseEntity voToEntity(EntityManager em, CourseVo vo) throws
             ExternalServiceConnectionException, MultipleMessagesException,
             DataBaseException {
-        validateVo(em, vo);
+        
+        
         CourseEntity course = new CourseEntity();
         course.setId(vo.getId());
         course.setPeriod(getDaoFactory().getPeriodDao().getById(em, vo.

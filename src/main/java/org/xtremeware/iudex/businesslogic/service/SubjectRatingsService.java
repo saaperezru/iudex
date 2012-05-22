@@ -6,10 +6,11 @@ import org.xtremeware.iudex.businesslogic.service.removeimplementations.SimpleRe
 import org.xtremeware.iudex.dao.AbstractDaoFactory;
 import org.xtremeware.iudex.entity.SubjectRatingEntity;
 import org.xtremeware.iudex.helper.DataBaseException;
+import org.xtremeware.iudex.helper.ExternalServiceConnectionException;
 import org.xtremeware.iudex.helper.MultipleMessagesException;
-import org.xtremeware.iudex.vo.SubjectRatingVo;
+import org.xtremeware.iudex.vo.BinaryRatingVo;
 
-public class SubjectRatingsService extends RatingService<SubjectRatingVo, SubjectRatingEntity> {
+public class SubjectRatingsService extends RatingService<SubjectRatingEntity> {
 
     public SubjectRatingsService(AbstractDaoFactory daoFactory) {
         super(daoFactory,
@@ -19,41 +20,46 @@ public class SubjectRatingsService extends RatingService<SubjectRatingVo, Subjec
     }
 
     @Override
-    public void validateVo(EntityManager em, SubjectRatingVo vo) throws
-            MultipleMessagesException, DataBaseException {
+    public void validateVoForCreation(EntityManager entityManager,
+            BinaryRatingVo binaryRatingVo)
+            throws MultipleMessagesException,
+            ExternalServiceConnectionException, DataBaseException {
+
         MultipleMessagesException multipleMessageException = new MultipleMessagesException();
-        if (vo == null) {
+        if (binaryRatingVo == null) {
             multipleMessageException.addMessage("subjectRating.null");
             throw multipleMessageException;
         }
-        if (vo.getValue() > 1 || vo.getValue() < -1) {
-            multipleMessageException.addMessage("subjectRating.value.invalidRating");
-        }
-        if (vo.getEvaluatedObjectId() == null) {
+        if (binaryRatingVo.getEvaluatedObjectId() == null) {
             multipleMessageException.addMessage("subjectRating.subjectId.null");
-        } else if (getDaoFactory().getSubjectDao().getById(em, vo.getEvaluatedObjectId()) == null) {
+        } else if (getDaoFactory().getSubjectDao().getById(entityManager, binaryRatingVo.getEvaluatedObjectId()) == null) {
             multipleMessageException.addMessage("subjectRating.subjectId.element.notFound");
         }
-        if (vo.getUserId() == null) {
+        if (binaryRatingVo.getUserId() == null) {
             multipleMessageException.addMessage("subjectRating.userId.null");
-        } else if (getDaoFactory().getUserDao().getById(em, vo.getUserId()) == null) {
+        } else if (getDaoFactory().getUserDao().getById(entityManager, binaryRatingVo.getUserId()) == null) {
             multipleMessageException.addMessage("subjectRating.userId.element.notFound");
         }
         if (!multipleMessageException.getMessages().isEmpty()) {
             throw multipleMessageException;
         }
+        if (binaryRatingVo.getValue() > 1 || binaryRatingVo.getValue() < -1) {
+            multipleMessageException.addMessage("subjectRating.value.invalidRating");
+        }
     }
 
     @Override
-    public SubjectRatingEntity voToEntity(EntityManager em, SubjectRatingVo vo)
-            throws MultipleMessagesException, DataBaseException {
-        validateVo(em, vo);
+    public SubjectRatingEntity voToEntity(EntityManager entityManager,
+            BinaryRatingVo binaryRatingVo) throws MultipleMessagesException,
+            ExternalServiceConnectionException, DataBaseException {
+
         SubjectRatingEntity entity = new SubjectRatingEntity();
-        entity.setId(vo.getId());
-        entity.setSubject(getDaoFactory().getSubjectDao().getById(em,
-                vo.getEvaluatedObjectId()));
-        entity.setUser(getDaoFactory().getUserDao().getById(em, vo.getUserId()));
-        entity.setValue(vo.getValue());
+        entity.setId(binaryRatingVo.getId());
+        entity.setSubject(getDaoFactory().getSubjectDao().getById(entityManager,
+                binaryRatingVo.getEvaluatedObjectId()));
+        entity.setUser(getDaoFactory().getUserDao().
+                getById(entityManager, binaryRatingVo.getUserId()));
+        entity.setValue(binaryRatingVo.getValue());
         return entity;
     }
 }

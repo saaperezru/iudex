@@ -1,8 +1,8 @@
 package org.xtremeware.iudex.businesslogic.service.updateimplementations;
 
 import javax.persistence.EntityManager;
-import org.xtremeware.iudex.businesslogic.service.crudinterfaces.UpdateInterface;
-import org.xtremeware.iudex.dao.CrudDaoInterface;
+import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Update;
+import org.xtremeware.iudex.dao.CrudDao;
 import org.xtremeware.iudex.entity.Entity;
 import org.xtremeware.iudex.helper.DataBaseException;
 
@@ -10,24 +10,24 @@ import org.xtremeware.iudex.helper.DataBaseException;
  *
  * @author josebermeo
  */
-public class SimpleUpdate<E extends Entity> implements UpdateInterface<E> {
+public class SimpleUpdate<E extends Entity> implements Update<E> {
 
-    private CrudDaoInterface<E> dao;
+    private CrudDao<E> dao;
 
-    public SimpleUpdate(CrudDaoInterface<E> dao) {
+    public SimpleUpdate(CrudDao<E> dao) {
         this.dao = dao;
     }
 
     @Override
-    public E update(EntityManager em, E entity) throws DataBaseException {
-        if (getDao().getById(em, entity.getId()) != null) {
-            return dao.merge(em, entity);
+    public E update(EntityManager entityManager, E entity) throws DataBaseException {
+        if (getDao().getById(entityManager, entity.getId()) != null) {
+            return dao.merge(entityManager, entity);
         } else {
             return null;
         }
     }
 
-    public CrudDaoInterface<E> getDao() {
+    public CrudDao<E> getDao() {
         return dao;
     }
 }

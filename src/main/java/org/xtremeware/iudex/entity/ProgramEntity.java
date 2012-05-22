@@ -24,7 +24,6 @@ public class ProgramEntity implements Serializable, Entity<ProgramVo> {
     private Long id;
     @Column(name = "NAME", length = 50, nullable = false, unique = true)
     private String name;
-    
     @Column(name = "CODE", nullable = false, unique = true)
     private int code;
 

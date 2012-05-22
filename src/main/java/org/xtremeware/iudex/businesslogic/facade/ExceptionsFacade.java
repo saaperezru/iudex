@@ -2,7 +2,6 @@ package org.xtremeware.iudex.businesslogic.facade;
 
 import java.util.Locale;
 import java.util.ResourceBundle;
-import org.xtremeware.iudex.businesslogic.helper.FacadesHelper;
 import org.xtremeware.iudex.helper.Config;
 import org.xtremeware.iudex.helper.ConfigurationVariablesHelper;
 import org.xtremeware.iudex.helper.ExternalServiceConnectionException;

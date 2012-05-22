@@ -4,7 +4,7 @@ package org.xtremeware.iudex.vo;
  *
  * @author jdbermeol
  */
-public abstract class BinaryRatingVo extends IdentifiableValueObject<Long> implements ValueObject {
+public class BinaryRatingVo extends IdentifiableValueObject<Long> implements ValueObject {
 
     private Long evaluatedObjectId;
     private Long userId;

@@ -8,10 +8,10 @@ import org.xtremeware.iudex.businesslogic.DuplicityException;
 import org.xtremeware.iudex.entity.ProfessorEntity;
 import org.xtremeware.iudex.helper.Config;
 import org.xtremeware.iudex.helper.MultipleMessagesException;
-import org.xtremeware.iudex.vo.ProfessorRatingVo;
 import org.xtremeware.iudex.vo.ProfessorVo;
 import org.xtremeware.iudex.businesslogic.helper.FacadesTestHelper;
 import org.xtremeware.iudex.presentation.vovw.ProfessorVoVwFull;
+import org.xtremeware.iudex.vo.BinaryRatingVo;
 import org.xtremeware.iudex.vo.RatingSummaryVo;
 
 /**
@@ -47,7 +47,7 @@ public class ProfessorsFacadeIT {
         Long professorId = 1L;
         Long userId = 5L;
         int value = 1;
-        ProfessorRatingVo rateProfessor = pf.rateProfessor(professorId, userId, value);
+        BinaryRatingVo rateProfessor = pf.rateProfessor(professorId, userId, value);
     }
 
     @Test
@@ -61,7 +61,7 @@ public class ProfessorsFacadeIT {
             "professorRating.professorId.element.notFound",
             "professorRating.userId.element.notFound"};
         try {
-            ProfessorRatingVo rateProfessor = pf.rateProfessor(professorId, userId, value);
+            BinaryRatingVo rateProfessor = pf.rateProfessor(professorId, userId, value);
         } catch (MultipleMessagesException ex) {
             FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
         }
@@ -70,7 +70,7 @@ public class ProfessorsFacadeIT {
         userId = Long.MIN_VALUE;
         value = Integer.MIN_VALUE;
         try {
-            ProfessorRatingVo rateProfessor = pf.rateProfessor(professorId, userId, value);
+            BinaryRatingVo rateProfessor = pf.rateProfessor(professorId, userId, value);
         } catch (MultipleMessagesException ex) {
             FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
         }
@@ -83,7 +83,7 @@ public class ProfessorsFacadeIT {
             "professorRating.professorId.element.notFound",
             "professorRating.userId.element.notFound"};
         try {
-            ProfessorRatingVo rateProfessor = pf.rateProfessor(professorId, userId, value);
+            BinaryRatingVo rateProfessor = pf.rateProfessor(professorId, userId, value);
         } catch (MultipleMessagesException ex) {
             FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
         }
@@ -95,7 +95,7 @@ public class ProfessorsFacadeIT {
         Long professorId = 2L;
         Long userId = 5L;
         int value = 1;
-        ProfessorRatingVo rateProfessor = pf.rateProfessor(professorId, userId, value);
+        BinaryRatingVo rateProfessor = pf.rateProfessor(professorId, userId, value);
         Long id = rateProfessor.getId();
         value = -1;
         rateProfessor = pf.rateProfessor(professorId, userId, value);
@@ -113,7 +113,7 @@ public class ProfessorsFacadeIT {
         Long professorId = 2L;
         Long userId = 5L;
         int value = 1;
-        ProfessorRatingVo rateProfessor = pf.rateProfessor(professorId, userId, value);
+        BinaryRatingVo rateProfessor = pf.rateProfessor(professorId, userId, value);
         Long id = rateProfessor.getId();
 
         rateProfessor = pf.rateProfessor(professorId, userId, value);
@@ -458,7 +458,7 @@ public class ProfessorsFacadeIT {
     public void testBL_33_1() throws MultipleMessagesException, Exception {
 
         ProfessorsFacade professorsFacade = Config.getInstance().getFacadeFactory().getProfessorsFacade();
-        ProfessorRatingVo prv = null;
+        BinaryRatingVo prv = null;
 
         Long professorId = 1L;
         Long userId = 1L;
@@ -477,7 +477,7 @@ public class ProfessorsFacadeIT {
     public void testBL_33_2() throws MultipleMessagesException, Exception {
 
          ProfessorsFacade professorsFacade = Config.getInstance().getFacadeFactory().getProfessorsFacade();
-        ProfessorRatingVo prv = null;
+        BinaryRatingVo prv = null;
 
         Long professorId = 0L;
         Long userId = 0L;
@@ -591,9 +591,7 @@ public class ProfessorsFacadeIT {
             professorsFacade.removeProfessor(id);
         } catch (Exception ex) {
             assertEquals(RuntimeException.class, ex.getClass());
-            assertEquals("No entity found for id "
-                    + String.valueOf(id)
-                    + "while triying to delete the associated record", ex.getCause().getMessage());
+            assertEquals("entity.notFound", ex.getCause().getMessage());
         }
 
         id = Long.MIN_VALUE;
@@ -601,9 +599,7 @@ public class ProfessorsFacadeIT {
             professorsFacade.removeProfessor(id);
         } catch (Exception ex) {
             assertEquals(RuntimeException.class, ex.getClass());
-            assertEquals("No entity found for id "
-                    + String.valueOf(id)
-                    + "while triying to delete the associated record", ex.getCause().getMessage());
+            assertEquals("entity.notFound", ex.getCause().getMessage());
         }
 
         id = 0L;
@@ -611,9 +607,7 @@ public class ProfessorsFacadeIT {
             professorsFacade.removeProfessor(id);
         } catch (Exception ex) {
             assertEquals(RuntimeException.class, ex.getClass());
-            assertEquals("No entity found for id "
-                    + String.valueOf(id)
-                    + "while triying to delete the associated record", ex.getCause().getMessage());
+            assertEquals("entity.notFound", ex.getCause().getMessage());
         }
 
     }

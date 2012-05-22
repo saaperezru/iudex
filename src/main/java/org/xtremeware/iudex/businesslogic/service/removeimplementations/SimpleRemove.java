@@ -1,8 +1,8 @@
 package org.xtremeware.iudex.businesslogic.service.removeimplementations;
 
-import org.xtremeware.iudex.businesslogic.service.crudinterfaces.RemoveInterface;
+import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Remove;
 import javax.persistence.EntityManager;
-import org.xtremeware.iudex.dao.CrudDaoInterface;
+import org.xtremeware.iudex.dao.CrudDao;
 import org.xtremeware.iudex.entity.Entity;
 import org.xtremeware.iudex.helper.DataBaseException;
 
@@ -10,20 +10,21 @@ import org.xtremeware.iudex.helper.DataBaseException;
  *
  * @author josebermeo
  */
-public class SimpleRemove<E extends Entity> implements RemoveInterface {
+public class SimpleRemove<E extends Entity> implements Remove {
 
-    private CrudDaoInterface<E> dao;
+    private CrudDao<E> dao;
 
-    public SimpleRemove(CrudDaoInterface<E> dao) {
+    public SimpleRemove(CrudDao<E> dao) {
         this.dao = dao;
     }
 
     @Override
-    public void remove(EntityManager em, Long id) throws DataBaseException {
-        getDao().remove(em, id);
+    public void remove(EntityManager entityManager, Long entityId)
+            throws DataBaseException {
+        getDao().remove(entityManager, entityId);
     }
 
-    public CrudDaoInterface<E> getDao() {
+    public CrudDao<E> getDao() {
         return dao;
     }
 }

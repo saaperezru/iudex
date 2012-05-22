@@ -1,6 +1,6 @@
 package org.xtremeware.iudex.businesslogic.service.removeimplementations;
 
-import org.xtremeware.iudex.businesslogic.service.crudinterfaces.RemoveInterface;
+import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Remove;
 import java.util.List;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.dao.AbstractDaoFactory;
@@ -11,7 +11,7 @@ import org.xtremeware.iudex.helper.DataBaseException;
  *
  * @author josebermeo
  */
-public class FeedbackTypesRemove implements RemoveInterface {
+public class FeedbackTypesRemove implements Remove {
 
     private AbstractDaoFactory daoFactory;
 
@@ -26,13 +26,15 @@ public class FeedbackTypesRemove implements RemoveInterface {
      * @param id id of the FeedBackType
      */
     @Override
-    public void remove(EntityManager em, Long id) throws DataBaseException {
-        List<FeedbackEntity> feedBacks = getDaoFactory().getFeedbackDao().getByTypeId(em, id);
-        for (FeedbackEntity feedBack : feedBacks) {
-            getDaoFactory().getFeedbackDao().remove(em, feedBack.getId());
+    public void remove(EntityManager entityManager, Long entityId)
+            throws DataBaseException {
+        List<FeedbackEntity> feedbackEntitys = getDaoFactory().
+                getFeedbackDao().getByTypeId(entityManager, entityId);
+        for (FeedbackEntity feedbackEntity : feedbackEntitys) {
+            getDaoFactory().getFeedbackDao().remove(entityManager, feedbackEntity.getId());
         }
 
-        getDaoFactory().getFeedbackTypeDao().remove(em, id);
+        getDaoFactory().getFeedbackTypeDao().remove(entityManager, entityId);
     }
 
     private AbstractDaoFactory getDaoFactory() {

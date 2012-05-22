@@ -47,7 +47,7 @@ public class FeedbackTypesService extends CrudService<FeedbackTypeVo, FeedbackTy
      * @throws InvalidVoException
      */
     @Override
-    public void validateVo(EntityManager em, FeedbackTypeVo vo)
+    public void validateVoForCreation(EntityManager em, FeedbackTypeVo vo)
             throws ExternalServiceConnectionException,
             MultipleMessagesException {
         
@@ -65,6 +65,18 @@ public class FeedbackTypesService extends CrudService<FeedbackTypeVo, FeedbackTy
         }
         vo.setName(SecurityHelper.sanitizeHTML(vo.getName()));
     }
+    
+    @Override
+    public void validateVoForUpdate(EntityManager entityManager, FeedbackTypeVo valueObject) throws MultipleMessagesException, ExternalServiceConnectionException, DataBaseException {
+        validateVoForCreation(entityManager, valueObject);
+        MultipleMessagesException multipleMessageException =
+                new MultipleMessagesException();
+        if (valueObject.getId() == null) {
+            multipleMessageException.addMessage(
+                    "feedbackType.null");
+            throw multipleMessageException;
+        }
+    }
 
     /**
      * Returns a FeedbackTypeEntity using the information in the provided
@@ -79,7 +91,6 @@ public class FeedbackTypesService extends CrudService<FeedbackTypeVo, FeedbackTy
     public FeedbackTypeEntity voToEntity(EntityManager em, FeedbackTypeVo vo)
             throws ExternalServiceConnectionException, MultipleMessagesException {
 
-        validateVo(em, vo);
         FeedbackTypeEntity feedbackTypeEntity = new FeedbackTypeEntity();
         feedbackTypeEntity.setId(vo.getId());
         feedbackTypeEntity.setName(vo.getName());

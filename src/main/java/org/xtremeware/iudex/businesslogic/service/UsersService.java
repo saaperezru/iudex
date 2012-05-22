@@ -33,10 +33,8 @@ public class UsersService extends CrudService<UserVo, UserEntity> {
                 new SimpleRead<UserEntity>(daoFactory.getUserDao()),
                 new UsersUpdate(daoFactory.getUserDao()),
                 new UsersRemove(daoFactory));
-        MIN_USERNAME_LENGTH = Integer.parseInt(ConfigurationVariablesHelper.
-                getVariable(ConfigurationVariablesHelper.MIN_USERNAME_LENGTH));
-        MAX_USERNAME_LENGTH = Integer.parseInt(ConfigurationVariablesHelper.
-                getVariable(ConfigurationVariablesHelper.MAX_USERNAME_LENGTH));
+        MIN_USERNAME_LENGTH = Integer.parseInt(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MIN_USERNAME_LENGTH));
+        MAX_USERNAME_LENGTH = Integer.parseInt(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAX_USERNAME_LENGTH));
         MAX_USER_PASSWORD_LENGTH =
                 Integer.parseInt(ConfigurationVariablesHelper.getVariable(
                 ConfigurationVariablesHelper.MAX_USER_PASSWORD_LENGTH));
@@ -46,83 +44,81 @@ public class UsersService extends CrudService<UserVo, UserEntity> {
     }
 
     @Override
-    public void validateVo(EntityManager em, UserVo vo) throws
+    public void validateVoForCreation(EntityManager entityManager, UserVo valueObject) throws
             MultipleMessagesException, ExternalServiceConnectionException,
             DataBaseException {
         MultipleMessagesException multipleMessagesException =
                 new MultipleMessagesException();
 
-        if (vo == null) {
-            multipleMessagesException.addMessage(
-                    "user.null");
+        if (valueObject == null) {
+            multipleMessagesException.addMessage("user.null");
             throw multipleMessagesException;
         }
 
-        if (vo.getFirstName() == null) {
+        if (valueObject.getFirstName() == null) {
             multipleMessagesException.addMessage(
                     "user.firstName.null");
         } else {
-            vo.setFirstName(SecurityHelper.sanitizeHTML(vo.getFirstName()));
-            if (vo.getFirstName().isEmpty()) {
+            valueObject.setFirstName(SecurityHelper.sanitizeHTML(valueObject.getFirstName()));
+            if (valueObject.getFirstName().isEmpty()) {
                 multipleMessagesException.addMessage(
                         "user.firstName.empty");
             }
         }
-        if (vo.getLastName() == null) {
+        if (valueObject.getLastName() == null) {
             multipleMessagesException.addMessage(
                     "user.lastName.null");
         } else {
-            vo.setLastName(SecurityHelper.sanitizeHTML(vo.getLastName()));
-            if (vo.getLastName().isEmpty()) {
+            valueObject.setLastName(SecurityHelper.sanitizeHTML(valueObject.getLastName()));
+            if (valueObject.getLastName().isEmpty()) {
                 multipleMessagesException.addMessage(
                         "user.lastName.empty");
             }
         }
-        if (vo.getUserName() == null) {
+        if (valueObject.getUserName() == null) {
             multipleMessagesException.addMessage(
                     "user.userName.null");
         } else {
-            vo.setUserName(SecurityHelper.sanitizeHTML(vo.getUserName()));
-            if (vo.getUserName().length() < MIN_USERNAME_LENGTH) {
+            valueObject.setUserName(SecurityHelper.sanitizeHTML(valueObject.getUserName()));
+            if (valueObject.getUserName().length() < MIN_USERNAME_LENGTH) {
                 multipleMessagesException.addMessage(
                         "user.userName.tooShort");
-            } else if (vo.getUserName().length() > MAX_USERNAME_LENGTH) {
+            } else if (valueObject.getUserName().length() > MAX_USERNAME_LENGTH) {
                 multipleMessagesException.addMessage(
                         "user.userName.tooLong");
             }
         }
-        if (vo.getPassword() == null) {
+        if (valueObject.getPassword() == null) {
             multipleMessagesException.addMessage(
                     "user.password.null");
         } else {
-            vo.setUserName(SecurityHelper.sanitizeHTML(vo.getUserName()));
-            if (vo.getPassword().length() < MIN_USER_PASSWORD_LENGTH) {
+            valueObject.setUserName(SecurityHelper.sanitizeHTML(valueObject.getUserName()));
+            if (valueObject.getPassword().length() < MIN_USER_PASSWORD_LENGTH) {
                 multipleMessagesException.addMessage(
                         "user.password.tooShort");
-            } else if (vo.getPassword().length() > MAX_USER_PASSWORD_LENGTH) {
+            } else if (valueObject.getPassword().length() > MAX_USER_PASSWORD_LENGTH) {
                 multipleMessagesException.addMessage(
                         "user.password.tooLong");
             }
         }
-        if (vo.getProgramsId() == null) {
+        if (valueObject.getProgramsId() == null) {
             multipleMessagesException.addMessage(
                     "user.programsId.null");
-        } else if (vo.getProgramsId().isEmpty()) {
+        } else if (valueObject.getProgramsId().isEmpty()) {
             multipleMessagesException.addMessage(
                     "user.programsId.empty");
         } else {
-            for (Long programId : vo.getProgramsId()) {
+            for (Long programId : valueObject.getProgramsId()) {
                 if (programId == null) {
                     multipleMessagesException.addMessage(
                             "user.programsId.element.null");
-                } else if (getDaoFactory().getProgramDao().getById(em, programId) ==
-                        null) {
+                } else if (getDaoFactory().getProgramDao().getById(entityManager, programId) == null) {
                     multipleMessagesException.addMessage(
                             "user.programsId.element.notFound");
                 }
             }
         }
-        if (vo.getRole() == null) {
+        if (valueObject.getRole() == null) {
             multipleMessagesException.addMessage("user.role.null");
         }
 
@@ -132,10 +128,22 @@ public class UsersService extends CrudService<UserVo, UserEntity> {
     }
 
     @Override
+    public void validateVoForUpdate(EntityManager entityManager, UserVo valueObject)
+            throws MultipleMessagesException,
+            ExternalServiceConnectionException, DataBaseException{
+        validateVoForCreation(entityManager, valueObject);
+        MultipleMessagesException multipleMessagesException =
+                new MultipleMessagesException();
+        if(valueObject.getId() == null){
+            multipleMessagesException.addMessage("user.id.null");
+            throw multipleMessagesException;
+        }   
+    }
+
+    @Override
     public UserEntity voToEntity(EntityManager em, UserVo vo)
             throws ExternalServiceConnectionException, MultipleMessagesException,
             DataBaseException {
-        validateVo(em, vo);
 
         UserEntity userEntity = new UserEntity();
         userEntity.setId(vo.getId());

@@ -2,7 +2,7 @@ package org.xtremeware.iudex.entity;
 
 import java.io.Serializable;
 import javax.persistence.*;
-import org.xtremeware.iudex.vo.ProfessorRatingVo;
+import org.xtremeware.iudex.vo.BinaryRatingVo;
 
 @javax.persistence.Entity(name = "ProfessorRating")
 @NamedQueries({
@@ -19,7 +19,7 @@ import org.xtremeware.iudex.vo.ProfessorRatingVo;
     query = "SELECT COUNT (result) FROM ProfessorRating result "
     + "WHERE result.professor.id = :evaluatedObjectId AND result.value = -1")})
 @Table(name = "PROFESSOR_RATING")
-public class ProfessorRatingEntity implements Serializable, Entity<ProfessorRatingVo>, RatingEntity {
+public class ProfessorRatingEntity implements Serializable, Entity<BinaryRatingVo>, RatingEntity {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -36,8 +36,8 @@ public class ProfessorRatingEntity implements Serializable, Entity<ProfessorRati
     private int value;
 
     @Override
-    public ProfessorRatingVo toVo() {
-        ProfessorRatingVo vo = new ProfessorRatingVo();
+    public BinaryRatingVo toVo() {
+        BinaryRatingVo vo = new BinaryRatingVo();
 
         vo.setId(getId());
         vo.setEvaluatedObjectId(getProfessor().getId());
@@ -48,13 +48,24 @@ public class ProfessorRatingEntity implements Serializable, Entity<ProfessorRati
     }
 
     @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof ProfessorRatingEntity)) {
+    public boolean equals(Object obj) {
+        if (obj == null) {
             return false;
         }
-        ProfessorRatingEntity other = (ProfessorRatingEntity) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final ProfessorRatingEntity other = (ProfessorRatingEntity) obj;
+        if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
+            return false;
+        }
+        if (this.professor != other.professor && (this.professor == null || !this.professor.equals(other.professor))) {
+            return false;
+        }
+        if (this.user != other.user && (this.user == null || !this.user.equals(other.user))) {
+            return false;
+        }
+        if (this.value != other.value) {
             return false;
         }
         return true;

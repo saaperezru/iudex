@@ -1,6 +1,6 @@
 package org.xtremeware.iudex.businesslogic.service.removeimplementations;
 
-import org.xtremeware.iudex.businesslogic.service.crudinterfaces.RemoveInterface;
+import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Remove;
 import java.util.List;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.businesslogic.service.CommentsService;
@@ -14,7 +14,7 @@ import org.xtremeware.iudex.helper.DataBaseException;
  *
  * @author josebermeo
  */
-public class CoursesRemove implements RemoveInterface {
+public class CoursesRemove implements Remove {
 
     private AbstractDaoFactory daoFactory;
 
@@ -23,24 +23,27 @@ public class CoursesRemove implements RemoveInterface {
     }
 
     @Override
-    public void remove(EntityManager em, Long id) throws DataBaseException {
-        List<CourseRatingEntity> courseRatings = getDaoFactory().getCourseRatingDao().getByCourseId(em, id);
-        for (CourseRatingEntity rating : courseRatings) {
-            getDaoFactory().getCourseRatingDao().remove(em, rating.getId());
+    public void remove(EntityManager entityManager, Long entityId)
+            throws DataBaseException {
+        List<CourseRatingEntity> courseRatings = getDaoFactory().
+                getCourseRatingDao().getByCourseId(entityManager, entityId);
+
+        for (CourseRatingEntity courseRatingEntity : courseRatings) {
+            getDaoFactory().getCourseRatingDao().
+                    remove(entityManager, courseRatingEntity.getId());
         }
 
-        /**
-         * This is a bad implementation, but due to few time, it had to be
-         * implemented, it will be changed for the next release.
-         */
-        List<CommentEntity> comments = getDaoFactory().getCommentDao().getByCourseId(em, id);
+        //TODO fix implementation
+        List<CommentEntity> comments = getDaoFactory().getCommentDao().
+                getByCourseId(entityManager, entityId);
 
-        CommentsService commentService = Config.getInstance().getServiceFactory().createCommentsService();
+        CommentsService commentService = Config.getInstance().
+                getServiceFactory().createCommentsService();
         for (CommentEntity comment : comments) {
-            commentService.remove(em, comment.getId());
+            commentService.remove(entityManager, comment.getId());
         }
 
-        getDaoFactory().getCourseDao().remove(em, id);
+        getDaoFactory().getCourseDao().remove(entityManager, entityId);
     }
 
     private AbstractDaoFactory getDaoFactory() {

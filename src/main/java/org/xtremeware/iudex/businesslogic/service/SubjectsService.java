@@ -46,7 +46,7 @@ public class SubjectsService extends CrudService<SubjectVo, SubjectEntity> {
      * @throws InvalidVoException
      */
     @Override
-    public void validateVo(EntityManager em, SubjectVo vo)
+    public void validateVoForCreation(EntityManager em, SubjectVo vo)
             throws ExternalServiceConnectionException, MultipleMessagesException {
         MultipleMessagesException multipleMessageException = new MultipleMessagesException();
         if (vo == null) {
@@ -81,6 +81,16 @@ public class SubjectsService extends CrudService<SubjectVo, SubjectEntity> {
             throw multipleMessageException;
         }
     }
+    
+    @Override
+    public void validateVoForUpdate(EntityManager entityManager, SubjectVo valueObject) throws MultipleMessagesException, ExternalServiceConnectionException, DataBaseException {
+        validateVoForCreation(entityManager, valueObject);
+        MultipleMessagesException multipleMessageException = new MultipleMessagesException();
+        if (valueObject.getId() == null) {
+            multipleMessageException.addMessage("subject.id.null");
+            throw multipleMessageException;
+        }
+    }
 
     /**
      * Returns a SubjectEntity using the information in the provided SubjectVo.
@@ -91,16 +101,15 @@ public class SubjectsService extends CrudService<SubjectVo, SubjectEntity> {
      * @throws InvalidVoException
      */
     @Override
-    public SubjectEntity voToEntity(EntityManager em, SubjectVo vo)
+    public SubjectEntity voToEntity(EntityManager em, SubjectVo valueObject)
             throws ExternalServiceConnectionException, MultipleMessagesException {
 
-        validateVo(em, vo);
-
         SubjectEntity subjectEntity = new SubjectEntity();
-        subjectEntity.setId(vo.getId());
-        subjectEntity.setName(vo.getName());
-        subjectEntity.setDescription(vo.getDescription());
-
+        subjectEntity.setId(valueObject.getId());
+        subjectEntity.setName(valueObject.getName());
+        subjectEntity.setDescription(valueObject.getDescription());
+        subjectEntity.setCode(valueObject.getCode());
+        
         return subjectEntity;
     }
 

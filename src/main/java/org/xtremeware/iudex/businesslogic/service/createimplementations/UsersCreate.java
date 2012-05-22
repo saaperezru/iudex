@@ -9,13 +9,13 @@ import org.xtremeware.iudex.helper.DataBaseException;
 import org.xtremeware.iudex.helper.SecurityHelper;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.businesslogic.DuplicityException;
-import org.xtremeware.iudex.businesslogic.service.crudinterfaces.CreateInterface;
+import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Create;
 
 /**
  *
  * @author josebermeo
  */
-public class UsersCreate implements CreateInterface<UserEntity> {
+public class UsersCreate implements Create<UserEntity> {
     private AbstractDaoFactory daoFactory;
 
     public UsersCreate(AbstractDaoFactory daoFactory) {
@@ -23,7 +23,8 @@ public class UsersCreate implements CreateInterface<UserEntity> {
     }
 
     @Override
-    public UserEntity create(EntityManager em, UserEntity entity) throws DataBaseException, DuplicityException {
+    public UserEntity create(EntityManager entityManager, UserEntity entity)
+            throws DataBaseException, DuplicityException {
         //It is not possible to create users that are already active
         entity.setActive(false);
         //Hash password
@@ -39,11 +40,10 @@ public class UsersCreate implements CreateInterface<UserEntity> {
         //Associate confirmation key with user
         entity.setConfirmationKey(confirmationKeyEntity);
 
-        entity = getDaoFactory().getUserDao().persist(em, entity);
+        entity = getDaoFactory().getUserDao().persist(entityManager, entity);
         confirmationKeyEntity.setUser(entity);
         //persist confirmation key
-        getDaoFactory().getConfirmationKeyDao().persist(em, confirmationKeyEntity);
-
+        getDaoFactory().getConfirmationKeyDao().persist(entityManager, confirmationKeyEntity);
         return entity;
     }
 

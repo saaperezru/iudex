@@ -29,7 +29,7 @@ public class ProgramsService extends CrudService<ProgramVo, ProgramEntity> {
     }
 
     @Override
-    public void validateVo(EntityManager em, ProgramVo vo)
+    public void validateVoForCreation(EntityManager em, ProgramVo vo)
             throws ExternalServiceConnectionException, MultipleMessagesException {
         
         MultipleMessagesException multipleMessageException = new MultipleMessagesException();
@@ -55,14 +55,25 @@ public class ProgramsService extends CrudService<ProgramVo, ProgramEntity> {
             throw multipleMessageException;
         }
     }
+    
+    @Override
+    public void validateVoForUpdate(EntityManager entityManager, ProgramVo valueObject) throws MultipleMessagesException, ExternalServiceConnectionException, DataBaseException {
+        validateVoForCreation(entityManager, valueObject);
+        MultipleMessagesException multipleMessageException = new MultipleMessagesException();
+        if (valueObject.getId() == null) {
+            multipleMessageException.addMessage("program.id.null");
+            throw multipleMessageException;
+        }
+    }
 
     @Override
     public ProgramEntity voToEntity(EntityManager em, ProgramVo vo)
             throws ExternalServiceConnectionException, MultipleMessagesException {
-        validateVo(em, vo);
+        
         ProgramEntity entity = new ProgramEntity();
         entity.setId(vo.getId());
         entity.setName(vo.getName());
+        entity.setCode(vo.getCode());
         return entity;
 
     }

@@ -7,7 +7,7 @@ import javax.persistence.Persistence;
 import org.xtremeware.iudex.businesslogic.facade.FacadeFactory;
 import org.xtremeware.iudex.businesslogic.service.ServiceFactory;
 import org.xtremeware.iudex.dao.AbstractDaoFactory;
-import org.xtremeware.iudex.dao.internal.MySqlDaoFactory;
+import org.xtremeware.iudex.dao.sql.MySqlDaoFactory;
 import org.xtremeware.iudex.vo.MailingConfigVo;
 
 /**

@@ -11,6 +11,7 @@ import org.xtremeware.iudex.businesslogic.service.updateimplementations.SimpleUp
 import org.xtremeware.iudex.dao.AbstractDaoFactory;
 import org.xtremeware.iudex.entity.PeriodEntity;
 import org.xtremeware.iudex.helper.DataBaseException;
+import org.xtremeware.iudex.helper.ExternalServiceConnectionException;
 import org.xtremeware.iudex.helper.MultipleMessagesException;
 import org.xtremeware.iudex.vo.PeriodVo;
 
@@ -68,9 +69,9 @@ public class PeriodsService extends CrudService<PeriodVo, PeriodEntity> {
      * @throws InvalidVoException in case the business rules are violated
      */
     @Override
-    public void validateVo(EntityManager em, PeriodVo vo)
+    public void validateVoForCreation(EntityManager em, PeriodVo vo)
             throws MultipleMessagesException {
-        
+
         MultipleMessagesException multipleMessageException =
                 new MultipleMessagesException();
         if (vo == null) {
@@ -90,6 +91,19 @@ public class PeriodsService extends CrudService<PeriodVo, PeriodEntity> {
         }
     }
 
+    @Override
+    public void validateVoForUpdate(EntityManager entityManager, PeriodVo valueObject)
+            throws MultipleMessagesException, ExternalServiceConnectionException,
+            DataBaseException {
+        validateVoForCreation(entityManager, valueObject);
+        MultipleMessagesException multipleMessageException =
+                new MultipleMessagesException();
+        if (valueObject.getId() == null) {
+            multipleMessageException.addMessage("period.id.null");
+            throw multipleMessageException;
+        }
+    }
+
     /**
      * Creates a Entity with the data of the value object
      *
@@ -101,8 +115,6 @@ public class PeriodsService extends CrudService<PeriodVo, PeriodEntity> {
     @Override
     public PeriodEntity voToEntity(EntityManager em, PeriodVo vo)
             throws MultipleMessagesException {
-
-        validateVo(em, vo);
 
         PeriodEntity entity = new PeriodEntity();
 

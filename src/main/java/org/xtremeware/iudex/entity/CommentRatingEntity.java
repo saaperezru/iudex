@@ -2,7 +2,7 @@ package org.xtremeware.iudex.entity;
 
 import java.io.Serializable;
 import javax.persistence.*;
-import org.xtremeware.iudex.vo.CommentRatingVo;
+import org.xtremeware.iudex.vo.BinaryRatingVo;
 
 @javax.persistence.Entity(name = "CommentRating")
 @NamedQueries({
@@ -22,7 +22,7 @@ import org.xtremeware.iudex.vo.CommentRatingVo;
 })
 @Table( name = "COMMENT_RATING",
             uniqueConstraints = { @UniqueConstraint( columnNames = { "ID_USER_", "ID_COMMENT_" } ) } )
-public class CommentRatingEntity implements Serializable, Entity<CommentRatingVo>, RatingEntity {
+public class CommentRatingEntity implements Serializable, Entity<BinaryRatingVo>, RatingEntity {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -39,8 +39,8 @@ public class CommentRatingEntity implements Serializable, Entity<CommentRatingVo
     private int value;
 
     @Override
-    public CommentRatingVo toVo() {
-        CommentRatingVo vo = new CommentRatingVo();
+    public BinaryRatingVo toVo() {
+        BinaryRatingVo vo = new BinaryRatingVo();
         vo.setId(getId());
         vo.setEvaluatedObjectId(getComment().getId());
         vo.setUserId(getUser().getId());

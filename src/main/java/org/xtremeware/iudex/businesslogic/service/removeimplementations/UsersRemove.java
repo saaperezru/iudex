@@ -1,6 +1,6 @@
 package org.xtremeware.iudex.businesslogic.service.removeimplementations;
 
-import org.xtremeware.iudex.businesslogic.service.crudinterfaces.RemoveInterface;
+import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Remove;
 import java.util.List;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.businesslogic.service.CommentsService;
@@ -13,7 +13,7 @@ import org.xtremeware.iudex.helper.DataBaseException;
  *
  * @author josebermeo
  */
-public class UsersRemove implements RemoveInterface {
+public class UsersRemove implements Remove {
 
     private AbstractDaoFactory daoFactory;
 

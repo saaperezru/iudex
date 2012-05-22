@@ -1,6 +1,6 @@
 package org.xtremeware.iudex.businesslogic.service.removeimplementations;
 
-import org.xtremeware.iudex.businesslogic.service.crudinterfaces.RemoveInterface;
+import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Remove;
 import java.util.List;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.businesslogic.service.CoursesService;
@@ -13,7 +13,7 @@ import org.xtremeware.iudex.helper.DataBaseException;
  *
  * @author josebermeo
  */
-public class PeriodRemove implements RemoveInterface {
+public class PeriodRemove implements Remove {
 
     private AbstractDaoFactory daoFactory;
 
@@ -28,19 +28,18 @@ public class PeriodRemove implements RemoveInterface {
      * @param id id of the period
      */
     @Override
-    public void remove(EntityManager em, Long id) throws DataBaseException {
+    public void remove(EntityManager entityManager, Long entityId)
+            throws DataBaseException {
 
-        /**
-         * This is a bad implementation, but due to few time, it had to be
-         * implemented, it will be changed for the next release.
-         */
-        List<CourseEntity> courses = getDaoFactory().getCourseDao().getByPeriodId(em, id);
-
+        //TODO fix implementation
+        List<CourseEntity> courses = getDaoFactory().
+                getCourseDao().getByPeriodId(entityManager, entityId);
+        CoursesService coursesService = Config.getInstance().getServiceFactory().createCoursesService();
         for (CourseEntity course : courses) {
-            getDaoFactory().getCourseDao().remove(em, course.getId());
+           coursesService.remove(entityManager, course.getId());
         }
 
-        getDaoFactory().getPeriodDao().remove(em, id);
+        getDaoFactory().getPeriodDao().remove(entityManager, entityId);
     }
 
     private AbstractDaoFactory getDaoFactory() {

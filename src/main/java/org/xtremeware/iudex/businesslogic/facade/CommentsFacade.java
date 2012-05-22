@@ -14,7 +14,9 @@ import org.xtremeware.iudex.helper.MultipleMessagesException;
 import org.xtremeware.iudex.presentation.vovw.CommentVoVwFull;
 import org.xtremeware.iudex.presentation.vovw.UserVoVwSmall;
 import org.xtremeware.iudex.presentation.vovw.VoVwFactory;
-import org.xtremeware.iudex.vo.*;
+import org.xtremeware.iudex.vo.BinaryRatingVo;
+import org.xtremeware.iudex.vo.CommentVo;
+import org.xtremeware.iudex.vo.RatingSummaryVo;
 
 public class CommentsFacade extends AbstractFacade {
 
@@ -117,9 +119,9 @@ public class CommentsFacade extends AbstractFacade {
         return summary;
     }
 
-    public CommentRatingVo getCommentRatingByUserId(long commentId, long userId) {
+    public BinaryRatingVo getCommentRatingByUserId(long commentId, long userId) {
         EntityManager em = null;
-        CommentRatingVo rating = null;
+        BinaryRatingVo rating = null;
         try {
             em = getEntityManagerFactory().createEntityManager();
             rating = getServiceFactory().createCommentRatingService().
@@ -133,13 +135,13 @@ public class CommentsFacade extends AbstractFacade {
         return rating;
     }
 
-    public CommentRatingVo rateComment(long commentId, long userId, int value)
+    public BinaryRatingVo rateComment(long commentId, long userId, int value)
             throws MultipleMessagesException, Exception {
         EntityManager entityManager = null;
         EntityTransaction tx = null;
-        CommentRatingVo rating = null;
+        BinaryRatingVo rating = null;
         try {
-            CommentRatingVo vo = new CommentRatingVo();
+            BinaryRatingVo vo = new BinaryRatingVo();
             vo.setEvaluatedObjectId(commentId);
             vo.setUserId(userId);
             vo.setValue(value);

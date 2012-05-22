@@ -198,7 +198,7 @@ public class CoursesFacade extends AbstractFacade {
             } else {
                 //Otherwise update the existing one
                 //But first verify bussines rules
-                getServiceFactory().createCourseRatingsService().validateVo(em, vo);
+                getServiceFactory().createCourseRatingsService().validateVoForUpdate(em, vo);
                 rating.setValue(value);
             }
             tx.commit();

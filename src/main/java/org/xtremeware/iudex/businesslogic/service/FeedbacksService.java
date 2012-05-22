@@ -44,7 +44,7 @@ public class FeedbacksService extends CrudService<FeedbackVo, FeedbackEntity> {
      * @throws InvalidVoException
      */
     @Override
-    public void validateVo(EntityManager em, FeedbackVo vo)
+    public void validateVoForCreation(EntityManager em, FeedbackVo vo)
             throws ExternalServiceConnectionException, MultipleMessagesException,
             DataBaseException {
 
@@ -84,6 +84,18 @@ public class FeedbacksService extends CrudService<FeedbackVo, FeedbackEntity> {
             throw multipleMessageException;
         }
     }
+    
+    @Override
+    public void validateVoForUpdate(EntityManager entityManager, FeedbackVo valueObject) throws MultipleMessagesException, ExternalServiceConnectionException, DataBaseException {
+        validateVoForCreation(entityManager, valueObject);
+        MultipleMessagesException multipleMessageException =
+                new MultipleMessagesException();
+        if (valueObject.getId() == null) {
+            multipleMessageException.addMessage(
+                    "feedback.id.null");
+            throw multipleMessageException;
+        }
+    }
 
     /**
      * Returns a FeedbackEntity using the information in the provided
@@ -98,8 +110,6 @@ public class FeedbacksService extends CrudService<FeedbackVo, FeedbackEntity> {
     public FeedbackEntity voToEntity(EntityManager em, FeedbackVo vo)
             throws ExternalServiceConnectionException,
             MultipleMessagesException, DataBaseException {
-
-        validateVo(em, vo);
 
         FeedbackEntity feedbackEntity = new FeedbackEntity();
         feedbackEntity.setContent(vo.getContent());

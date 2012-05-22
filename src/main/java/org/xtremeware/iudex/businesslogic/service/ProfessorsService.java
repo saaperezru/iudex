@@ -52,7 +52,7 @@ public class ProfessorsService extends CrudService<ProfessorVo, ProfessorEntity>
     }
 
     @Override
-    public void validateVo(EntityManager em, ProfessorVo vo)
+    public void validateVoForCreation(EntityManager em, ProfessorVo vo)
             throws ExternalServiceConnectionException, MultipleMessagesException {
 
         MultipleMessagesException multipleMessageException =
@@ -150,11 +150,23 @@ public class ProfessorsService extends CrudService<ProfessorVo, ProfessorEntity>
             throw multipleMessageException;
         }
     }
+    
+    @Override
+    public void validateVoForUpdate(EntityManager entityManager, ProfessorVo valueObject) throws MultipleMessagesException, ExternalServiceConnectionException, DataBaseException {
+        validateVoForCreation(entityManager, valueObject);
+        MultipleMessagesException multipleMessageException =
+                new MultipleMessagesException();
+        if (valueObject.getId() == null) {
+            multipleMessageException.addMessage("professor.id.null");
+            throw multipleMessageException;
+        }
+    }
 
     @Override
     public ProfessorEntity voToEntity(EntityManager em, ProfessorVo vo)
             throws ExternalServiceConnectionException, MultipleMessagesException {
-        validateVo(em, vo);
+        
+        
         ProfessorEntity entity = new ProfessorEntity();
         entity.setId(vo.getId());
         entity.setEmail(vo.getEmail());

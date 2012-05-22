@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.businesslogic.DuplicityException;
-import org.xtremeware.iudex.businesslogic.service.crudinterfaces.ReadInterface;
-import org.xtremeware.iudex.businesslogic.service.crudinterfaces.RemoveInterface;
+import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Read;
+import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Remove;
 import org.xtremeware.iudex.dao.AbstractDaoFactory;
-import org.xtremeware.iudex.dao.BinaryRatingDaoInterface;
+import org.xtremeware.iudex.dao.BinaryRatingDao;
 import org.xtremeware.iudex.entity.Entity;
 import org.xtremeware.iudex.entity.RatingEntity;
 import org.xtremeware.iudex.helper.DataBaseException;
@@ -20,17 +20,17 @@ import org.xtremeware.iudex.vo.RatingSummaryVo;
  *
  * @author josebermeo
  */
-public abstract class RatingService<E extends BinaryRatingVo, F extends Entity<E>> {
+public abstract class RatingService<F extends Entity<BinaryRatingVo>> {
 
     private AbstractDaoFactory daoFactory;
-    private ReadInterface<F> readInterface;
-    private RemoveInterface removeInterface;
-    private BinaryRatingDaoInterface<F> dao;
+    private Read<F> readInterface;
+    private Remove removeInterface;
+    private BinaryRatingDao<F> dao;
 
     public RatingService(AbstractDaoFactory daoFactory,
-            ReadInterface readInterface,
-            RemoveInterface removeInterface,
-            BinaryRatingDaoInterface<F> dao) {
+            Read readInterface,
+            Remove removeInterface,
+            BinaryRatingDao<F> dao) {
         this.daoFactory = daoFactory;
         this.readInterface = readInterface;
         this.removeInterface = removeInterface;
@@ -41,31 +41,30 @@ public abstract class RatingService<E extends BinaryRatingVo, F extends Entity<E
         return daoFactory;
     }
 
-    private ReadInterface<F> getReadInterface() {
+    private Read<F> getReadInterface() {
         return readInterface;
     }
 
-    private RemoveInterface getRemoveInterface() {
+    private Remove getRemoveInterface() {
         return removeInterface;
     }
 
-    private BinaryRatingDaoInterface<F> getDao() {
+    protected BinaryRatingDao<F> getDao() {
         return dao;
     }
 
-    public E create(EntityManager entityManager, E vo) throws MultipleMessagesException,
-            ExternalServiceConnectionException,
-            DataBaseException,
-            DuplicityException {
-        validateVo(entityManager, vo);
+    public BinaryRatingVo create(EntityManager entityManager, BinaryRatingVo binaryRatingVo)
+            throws MultipleMessagesException, ExternalServiceConnectionException,
+            DataBaseException, DuplicityException {
+        validateVoForCreation(entityManager, binaryRatingVo);
         try {
-            F ratingEntity = getDao().
-                    getByEvaluatedObjectIdAndUserId(entityManager, vo.getEvaluatedObjectId(),
-                    vo.getUserId());
+            F ratingEntity = getDao().getByEvaluatedObjectIdAndUserId(entityManager,
+                    binaryRatingVo.getEvaluatedObjectId(), binaryRatingVo.getUserId());
             if (ratingEntity == null) {
-                return getDao().persist(entityManager, voToEntity(entityManager, vo)).toVo();
+                return getDao().persist(entityManager, voToEntity(entityManager,
+                        binaryRatingVo)).toVo();
             } else {
-                ((RatingEntity) ratingEntity).setValue(vo.getValue());
+                ((RatingEntity) ratingEntity).setValue(binaryRatingVo.getValue());
                 return ratingEntity.toVo();
             }
         } catch (DataBaseException ex) {
@@ -78,8 +77,8 @@ public abstract class RatingService<E extends BinaryRatingVo, F extends Entity<E
 
     }
 
-    public E getById(EntityManager em, long id) throws DataBaseException {
-        F result = getReadInterface().getById(em, id);
+    public BinaryRatingVo getById(EntityManager em, long ratingId) throws DataBaseException {
+        F result = getReadInterface().getById(em, ratingId);
         if (result == null) {
             return null;
         } else {
@@ -87,14 +86,14 @@ public abstract class RatingService<E extends BinaryRatingVo, F extends Entity<E
         }
     }
 
-    public void remove(EntityManager em, long id)
+    public void remove(EntityManager em, long ratingId)
             throws DataBaseException {
-        getRemoveInterface().remove(em, id);
+        getRemoveInterface().remove(em, ratingId);
     }
-    
-    public List<E> getByEvaluatedObjectId(EntityManager entityManager, long evaluatedObjectId)
-            throws DataBaseException {
-        List<E> list = new ArrayList<E>();
+
+    public List<BinaryRatingVo> getByEvaluatedObjectId(EntityManager entityManager,
+            long evaluatedObjectId) throws DataBaseException {
+        List<BinaryRatingVo> list = new ArrayList<BinaryRatingVo>();
         for (F rating : getDao().
                 getByEvaluatedObjectId(entityManager, evaluatedObjectId)) {
             list.add(rating.toVo());
@@ -102,8 +101,8 @@ public abstract class RatingService<E extends BinaryRatingVo, F extends Entity<E
         return list;
     }
 
-    public E getByEvaluatedObjectAndUserId(EntityManager entityManager,
-            long evaluatedObjectId, long userId)throws DataBaseException {
+    public BinaryRatingVo getByEvaluatedObjectAndUserId(EntityManager entityManager,
+            long evaluatedObjectId, long userId) throws DataBaseException {
         F rating = getDao().
                 getByEvaluatedObjectIdAndUserId(entityManager, evaluatedObjectId, userId);
 
@@ -119,11 +118,13 @@ public abstract class RatingService<E extends BinaryRatingVo, F extends Entity<E
         return getDao().getSummary(entityManager, evaluatedObjectId);
     }
 
-    public abstract void validateVo(EntityManager em, E vo)
+    public abstract void validateVoForCreation(EntityManager entityManager,
+            BinaryRatingVo binaryRatingVo)
             throws MultipleMessagesException,
             ExternalServiceConnectionException, DataBaseException;
 
-    public abstract F voToEntity(EntityManager em, E vo)
+    public abstract F voToEntity(EntityManager entityManager,
+            BinaryRatingVo binaryRatingVo)
             throws MultipleMessagesException,
             ExternalServiceConnectionException, DataBaseException;
 }

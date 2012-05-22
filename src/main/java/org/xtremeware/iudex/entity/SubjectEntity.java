@@ -20,7 +20,7 @@ public class SubjectEntity implements Serializable, Entity<SubjectVo> {
     private Long id;
     @Column(name = "NAME", nullable = false, length = 50, unique = true)
     private String name;
-    @Column(name = "CODE", unique = true)
+    @Column(name = "CODE", nullable = false, unique = true)
     private int code;
     @Column(name = "DESCRIPTION", length = 2000)
     private String description;
@@ -62,16 +62,24 @@ public class SubjectEntity implements Serializable, Entity<SubjectVo> {
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 79 * hash + (this.id != null ? this.id.hashCode() : 0);
-        hash = 79 * hash + (this.name != null ? this.name.hashCode() : 0);
-        hash = 79 * hash + this.code;
-        hash = 79 * hash + (this.description != null ? this.description.hashCode() : 0);
+        hash = 89 * hash + (this.id != null ? this.id.hashCode() : 0);
+        hash = 89 * hash + (this.name != null ? this.name.hashCode() : 0);
+        hash = 89 * hash + this.code;
+        hash = 89 * hash + (this.description != null ? this.description.hashCode() : 0);
         return hash;
     }
 
     @Override
     public String toString() {
         return "SubjectEntity{" + "id=" + id + ", name=" + name + ", code=" + code + ", description=" + description + '}';
+    }
+
+    public int getCode() {
+        return code;
+    }
+
+    public void setCode(int code) {
+        this.code = code;
     }
 
     public String getDescription() {
@@ -98,13 +106,5 @@ public class SubjectEntity implements Serializable, Entity<SubjectVo> {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public int getCode() {
-        return code;
-    }
-
-    public void setCode(int code) {
-        this.code = code;
-    }
+    } 
 }

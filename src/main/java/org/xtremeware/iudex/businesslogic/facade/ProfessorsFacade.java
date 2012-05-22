@@ -101,9 +101,9 @@ public class ProfessorsFacade extends AbstractFacade {
         }
     }
 
-    public ProfessorRatingVo getProfessorRatingByUserId(long professorId, long userId) throws Exception {
+    public BinaryRatingVo getProfessorRatingByUserId(long professorId, long userId) throws Exception {
         EntityManager entityManager = null;
-        ProfessorRatingVo rating = null;
+        BinaryRatingVo rating = null;
         try {
             entityManager = getEntityManagerFactory().createEntityManager();
             rating = getServiceFactory().createProfessorRatingsService().getByEvaluatedObjectAndUserId(entityManager, professorId, userId);
@@ -116,12 +116,12 @@ public class ProfessorsFacade extends AbstractFacade {
         return rating;
     }
 
-    public ProfessorRatingVo rateProfessor(long professorId, long userId, int value) throws MultipleMessagesException, Exception {
+    public BinaryRatingVo rateProfessor(long professorId, long userId, int value) throws MultipleMessagesException, Exception {
         EntityManager entityManager = null;
         EntityTransaction tx = null;
-        ProfessorRatingVo rating = null;
+        BinaryRatingVo rating = null;
         try {
-            ProfessorRatingVo vo = new ProfessorRatingVo();
+            BinaryRatingVo vo = new BinaryRatingVo();
             vo.setEvaluatedObjectId(professorId);
             vo.setUserId(userId);
             vo.setValue(value);

@@ -1,11 +1,11 @@
 package org.xtremeware.iudex.businesslogic.service;
 
-import org.xtremeware.iudex.businesslogic.service.crudinterfaces.ReadInterface;
-import org.xtremeware.iudex.businesslogic.service.crudinterfaces.RemoveInterface;
-import org.xtremeware.iudex.businesslogic.service.crudinterfaces.CreateInterface;
+import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Read;
+import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Remove;
+import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Create;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.businesslogic.DuplicityException;
-import org.xtremeware.iudex.businesslogic.service.crudinterfaces.UpdateInterface;
+import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Update;
 import org.xtremeware.iudex.dao.AbstractDaoFactory;
 import org.xtremeware.iudex.entity.Entity;
 import org.xtremeware.iudex.helper.DataBaseException;
@@ -20,15 +20,15 @@ import org.xtremeware.iudex.vo.ValueObject;
 public abstract class CrudService<E extends ValueObject, F extends Entity<E>> {
 
     private AbstractDaoFactory daoFactory;
-    private CreateInterface<F> createInterface;
-    private ReadInterface<F> readInterface;
-    private UpdateInterface<F> updateInterface;
-    private RemoveInterface removeInterface;
+    private Create<F> createInterface;
+    private Read<F> readInterface;
+    private Update<F> updateInterface;
+    private Remove removeInterface;
 
     public CrudService(AbstractDaoFactory daoFactory,
-            CreateInterface createInterface,
-            ReadInterface readInterface, UpdateInterface updateInterface,
-            RemoveInterface removeInterface) {
+            Create createInterface,
+            Read readInterface, Update updateInterface,
+            Remove removeInterface) {
         this.daoFactory = daoFactory;
         this.createInterface = createInterface;
         this.readInterface = readInterface;
@@ -40,31 +40,31 @@ public abstract class CrudService<E extends ValueObject, F extends Entity<E>> {
         return daoFactory;
     }
 
-    private CreateInterface<F> getCreateInterface() {
+    private Create<F> getCreateInterface() {
         return createInterface;
     }
 
-    private ReadInterface<F> getReadInterface() {
+    private Read<F> getReadInterface() {
         return readInterface;
     }
 
-    private RemoveInterface getRemoveInterface() {
+    private Remove getRemoveInterface() {
         return removeInterface;
     }
 
-    private UpdateInterface<F> getUpdateInterface() {
+    private Update<F> getUpdateInterface() {
         return updateInterface;
     }
 
-    public E create(EntityManager em, E vo) throws MultipleMessagesException,
+    public E create(EntityManager entityManager, E valueObject) throws MultipleMessagesException,
             ExternalServiceConnectionException,
-            DataBaseException, 
+            DataBaseException,
             DuplicityException {
-        validateVo(em, vo);
+        validateVoForCreation(entityManager, valueObject);
         try {
-            return getCreateInterface().create(em, voToEntity(em, vo)).toVo();
+            return getCreateInterface().create(entityManager, voToEntity(entityManager, valueObject)).toVo();
         } catch (DataBaseException ex) {
-            if(ex.getMessage().equals("entity.exists")) {
+            if (ex.getMessage().equals("entity.exists")) {
                 throw new DuplicityException("entity.exists", ex.getCause());
             } else {
                 throw ex;
@@ -73,8 +73,8 @@ public abstract class CrudService<E extends ValueObject, F extends Entity<E>> {
 
     }
 
-    public E getById(EntityManager em, long id) throws DataBaseException {
-        F result = getReadInterface().getById(em, id);
+    public E getById(EntityManager entityManager, long valueObjectid) throws DataBaseException {
+        F result = getReadInterface().getById(entityManager, valueObjectid);
         if (result == null) {
             return null;
         } else {
@@ -82,29 +82,42 @@ public abstract class CrudService<E extends ValueObject, F extends Entity<E>> {
         }
     }
 
-    public void remove(EntityManager em, long id)
+    public void remove(EntityManager entityManager, long valueObjectid)
             throws DataBaseException {
-        getRemoveInterface().remove(em, id);
+        getRemoveInterface().remove(entityManager, valueObjectid);
     }
 
-    public E update(EntityManager em, E vo)
+    public E update(EntityManager entityManager, E valueObject)
             throws ExternalServiceConnectionException,
             MultipleMessagesException,
-            DataBaseException {
-        validateVo(em, vo);
-        F entity = getUpdateInterface().update(em, voToEntity(em, vo));
-        if (entity != null) {
-            return entity.toVo();
-        } else {
-            return null;
+            DataBaseException,
+            DuplicityException {
+        validateVoForUpdate(entityManager, valueObject);
+        try {
+            F entity = getUpdateInterface().update(entityManager, voToEntity(entityManager, valueObject));
+            if (entity != null) {
+                return entity.toVo();
+            } else {
+                return null;
+            }
+        } catch (DataBaseException ex) {
+            if (ex.getMessage().equals("entity.exists")) {
+                throw new DuplicityException("entity.exists", ex.getCause());
+            } else {
+                throw ex;
+            }
         }
     }
 
-    public abstract void validateVo(EntityManager em, E vo)
+    public abstract void validateVoForCreation(EntityManager entityManager, E valueObject)
             throws MultipleMessagesException,
             ExternalServiceConnectionException, DataBaseException;
 
-    public abstract F voToEntity(EntityManager em, E vo)
+    public abstract void validateVoForUpdate(EntityManager entityManager, E valueObject)
+            throws MultipleMessagesException,
+            ExternalServiceConnectionException, DataBaseException;
+
+    public abstract F voToEntity(EntityManager entityManager, E valueObject)
             throws MultipleMessagesException,
             ExternalServiceConnectionException, DataBaseException;
 }

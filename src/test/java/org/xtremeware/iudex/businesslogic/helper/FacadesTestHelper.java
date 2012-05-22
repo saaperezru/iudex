@@ -35,12 +35,16 @@ public class FacadesTestHelper {
             MultipleMessagesException exception, String[] expectedMessages) {
         List<String> messages = exception.getMessages();
         for (String expectedMessage : expectedMessages) {
-            assertTrue(messages.contains(expectedMessage));
+            assertTrue("not message "+expectedMessage, messages.contains(expectedMessage));
         }
     }
     
     public static String randomString(int length){
         return new BigInteger(length * 5, new Random()).toString(32);
+    }
+    
+    public static int randomInt(int length){   
+        return new Random().nextInt((int)Math.pow(10.0, length + 0.0));
     }
     
     public static EntityManagerFactory createEntityManagerFactory() {

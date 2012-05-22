@@ -99,6 +99,11 @@
             <version>2.1.7</version>
         </dependency>
         <dependency>
+            <groupId>org.apache.myfaces.commons</groupId>
+            <artifactId>myfaces-validators20</artifactId>
+            <version>1.0.2.1</version>
+        </dependency>
+        <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-web-api</artifactId>
             <version>6.0</version>

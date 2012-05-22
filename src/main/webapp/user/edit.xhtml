@@ -6,7 +6,8 @@
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:c="http://java.sun.com/jsp/jstl/core"
                 xmlns:iudex="http://java.sun.com/jsf/composite/iudex"
-                xmlns="http://www.w3.org/1999/xhtml">
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:maocv="http://myfaces.apache.org/commons/validators">
 
     <f:metadata>
         <f:event type="preRenderView" listener="#{editUser.preRenderView()}" />
@@ -57,6 +58,16 @@
                                     <f:validateRegex pattern=".{0}|.{8,18}"  /> 
                                 </h:inputSecret>
                                 <iudex:inlineError key="editForm:password" />
+                            </div>
+                        </div>
+                        
+                        <div class="control-group #{viewHelper.addErrorClass('editForm:passwordConfirmation')}">
+                            <label class="control-label span3" for="password">Confirmar contraseña nueva</label>
+                            <div class="controls span9">
+                                <h:inputSecret id="passwordConfirmation" value="" maxlength="18" styleClass="input-xlarge" validatorMessage="La confirmación de la contraseña no coincide">
+                                    <maocv:validateCompareTo forId="password" operator="eq" />
+                                </h:inputSecret>
+                                <iudex:inlineError key="editForm:passwordConfirmation" />
                             </div>
                         </div>
 

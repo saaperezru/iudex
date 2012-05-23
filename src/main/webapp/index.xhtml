@@ -6,7 +6,8 @@
                 xmlns:c="http://java.sun.com/jsp/jstl/core"
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:iudex="http://java.sun.com/jsf/composite/iudex"
-                xmlns="http://www.w3.org/1999/xhtml">
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:pou="http://primefaces.org/ui">
 
     <ui:define name="content">
         <div class="row-fluid">
@@ -72,6 +73,7 @@
                                             <iudex:inlineError key="loginForm:password" />
                                         </div>
                                     </div>
+
                                     <center>
                                         <span>
                                             <h:commandButton action="#{login.logIn()}" value="Acceder" class="btn btn-success" />
@@ -139,6 +141,16 @@
                                             <iudex:inlineError key="signUpForm:program" />
                                         </div>
                                     </div>
+                                    <p>
+                                        ¿No eres un robot, verdad? Entonces esto será fácil.
+                                    </p>
+                                    <div class="control-group #{viewHelper.addErrorClass('signUpForm:captcha')}">
+                                        <div class="controls span12">
+                                            <iudex:inlineError key="signUpForm:captcha" cssClass="float-right" />
+                                            <pou:captcha id="captcha" secure="true" />
+                                        </div>
+                                    </div>
+
                                     <center>
                                         <span>
                                             <h:commandButton action="#{signUp.signUp}" value="Registrarme" class="btn btn-success"/>

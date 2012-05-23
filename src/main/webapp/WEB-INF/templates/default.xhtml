@@ -38,15 +38,15 @@
                                 <i class="icon-user"></i>#{user.userName}
                                 <span class="caret"></span>
                             </a>
-                            <ul class="dropdown-menu">
-                                <li><h:link outcome="editUser" value="Editar cuenta" /></li>
-                                <li class="divider"></li>
-                                <li>
-                                    <h:form>
+                            <h:form>
+                                <ul class="dropdown-menu">
+                                    <li><h:link outcome="editUser" value="Editar cuenta" /></li>
+                                    <li class="divider"></li>
+                                    <li>
                                         <h:commandLink action="#{user.logOut()}" value="Cerrar sesión" />
-                                    </h:form>
-                                </li>
-                            </ul>
+                                    </li>
+                                </ul>
+                            </h:form>
                         </div>
                     </c:if>
                     <div class="nav-collapse">
@@ -62,9 +62,9 @@
         <!--content-->
 
         <div class="container-fluid offset1 span10">
-                <ui:insert name="content">
+            <ui:insert name="content">
 
-                </ui:insert>
+            </ui:insert>
         </div>
 
         <!-- footer -->

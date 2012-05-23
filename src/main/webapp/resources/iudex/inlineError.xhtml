@@ -8,12 +8,13 @@
     <!-- INTERFACE -->
     <cc:interface>
         <cc:attribute name="key" required="true" type="java.lang.String" />
+        <cc:attribute name="cssClass" required="false" type="java.lang.String" />
     </cc:interface>
 
     <!-- IMPLEMENTATION -->
     <cc:implementation>
         <c:if test="#{viewHelper.hasErrors(cc.attrs.key)}">
-            <i title="#{viewHelper.getMessage(cc.attrs.key)}" class="icon-exclamation-sign inline-error" />
+            <i title="#{viewHelper.getMessage(cc.attrs.key)}" class="icon-exclamation-sign inline-error #{cc.attrs.cssClass}" />
         </c:if>
     </cc:implementation>
 </html>

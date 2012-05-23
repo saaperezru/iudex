@@ -50,6 +50,10 @@ div.big-media {
     height: 340px;
 }
 
+.float-right {
+    float: right;
+}
+
 div.share-icon {
     background-image: url(../resources/images/share.png);
     background-position: center top;

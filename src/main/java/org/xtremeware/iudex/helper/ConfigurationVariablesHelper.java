@@ -23,8 +23,6 @@ public class ConfigurationVariablesHelper {
     public static final String MAX_PROFESSOR_DECRIPTION_LENGTH = "professor.maxProfessorDescriptionLength";
     public static final String MAX_SUBJECT_NAME_LENGTH = "subject.maxNameLength";
     public static final String MAX_SUBJECT_DESCRIPTION_LENGTH = "subject.maxDescriptionLength";
-    public static final String RECAPTCHA_PRIVATE_KEY = "security.reCaptchaPrivateKey";
-    public static final String RECAPTCHA_PUBLIC_KEY = "security.reCaptchaPublicKey";
     public static final String MAILING_SMTP_SERVER = "mailing.smtpServer";
     public static final String MAILING_SENDER_EMAIL_ADDRESS = "mailing.senderEMailAddress";
     public static final String MAILING_SMTP_USER = "mailing.smtpServerUser";

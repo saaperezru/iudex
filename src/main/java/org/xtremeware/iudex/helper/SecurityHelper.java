@@ -8,9 +8,6 @@ import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import javax.servlet.http.HttpServletRequest;
-import net.tanesha.recaptcha.ReCaptchaImpl;
-import net.tanesha.recaptcha.ReCaptchaResponse;
 import org.owasp.validator.html.AntiSamy;
 import org.owasp.validator.html.CleanResults;
 import org.owasp.validator.html.Policy;
@@ -73,18 +70,6 @@ public class SecurityHelper {
 			Config.getInstance().getServiceFactory().createLogService().error(ex.getMessage(), ex);
 		}
 		return hash;
-	}
-
-	public static boolean verifyCaptcha(HttpServletRequest request) throws ExternalServiceConnectionException {
-		String remoteAddr = request.getRemoteAddr();
-		ReCaptchaImpl reCaptcha = new ReCaptchaImpl();
-		reCaptcha.setPrivateKey(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.RECAPTCHA_PRIVATE_KEY));
-
-		String challenge = request.getParameter("recaptcha_challenge_field");
-		String uresponse = request.getParameter("recaptcha_response_field");
-		ReCaptchaResponse reCaptchaResponse = reCaptcha.checkAnswer(remoteAddr, challenge, uresponse);
-
-		return (reCaptchaResponse.isValid());
 	}
 
 	public static String generateMailingKey() throws ExternalServiceConnectionException{

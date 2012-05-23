@@ -54,7 +54,7 @@ public class UsersFacadeIT {
      */
     @Test
     public void test_BL_2_1() throws MultipleMessagesException,
-            DuplicityException, 
+            DuplicityException,
             Exception {
         UserVo user = new UserVo();
         user.setFirstName("John");
@@ -235,7 +235,7 @@ public class UsersFacadeIT {
      */
     @Test
     public void test_BL_2_4() throws MultipleMessagesException,
-            DuplicityException, 
+            DuplicityException,
             Exception {
         UserVo user = new UserVo();
         user.setFirstName("Diane");
@@ -327,15 +327,19 @@ public class UsersFacadeIT {
             MailingService mailingService, MailingConfigVo mailingConfig) throws
             MultipleMessagesException, DuplicityException, Exception {
         mailingService.setConfig(mailingConfig);
-        boolean exception = false;
+        RuntimeException exception = null;
+        boolean externalServiceConnectionException = false;
         try {
             usersFacade.addUser(user);
         } catch (RuntimeException ex) {
+            exception = ex;
             if (ex.getCause() instanceof ExternalServiceConnectionException) {
-                exception = true;
+                externalServiceConnectionException = true;
             }
         }
-        assertTrue(exception);
+        assertTrue("Expecting an ExternalServiceConnectionException, got " +
+                exception == null ? "no exception" : exception.getMessage(),
+                externalServiceConnectionException);
     }
 
     /**
@@ -502,7 +506,7 @@ public class UsersFacadeIT {
                 user);
         assertNull(user);
     }
-    
+
     /**
      * Test an attempt to edit a user with invalid data
      */

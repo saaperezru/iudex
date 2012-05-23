@@ -12,6 +12,7 @@ import org.xtremeware.iudex.businesslogic.service.ServiceFactory;
 import org.xtremeware.iudex.businesslogic.service.UsersService;
 import org.xtremeware.iudex.helper.ConfigurationVariablesHelper;
 import org.xtremeware.iudex.helper.MultipleMessagesException;
+import org.xtremeware.iudex.vo.ForgottenPasswordKeyVo;
 import org.xtremeware.iudex.vo.UserVo;
 
 public class UsersFacade extends AbstractFacade {
@@ -150,5 +151,82 @@ public class UsersFacade extends AbstractFacade {
             FacadesHelper.closeEntityManager(em);
         }
         return updatedUser;
+    }
+
+    public void recoverPassword(String userName) {
+        EntityManager em = null;
+        EntityTransaction tx = null;
+        try {
+            em = getEntityManagerFactory().createEntityManager();
+            tx = em.getTransaction();
+            tx.begin();
+
+            ServiceFactory serviceFactory = getServiceFactory();
+
+            ForgottenPasswordKeyVo vo = serviceFactory.createUsersService().
+                    createForgottenPasswordKey(em,
+                    userName);
+
+            if (vo != null) {
+                Map<String, String> data = new HashMap<String, String>();
+                data.put("userName", userName);
+                data.put("appPath", ConfigurationVariablesHelper.getVariable(
+                        ConfigurationVariablesHelper.APP_PATH));
+                data.put("key", vo.getKey());
+
+                serviceFactory.createMailingService().sendMessage(data,
+                        ConfigurationVariablesHelper.getVariable(
+                        ConfigurationVariablesHelper.MAILING_TEMPLATES_RECOVER_PASSWORD),
+                        ConfigurationVariablesHelper.getVariable(
+                        ConfigurationVariablesHelper.MAILING_TEMPLATES_RECOVER_PASSWORD_SUBJECT),
+                        userName + "@unal.edu.co");
+            }
+            tx.commit();
+        } catch (Exception ex) {
+            getServiceFactory().createLogService().error(ex.getMessage(), ex);
+            FacadesHelper.rollbackTransaction(em, tx, ex);
+        } finally {
+            FacadesHelper.closeEntityManager(em);
+        }
+    }
+
+    public UserVo validateForgottenPasswordKey(String key) {
+        EntityManager em = null;
+        UserVo vo = null;
+        try {
+            em = getEntityManagerFactory().createEntityManager();
+
+            vo = getServiceFactory().createUsersService().
+                    getUserByForgottenPasswordKey(em, key);
+        } catch (Exception ex) {
+            getServiceFactory().createLogService().error(ex.getMessage(), ex);
+            throw new RuntimeException(ex);
+        } finally {
+            FacadesHelper.closeEntityManager(em);
+        }
+        return vo;
+    }
+
+    public void resetPassword(String key, String password) throws
+            MultipleMessagesException {
+        EntityManager em = null;
+        EntityTransaction tx = null;
+
+        try {
+            em = getEntityManagerFactory().createEntityManager();
+            tx = em.getTransaction();
+            tx.begin();
+
+            getServiceFactory().createUsersService().resetPassword(em, key,
+                    password);
+            tx.commit();
+        } catch (Exception ex) {
+            getServiceFactory().createLogService().error(ex.getMessage(), ex);
+            FacadesHelper.checkExceptionAndRollback(em, tx, ex,
+                    MultipleMessagesException.class);
+            FacadesHelper.rollbackTransaction(em, tx, ex);
+        } finally {
+            FacadesHelper.closeEntityManager(em);
+        }
     }
 }

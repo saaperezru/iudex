@@ -8,8 +8,7 @@ import org.xtremeware.iudex.vo.ConfirmationKeyVo;
 
 @javax.persistence.Entity(name = "ConfirmationKey")
 @NamedQuery(name = "getByConfirmationKey",
-query = "SELECT result FROM ConfirmationKey result "
-+ "WHERE result.confirmationKey = :confirmationKey")
+query = "SELECT ck FROM ConfirmationKey ck WHERE ck.confirmationKey = :confirmationKey AND ck.expirationDate >= CURRENT_DATE")
 @Table(name = "CONFIRMATION_KEY")
 public class ConfirmationKeyEntity implements Serializable, Entity<ConfirmationKeyVo> {
 

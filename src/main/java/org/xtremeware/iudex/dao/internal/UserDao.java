@@ -19,17 +19,34 @@ public class UserDao extends CrudDao<UserEntity> implements UserDaoInterface {
      * password are like the specified ones
      *
      * @param em the entity manager
-     * @param username String containing the username
+     * @param userName String containing the username
      * @param password String containing the password
      * @return Value object with required user information
      */
     @Override
-    public UserEntity getByUsernameAndPassword(EntityManager em, String username, String password) throws DataBaseException {
-
+    public UserEntity getByUserNameAndPassword(EntityManager em, String userName,
+            String password) throws DataBaseException {
         checkEntityManager(em);
         try {
-            return em.createNamedQuery("getUserByUsernameAndPassword", UserEntity.class).
-                    setParameter("userName", username).setParameter("password", password).getSingleResult();
+            return em.createNamedQuery("getUserByUserNameAndPassword",
+                    UserEntity.class).
+                    setParameter("userName", userName).setParameter("password",
+                    password).getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        } catch (Exception e) {
+            throw new DataBaseException(e.getMessage(), e.getCause());
+        }
+    }
+
+    @Override
+    public UserEntity getByUserName(EntityManager em, String userName) throws
+            DataBaseException {
+        checkEntityManager(em);
+        try {
+            return em.createNamedQuery("getUserByUserName",
+                    UserEntity.class).
+                    setParameter("userName", userName).getSingleResult();
         } catch (NoResultException e) {
             return null;
         } catch (Exception e) {

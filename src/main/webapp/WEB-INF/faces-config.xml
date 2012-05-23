@@ -61,5 +61,9 @@
             <from-outcome>editUser</from-outcome>
             <to-view-id>/user/edit.xhtml</to-view-id>
         </navigation-case>
+        <navigation-case>
+            <from-outcome>forgottenPassword</from-outcome>
+            <to-view-id>/forgottenPassword.xhtml</to-view-id>
+        </navigation-case>
     </navigation-rule>
 </faces-config>

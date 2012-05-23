@@ -54,7 +54,7 @@
                                 <fieldset>
                                     <legend>Iniciar sesión</legend>
                                     <h:messages for="loginForm" class="alert alert-error"/>
-                                    <div class="control-group">
+                                    <div class="control-group #{viewHelper.addErrorClass('loginForm:userName')}">
                                         <label class="control-label span3" for="userName">Usuario</label>
                                         <div class="controls span9">
                                             <h:inputText id="userName" value="#{login.userName}" required="true">
@@ -63,7 +63,7 @@
                                             <iudex:inlineError key="loginForm:userName" />
                                         </div>
                                     </div>
-                                    <div class="control-group">
+                                    <div class="control-group #{viewHelper.addErrorClass('loginForm:password')}">
                                         <label class="control-label span3" for="password">Contraseña</label>
                                         <div class="controls span9">
                                             <h:inputSecret id="password" value="#{login.password}" required="true">
@@ -75,6 +75,9 @@
                                     <center>
                                         <span>
                                             <h:commandButton action="#{login.logIn()}" value="Acceder" class="btn btn-success" />
+                                        </span>
+                                        <span>
+                                            <h:link outcome="forgottenPassword" value="Olvidé mi contraseña" class="btn" />
                                         </span>
                                     </center>
                                 </fieldset>

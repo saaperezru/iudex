@@ -20,6 +20,8 @@ public interface AbstractDaoFactory {
 
     public FeedbackTypeDaoInterface getFeedbackTypeDao();
 
+    public ForgottenPasswordKeyDaoInterface getForgottenPasswordKeyDao();
+    
     public PeriodDaoInterface getPeriodDao();
 
     public ProfessorDaoInterface getProfessorDao();

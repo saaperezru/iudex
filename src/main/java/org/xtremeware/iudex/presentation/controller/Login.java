@@ -71,8 +71,7 @@ public class Login {
                         "Nombre de usuario o contraseña inválidos"));
             }
         } catch (Exception ex) {
-            FacesContext.getCurrentInstance().addMessage("loginForm",
-                    new FacesMessage(ViewHelper.getExceptionMessage(ex)));
+            ViewHelper.addExceptionFacesMessage("loginForm", ex);
         }
         return "failure";
     }

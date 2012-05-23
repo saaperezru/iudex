@@ -52,7 +52,7 @@
                         </div>
 
                         <div class="control-group #{viewHelper.addErrorClass('editForm:password')}">
-                            <label class="control-label span3" for="password">Contraseña nueva</label>
+                            <label class="control-label span3" for="password">Nueva contraseña</label>
                             <div class="controls span9">
                                 <h:inputSecret id="password" value="#{editUser.password}" maxlength="18" styleClass="input-xlarge" validatorMessage="La contraseña debe tener de 8 a 18 caracteres">
                                     <f:validateRegex pattern=".{0}|.{8,18}"  /> 
@@ -62,7 +62,7 @@
                         </div>
                         
                         <div class="control-group #{viewHelper.addErrorClass('editForm:passwordConfirmation')}">
-                            <label class="control-label span3" for="password">Confirmar contraseña nueva</label>
+                            <label class="control-label span3" for="password">Confirmar nueva contraseña</label>
                             <div class="controls span9">
                                 <h:inputSecret id="passwordConfirmation" value="" maxlength="18" styleClass="input-xlarge" validatorMessage="La confirmación de la contraseña no coincide">
                                     <maocv:validateCompareTo forId="password" operator="eq" />

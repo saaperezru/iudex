@@ -54,11 +54,15 @@
                             <h:form id="loginForm" class="form-horizontal well">
                                 <fieldset>
                                     <legend>Iniciar sesión</legend>
-                                    <h:messages for="loginForm" class="alert alert-error"/>
+                                    <ui:fragment rendered="#{not empty flash.loginMessage}">
+                                        <ul class="alert alert-error">
+                                            <li><h:outputText  value="#{flash.loginMessage}" /></li>
+                                        </ul>
+                                    </ui:fragment>
                                     <div class="control-group #{viewHelper.addErrorClass('loginForm:userName')}">
                                         <label class="control-label span3" for="userName">Usuario</label>
                                         <div class="controls span9">
-                                            <h:inputText id="userName" value="#{login.userName}" required="true">
+                                            <h:inputText id="userName" value="#{login.userName}" required="true" maxlength="20">
                                                 <f:validateLength maximum="20" />
                                             </h:inputText>
                                             <iudex:inlineError key="loginForm:userName" />
@@ -67,7 +71,7 @@
                                     <div class="control-group #{viewHelper.addErrorClass('loginForm:password')}">
                                         <label class="control-label span3" for="password">Contraseña</label>
                                         <div class="controls span9">
-                                            <h:inputSecret id="password" value="#{login.password}" required="true">
+                                            <h:inputSecret id="password" value="#{login.password}" required="true" maxlength="18">
                                                 <f:validateLength minimum="8" maximum="18" /> 
                                             </h:inputSecret>
                                             <iudex:inlineError key="loginForm:password" />

@@ -14,14 +14,11 @@
     
     <ui:define name="content">
         <div class="panel">
-            <h:form id="searchForm2">
-                Para buscar un curso ingresa el nombre del profesor o de la materia.<br/><br/>
-                <h:panelGrid columns="3">
-                   <label for="query">Buscar</label>
-                   <h:inputText id="query" class="input-large"  value="#{search.query}" />                   
-                   <h:commandButton actionListener="#{search.getResults()}" value="Buscar" />
-                </h:panelGrid>
-            </h:form>
+            Para buscar un curso ingresa el nombre del profesor o de la materia.<br/><br/>
+                <form id="searchForm" method="get" >
+                    <h:inputText id="query" class="input-large"  value="#{search.query}" />
+                    <input type="submit" value="Buscar"/>
+                </form>
         </div>
        <c:choose>
            <!--When the query is not null or empty-->

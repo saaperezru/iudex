@@ -34,13 +34,18 @@
             <to-view-id>/index.xhtml</to-view-id>
         </navigation-case>
     </navigation-rule>
-    
+
     <navigation-rule>
-        <from-view-id>/seach.xhtml</from-view-id>
         <navigation-case>
-            <from-action>#{search.getResults()}</from-action>
+            <from-action>#{search.submit()}</from-action>
             <from-outcome>success</from-outcome>
-            <to-view-id>/search.xhtml</to-view-id>
+            <to-view-id>/index.xhtml</to-view-id>
+            <redirect>
+                <view-param>
+                    <name>query</name>
+                    <value>#{Search.query}</value>
+                </view-param>
+            </redirect>
          </navigation-case>
     </navigation-rule>
     

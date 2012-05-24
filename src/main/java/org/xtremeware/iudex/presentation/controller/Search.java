@@ -1,5 +1,6 @@
 package org.xtremeware.iudex.presentation.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
@@ -19,8 +20,8 @@ import org.xtremeware.iudex.presentation.vovw.CourseVoVwFull;
 @RequestScoped
 public class Search {
 
-    private String query;
-    private List<CourseVoVwFull> courses;
+    private String query = "";
+    private List<CourseVoVwFull> courses  = new ArrayList<CourseVoVwFull>();;
 
     public List<CourseVoVwFull> getCourses() {
         return courses;
@@ -35,6 +36,12 @@ public class Search {
     }
     
     public void setQuery(String query) {
+        /*if(query == null){
+            FacesContext fc = FacesContext.getCurrentInstance();
+            Map<String, String> params = fc.getExternalContext().getRequestParameterMap();
+            if(params.get("searchForm:query") != null)
+                this.query = params.get("searchForm:query");
+        }*/
         this.query = query;
     }
     
@@ -48,22 +55,29 @@ public class Search {
 
     
     @PostConstruct
-    public String getResults(){
-        FacesContext fc = FacesContext.getCurrentInstance();
-        Map<String, String> params = fc.getExternalContext().getRequestParameterMap();
-        if(params.get("searchForm:query") != null)
-            this.query = params.get("searchForm:query");
+    public void getResultsOnLoad(){
+            FacesContext fc = FacesContext.getCurrentInstance();
+            Map<String, String> params = fc.getExternalContext().getRequestParameterMap();
+            this.query = params.get("query");
+        
         CoursesFacade coursesFacade = Config.getInstance().getFacadeFactory().getCoursesFacade();
         try{
-            courses = coursesFacade.search(this.query);
-            return "success";
+            this.courses.addAll(coursesFacade.search(this.query));
         }catch  (Exception ex) {
             FacesContext.getCurrentInstance().addMessage("searchForm", new FacesMessage(ex.getMessage()));
         }
-        return "failure";
+    }
+    
+    public String submit() {
+        FacesContext fc = FacesContext.getCurrentInstance();
+        Map<String, String> params = fc.getExternalContext().getRequestParameterMap();
+        this.query = params.get("searchForm:query");
+        return "success";
     }
     
     public void preRenderView(){
-        getResults();
+        FacesContext fc = FacesContext.getCurrentInstance();
+            Map<String, String> params = fc.getExternalContext().getRequestParameterMap();
+            this.query = params.get("query");
     }
 }

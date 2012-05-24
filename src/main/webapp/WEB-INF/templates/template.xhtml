@@ -48,6 +48,10 @@
                             <li><a href="#about">Acerca de</a></li>
                             <li><a href="#contact">Contacto</a></li>
                         </ul>
+                        <form id="searchForm" method="get" action="./search.xhtml">
+                            <h:inputText id="query" class="input-large"  value="#{search.query}" />
+                            <input type="submit" value="Buscar"/>
+                        </form>
                     </div><!--/.nav-collapse -->
                 </div>
             </div>

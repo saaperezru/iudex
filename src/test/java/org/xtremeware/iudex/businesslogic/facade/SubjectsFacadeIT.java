@@ -15,6 +15,7 @@ import org.xtremeware.iudex.vo.RatingSummaryVo;
 import org.xtremeware.iudex.vo.SubjectVo;
 import org.xtremeware.iudex.businesslogic.helper.FacadesTestHelper;
 import org.xtremeware.iudex.vo.BinaryRatingVo;
+import org.xtremeware.iudex.vo.SubjectVoFull;
 
 /**
  *
@@ -162,7 +163,7 @@ public class SubjectsFacadeIT {
 
         createdSubjectId = subjectsFacade.addSubject(subjectVo).getId();
 
-        SubjectVoVwFull subjectVoVw = subjectsFacade.getSubject(createdSubjectId);
+        SubjectVoFull subjectVoVw = subjectsFacade.getSubject(createdSubjectId);
 
         assertEquals(subjectVoVw.getId(), createdSubjectId);
         assertEquals(subjectVoVw.getName(), subjectName);
@@ -336,7 +337,7 @@ public class SubjectsFacadeIT {
         subjectVo.setDescription(newSubjectDescription);
         subjectsFacade.updateSubject(subjectVo);
 
-        SubjectVoVwFull subject = subjectsFacade.getSubject(subjectId);
+        SubjectVoFull subject = subjectsFacade.getSubject(subjectId);
 
         assertEquals(subject.getId(), subjectId);
         assertEquals(subject.getName(), newSubjectName);

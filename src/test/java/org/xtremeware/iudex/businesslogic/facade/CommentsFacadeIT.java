@@ -14,6 +14,7 @@ import org.xtremeware.iudex.helper.MultipleMessagesException;
 import org.xtremeware.iudex.presentation.vovw.CommentVoVwFull;
 import org.xtremeware.iudex.vo.BinaryRatingVo;
 import org.xtremeware.iudex.vo.CommentVo;
+import org.xtremeware.iudex.vo.CommentVoFull;
 import org.xtremeware.iudex.vo.RatingSummaryVo;
 
 /**
@@ -147,7 +148,7 @@ public class CommentsFacadeIT {
 
     @Test
     public void test_BL_5_3() throws MultipleMessagesException,
-            MaxCommentsLimitReachedException, 
+            MaxCommentsLimitReachedException,
             DuplicityException {
         CommentVo commentVo = new CommentVo();
         commentVo.setAnonymous(true);
@@ -321,13 +322,13 @@ public class CommentsFacadeIT {
         CommentsFacade commentsFacade = Config.getInstance().getFacadeFactory().
                 getCommentsFacade();
         Long id = 1L;
-        List<CommentVoVwFull> commentsByCourseId = commentsFacade.getCommentsByCourseId(id);
+        List<CommentVoFull> commentsByCourseId = commentsFacade.getCommentsByCourseId(id);
         int size = entityManager.createQuery(
                 "SELECT COUNT(c) FROM Comment c WHERE c.course.id = :id",
                 Long.class).
                 setParameter("id", id).getSingleResult().intValue();
         assertEquals(3, size);
-        for (CommentVoVwFull cvvf : commentsByCourseId) {
+        for (CommentVoFull cvvf : commentsByCourseId) {
             CommentVo result = entityManager.createQuery(
                     "SELECT c FROM Comment c WHERE c.id = :id",
                     CommentEntity.class).
@@ -350,8 +351,7 @@ public class CommentsFacadeIT {
         CommentsFacade commentsFacade = Config.getInstance().getFacadeFactory().
                 getCommentsFacade();
         Long id = 0L;
-        List<CommentVoVwFull> commentsByCourseId = commentsFacade.
-                getCommentsByCourseId(id);
+        List<CommentVoFull> commentsByCourseId = commentsFacade.getCommentsByCourseId(id);
         assertEquals(0, commentsByCourseId.size());
 
         id = Long.MAX_VALUE;
@@ -369,8 +369,7 @@ public class CommentsFacadeIT {
                 getCommentsFacade();
         Long userId = 1L;
         Long commentId = 1L;
-        BinaryRatingVo commentRatingByUserId = commentsFacade.
-                getCommentRatingByUserId(commentId, userId);
+        BinaryRatingVo commentRatingByUserId = commentsFacade.getCommentRatingByUserId(commentId, userId);
         assertNotNull(commentRatingByUserId);
         assertEquals(commentId, commentRatingByUserId.getEvaluatedObjectId());
         assertEquals(userId, commentRatingByUserId.getUserId());
@@ -390,8 +389,7 @@ public class CommentsFacadeIT {
                 getCommentsFacade();
         Long userId = 1L;
         Long commentId = 10L;
-        BinaryRatingVo commentRatingByUserId = commentsFacade.
-                getCommentRatingByUserId(commentId, userId);
+        BinaryRatingVo commentRatingByUserId = commentsFacade.getCommentRatingByUserId(commentId, userId);
         assertNull(commentRatingByUserId);
 
         userId = 0L;

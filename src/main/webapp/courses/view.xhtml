@@ -19,7 +19,7 @@
 							<h:form>
 								<h:panelGrid columns="2" cellpadding="5">  
 									<h:outputText value="CALIFICA EL CURSO" />  
-									<p:rating value="#{viewCourse.courseRating.value}" onRate="showPeriodInput">  
+									<p:rating value="#{viewCourse.courseRating}" onRate="showPeriodInput()">  
 										<p:ajax event="rate" listener="#{viewCourse.handleRate}" update="messages" />  
 									</p:rating>  
 								</h:panelGrid> 

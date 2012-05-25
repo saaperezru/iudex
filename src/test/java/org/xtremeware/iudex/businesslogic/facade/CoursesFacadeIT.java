@@ -5,6 +5,8 @@ package org.xtremeware.iudex.businesslogic.facade;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import org.junit.*;
 import static org.junit.Assert.*;
@@ -16,6 +18,7 @@ import org.xtremeware.iudex.helper.MultipleMessagesException;
 import org.xtremeware.iudex.presentation.vovw.CourseVoVwFull;
 import org.xtremeware.iudex.presentation.vovw.ProfessorVoVwSmall;
 import org.xtremeware.iudex.presentation.vovw.SubjectVoVwSmall;
+import org.xtremeware.iudex.vo.CourseRatingVo;
 import org.xtremeware.iudex.vo.CourseVo;
 import org.xtremeware.iudex.vo.RatingSummaryVo;
 
@@ -370,6 +373,49 @@ public class CoursesFacadeIT {
 			if (!expected.contains(result)) {
 				fail("The following course was not expected for the professor Id " + mario.getId() + ": " + result.toString());
 			}
+		}
+	}
+
+	@Test
+	public void rateComment() {
+		CoursesFacade facade = Config.getInstance().getFacadeFactory().getCoursesFacade();
+		//Rate a non-existing course and a non-existing user, with an invalid rating value
+		rateCommentInvalidInputry(facade, Long.MIN_VALUE, Long.MIN_VALUE, -0.1f, new String[]{"courseRating.courseId.notFound", "courseRating.userId.notFound", "courseRating.value.invalidRange"});
+		//Rate a existing course and a user, with an invalid rating value
+		rateCommentInvalidInputry(facade, 1L, 1L, -0.1f, new String[]{"courseRating.value.invalidRange"});
+
+		//Rate a valid course, with valid user and valid value
+		try {
+			CourseRatingVo result = facade.rateCourse(5L, 1L, 0.5f);
+			CourseRatingVo expected = facade.getCourseRatingByUserId(5L, 1L);
+			assertEquals(expected, result);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			fail("An unexpected exception ocurred");
+		}
+
+		//Edit an existing rating
+		try {
+			CourseRatingVo result = facade.rateCourse(5L, 1L, 1.5f);
+			CourseRatingVo expected = facade.getCourseRatingByUserId(5L, 1L);
+			assertEquals(expected, result);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			fail("An unexpected exception ocurred");
+		}
+
+
+	}
+
+	private void rateCommentInvalidInputry(CoursesFacade facade, Long courseId, Long userId, float value, String[] expectedMessages) {
+		try {
+			facade.rateCourse(courseId, userId, value);
+			fail("A non-existing course was rated");
+		} catch (MultipleMessagesException ex) {
+			FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			fail("An unexpected exception ocurred");
 		}
 	}
 }

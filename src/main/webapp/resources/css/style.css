@@ -323,3 +323,13 @@ div.professor-photo ul.actions li.downvote-prof a {
 .vote{
 	float:right;
 }
+
+.fittext-rating{
+	display: block;
+	width: 100%;
+}
+
+.fittext-subject{
+	display: block;
+	width: 100%;
+}

@@ -1,13 +1,15 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
-                template="WEB-INF/templates/template.xhtml"
+                template="WEB-INF/templates/default.xhtml"
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:c="http://java.sun.com/jsp/jstl/core"
                 xmlns:f="http://java.sun.com/jsf/core"
-                xmlns:iudex="http://java.sun.com/jsf/composite/iudex">
+                xmlns:iudex="http://java.sun.com/jsf/composite/iudex"
+                xmlns="http://www.w3.org/1999/xhtml">
 
     <ui:define name="content">
+<div class="container">
         <div class="row-fluid">
             <div class="span12 well">
                 <div class="big-media"></div>
@@ -129,7 +131,7 @@
                                         <div class="controls span9">
                                             <h:selectOneMenu id="program" value="#{signUp.programId}" required="true">
                                                 <f:selectItem itemLabel="" />
-                                                <f:selectItems value="#{signUp.programs}" />
+                                                <f:selectItems value="#{lists.programs}" />
                                                 <f:validateLongRange minimum="1" />
                                             </h:selectOneMenu>
                                             <iudex:inlineError key="signUpForm:program" />
@@ -147,5 +149,7 @@
                 </div>
             </c:if>
         </div>
+</div>
+
     </ui:define>
 </ui:composition>

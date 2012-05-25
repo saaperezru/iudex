@@ -24,7 +24,7 @@
             <to-view-id>/index.xhtml</to-view-id>
         </navigation-case>
         <navigation-case>
-            <from-action>#{login.logIn}</from-action>
+            <from-action>#{login.logIn()}</from-action>
             <from-outcome>success</from-outcome>
             <to-view-id>/index.xhtml</to-view-id>
         </navigation-case>
@@ -34,29 +34,32 @@
             <to-view-id>/index.xhtml</to-view-id>
         </navigation-case>
     </navigation-rule>
-
     <navigation-rule>
-        <navigation-case>
-            <from-action>#{search.submit()}</from-action>
-            <from-outcome>success</from-outcome>
-            <to-view-id>/index.xhtml</to-view-id>
-            <redirect>
-                <view-param>
-                    <name>query</name>
-                    <value>#{Search.query}</value>
-                </view-param>
-            </redirect>
-         </navigation-case>
+	<from-view-id>/courses/view.xhtml</from-view-id>
+	<navigation-case>
+		<from-outcome>notfound</from-outcome>
+		<to-view-id>/notfound.xhtml</to-view-id>
+	</navigation-case>
     </navigation-rule>
-    
     <navigation-rule>
-        <navigation-case>
+	<from-view-id>/subjects/view.xhtml</from-view-id>
+	<navigation-case>
+		<from-outcome>notfound</from-outcome>
+		<to-view-id>/notfound.xhtml</to-view-id>
+	</navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+	<navigation-case>
             <from-outcome>home</from-outcome>
             <to-view-id>/index.xhtml</to-view-id>
         </navigation-case>
         <navigation-case>
             <from-outcome>logIn</from-outcome>
             <to-view-id>/index.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>editUser</from-outcome>
+            <to-view-id>/user/edit.xhtml</to-view-id>
         </navigation-case>
     </navigation-rule>
 </faces-config>

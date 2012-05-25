@@ -27,7 +27,7 @@ public class FacadesTestHelper {
         connectionProps.put("password", "");
         FileReader reader = new FileReader("src/test/init.sql");
         RunScript.execute(DriverManager.getConnection(
-                "jdbc:h2:mem:db1;DB_CLOSE_DELAY=-1;", connectionProps), reader);
+                "jdbc:h2:mem:db1;", connectionProps), reader);
         init = true;
     }
 

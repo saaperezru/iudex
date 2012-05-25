@@ -41,7 +41,7 @@ public class CommentRatingEntity implements Serializable, Entity<CommentRatingVo
     public CommentRatingVo toVo() {
         CommentRatingVo vo = new CommentRatingVo();
         vo.setId(getId());
-        vo.setEvaluetedObjectId(getComment().getId());
+        vo.setEvaluatedObjectId(getComment().getId());
         vo.setUser(getUser().getId());
         vo.setValue(getValue());
         return vo;

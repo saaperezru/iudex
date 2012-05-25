@@ -1,6 +1,7 @@
 package org.xtremeware.iudex.businesslogic.service.crudinterfaces;
 
 import javax.persistence.EntityManager;
+import org.xtremeware.iudex.businesslogic.DuplicityException;
 import org.xtremeware.iudex.entity.Entity;
 import org.xtremeware.iudex.helper.DataBaseException;
 
@@ -11,5 +12,5 @@ import org.xtremeware.iudex.helper.DataBaseException;
 public interface CreateInterface<E extends Entity> {
 
     public E create(EntityManager em, E entity)
-            throws DataBaseException;
+            throws DataBaseException, DuplicityException;
 }

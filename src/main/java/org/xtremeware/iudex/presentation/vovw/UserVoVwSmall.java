@@ -1,6 +1,8 @@
 package org.xtremeware.iudex.presentation.vovw;
 
-public class UserVoVwSmall {
+import org.xtremeware.iudex.vo.ValueObject;
+
+public class UserVoVwSmall implements ValueObject{
 
     private Long id;
     private String name;

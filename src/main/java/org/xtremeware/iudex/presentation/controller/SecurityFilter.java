@@ -22,28 +22,24 @@ import org.xtremeware.iudex.helper.Role;
 // TODO: Use the standard logger in this filter
 public class SecurityFilter implements Filter {
 
-    // TODO: Get this value from a centralized config
-    private static final String ROLE_SESSION_KEY = "role";
     private FilterConfig filterConfig = null;
     private Map<String, String[]> permissions = null;
     private boolean denyByDefault = true;
     private String anybody = null;
 
-    public SecurityFilter() {
-    }
-
-    private void checkAuthorization(ServletRequest request,
+    private boolean checkAuthorization(ServletRequest request,
             ServletResponse response)
             throws IOException, ServletException {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         String requestUri = httpServletRequest.getRequestURI();
         String contextPath = httpServletRequest.getContextPath();
         String path;
-        Role role = (Role) httpServletRequest.getSession().
-                getAttribute(ROLE_SESSION_KEY);
+        User user = (User) httpServletRequest.getSession().
+                getAttribute("user");
+
         String roleName;
-        if (role != null) {
-            roleName = role.toString();
+        if (user != null && user.isLoggedIn()) {
+            roleName = user.getRole().toString();
         } else {
             roleName = "";
         }
@@ -74,6 +70,9 @@ public class SecurityFilter implements Filter {
         if (!allowedAccess && denyByDefault) {
             ((HttpServletResponse) response).sendError(
                     HttpURLConnection.HTTP_UNAUTHORIZED);
+            return false;
+        } else {
+            return true;
         }
     }
 
@@ -91,9 +90,9 @@ public class SecurityFilter implements Filter {
             FilterChain chain)
             throws IOException, ServletException {
 
-        checkAuthorization(request, response);
-
-        chain.doFilter(request, response);
+        if (checkAuthorization(request, response)) {
+            chain.doFilter(request, response);
+        }
     }
 
     /**

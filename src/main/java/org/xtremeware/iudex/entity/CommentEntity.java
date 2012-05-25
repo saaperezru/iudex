@@ -3,6 +3,7 @@ package org.xtremeware.iudex.entity;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.*;
+import org.xtremeware.iudex.helper.SecurityHelper;
 import org.xtremeware.iudex.vo.CommentVo;
 
 @javax.persistence.Entity(name = "Comment")
@@ -41,7 +42,7 @@ public class CommentEntity implements Serializable, Entity<CommentVo> {
     public CommentVo toVo() {
         CommentVo vo = new CommentVo();
         vo.setId(getId());
-        vo.setContent(getContent());
+        vo.setContent(SecurityHelper.sanitizeHTML(getContent()));
         vo.setDate(getDate());
         vo.setUserId(getUser().getId());
         vo.setCourseId(getCourse().getId());

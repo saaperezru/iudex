@@ -54,7 +54,8 @@ public class UsersFacadeIT {
      */
     @Test
     public void test_BL_2_1() throws MultipleMessagesException,
-            DuplicityException {
+            DuplicityException, 
+            Exception {
         UserVo user = new UserVo();
         user.setFirstName("John");
         user.setLastName("Doe");
@@ -234,7 +235,8 @@ public class UsersFacadeIT {
      */
     @Test
     public void test_BL_2_4() throws MultipleMessagesException,
-            DuplicityException {
+            DuplicityException, 
+            Exception {
         UserVo user = new UserVo();
         user.setFirstName("Diane");
         user.setLastName("Doe");
@@ -323,7 +325,7 @@ public class UsersFacadeIT {
 
     private void testMailingConnection(UsersFacade usersFacade, UserVo user,
             MailingService mailingService, MailingConfigVo mailingConfig) throws
-            MultipleMessagesException, DuplicityException {
+            MultipleMessagesException, DuplicityException, Exception {
         mailingService.setConfig(mailingConfig);
         boolean exception = false;
         try {
@@ -437,7 +439,7 @@ public class UsersFacadeIT {
      * Test a successful user account update
      */
     @Test
-    public void test_BL_11_1() throws MultipleMessagesException {
+    public void test_BL_11_1() throws MultipleMessagesException, Exception {
         UserVo user = new UserVo();
         user.setId(5L);
         user.setFirstName("New name");
@@ -487,7 +489,7 @@ public class UsersFacadeIT {
      * Test an attempt to edit an inexistent user
      */
     @Test
-    public void test_BL_11_2() throws MultipleMessagesException {
+    public void test_BL_11_2() throws MultipleMessagesException, Exception {
         UserVo user = new UserVo();
         user.setId(-1L);
         user.setFirstName("John");

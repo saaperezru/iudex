@@ -1,0 +1,14 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="../WEB-INF/templates/error.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns="http://www.w3.org/1999/xhtml">
+
+    <ui:define name="header">
+        <h1>No estás autorizado</h1>
+        <br/>
+        <p>¿Cómo llegaste aquí, eh?</p>
+        <br/>
+        <h:link outcome="logIn" value="Iniciar sesión" class="btn btn-info"/>
+    </ui:define>
+
+</ui:composition>

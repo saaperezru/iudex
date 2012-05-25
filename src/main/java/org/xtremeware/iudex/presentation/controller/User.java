@@ -1,14 +1,9 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.xtremeware.iudex.presentation.controller;
 
+import java.io.Serializable;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpSession;
-import org.xtremeware.iudex.vo.UserVo;
+import org.xtremeware.iudex.helper.Role;
 
 /**
  *
@@ -16,40 +11,89 @@ import org.xtremeware.iudex.vo.UserVo;
  */
 @ManagedBean
 @SessionScoped
-public class User {
+public class User implements Serializable {
 
-    public static final String USER_SESSION_KEY = "userVo";
-    public static final String ROLE_SESSION_KEY = "role";
-    
-    public boolean checkAuth(String roles) {
+    private Long id;
+    private String firstName;
+    private String lastName;
+    private String userName;
+    private Long programId;
+    private Role role;
+    private boolean loggedIn;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public boolean isLoggedIn() {
+        return loggedIn;
+    }
+
+    public void setLoggedIn(boolean loggedIn) {
+        this.loggedIn = loggedIn;
+    }
+
+    public Long getProgramId() {
+        return programId;
+    }
+
+    public void setProgramId(Long programId) {
+        this.programId = programId;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public boolean checkPermissions(String roles) {
         String[] rolesArray = roles.split(",");
-        String userRole = FacesContext.getCurrentInstance().getExternalContext().
-                getSessionMap().get(ROLE_SESSION_KEY).toString();
-        for (String role : rolesArray) {
-            if (userRole.equals(role)) {
+        for (String userRole : rolesArray) {
+            if (userRole.equals(role.toString())) {
                 return true;
             }
         }
         return false;
     }
 
-    public boolean isLoggedIn() {
-        return FacesContext.getCurrentInstance().getExternalContext().
-                getSessionMap().get(USER_SESSION_KEY) != null;
-    }
-
     public String logOut() {
-        ((HttpSession) FacesContext.getCurrentInstance().getExternalContext().
-                getSession(true)).invalidate();
+        firstName = null;
+        lastName = null;
+        userName = null;
+        programId = null;
+        role = null;
+        loggedIn = false;
         return "home";
-    }
-
-    public String getUserName() {
-        if (isLoggedIn()) {
-            UserVo user = (UserVo) FacesContext.getCurrentInstance().
-                    getExternalContext().getSessionMap().get(USER_SESSION_KEY);
-            return user.getUserName();
-        }
-        return "";
     }
 }

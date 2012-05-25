@@ -2,6 +2,7 @@ package org.xtremeware.iudex.presentation.controller;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
@@ -20,6 +21,8 @@ public class Login {
 
     private String userName;
     private String password;
+    @ManagedProperty(value="#{user}")
+    private User user;
 
     public String getPassword() {
         return password;
@@ -37,6 +40,14 @@ public class Login {
         this.userName = userName;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     public String logIn() {
         FacesContext fc = FacesContext.getCurrentInstance();
         UsersFacade usersFacade = Config.getInstance().getFacadeFactory().
@@ -46,9 +57,13 @@ public class Login {
             if (userVo != null) {
                 HttpSession session = (HttpSession) fc.getExternalContext().
                         getSession(true);
-                session.setAttribute(User.USER_SESSION_KEY, userVo);
-                session.setAttribute(User.ROLE_SESSION_KEY,
-                        userVo.getRole());
+                user.setId(userVo.getId());
+                user.setFirstName(userVo.getFirstName());
+                user.setLastName(userVo.getLastName());
+                user.setUserName(userVo.getUserName());
+                user.setProgramId(userVo.getProgramsId().get(0));
+                user.setRole(userVo.getRole());
+                user.setLoggedIn(true);
                 return "success";
             } else {
                 FacesContext.getCurrentInstance().addMessage("loginForm",

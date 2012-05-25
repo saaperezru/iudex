@@ -2,8 +2,9 @@
 package org.xtremeware.iudex.presentation.vovw;
 
 import org.xtremeware.iudex.vo.RatingSummaryVo;
+import org.xtremeware.iudex.vo.ValueObject;
 
-public class SubjectVoVwSmall {
+public class SubjectVoVwSmall implements ValueObject{
 
 	private long id;
 	private String name;

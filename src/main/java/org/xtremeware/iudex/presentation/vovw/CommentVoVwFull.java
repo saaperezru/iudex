@@ -1,15 +1,23 @@
 package org.xtremeware.iudex.presentation.vovw;
 
 import java.util.Date;
+import javax.annotation.ManagedBean;
+import javax.faces.bean.ViewScoped;
 import org.xtremeware.iudex.vo.CommentVo;
+import org.xtremeware.iudex.vo.RatingSummaryVo;
+import org.xtremeware.iudex.vo.ValueObject;
 
-public class CommentVoVwFull {
+@ManagedBean
+@ViewScoped
+public class CommentVoVwFull implements ValueObject{
 
 	private CommentVo vo;
 	private UserVoVwSmall user;
+	private RatingSummaryVo rating;
 
-	public CommentVoVwFull(CommentVo vo, UserVoVwSmall user) {
+	public CommentVoVwFull(CommentVo vo, UserVoVwSmall user, RatingSummaryVo rating) {
 		this.vo = vo;
+		this.rating = rating;		
 		if (vo.isAnonymous()) {
 			this.user = null;
 		} else {
@@ -37,10 +45,15 @@ public class CommentVoVwFull {
 	public Long getId() {
 		return vo.getId();
 	}
+	
+	public RatingSummaryVo getRating(){
+		return this.rating;
+	}
 
-	public Float getRating() {
+	public Float getCourseRating() {
 		return vo.getRating();
 	}
+
 
 	public UserVoVwSmall getUser() {
 		return user;

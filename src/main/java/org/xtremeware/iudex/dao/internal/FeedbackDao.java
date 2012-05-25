@@ -49,4 +49,14 @@ public class FeedbackDao extends CrudDao<FeedbackEntity> implements FeedbackDaoI
     protected Class getEntityClass() {
         return FeedbackEntity.class;
     }
+
+    @Override
+    public List<FeedbackEntity> getAll(EntityManager em) throws DataBaseException {
+        checkEntityManager(em);
+        try {
+            return em.createNamedQuery("getAllFeedbacks", FeedbackEntity.class).getResultList();
+        } catch (Exception e) {
+            throw new DataBaseException(e.getMessage(), e.getCause());
+        }
+    }
 }

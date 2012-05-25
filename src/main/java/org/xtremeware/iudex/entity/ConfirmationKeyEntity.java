@@ -3,6 +3,7 @@ package org.xtremeware.iudex.entity;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.*;
+import org.xtremeware.iudex.helper.SecurityHelper;
 import org.xtremeware.iudex.vo.ConfirmationKeyVo;
 
 @javax.persistence.Entity(name = "ConfirmationKey")
@@ -34,7 +35,7 @@ public class ConfirmationKeyEntity implements Serializable, Entity<ConfirmationK
         ConfirmationKeyVo vo = new ConfirmationKeyVo();
         vo.setId(getId());
         vo.setExpirationDate(getExpirationDate());
-        vo.setConfirmationKey(getConfirmationKey());
+        vo.setConfirmationKey(SecurityHelper.sanitizeHTML(getConfirmationKey()));
         vo.setUserId(getUser().getId());
         return vo;
     }

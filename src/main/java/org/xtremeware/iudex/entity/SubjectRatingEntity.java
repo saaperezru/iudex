@@ -44,7 +44,7 @@ public class SubjectRatingEntity implements Serializable, Entity<SubjectRatingVo
         SubjectRatingVo vo = new SubjectRatingVo();
 
         vo.setId(this.getId());
-        vo.setEvaluetedObjectId(this.getSubject().getId());
+        vo.setEvaluatedObjectId(this.getSubject().getId());
         vo.setUser(this.getUser().getId());
         vo.setValue(this.getValue());
 

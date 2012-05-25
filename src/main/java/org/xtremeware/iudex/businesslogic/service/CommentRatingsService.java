@@ -47,37 +47,34 @@ public class CommentRatingsService extends CrudService<CommentRatingVo, CommentR
     @Override
     public void validateVo(EntityManager em, CommentRatingVo vo)
             throws MultipleMessagesException, DataBaseException {
-        if (em == null) {
-            throw new IllegalArgumentException("EntityManager em cannot be null");
-        }
+        
         MultipleMessagesException multipleMessageException =
                 new MultipleMessagesException();
 
         if (vo == null) {
             multipleMessageException.addMessage(
-                    "Null CommentRatingVo");
+                    "commentRating.null");
             throw multipleMessageException;
         }
-        if (vo.getEvaluetedObjectId() == null) {
+        if (vo.getEvaluatedObjectId() == null) {
             multipleMessageException.addMessage(
-                    "Null commentId in the provided CourseRatingVo");
+                    "commentRating.commentId.null");
         } else if (getDaoFactory().getCommentDao().getById(em, vo.
-                getEvaluetedObjectId()) == null) {
+                getEvaluatedObjectId()) == null) {
             multipleMessageException.addMessage(
-                    "No such comment associeted with CommentRatingVo.commentId");
+                    "commentRating.commentId.element.notFound");
         }
         if (vo.getUser() == null) {
             multipleMessageException.addMessage(
-                    "Null userId in the provided CommentRatingVo");
+                    "commentRating.userId.null");
         } else if (getDaoFactory().getUserDao().getById(em, vo.getUser()) ==
                 null) {
             multipleMessageException.addMessage(
-                    "No such user associated with CommentRatingVo.userId");
+                    "commentRating.userId.element.notFound");
         }
         if (vo.getValue() < -1 || vo.getValue() > 1) {
             multipleMessageException.addMessage(
-                    "int Value in the provided CommentRatingVo " +
-                    "must be less than or equal to 1 and greater than or equal to -1");
+                    "commentRating.value.invalidValue");
         }
 
         if (!multipleMessageException.getMessages().isEmpty()) {
@@ -107,7 +104,7 @@ public class CommentRatingsService extends CrudService<CommentRatingVo, CommentR
         commentRatingEntity.setUser(this.getDaoFactory().getUserDao().getById(em,
                 vo.getUser()));
         commentRatingEntity.setComment(this.getDaoFactory().getCommentDao().
-                getById(em, vo.getEvaluetedObjectId()));
+                getById(em, vo.getEvaluatedObjectId()));
 
         return commentRatingEntity;
     }

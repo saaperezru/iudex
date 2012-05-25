@@ -50,19 +50,17 @@ public class FeedbackTypesService extends CrudService<FeedbackTypeVo, FeedbackTy
     public void validateVo(EntityManager em, FeedbackTypeVo vo)
             throws ExternalServiceConnectionException,
             MultipleMessagesException {
-        if (em == null) {
-            throw new IllegalArgumentException("EntityManager em cannot be null");
-        }
+        
         MultipleMessagesException multipleMessageException =
                 new MultipleMessagesException();
         if (vo == null) {
             multipleMessageException.addMessage(
-                    "Null FeedbackTypeVo");
+                    "feedbackType.null");
             throw multipleMessageException;
         }
         if (vo.getName() == null) {
             multipleMessageException.addMessage(
-                    "Null name in the provided FeedbackTypeVo");
+                    "feedbackType.name.null");
             throw multipleMessageException;
         }
         vo.setName(SecurityHelper.sanitizeHTML(vo.getName()));

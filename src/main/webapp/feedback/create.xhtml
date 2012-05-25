@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                template="../WEB-INF/templates/default.xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:iudex="http://java.sun.com/jsf/composite/iudex"
+                xmlns:pou="http://primefaces.org/ui">
+
+    <ui:define name="content">
+        <div class="row-fluid">
+            <div class="span12">
+                <h:form id="feedbackForm" class="form-horizontal well">
+                    <fieldset>
+                        <legend>Déjanos un comentario</legend>
+
+                        <h:messages globalOnly="true" class="alert alert-info" />
+
+                        <div class="control-group #{viewHelper.addErrorClass('feedbackForm:type')}">
+                            <label class="control-label span3">Tipo</label>
+                            <div class="controls span9">
+                                <h:selectOneMenu id="type" value="#{createFeedback.feedbackTypeId}" required="true">
+                                    <f:selectItem itemLabel="" />
+                                    <f:selectItems value="#{lists.feedbackTypes}" />
+                                    <f:validateLongRange minimum="1" />
+                                </h:selectOneMenu>
+                                <iudex:inlineError key="feedbackForm:type" />
+                            </div>
+                        </div>
+
+                        <div class="control-group #{viewHelper.addErrorClass('feedbackForm:content')}">
+                            <div class="control-label span3"></div>
+                            <div class="controls span9">
+                                <h:inputTextarea id="content" value="#{createFeedback.content}" required="true" class="span10" style="height: 150px; display: inline-block;"  onkeyup="jQuery('#char-counter').text(jQuery(this).val().length);">
+                                    <f:validateLength maximum="2000" />
+                                </h:inputTextarea>
+                                <iudex:inlineError key="feedbackForm:content" />
+                                <div class="span10" style="margin: 0; text-align: right;"><strong id="char-counter"></strong> de máximo 2000 caracteres</div>
+                            </div>
+                        </div>
+
+                        <div class="control-group #{viewHelper.addErrorClass('feedbackForm:captcha')}">
+                            <div class="control-label span3"></div>
+                            <div class="controls span9">
+                                <p>
+                                    ¿No eres un robot, verdad? Entonces esto será fácil.
+                                </p>
+                                <pou:captcha id="captcha" secure="true" />
+                                <iudex:inlineError key="feedbackForm:captcha" />
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <div class="control-label span3"></div>
+                            <div class="controls span9">
+                                <h:commandButton action="#{createFeedback.submit()}" value="Comentar" class="btn btn-success    " />
+                            </div>
+                        </div>
+                    </fieldset>
+                </h:form>
+            </div>
+        </div>
+        <script type="text/javascript">
+            jQuery(document).ready(function() { jQuery("#char-counter").text(jQuery("#feedbackForm\\:content").val().length); } );
+        </script>
+    </ui:define>
+
+</ui:composition>

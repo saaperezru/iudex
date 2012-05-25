@@ -1,28 +1,15 @@
 package org.xtremeware.iudex.dao.sql;
 
-import org.xtremeware.iudex.dao.AbstractDaoFactory;
-import org.xtremeware.iudex.dao.BinaryRatingDao;
-import org.xtremeware.iudex.dao.CommentDao;
-import org.xtremeware.iudex.dao.ConfirmationKeyDao;
-import org.xtremeware.iudex.dao.CourseDao;
-import org.xtremeware.iudex.dao.CourseRatingDao;
-import org.xtremeware.iudex.dao.FeedbackDao;
-import org.xtremeware.iudex.dao.FeedbackTypeDao;
-import org.xtremeware.iudex.dao.PeriodDao;
-import org.xtremeware.iudex.dao.ProfessorDao;
-import org.xtremeware.iudex.dao.ProgramDao;
-import org.xtremeware.iudex.dao.SubjectDao;
-import org.xtremeware.iudex.dao.UserDao;
-import org.xtremeware.iudex.entity.CommentRatingEntity;
-import org.xtremeware.iudex.entity.ProfessorRatingEntity;
-import org.xtremeware.iudex.entity.SubjectRatingEntity;
+import org.xtremeware.iudex.dao.*;
+import org.xtremeware.iudex.dao.sql.removeimplementations.*;
+import org.xtremeware.iudex.entity.*;
 
 /**
  * DAO factory for an HSQLDB persistence unit
  *
  * @author healarconr
  */
-public class HSqlDbDaoFactory implements AbstractDaoFactory {
+public class HSqlDbDaoBuilder implements AbstractDaoBuilder {
 
     private CommentDao commentDao;
     private BinaryRatingDao<CommentRatingEntity> commentRatingDao;
@@ -38,14 +25,14 @@ public class HSqlDbDaoFactory implements AbstractDaoFactory {
     private SubjectDao subjectDao;
     private BinaryRatingDao<SubjectRatingEntity> subjectRatingDao;
     private UserDao userDao;
-    private static HSqlDbDaoFactory instance;
+    private static HSqlDbDaoBuilder instance;
 
-    private HSqlDbDaoFactory() {
+    private HSqlDbDaoBuilder() {
     }
 
-    public static synchronized HSqlDbDaoFactory getInstance() {
+    public static synchronized HSqlDbDaoBuilder getInstance() {
         if (instance == null) {
-            instance = new HSqlDbDaoFactory();
+            instance = new HSqlDbDaoBuilder();
         }
         return instance;
     }
@@ -53,7 +40,9 @@ public class HSqlDbDaoFactory implements AbstractDaoFactory {
     @Override
     public CommentDao getCommentDao() {
         if (commentDao == null) {
-            commentDao = new SQLCommentDao();
+            commentDao = new SQLCommentDao(
+                    new CommentsRemoveBehavior(
+                    this, new SimpleRemove<CommentEntity>()));
         }
         return commentDao;
     }
@@ -69,7 +58,8 @@ public class HSqlDbDaoFactory implements AbstractDaoFactory {
     @Override
     public ConfirmationKeyDao getConfirmationKeyDao() {
         if (confirmationKeyDao == null) {
-            confirmationKeyDao = new SQLConfirmationKeyDao();
+            confirmationKeyDao = new SQLConfirmationKeyDao(
+                    new SimpleRemove<ConfirmationKeyEntity>());
         }
         return confirmationKeyDao;
     }
@@ -77,7 +67,9 @@ public class HSqlDbDaoFactory implements AbstractDaoFactory {
     @Override
     public CourseDao getCourseDao() {
         if (courseDao == null) {
-            courseDao = new SQLCourseDao();
+            courseDao = new SQLCourseDao(
+                    new CoursesRemoveBehavior(
+                    this, new SimpleRemove<CourseEntity>()));
         }
         return courseDao;
     }
@@ -85,7 +77,8 @@ public class HSqlDbDaoFactory implements AbstractDaoFactory {
     @Override
     public CourseRatingDao getCourseRatingDao() {
         if (courseRatingDao == null) {
-            courseRatingDao = new SQLCourseRatingDao();
+            courseRatingDao = new SQLCourseRatingDao(
+                    new SimpleRemove<CourseRatingEntity>());
         }
         return courseRatingDao;
     }
@@ -93,7 +86,8 @@ public class HSqlDbDaoFactory implements AbstractDaoFactory {
     @Override
     public FeedbackDao getFeedbackDao() {
         if (feedbackDao == null) {
-            feedbackDao = new SQLFeedbackDao();
+            feedbackDao = new SQLFeedbackDao(
+                    new SimpleRemove<FeedbackEntity>());
         }
         return feedbackDao;
     }
@@ -101,7 +95,8 @@ public class HSqlDbDaoFactory implements AbstractDaoFactory {
     @Override
     public FeedbackTypeDao getFeedbackTypeDao() {
         if (feedbackTypeDao == null) {
-            feedbackTypeDao = new SQLFeedbackTypeDao();
+            feedbackTypeDao = new SQLFeedbackTypeDao(
+                    new SimpleRemove<FeedbackTypeEntity>());
         }
         return feedbackTypeDao;
     }
@@ -109,7 +104,9 @@ public class HSqlDbDaoFactory implements AbstractDaoFactory {
     @Override
     public PeriodDao getPeriodDao() {
         if (periodDao == null) {
-            periodDao = new SQLPeriodDao();
+            periodDao = new SQLPeriodDao(
+                    new PeriodRemoveBehavior(
+                    this, new SimpleRemove<PeriodEntity>()));
         }
         return periodDao;
     }
@@ -117,7 +114,9 @@ public class HSqlDbDaoFactory implements AbstractDaoFactory {
     @Override
     public ProfessorDao getProfessorDao() {
         if (professorDao == null) {
-            professorDao = new SQLProfessorDao();
+            professorDao = new SQLProfessorDao(
+                    new ProfessorsRemoveBehavior(
+                    this, new SimpleRemove<ProfessorEntity>()));
         }
         return professorDao;
     }
@@ -133,7 +132,8 @@ public class HSqlDbDaoFactory implements AbstractDaoFactory {
     @Override
     public ProgramDao getProgramDao() {
         if (programDao == null) {
-            programDao = new SQLProgramDao();
+            programDao = new SQLProgramDao(
+                    new SimpleRemove<ProgramEntity>());
         }
         return programDao;
     }
@@ -141,7 +141,9 @@ public class HSqlDbDaoFactory implements AbstractDaoFactory {
     @Override
     public SubjectDao getSubjectDao() {
         if (subjectDao == null) {
-            subjectDao = new SQLSubjectDao();
+            subjectDao = new SQLSubjectDao(
+                    new SubjectsRemoveBehavior(
+                    this, new SimpleRemove<SubjectEntity>()));
         }
         return subjectDao;
     }
@@ -157,7 +159,9 @@ public class HSqlDbDaoFactory implements AbstractDaoFactory {
     @Override
     public UserDao getUserDao() {
         if (userDao == null) {
-            userDao = new SQLUserDao();
+            userDao = new SQLUserDao(
+                    new UsersRemoveBehavior(
+                    this, new SimpleRemove<UserEntity>()));
         }
         return userDao;
     }

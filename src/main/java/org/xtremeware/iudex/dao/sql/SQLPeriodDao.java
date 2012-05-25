@@ -1,9 +1,8 @@
 package org.xtremeware.iudex.dao.sql;
 
 import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import org.xtremeware.iudex.dao.PeriodDao;
+import javax.persistence.*;
+import org.xtremeware.iudex.dao.*;
 import org.xtremeware.iudex.entity.PeriodEntity;
 import org.xtremeware.iudex.helper.DataBaseException;
 
@@ -15,6 +14,10 @@ import org.xtremeware.iudex.helper.DataBaseException;
  */
 public class SQLPeriodDao extends SQLCrudDao<PeriodEntity> implements PeriodDao {
 
+    public SQLPeriodDao(Remove remove) {
+        super(remove);
+    }
+
     /**
      * Returns the list of all periods entities
      *
@@ -23,10 +26,11 @@ public class SQLPeriodDao extends SQLCrudDao<PeriodEntity> implements PeriodDao 
      */
     @Override
     public List<PeriodEntity> getAll(EntityManager entityManager)
-            throws DataBaseException{
+            throws DataBaseException {
         checkEntityManager(entityManager);
         try {
-            return entityManager.createNamedQuery("getAllPeriods", PeriodEntity.class).getResultList();
+            return entityManager.createNamedQuery("getAllPeriods",
+                    PeriodEntity.class).getResultList();
         } catch (Exception e) {
             throw new DataBaseException(e.getMessage(), e.getCause());
         }
@@ -45,7 +49,8 @@ public class SQLPeriodDao extends SQLCrudDao<PeriodEntity> implements PeriodDao 
             throws DataBaseException {
         checkEntityManager(entityManager);
         try {
-            return entityManager.createNamedQuery("getPeriodsByYear", PeriodEntity.class).setParameter("year", year).getResultList();
+            return entityManager.createNamedQuery("getPeriodsByYear",
+                    PeriodEntity.class).setParameter("year", year).getResultList();
         } catch (Exception e) {
             throw new DataBaseException(e.getMessage(), e.getCause());
         }
@@ -64,7 +69,8 @@ public class SQLPeriodDao extends SQLCrudDao<PeriodEntity> implements PeriodDao 
             int semester) throws DataBaseException {
         checkEntityManager(entityManager);
         try {
-            return entityManager.createNamedQuery("getPeriodByYearAndSemester", PeriodEntity.class).setParameter("year", year).setParameter("semester", semester).getSingleResult();
+            return entityManager.createNamedQuery("getPeriodByYearAndSemester",
+                    PeriodEntity.class).setParameter("year", year).setParameter("semester", semester).getSingleResult();
         } catch (NoResultException ex) {
             return null;
         } catch (Exception e) {

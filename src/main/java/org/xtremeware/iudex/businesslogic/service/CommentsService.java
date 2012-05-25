@@ -5,7 +5,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.businesslogic.DuplicityException;
 import org.xtremeware.iudex.businesslogic.InvalidVoException;
-import org.xtremeware.iudex.dao.AbstractDaoFactory;
+import org.xtremeware.iudex.dao.AbstractDaoBuilder;
 import org.xtremeware.iudex.entity.CommentEntity;
 import org.xtremeware.iudex.entity.CommentRatingEntity;
 import org.xtremeware.iudex.helper.*;
@@ -20,21 +20,21 @@ public class CommentsService {
 
     public final int MAX_COMMENT_LENGTH;
     public final int MAX_COMMENTS_PER_DAY;
-    private AbstractDaoFactory daoFactory;
+    private AbstractDaoBuilder daoFactory;
 
     /**
      * Constructor
      *
      * @param daoFactory a daoFactory
      */
-    public CommentsService(AbstractDaoFactory daoFactory) throws ExternalServiceConnectionException {
+    public CommentsService(AbstractDaoBuilder daoFactory) throws ExternalServiceConnectionException {
         this.daoFactory = daoFactory;
         MAX_COMMENTS_PER_DAY = Integer.parseInt(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAX_COMMENTS_PER_DAY));
         MAX_COMMENT_LENGTH = Integer.parseInt(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAX_COMMENT_LENGTH));
 
     }
 
-    private AbstractDaoFactory getDaoFactory() {
+    private AbstractDaoBuilder getDaoFactory() {
         return daoFactory;
     }
 

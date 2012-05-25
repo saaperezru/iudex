@@ -5,11 +5,11 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.businesslogic.DuplicityException;
 import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Read;
-import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Remove;
-import org.xtremeware.iudex.dao.AbstractDaoFactory;
+import org.xtremeware.iudex.dao.Remove;
+import org.xtremeware.iudex.dao.AbstractDaoBuilder;
 import org.xtremeware.iudex.dao.BinaryRatingDao;
 import org.xtremeware.iudex.entity.Entity;
-import org.xtremeware.iudex.entity.RatingEntity;
+import org.xtremeware.iudex.entity.BinaryRatingEntity;
 import org.xtremeware.iudex.helper.DataBaseException;
 import org.xtremeware.iudex.helper.ExternalServiceConnectionException;
 import org.xtremeware.iudex.helper.MultipleMessagesException;
@@ -22,12 +22,12 @@ import org.xtremeware.iudex.vo.RatingSummaryVo;
  */
 public abstract class RatingService<F extends Entity<BinaryRatingVo>> {
 
-    private AbstractDaoFactory daoFactory;
+    private AbstractDaoBuilder daoFactory;
     private Read<F> readInterface;
     private Remove removeInterface;
     private BinaryRatingDao<F> dao;
 
-    public RatingService(AbstractDaoFactory daoFactory,
+    public RatingService(AbstractDaoBuilder daoFactory,
             Read readInterface,
             Remove removeInterface,
             BinaryRatingDao<F> dao) {
@@ -37,7 +37,7 @@ public abstract class RatingService<F extends Entity<BinaryRatingVo>> {
         this.dao = dao;
     }
 
-    protected AbstractDaoFactory getDaoFactory() {
+    protected AbstractDaoBuilder getDaoFactory() {
         return daoFactory;
     }
 
@@ -64,7 +64,7 @@ public abstract class RatingService<F extends Entity<BinaryRatingVo>> {
                 return getDao().persist(entityManager, voToEntity(entityManager,
                         binaryRatingVo)).toVo();
             } else {
-                ((RatingEntity) ratingEntity).setValue(binaryRatingVo.getValue());
+                ((BinaryRatingEntity) ratingEntity).setValue(binaryRatingVo.getValue());
                 return ratingEntity.toVo();
             }
         } catch (DataBaseException ex) {

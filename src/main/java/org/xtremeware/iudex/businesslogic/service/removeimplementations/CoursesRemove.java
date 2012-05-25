@@ -1,10 +1,10 @@
 package org.xtremeware.iudex.businesslogic.service.removeimplementations;
 
-import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Remove;
+import org.xtremeware.iudex.dao.Remove;
 import java.util.List;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.businesslogic.service.CommentsService;
-import org.xtremeware.iudex.dao.AbstractDaoFactory;
+import org.xtremeware.iudex.dao.AbstractDaoBuilder;
 import org.xtremeware.iudex.entity.CommentEntity;
 import org.xtremeware.iudex.entity.CourseRatingEntity;
 import org.xtremeware.iudex.helper.Config;
@@ -16,9 +16,9 @@ import org.xtremeware.iudex.helper.DataBaseException;
  */
 public class CoursesRemove implements Remove {
 
-    private AbstractDaoFactory daoFactory;
+    private AbstractDaoBuilder daoFactory;
 
-    public CoursesRemove(AbstractDaoFactory daoFactory) {
+    public CoursesRemove(AbstractDaoBuilder daoFactory) {
         this.daoFactory = daoFactory;
     }
 
@@ -46,7 +46,7 @@ public class CoursesRemove implements Remove {
         getDaoFactory().getCourseDao().remove(entityManager, entityId);
     }
 
-    private AbstractDaoFactory getDaoFactory() {
+    private AbstractDaoBuilder getDaoFactory() {
         return daoFactory;
     }
 }

@@ -2,7 +2,7 @@ package org.xtremeware.iudex.dao.sql;
 
 import java.util.List;
 import javax.persistence.EntityManager;
-import org.xtremeware.iudex.dao.ProgramDao;
+import org.xtremeware.iudex.dao.*;
 import org.xtremeware.iudex.entity.ProgramEntity;
 import org.xtremeware.iudex.helper.DataBaseException;
 
@@ -12,6 +12,10 @@ import org.xtremeware.iudex.helper.DataBaseException;
  */
 public class SQLProgramDao extends SQLCrudDao<ProgramEntity> implements ProgramDao {
 
+    public SQLProgramDao(Remove remove) {
+        super(remove);
+    }
+
     /**
      * Search a program which name contains the given parameter name
      *
@@ -20,12 +24,12 @@ public class SQLProgramDao extends SQLCrudDao<ProgramEntity> implements ProgramD
      * @return Return a list of programEntity objects
      */
     @Override
-    public List<ProgramEntity> getByNameLike(EntityManager entityManager, String name) 
+    public List<ProgramEntity> getByNameLike(EntityManager entityManager, String programName) 
             throws DataBaseException {
         checkEntityManager(entityManager);
         try {
             return entityManager.createNamedQuery("getProgramByNameLike", ProgramEntity.class).
-                    setParameter("name", "%" + name + "%").getResultList();
+                    setParameter("name", "%" + programName + "%").getResultList();
         } catch (Exception e) {
             throw new DataBaseException(e.getMessage(), e.getCause());
         }

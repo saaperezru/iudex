@@ -7,7 +7,7 @@ import org.xtremeware.iudex.businesslogic.service.createimplementations.SimpleCr
 import org.xtremeware.iudex.businesslogic.service.readimplementations.SimpleRead;
 import org.xtremeware.iudex.businesslogic.service.removeimplementations.SimpleRemove;
 import org.xtremeware.iudex.businesslogic.service.updateimplementations.SimpleUpdate;
-import org.xtremeware.iudex.dao.AbstractDaoFactory;
+import org.xtremeware.iudex.dao.AbstractDaoBuilder;
 import org.xtremeware.iudex.entity.ProgramEntity;
 import org.xtremeware.iudex.helper.DataBaseException;
 import org.xtremeware.iudex.helper.ExternalServiceConnectionException;
@@ -19,7 +19,7 @@ public class ProgramsService extends CrudService<ProgramVo, ProgramEntity> {
 
     private final int MAX_PROGRAMNAME_LENGTH;
 
-    public ProgramsService(AbstractDaoFactory daoFactory) {
+    public ProgramsService(AbstractDaoBuilder daoFactory) {
         super(daoFactory,
                 new SimpleCreate<ProgramEntity>(daoFactory.getProgramDao()),
                 new SimpleRead<ProgramEntity>(daoFactory.getProgramDao()),

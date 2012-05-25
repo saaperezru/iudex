@@ -8,7 +8,7 @@ import org.xtremeware.iudex.businesslogic.service.createimplementations.SimpleCr
 import org.xtremeware.iudex.businesslogic.service.readimplementations.SimpleRead;
 import org.xtremeware.iudex.businesslogic.service.removeimplementations.FeedbackTypesRemove;
 import org.xtremeware.iudex.businesslogic.service.updateimplementations.SimpleUpdate;
-import org.xtremeware.iudex.dao.AbstractDaoFactory;
+import org.xtremeware.iudex.dao.AbstractDaoBuilder;
 import org.xtremeware.iudex.entity.FeedbackTypeEntity;
 import org.xtremeware.iudex.helper.DataBaseException;
 import org.xtremeware.iudex.helper.ExternalServiceConnectionException;
@@ -27,7 +27,7 @@ public class FeedbackTypesService extends CrudService<FeedbackTypeVo, FeedbackTy
      *
      * @param daoFactory
      */
-    public FeedbackTypesService(AbstractDaoFactory daoFactory) {
+    public FeedbackTypesService(AbstractDaoBuilder daoFactory) {
         super(daoFactory,
                 new SimpleCreate<FeedbackTypeEntity>(daoFactory.
                 getFeedbackTypeDao()),

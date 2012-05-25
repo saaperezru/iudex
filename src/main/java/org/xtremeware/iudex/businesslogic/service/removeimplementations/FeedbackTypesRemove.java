@@ -1,9 +1,9 @@
 package org.xtremeware.iudex.businesslogic.service.removeimplementations;
 
-import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Remove;
+import org.xtremeware.iudex.dao.Remove;
 import java.util.List;
 import javax.persistence.EntityManager;
-import org.xtremeware.iudex.dao.AbstractDaoFactory;
+import org.xtremeware.iudex.dao.AbstractDaoBuilder;
 import org.xtremeware.iudex.entity.FeedbackEntity;
 import org.xtremeware.iudex.helper.DataBaseException;
 
@@ -13,9 +13,9 @@ import org.xtremeware.iudex.helper.DataBaseException;
  */
 public class FeedbackTypesRemove implements Remove {
 
-    private AbstractDaoFactory daoFactory;
+    private AbstractDaoBuilder daoFactory;
 
-    public FeedbackTypesRemove(AbstractDaoFactory daoFactory) {
+    public FeedbackTypesRemove(AbstractDaoBuilder daoFactory) {
         this.daoFactory = daoFactory;
     }
 
@@ -37,7 +37,7 @@ public class FeedbackTypesRemove implements Remove {
         getDaoFactory().getFeedbackTypeDao().remove(entityManager, entityId);
     }
 
-    private AbstractDaoFactory getDaoFactory() {
+    private AbstractDaoBuilder getDaoFactory() {
         return daoFactory;
     }
 }

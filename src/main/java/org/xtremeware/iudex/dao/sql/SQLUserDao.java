@@ -1,8 +1,7 @@
 package org.xtremeware.iudex.dao.sql;
 
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import org.xtremeware.iudex.dao.UserDao;
+import javax.persistence.*;
+import org.xtremeware.iudex.dao.*;
 import org.xtremeware.iudex.entity.UserEntity;
 import org.xtremeware.iudex.helper.DataBaseException;
 
@@ -13,6 +12,10 @@ import org.xtremeware.iudex.helper.DataBaseException;
  * @author juan
  */
 public class SQLUserDao extends SQLCrudDao<UserEntity> implements UserDao {
+
+    public SQLUserDao(Remove remove) {
+        super(remove);
+    }
 
     /**
      * Returns a value object that corresponds to the user whose username and
@@ -25,7 +28,7 @@ public class SQLUserDao extends SQLCrudDao<UserEntity> implements UserDao {
      */
     @Override
     public UserEntity getByUsernameAndPassword(EntityManager entityManager,
-            String username, String password) throws DataBaseException{
+            String username, String password) throws DataBaseException {
         checkEntityManager(entityManager);
         try {
             return entityManager.createNamedQuery("getUserByUsernameAndPassword", UserEntity.class).

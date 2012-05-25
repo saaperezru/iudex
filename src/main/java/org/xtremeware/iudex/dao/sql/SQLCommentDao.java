@@ -2,7 +2,7 @@ package org.xtremeware.iudex.dao.sql;
 
 import java.util.List;
 import javax.persistence.EntityManager;
-import org.xtremeware.iudex.dao.CommentDao;
+import org.xtremeware.iudex.dao.*;
 import org.xtremeware.iudex.entity.CommentEntity;
 import org.xtremeware.iudex.helper.DataBaseException;
 
@@ -13,6 +13,10 @@ import org.xtremeware.iudex.helper.DataBaseException;
  * @author saaperezru
  */
 public class SQLCommentDao extends SQLCrudDao<CommentEntity> implements CommentDao {
+
+    public SQLCommentDao(Remove remove) {
+        super(remove);
+    }
 
     /**
      * Returns a list of Comments associated with the course who's professor is

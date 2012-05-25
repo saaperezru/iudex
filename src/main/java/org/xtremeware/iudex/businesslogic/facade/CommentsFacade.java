@@ -1,22 +1,12 @@
 package org.xtremeware.iudex.businesslogic.facade;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
-import org.xtremeware.iudex.businesslogic.DuplicityException;
+import java.util.*;
+import javax.persistence.*;
+import org.xtremeware.iudex.businesslogic.*;
 import org.xtremeware.iudex.businesslogic.helper.FacadesHelper;
-import org.xtremeware.iudex.businesslogic.service.MaxCommentsLimitReachedException;
-import org.xtremeware.iudex.businesslogic.service.ServiceFactory;
+import org.xtremeware.iudex.businesslogic.service.*;
 import org.xtremeware.iudex.helper.MultipleMessagesException;
-import org.xtremeware.iudex.presentation.vovw.CommentVoVwFull;
-import org.xtremeware.iudex.presentation.vovw.UserVoVwSmall;
-import org.xtremeware.iudex.presentation.vovw.VoVwFactory;
-import org.xtremeware.iudex.vo.BinaryRatingVo;
-import org.xtremeware.iudex.vo.CommentVo;
-import org.xtremeware.iudex.vo.RatingSummaryVo;
+import org.xtremeware.iudex.vo.*;
 
 public class CommentsFacade extends AbstractFacade {
 
@@ -67,30 +57,31 @@ public class CommentsFacade extends AbstractFacade {
         }
     }
 
-    public List<CommentVoVwFull> getCommentsByCourseId(long courseId) {
+    public List<CommentVoFull> getCommentsByCourseId(long courseId) {
         EntityManager em = null;
-        List<CommentVoVwFull> commentVoVwFulls = new ArrayList<CommentVoVwFull>();
+        List<CommentVoFull> commentVoFulls = new ArrayList<CommentVoFull>();
         try {
             em = getEntityManagerFactory().createEntityManager();
 
             List<CommentVo> comments = getServiceFactory().createCommentsService().
                     getByCourseId(em, courseId);
 
-            HashMap<Long, UserVoVwSmall> users =
-                    new HashMap<Long, UserVoVwSmall>();
+            HashMap<Long, UserVoSmall> users =
+                    new HashMap<Long, UserVoSmall>();
 
             for (CommentVo commentVo : comments) {
                 if (!users.containsKey(commentVo.getUserId())) {
-                    users.put(commentVo.getUserId(), VoVwFactory.getUserVoVwSmall(courseId,
-                            getServiceFactory().createUsersService().getById(em,
+                    users.put(commentVo.getUserId(),
+                            new UserVoSmall(getServiceFactory().
+                            createUsersService().getById(em,
                             commentVo.getUserId())));
                 }
                 if (commentVo.isAnonymous()) {
-                    commentVoVwFulls.add(VoVwFactory.getCommentVoVwFull(commentVo,
+                    commentVoFulls.add(new CommentVoFull(commentVo,
                             null, getCommentRatingSummary(commentVo.getId())));
                 } else {
-                    commentVoVwFulls.add(VoVwFactory.getCommentVoVwFull(commentVo,
-                            users.get(commentVo.getId()), getCommentRatingSummary(commentVo.getId())));
+                    commentVoFulls.add(new CommentVoFull(commentVo, users.get(commentVo.getUserId()), getCommentRatingSummary(commentVo.getId())));
+
                 }
             }
 
@@ -100,7 +91,7 @@ public class CommentsFacade extends AbstractFacade {
         } finally {
             FacadesHelper.closeEntityManager(em);
         }
-        return commentVoVwFulls;
+        return commentVoFulls;
     }
 
     public RatingSummaryVo getCommentRatingSummary(long commentId) {

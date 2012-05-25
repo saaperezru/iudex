@@ -7,7 +7,7 @@ import org.xtremeware.iudex.businesslogic.service.createimplementations.UsersCre
 import org.xtremeware.iudex.businesslogic.service.readimplementations.SimpleRead;
 import org.xtremeware.iudex.businesslogic.service.removeimplementations.UsersRemove;
 import org.xtremeware.iudex.businesslogic.service.updateimplementations.UsersUpdate;
-import org.xtremeware.iudex.dao.AbstractDaoFactory;
+import org.xtremeware.iudex.dao.AbstractDaoBuilder;
 import org.xtremeware.iudex.entity.ConfirmationKeyEntity;
 import org.xtremeware.iudex.entity.ProgramEntity;
 import org.xtremeware.iudex.entity.UserEntity;
@@ -26,7 +26,7 @@ public class UsersService extends CrudService<UserVo, UserEntity> {
     private final int MAX_USER_PASSWORD_LENGTH;
     private final int MIN_USER_PASSWORD_LENGTH;
 
-    public UsersService(AbstractDaoFactory daoFactory) throws
+    public UsersService(AbstractDaoBuilder daoFactory) throws
             ExternalServiceConnectionException {
         super(daoFactory,
                 new UsersCreate(daoFactory),

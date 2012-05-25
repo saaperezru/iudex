@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.businesslogic.InvalidVoException;
-import org.xtremeware.iudex.dao.AbstractDaoFactory;
+import org.xtremeware.iudex.dao.AbstractDaoBuilder;
 import org.xtremeware.iudex.entity.FeedbackEntity;
 import org.xtremeware.iudex.helper.DataBaseException;
 import org.xtremeware.iudex.helper.ExternalServiceConnectionException;
@@ -27,7 +27,7 @@ public class FeedbacksService extends CrudService<FeedbackVo, FeedbackEntity> {
      *
      * @param daoFactory
      */
-    public FeedbacksService(AbstractDaoFactory daoFactory) {
+    public FeedbacksService(AbstractDaoBuilder daoFactory) {
         super(daoFactory,
                 new SimpleCreate<FeedbackEntity>(daoFactory.getFeedbackDao()),
                 new SimpleRead<FeedbackEntity>(daoFactory.getFeedbackDao()),

@@ -2,7 +2,7 @@ package org.xtremeware.iudex.dao.sql;
 
 import java.util.List;
 import javax.persistence.EntityManager;
-import org.xtremeware.iudex.dao.FeedbackDao;
+import org.xtremeware.iudex.dao.*;
 import org.xtremeware.iudex.entity.FeedbackEntity;
 import org.xtremeware.iudex.helper.DataBaseException;
 
@@ -13,6 +13,10 @@ import org.xtremeware.iudex.helper.DataBaseException;
  * @author saaperezru
  */
 public class SQLFeedbackDao extends SQLCrudDao<FeedbackEntity> implements FeedbackDao {
+
+    public SQLFeedbackDao(Remove remove) {
+        super(remove);
+    }
 
     /**
      * Returns a list of Feedback with a type corresponding to the specified

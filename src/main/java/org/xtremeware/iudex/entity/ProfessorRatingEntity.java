@@ -19,7 +19,7 @@ import org.xtremeware.iudex.vo.BinaryRatingVo;
     query = "SELECT COUNT (result) FROM ProfessorRating result "
     + "WHERE result.professor.id = :evaluatedObjectId AND result.value = -1")})
 @Table(name = "PROFESSOR_RATING")
-public class ProfessorRatingEntity implements Serializable, Entity<BinaryRatingVo>, RatingEntity {
+public class ProfessorRatingEntity implements Serializable, Entity<BinaryRatingVo>, BinaryRatingEntity {
 
     private static final long serialVersionUID = 1L;
     @Id

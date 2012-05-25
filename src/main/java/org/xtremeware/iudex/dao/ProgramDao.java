@@ -18,7 +18,7 @@ public interface ProgramDao extends CrudDao<ProgramEntity> {
      * @param name
      * @return Return a list of programEntity objects
      */
-    public List<ProgramEntity> getByNameLike(EntityManager entityManager, String name) 
+    public List<ProgramEntity> getByNameLike(EntityManager entityManager, String programName) 
             throws DataBaseException;
 
     public List<ProgramEntity> getAll(EntityManager entityManager) 

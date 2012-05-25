@@ -8,7 +8,7 @@ import org.xtremeware.iudex.entity.SubjectRatingEntity;
  *
  * @author healarconr
  */
-public interface AbstractDaoFactory {
+public interface AbstractDaoBuilder {
 
     public CommentDao getCommentDao();
 

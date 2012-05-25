@@ -6,8 +6,8 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import org.xtremeware.iudex.businesslogic.facade.FacadeFactory;
 import org.xtremeware.iudex.businesslogic.service.ServiceFactory;
-import org.xtremeware.iudex.dao.AbstractDaoFactory;
-import org.xtremeware.iudex.dao.sql.MySqlDaoFactory;
+import org.xtremeware.iudex.dao.AbstractDaoBuilder;
+import org.xtremeware.iudex.dao.sql.MySqlDaoBuilder;
 import org.xtremeware.iudex.vo.MailingConfigVo;
 
 /**
@@ -27,12 +27,12 @@ public class Config {
     public final static String CONFIGURATION_VARIABLES_PATH =
             "/org/xtremeware/iudex/iudex.properties";
     private EntityManagerFactory persistenceUnit;
-    private AbstractDaoFactory daoFactory;
+    private AbstractDaoBuilder daoFactory;
     private static Config instance;
     private ServiceFactory serviceFactory;
     private FacadeFactory facadeFactory;
 
-    private Config(String persistenceUnit, AbstractDaoFactory daoFactory) throws
+    private Config(String persistenceUnit, AbstractDaoBuilder daoFactory) throws
             ExternalServiceConnectionException {
         try {
 
@@ -61,7 +61,7 @@ public class Config {
         while (instance == null) {
             try {
                 instance = new Config("org.xtremeware.iudex_local",
-                        MySqlDaoFactory.getInstance());
+                        MySqlDaoBuilder.getInstance());
             } catch (ExternalServiceConnectionException ex) {
                 System.out.println(
                         "[FATAL ERROR] Configuration Variables file could not be found, this is a ");
@@ -70,7 +70,7 @@ public class Config {
         return instance;
     }
 
-    public AbstractDaoFactory getDaoFactory() {
+    public AbstractDaoBuilder getDaoFactory() {
         return daoFactory;
     }
 

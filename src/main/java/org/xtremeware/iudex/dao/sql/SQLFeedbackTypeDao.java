@@ -1,9 +1,8 @@
 package org.xtremeware.iudex.dao.sql;
 
 import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import org.xtremeware.iudex.dao.FeedbackTypeDao;
+import javax.persistence.*;
+import org.xtremeware.iudex.dao.*;
 import org.xtremeware.iudex.entity.FeedbackTypeEntity;
 import org.xtremeware.iudex.helper.DataBaseException;
 
@@ -15,6 +14,10 @@ import org.xtremeware.iudex.helper.DataBaseException;
  */
 public class SQLFeedbackTypeDao extends SQLCrudDao<FeedbackTypeEntity> implements FeedbackTypeDao {
 
+    public SQLFeedbackTypeDao(Remove remove) {
+        super(remove);
+    }
+
     /**
      * Returns a feedback type entity which name matches the given name
      *
@@ -23,11 +26,11 @@ public class SQLFeedbackTypeDao extends SQLCrudDao<FeedbackTypeEntity> implement
      * @return a feedback type entity
      */
     @Override
-    public FeedbackTypeEntity getByName(EntityManager entityManager, String name)
+    public FeedbackTypeEntity getByName(EntityManager entityManager, String feedbackTypeName)
             throws DataBaseException {
         try {
             return entityManager.createNamedQuery("getFeedbackTypeByName", FeedbackTypeEntity.class).
-                    setParameter("name", name).getSingleResult();
+                    setParameter("name", feedbackTypeName).getSingleResult();
         } catch (NoResultException ex) {
             return null;
         }

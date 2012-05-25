@@ -3,7 +3,7 @@ package org.xtremeware.iudex.businesslogic.service;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.businesslogic.service.readimplementations.SimpleRead;
 import org.xtremeware.iudex.businesslogic.service.removeimplementations.SimpleRemove;
-import org.xtremeware.iudex.dao.AbstractDaoFactory;
+import org.xtremeware.iudex.dao.AbstractDaoBuilder;
 import org.xtremeware.iudex.entity.ProfessorRatingEntity;
 import org.xtremeware.iudex.helper.DataBaseException;
 import org.xtremeware.iudex.helper.ExternalServiceConnectionException;
@@ -12,7 +12,7 @@ import org.xtremeware.iudex.vo.BinaryRatingVo;
 
 public class ProfessorRatingsService extends RatingService< ProfessorRatingEntity> {
 
-    public ProfessorRatingsService(AbstractDaoFactory daoFactory) {
+    public ProfessorRatingsService(AbstractDaoBuilder daoFactory) {
         super(daoFactory,
                 new SimpleRead<ProfessorRatingEntity>(daoFactory.getProfessorRatingDao()),
                 new SimpleRemove<ProfessorRatingEntity>(daoFactory.getProfessorRatingDao()),

@@ -16,9 +16,9 @@ public interface CrudDao<E extends Entity> {
     public E merge(EntityManager entityManager, E entity)
             throws DataBaseException;
 
-    public void remove(EntityManager entityManager, long id)
+    public void remove(EntityManager entityManager, long entityId)
             throws DataBaseException;
 
-    public E getById(EntityManager entityManager, long id)
+    public E getById(EntityManager entityManager, long entityId)
             throws DataBaseException;
 }

@@ -1,6 +1,6 @@
 package org.xtremeware.iudex.businesslogic.service;
 
-import org.xtremeware.iudex.dao.AbstractDaoFactory;
+import org.xtremeware.iudex.dao.AbstractDaoBuilder;
 import org.xtremeware.iudex.helper.ExternalServiceConnectionException;
 import org.xtremeware.iudex.vo.MailingConfigVo;
 
@@ -27,7 +27,7 @@ public class ServiceFactory {
 	private FeedbackTypesService feedbackTypesService;
 	private LogService logService;
 
-	public ServiceFactory(AbstractDaoFactory daoFactory, MailingConfigVo mailingConfig) throws ExternalServiceConnectionException {
+	public ServiceFactory(AbstractDaoBuilder daoFactory, MailingConfigVo mailingConfig) throws ExternalServiceConnectionException {
 		usersService = new UsersService(daoFactory);
 		professorsService = new ProfessorsService(daoFactory);
 		subjectsService = new SubjectsService(daoFactory);

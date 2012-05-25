@@ -2,7 +2,7 @@ package org.xtremeware.iudex.dao.sql;
 
 import java.util.List;
 import javax.persistence.EntityManager;
-import org.xtremeware.iudex.dao.CourseDao;
+import org.xtremeware.iudex.dao.*;
 import org.xtremeware.iudex.entity.CourseEntity;
 import org.xtremeware.iudex.helper.DataBaseException;
 
@@ -13,6 +13,10 @@ import org.xtremeware.iudex.helper.DataBaseException;
  * @author saaperezru
  */
 public class SQLCourseDao extends SQLCrudDao<CourseEntity> implements CourseDao {
+
+    public SQLCourseDao(Remove remove) {
+        super(remove);
+    }
 
     /**
      * Returns a list of Courses associated with the professor identified by the

@@ -7,7 +7,7 @@ import org.xtremeware.iudex.businesslogic.service.createimplementations.SimpleCr
 import org.xtremeware.iudex.businesslogic.service.readimplementations.SimpleRead;
 import org.xtremeware.iudex.businesslogic.service.removeimplementations.CoursesRemove;
 import org.xtremeware.iudex.businesslogic.service.updateimplementations.SimpleUpdate;
-import org.xtremeware.iudex.dao.AbstractDaoFactory;
+import org.xtremeware.iudex.dao.AbstractDaoBuilder;
 import org.xtremeware.iudex.entity.CourseEntity;
 import org.xtremeware.iudex.helper.DataBaseException;
 import org.xtremeware.iudex.helper.ExternalServiceConnectionException;
@@ -17,7 +17,7 @@ import org.xtremeware.iudex.vo.CourseVo;
 
 public class CoursesService extends CrudService<CourseVo, CourseEntity> {
 
-    public CoursesService(AbstractDaoFactory daoFactory) {
+    public CoursesService(AbstractDaoBuilder daoFactory) {
         super(daoFactory,
                 new SimpleCreate<CourseEntity>(daoFactory.getCourseDao()),
                 new SimpleRead<CourseEntity>(daoFactory.getCourseDao()),

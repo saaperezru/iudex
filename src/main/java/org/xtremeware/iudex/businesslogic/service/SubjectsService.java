@@ -8,7 +8,7 @@ import org.xtremeware.iudex.businesslogic.service.createimplementations.SimpleCr
 import org.xtremeware.iudex.businesslogic.service.readimplementations.SimpleRead;
 import org.xtremeware.iudex.businesslogic.service.removeimplementations.SubjectsRemove;
 import org.xtremeware.iudex.businesslogic.service.updateimplementations.SimpleUpdate;
-import org.xtremeware.iudex.dao.AbstractDaoFactory;
+import org.xtremeware.iudex.dao.AbstractDaoBuilder;
 import org.xtremeware.iudex.entity.SubjectEntity;
 import org.xtremeware.iudex.helper.*;
 import org.xtremeware.iudex.vo.SubjectVo;
@@ -27,7 +27,7 @@ public class SubjectsService extends CrudService<SubjectVo, SubjectEntity> {
      *
      * @param daoFactory
      */
-    public SubjectsService(AbstractDaoFactory daoFactory) {
+    public SubjectsService(AbstractDaoBuilder daoFactory) {
         super(daoFactory,
                 new SimpleCreate<SubjectEntity>(daoFactory.getSubjectDao()),
                 new SimpleRead<SubjectEntity>(daoFactory.getSubjectDao()),

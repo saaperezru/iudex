@@ -1,9 +1,8 @@
 package org.xtremeware.iudex.dao.sql;
 
 import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import org.xtremeware.iudex.dao.CourseRatingDao;
+import javax.persistence.*;
+import org.xtremeware.iudex.dao.*;
 import org.xtremeware.iudex.entity.CourseRatingEntity;
 import org.xtremeware.iudex.helper.DataBaseException;
 
@@ -12,6 +11,10 @@ import org.xtremeware.iudex.helper.DataBaseException;
  * @author josebermeo
  */
 public class SQLCourseRatingDao extends SQLCrudDao<CourseRatingEntity> implements CourseRatingDao {
+
+    public SQLCourseRatingDao(Remove remove) {
+        super(remove);
+    }
 
     /**
      * Returns a list of CourseRating entities which has the same indicated

@@ -7,7 +7,7 @@ import org.xtremeware.iudex.businesslogic.service.createimplementations.SimpleCr
 import org.xtremeware.iudex.businesslogic.service.readimplementations.SimpleRead;
 import org.xtremeware.iudex.businesslogic.service.removeimplementations.ProfessorsRemove;
 import org.xtremeware.iudex.businesslogic.service.updateimplementations.SimpleUpdate;
-import org.xtremeware.iudex.dao.AbstractDaoFactory;
+import org.xtremeware.iudex.dao.AbstractDaoBuilder;
 import org.xtremeware.iudex.entity.ProfessorEntity;
 import org.xtremeware.iudex.helper.*;
 import org.xtremeware.iudex.vo.ProfessorVo;
@@ -17,7 +17,7 @@ public class ProfessorsService extends CrudService<ProfessorVo, ProfessorEntity>
     private final int MAX_PROFESSOR_NAME_LENGTH;
     private final int MAX_PROFESSOR_DECRIPTION_LENGTH;
 
-    public ProfessorsService(AbstractDaoFactory daoFactory) throws
+    public ProfessorsService(AbstractDaoBuilder daoFactory) throws
             ExternalServiceConnectionException {
         super(daoFactory, new SimpleCreate<ProfessorEntity>(daoFactory.getProfessorDao()),
                 new SimpleRead<ProfessorEntity>(daoFactory.getProfessorDao()),

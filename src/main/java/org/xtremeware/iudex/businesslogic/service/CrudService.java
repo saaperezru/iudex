@@ -1,12 +1,12 @@
 package org.xtremeware.iudex.businesslogic.service;
 
 import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Read;
-import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Remove;
+import org.xtremeware.iudex.dao.Remove;
 import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Create;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.businesslogic.DuplicityException;
 import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Update;
-import org.xtremeware.iudex.dao.AbstractDaoFactory;
+import org.xtremeware.iudex.dao.AbstractDaoBuilder;
 import org.xtremeware.iudex.entity.Entity;
 import org.xtremeware.iudex.helper.DataBaseException;
 import org.xtremeware.iudex.helper.ExternalServiceConnectionException;
@@ -19,13 +19,13 @@ import org.xtremeware.iudex.vo.ValueObject;
  */
 public abstract class CrudService<E extends ValueObject, F extends Entity<E>> {
 
-    private AbstractDaoFactory daoFactory;
+    private AbstractDaoBuilder daoFactory;
     private Create<F> createInterface;
     private Read<F> readInterface;
     private Update<F> updateInterface;
     private Remove removeInterface;
 
-    public CrudService(AbstractDaoFactory daoFactory,
+    public CrudService(AbstractDaoBuilder daoFactory,
             Create createInterface,
             Read readInterface, Update updateInterface,
             Remove removeInterface) {
@@ -36,7 +36,7 @@ public abstract class CrudService<E extends ValueObject, F extends Entity<E>> {
         this.removeInterface = removeInterface;
     }
 
-    protected AbstractDaoFactory getDaoFactory() {
+    protected AbstractDaoBuilder getDaoFactory() {
         return daoFactory;
     }
 

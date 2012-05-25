@@ -1,8 +1,7 @@
 package org.xtremeware.iudex.dao.sql;
 
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import org.xtremeware.iudex.dao.ConfirmationKeyDao;
+import javax.persistence.*;
+import org.xtremeware.iudex.dao.*;
 import org.xtremeware.iudex.entity.ConfirmationKeyEntity;
 import org.xtremeware.iudex.helper.DataBaseException;
 
@@ -11,6 +10,10 @@ import org.xtremeware.iudex.helper.DataBaseException;
  * @author josebermeo
  */
 public class SQLConfirmationKeyDao extends SQLCrudDao<ConfirmationKeyEntity> implements ConfirmationKeyDao {
+
+    public SQLConfirmationKeyDao( Remove remove) {
+        super(remove);
+    }
 
     /**
      * Returns a ConfirmationKey entity which key matched with the given string.

@@ -24,7 +24,7 @@ import org.xtremeware.iudex.vo.BinaryRatingVo;
 })
 @Table( name = "SUBJECT_RATING",
             uniqueConstraints = { @UniqueConstraint( columnNames = { "ID_USER_", "ID_SUBJECT" } ) } )
-public class SubjectRatingEntity implements Serializable, Entity<BinaryRatingVo>, RatingEntity {
+public class SubjectRatingEntity implements Serializable, Entity<BinaryRatingVo>, BinaryRatingEntity {
 
     private static final long serialVersionUID = 1L;
     @Id

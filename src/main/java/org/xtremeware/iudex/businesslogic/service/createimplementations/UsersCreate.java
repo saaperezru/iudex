@@ -2,7 +2,7 @@ package org.xtremeware.iudex.businesslogic.service.createimplementations;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import org.xtremeware.iudex.dao.AbstractDaoFactory;
+import org.xtremeware.iudex.dao.AbstractDaoBuilder;
 import org.xtremeware.iudex.entity.ConfirmationKeyEntity;
 import org.xtremeware.iudex.entity.UserEntity;
 import org.xtremeware.iudex.helper.DataBaseException;
@@ -16,9 +16,9 @@ import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Create;
  * @author josebermeo
  */
 public class UsersCreate implements Create<UserEntity> {
-    private AbstractDaoFactory daoFactory;
+    private AbstractDaoBuilder daoFactory;
 
-    public UsersCreate(AbstractDaoFactory daoFactory) {
+    public UsersCreate(AbstractDaoBuilder daoFactory) {
         this.daoFactory = daoFactory;
     }
 
@@ -47,7 +47,7 @@ public class UsersCreate implements Create<UserEntity> {
         return entity;
     }
 
-    private AbstractDaoFactory getDaoFactory() {
+    private AbstractDaoBuilder getDaoFactory() {
         return daoFactory;
     }
     

@@ -4,7 +4,7 @@ import javax.persistence.EntityManager;
 import org.xtremeware.iudex.businesslogic.InvalidVoException;
 import org.xtremeware.iudex.businesslogic.service.readimplementations.SimpleRead;
 import org.xtremeware.iudex.businesslogic.service.removeimplementations.SimpleRemove;
-import org.xtremeware.iudex.dao.AbstractDaoFactory;
+import org.xtremeware.iudex.dao.AbstractDaoBuilder;
 import org.xtremeware.iudex.entity.CommentRatingEntity;
 import org.xtremeware.iudex.helper.DataBaseException;
 import org.xtremeware.iudex.helper.ExternalServiceConnectionException;
@@ -22,7 +22,7 @@ public class CommentRatingsService extends RatingService<CommentRatingEntity> {
      *
      * @param daoFactory
      */
-    public CommentRatingsService(AbstractDaoFactory daoFactory) {
+    public CommentRatingsService(AbstractDaoBuilder daoFactory) {
         super(daoFactory,
                 new SimpleRead<CommentRatingEntity>(daoFactory.getCommentRatingDao()),
                 new SimpleRemove<CommentRatingEntity>(daoFactory.getCommentRatingDao()),

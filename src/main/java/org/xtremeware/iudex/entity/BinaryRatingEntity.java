@@ -4,7 +4,7 @@ package org.xtremeware.iudex.entity;
  *
  * @author josebermeo
  */
-public interface RatingEntity {
+public interface BinaryRatingEntity {
 
     public int getValue();
 

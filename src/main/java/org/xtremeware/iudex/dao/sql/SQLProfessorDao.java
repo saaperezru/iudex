@@ -2,7 +2,7 @@ package org.xtremeware.iudex.dao.sql;
 
 import java.util.List;
 import javax.persistence.EntityManager;
-import org.xtremeware.iudex.dao.ProfessorDao;
+import org.xtremeware.iudex.dao.*;
 import org.xtremeware.iudex.entity.ProfessorEntity;
 import org.xtremeware.iudex.helper.DataBaseException;
 
@@ -14,6 +14,10 @@ import org.xtremeware.iudex.helper.DataBaseException;
  */
 public class SQLProfessorDao extends SQLCrudDao<ProfessorEntity> implements ProfessorDao {
 
+    public SQLProfessorDao(Remove remove) {
+        super(remove);
+    }
+
     /**
      * Professors finder according to a required name
      *
@@ -23,11 +27,12 @@ public class SQLProfessorDao extends SQLCrudDao<ProfessorEntity> implements Prof
      * specified
      */
     @Override
-    public List<ProfessorEntity> getByNameLike(EntityManager entityManager, String name)
+    public List<ProfessorEntity> getByNameLike(EntityManager entityManager, String professorName)
             throws DataBaseException {
         checkEntityManager(entityManager);
         try {
-            return entityManager.createNamedQuery("getProfessorByNameLike", ProfessorEntity.class).setParameter("name", "%"+name+"%").getResultList();
+            return entityManager.createNamedQuery("getProfessorByNameLike",
+                    ProfessorEntity.class).setParameter("name", "%" + professorName + "%").getResultList();
         } catch (Exception e) {
             throw new DataBaseException(e.getMessage(), e.getCause());
         }

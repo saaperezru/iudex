@@ -33,7 +33,6 @@ public class CoursesFacade extends AbstractFacade {
     public List<CourseVoVwFull> search(String query) {
         EntityManager em = null;
         List<CourseVoVwFull> list = new ArrayList<CourseVoVwFull>();
-        if (!query.isEmpty()) {
 
             Set<Long> coursesIds = new HashSet<Long>();
             HashMap<Long, ProfessorVoVwSmall> professorsVoVws = new HashMap<Long, ProfessorVoVwSmall>();
@@ -99,7 +98,6 @@ public class CoursesFacade extends AbstractFacade {
                     em.close();
                 }
             }
-        }
         return list;
     }
 

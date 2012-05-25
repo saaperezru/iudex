@@ -30,12 +30,14 @@ public class ProfessorsService extends CrudService<ProfessorVo, ProfessorEntity>
 
     public List<ProfessorVo> getByNameLike(EntityManager em, String name)
             throws ExternalServiceConnectionException, DataBaseException {
-        name = SecurityHelper.sanitizeHTML(name);
-        ArrayList<ProfessorVo> list = new ArrayList<ProfessorVo>();
-        for (ProfessorEntity professor : getDaoFactory().getProfessorDao().
-                getByNameLike(em, name.toUpperCase())) {
-            list.add(professor.toVo());
-        }
+		name = SecurityHelper.sanitizeHTML(name);
+		ArrayList<ProfessorVo> list = new ArrayList<ProfessorVo>();
+		if(!name.isEmpty()){
+			for (ProfessorEntity professor : getDaoFactory().getProfessorDao().
+					getByNameLike(em, name.toUpperCase())) {
+				list.add(professor.toVo());
+			}
+		}
         return list;
     }
 

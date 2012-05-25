@@ -153,7 +153,7 @@ public class CoursesFacadeIT {
                 throw new AssertionFailedError("The following course was not expected for query " + query + ": " + result.toString());
             }
         }
-        query = "mario";
+        query = "linares";
         search = facade.search(query);
         assertNotNull(search);
         assertNotSame(search.size(), 0);

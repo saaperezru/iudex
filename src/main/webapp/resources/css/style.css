@@ -3,7 +3,7 @@ body {
 }
 
 .comments-container {
-        margin-top : 30px;
+        margin-top : 70px;
 /*	background-color: #F4F4F4;*/
 }
 .search-box {
@@ -331,4 +331,14 @@ div.professor-photo ul.actions li.downvote-prof a {
 }
 .vote{
 	float:right;
+}
+
+.fittext-rating{
+	display: block;
+	width: 100%;
+}
+
+.fittext-subject{
+	display: block;
+	width: 100%;
 }

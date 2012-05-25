@@ -65,7 +65,7 @@ public class Rating {
 		private int rateComment(CommentVoVwFull comment, int value) {
 				Long commentId = comment.getId();
 				int returnValue = 0;
-				if (user != null) {
+				if (user != null && user.isLoggedIn()) {
 						Long userId = user.getId();
 						int finalValue = 0; // Value to be stored in the comment
 						try {

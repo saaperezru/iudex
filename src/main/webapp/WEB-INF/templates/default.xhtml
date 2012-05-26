@@ -34,32 +34,37 @@
                         <span class="icon-bar"></span>
                     </a>
                     <h:link outcome="home" class="brand" value="IUDEX" />
-                    <c:if test="#{user.loggedIn}">
-                        <div class="btn-group pull-right">
-                            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                                <i class="icon-user"></i>#{user.userName}
-                                <span class="caret"></span>
-                            </a>
-                            <h:form>
-                                <ul class="dropdown-menu">
-                                    <li><h:link outcome="editUser" value="Editar cuenta" /></li>
-                                    <li class="divider"></li>
-                                    <li>
-                                        <h:commandLink action="#{user.logOut()}" value="Cerrar sesión" />
-                                    </li>
-                                </ul>
-                            </h:form>
-                        </div>
-                    </c:if>
-                    <div class="nav-collapse">
-                        <ul class="nav">
+					<div class="nav-collapse">
+                        <ul class="nav pull-left">
                             <li><a href="#about">Acerca de</a></li>
                             <li><a href="#contact">Contacto</a></li>
                         </ul>
-						<form id="searchForm" method="get" action="#{request.contextPath}/search.xhtml" class="navbar-search pull-right">
+						<ul class="nav pull-right">
+							<form id="searchForm" method="get" action="#{request.contextPath}/search.xhtml" class="nav">
 								<h:inputText id="query" value="#{search.query}" class="search-query span4"  label="Keyword" />
-								<input type="submit" value="Buscar"/>
+								<button type="submit" class="btn btn-small"><i class="icon-search"/>Buscar</button>
 							</form>
+							<c:if test="#{user.loggedIn}">
+								<li class="divider-vertical"></li>
+								<li class="dropdown">
+									<div class="btn-group pull-right">
+										<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+											<i class="icon-user"></i>#{user.userName}
+											<span class="caret"></span>
+										</a>
+										<h:form>
+											<ul class="dropdown-menu">
+												<li><h:link outcome="editUser" value="Editar cuenta" /></li>
+												<li class="divider"></li>
+												<li>
+													<h:commandLink action="#{user.logOut()}" value="Cerrar sesión" />
+												</li>
+											</ul>
+										</h:form>
+									</div>
+								</li>
+							</c:if>
+						</ul>
                     </div><!--/.nav-collapse -->
                 </div>
             </div>

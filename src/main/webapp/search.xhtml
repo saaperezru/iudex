@@ -10,17 +10,16 @@
 
     <f:metadata>
         <f:viewParam name="query" value="#{search.query}"/>
-        <f:event type="preRenderView" listener="#{search.preRenderView()}" />
     </f:metadata>
 
     <ui:define name="content">
 		<div class="container">
 			<div class="panel">
-				Para buscar un curso ingresa el nombre del profesor o de la materia.<br/><br/>
-                <form id="searchForm" method="get" >
-                    <h:inputText id="query" class="input-large"  value="#{search.query}" />
-                    <input type="submit" value="Buscar"/>
-                </form>
+				<form id="searchForm" method="get" action="#{request.contextPath}/search.xhtml" class="well">
+					Para buscar un curso ingresa el nombre del profesor o de la materia.<br/><br/>
+					<input type="text" name="query" value="#{search.query}" class="search-query span4"  label="Keyword" />
+					<button type="submit" class="btn btn-small"><i class="icon-search"/>Buscar</button>
+				</form>
 			</div>
 			<c:choose>
 				<!--When the query is not null or empty-->

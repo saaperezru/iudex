@@ -40,6 +40,10 @@ public class SecurityHelper {
 	}
 
 	public static String sanitizeHTML(String input) throws ExternalServiceConnectionException {
+		if (input == null){
+			System.out.println("[DEBUG] An exception occured while sanitizing");
+			throw  new IllegalArgumentException("The input to sanitize cannot be null");
+		}
 		String result = null;
 		try {
 			CleanResults cr = getInstance().getAntiSamy().scan(input, getInstance().getPolicy());

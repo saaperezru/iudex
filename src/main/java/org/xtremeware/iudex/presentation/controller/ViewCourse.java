@@ -100,22 +100,18 @@ public class ViewCourse implements Serializable {
 				courseRating.setUserId(user.getId());
 			} 
 		}
-		System.out.println("[DEBUG] Getting the courseRating from View course : " + courseRating.toString());
 		return courseRating.getValue();
 	}
 
 	public void setCourseRating(double rating){
 		float value = (float) rating;
 		this.courseRating.setValue(value);
-		System.out.println("[DEBUG] Setting the value for course rating : " + courseRating.toString());
 		try {
 			Config.getInstance().getFacadeFactory().getCoursesFacade().rateCourse(id, user.getId(), value);
 		} catch (MultipleMessagesException ex) {
 			Logger.getLogger(CourseRatingVo.class.getName()).log(Level.SEVERE, null, ex);
-		System.out.println("[DEBUG] FUCKK1!!");
 		} catch (Exception ex) {
 			Logger.getLogger(CourseRatingVo.class.getName()).log(Level.SEVERE, null, ex);
-		System.out.println("[DEBUG] FUCKK2!!");
 		}
 	}
 

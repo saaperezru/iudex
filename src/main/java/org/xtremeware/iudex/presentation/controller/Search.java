@@ -20,64 +20,48 @@ import org.xtremeware.iudex.presentation.vovw.CourseVoVwFull;
 @RequestScoped
 public class Search {
 
-    private String query = "";
-    private List<CourseVoVwFull> courses  = new ArrayList<CourseVoVwFull>();;
+	private String query ;
+	private List<CourseVoVwFull> courses;
+
+	;
 
     public List<CourseVoVwFull> getCourses() {
-        return courses;
-    }
+		CoursesFacade coursesFacade = Config.getInstance().getFacadeFactory().getCoursesFacade();
+		try {
+			this.courses = coursesFacade.search(this.getQuery());
+		} catch (Exception ex) {
+			FacesContext.getCurrentInstance().addMessage("searchForm", new FacesMessage(ex.getMessage()));
+		}
+		return courses;
+	}
 
-    public String getQuery() {
-        return query;
-    }
+	public String getQuery() {
+		FacesContext fc = FacesContext.getCurrentInstance();
+		Map<String, String> params = fc.getExternalContext().getRequestParameterMap();
+		this.query = params.get("query");
+		return query;
+	}
 
-    public void setCourses(List<CourseVoVwFull> courses) {
-        this.courses = courses;
-    }
-    
-    public void setQuery(String query) {
-        /*if(query == null){
-            FacesContext fc = FacesContext.getCurrentInstance();
-            Map<String, String> params = fc.getExternalContext().getRequestParameterMap();
-            if(params.get("searchForm:query") != null)
-                this.query = params.get("searchForm:query");
-        }*/
-        this.query = query;
-    }
-    
-    public boolean isCoursesEmpty(){
-        return ( this.courses == null || this.courses.isEmpty());
-    }
-    
-    public boolean isQueryEmpty(){
-        return (this.query == null || this.query.isEmpty());
-    }
+	public void setCourses(List<CourseVoVwFull> courses) {
+		this.courses = courses;
+	}
 
-    
-    @PostConstruct
-    public void getResultsOnLoad(){
-            FacesContext fc = FacesContext.getCurrentInstance();
-            Map<String, String> params = fc.getExternalContext().getRequestParameterMap();
-            this.query = params.get("query");
-        
-        CoursesFacade coursesFacade = Config.getInstance().getFacadeFactory().getCoursesFacade();
-        try{
-            this.courses.addAll(coursesFacade.search(this.query));
-        }catch  (Exception ex) {
-            FacesContext.getCurrentInstance().addMessage("searchForm", new FacesMessage(ex.getMessage()));
-        }
-    }
-    
-    public String submit() {
-        FacesContext fc = FacesContext.getCurrentInstance();
-        Map<String, String> params = fc.getExternalContext().getRequestParameterMap();
-        this.query = params.get("searchForm:query");
-        return "success";
-    }
-    
-    public void preRenderView(){
-        FacesContext fc = FacesContext.getCurrentInstance();
-            Map<String, String> params = fc.getExternalContext().getRequestParameterMap();
-            this.query = params.get("query");
-    }
+	public void setQuery(String query) {
+		this.query = query;
+	}
+
+	public boolean isCoursesEmpty() {
+		return (this.getCourses() == null || this.getCourses().isEmpty());
+	}
+
+	public boolean isQueryEmpty() {
+		return (this.getQuery()== null || this.getQuery().isEmpty());
+	}
+
+	public String submit() {
+//        FacesContext fc = FacesContext.getCurrentInstance();
+//        Map<String, String> params = fc.getExternalContext().getRequestParameterMap();
+//        this.query = params.get("searchForm:query");
+		return "success";
+	}
 }

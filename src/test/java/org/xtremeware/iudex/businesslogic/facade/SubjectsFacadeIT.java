@@ -5,16 +5,17 @@ import javax.persistence.EntityManager;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.xtremeware.iudex.helper.Config;
 import org.xtremeware.iudex.helper.ConfigurationVariablesHelper;
 import org.xtremeware.iudex.helper.DataBaseException;
 import org.xtremeware.iudex.helper.MultipleMessagesException;
-import org.xtremeware.iudex.presentation.vovw.SubjectVoVwFull;
 import org.xtremeware.iudex.vo.RatingSummaryVo;
 import org.xtremeware.iudex.vo.SubjectVo;
 import org.xtremeware.iudex.businesslogic.helper.FacadesTestHelper;
 import org.xtremeware.iudex.vo.BinaryRatingVo;
+import org.xtremeware.iudex.vo.SubjectVoFull;
 
 /**
  *
@@ -37,7 +38,8 @@ public class SubjectsFacadeIT {
     public void setUp() {
         entityManager = FacadesTestHelper.createEntityManagerFactory().createEntityManager();
     }
-
+    
+    //@Ignore
     @Test
     public void test_BL_12_1() throws DataBaseException,
             MultipleMessagesException, Exception {
@@ -65,6 +67,7 @@ public class SubjectsFacadeIT {
 
     }
 
+    //@Ignore
     @Test
     public void test_BL_12_2() throws Exception {
 
@@ -81,6 +84,7 @@ public class SubjectsFacadeIT {
         }
     }
 
+    //@Ignore
     @Test
     public void test_BL_12_3() throws MultipleMessagesException,
             Exception {
@@ -117,6 +121,7 @@ public class SubjectsFacadeIT {
 
     }
 
+    //@Ignore
     @Test
     public void test_BL_12_4() throws MultipleMessagesException,
             Exception {
@@ -145,6 +150,7 @@ public class SubjectsFacadeIT {
 
     }
 
+    //@Ignore
     @Test
     public void test_BL_16_1() throws MultipleMessagesException, Exception {
 
@@ -162,7 +168,7 @@ public class SubjectsFacadeIT {
 
         createdSubjectId = subjectsFacade.addSubject(subjectVo).getId();
 
-        SubjectVoVwFull subjectVoVw = subjectsFacade.getSubject(createdSubjectId);
+        SubjectVoFull subjectVoVw = subjectsFacade.getSubject(createdSubjectId);
 
         assertEquals(subjectVoVw.getId(), createdSubjectId);
         assertEquals(subjectVoVw.getName(), subjectName);
@@ -240,6 +246,7 @@ public class SubjectsFacadeIT {
         assertEquals(subjectVoVw.getDescription(), subjectDescription);
     }
 
+    //@Ignore
     @Test
     public void test_BL_16_2() throws Exception {
 
@@ -307,6 +314,7 @@ public class SubjectsFacadeIT {
 
     }
 
+    //@Ignore
     @Test
     public void test_BL_16_3() throws MultipleMessagesException, Exception {
         try {
@@ -322,6 +330,7 @@ public class SubjectsFacadeIT {
         }
     }
 
+    //@Ignore
     @Test
     public void test_BL_17_1() throws Exception {
         SubjectVo subjectVo = new SubjectVo();
@@ -336,7 +345,7 @@ public class SubjectsFacadeIT {
         subjectVo.setDescription(newSubjectDescription);
         subjectsFacade.updateSubject(subjectVo);
 
-        SubjectVoVwFull subject = subjectsFacade.getSubject(subjectId);
+        SubjectVoFull subject = subjectsFacade.getSubject(subjectId);
 
         assertEquals(subject.getId(), subjectId);
         assertEquals(subject.getName(), newSubjectName);
@@ -376,6 +385,7 @@ public class SubjectsFacadeIT {
         assertEquals(subject.getCode(), subjectId.intValue());
     }
 
+    //@Ignore
     @Test
     public void test_BL_17_2() throws MultipleMessagesException, Exception {
         SubjectVo subjectVo = new SubjectVo();
@@ -406,6 +416,7 @@ public class SubjectsFacadeIT {
         }
     }
 
+    //@Ignore
     @Test
     public void test_BL_17_3() throws Exception {
         SubjectVo subjectVo = new SubjectVo();
@@ -468,6 +479,7 @@ public class SubjectsFacadeIT {
         }
     }
 
+    //@Ignore
     @Test
     public void test_BL_18_1() throws Exception {
 
@@ -480,6 +492,7 @@ public class SubjectsFacadeIT {
 
     }
 
+    //@Ignore
     @Test
     public void test_BL_18_2() throws Exception {
         Long[] subjects = {2016722L, 9283792L, 7409261L, 7583632L};
@@ -492,6 +505,7 @@ public class SubjectsFacadeIT {
         }
     }
 
+    //@Ignore
     @Test
     public void test_BL_29_1() throws Exception {
         String string;
@@ -525,11 +539,13 @@ public class SubjectsFacadeIT {
 
     }
 
+    //@Ignore
     @Test
     public void test_BL_29_2() throws Exception {
         assertEquals(subjectsFacade.getSubjectsAutocomplete(null).size(), 0);
     }
 
+    //@Ignore
     @Test
     public void test_BL_30_1() throws Exception {
         RatingSummaryVo ratingSummary;
@@ -543,6 +559,7 @@ public class SubjectsFacadeIT {
         assertEquals(ratingSummary.getNegative(), 2);
     }
 
+    //@Ignore
     @Test
     public void test_BL_30_2() throws Exception {
 

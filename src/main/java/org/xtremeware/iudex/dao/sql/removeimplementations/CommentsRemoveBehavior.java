@@ -28,9 +28,11 @@ public class CommentsRemoveBehavior implements Remove<CommentEntity> {
             throws DataBaseException {
         List<CommentRatingEntity> commentRatings = getDaoBuilder().
                 getCommentRatingDao().getByEvaluatedObjectId(entityManager, entity.getId());
+        
         for (CommentRatingEntity rating : commentRatings) {
             getDaoBuilder().getCommentRatingDao().remove(entityManager, rating.getId());
         }
+        
         getSimpleRemove().remove(entityManager, entity);
     }
 

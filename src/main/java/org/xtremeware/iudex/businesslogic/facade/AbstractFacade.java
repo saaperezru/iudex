@@ -1,19 +1,19 @@
 package org.xtremeware.iudex.businesslogic.facade;
 
 import javax.persistence.EntityManagerFactory;
-import org.xtremeware.iudex.businesslogic.service.ServiceFactory;
+import org.xtremeware.iudex.businesslogic.service.ServiceBuilder;
 
 public abstract class AbstractFacade {
 
-	private ServiceFactory serviceFactory;
+	private ServiceBuilder serviceFactory;
 	private EntityManagerFactory emFactory;
 
-	public AbstractFacade(ServiceFactory serviceFactory, EntityManagerFactory emFactory) {
+	public AbstractFacade(ServiceBuilder serviceFactory, EntityManagerFactory emFactory) {
 		this.emFactory = emFactory;
 		this.serviceFactory = serviceFactory;
 	}
 
-	protected ServiceFactory getServiceFactory() {
+	protected ServiceBuilder getServiceFactory() {
 		return serviceFactory;
 	}
 

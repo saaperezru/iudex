@@ -6,13 +6,13 @@ import javax.persistence.EntityTransaction;
 import org.xtremeware.iudex.businesslogic.DuplicityException;
 import org.xtremeware.iudex.businesslogic.helper.FacadesHelper;
 import org.xtremeware.iudex.businesslogic.service.InactiveUserException;
-import org.xtremeware.iudex.businesslogic.service.ServiceFactory;
+import org.xtremeware.iudex.businesslogic.service.ServiceBuilder;
 import org.xtremeware.iudex.helper.MultipleMessagesException;
 import org.xtremeware.iudex.vo.UserVo;
 
 public class UsersFacade extends AbstractFacade {
 
-    public UsersFacade(ServiceFactory serviceFactory,
+    public UsersFacade(ServiceBuilder serviceFactory,
             EntityManagerFactory emFactory) {
         super(serviceFactory, emFactory);
     }
@@ -32,11 +32,11 @@ public class UsersFacade extends AbstractFacade {
             entityManager = getEntityManagerFactory().createEntityManager();
             transaction = entityManager.getTransaction();
             transaction.begin();
-            userVo = getServiceFactory().createUsersService().activateAccount(entityManager,
+            userVo = getServiceFactory().getUsersService().activateAccount(entityManager,
                     confirmationKey);
             transaction.commit();
         } catch (Exception exception) {
-            getServiceFactory().createLogService().error(exception.getMessage(), exception);
+            getServiceFactory().getLogService().error(exception.getMessage(), exception);
             FacadesHelper.rollbackTransaction(entityManager, transaction, exception);
         } finally {
             FacadesHelper.closeEntityManager(entityManager);
@@ -61,16 +61,16 @@ public class UsersFacade extends AbstractFacade {
             entityManager = getEntityManagerFactory().createEntityManager();
             transaction = entityManager.getTransaction();
             transaction.begin();
-            newUser = getServiceFactory().createUsersService().create(entityManager, user);
+            newUser = getServiceFactory().getUsersService().create(entityManager, user);
             // TODO: The confirmation email message should be configurable
-            getServiceFactory().createMailingService().sendMessage("<a href='http://iudex.j.rsnx.ru/confirm.xhtml?key=" +
-                    getServiceFactory().createUsersService().
+            getServiceFactory().getMailingService().sendMessage("<a href='http://iudex.j.rsnx.ru/confirm.xhtml?key=" +
+                    getServiceFactory().getUsersService().
                     getConfirmationKeyByUserId(entityManager, newUser.getId()).
                     getConfirmationKey() + "'>Confirmar registro</a>",
                     "Confirmar registro", user.getUserName() + "@unal.edu.co");
             transaction.commit();
         } catch (Exception exception) {
-            getServiceFactory().createLogService().error(exception.getMessage(), exception);
+            getServiceFactory().getLogService().error(exception.getMessage(), exception);
             FacadesHelper.checkExceptionAndRollback(entityManager, transaction, exception,
                     DuplicityException.class);
             FacadesHelper.checkExceptionAndRollback(entityManager, transaction, exception,
@@ -97,10 +97,10 @@ public class UsersFacade extends AbstractFacade {
         UserVo userVo = null;
         try {
             entityManager = getEntityManagerFactory().createEntityManager();
-            userVo = getServiceFactory().createUsersService().authenticate(entityManager,
+            userVo = getServiceFactory().getUsersService().authenticate(entityManager,
                     username, password);
         } catch (Exception exception) {
-            getServiceFactory().createLogService().error(exception.getMessage(), exception);
+            getServiceFactory().getLogService().error(exception.getMessage(), exception);
             FacadesHelper.checkException(exception, InactiveUserException.class);
             FacadesHelper.checkException(exception, MultipleMessagesException.class);
             throw new RuntimeException(exception);
@@ -125,11 +125,11 @@ public class UsersFacade extends AbstractFacade {
             entityManager = getEntityManagerFactory().createEntityManager();
             transaction = entityManager.getTransaction();
             transaction.begin();
-            updatedUserVo = getServiceFactory().createUsersService().update(entityManager,
+            updatedUserVo = getServiceFactory().getUsersService().update(entityManager,
                     userVo);
             transaction.commit();
         } catch (Exception ex) {
-            getServiceFactory().createLogService().error(ex.getMessage(), ex);
+            getServiceFactory().getLogService().error(ex.getMessage(), ex);
             FacadesHelper.checkExceptionAndRollback(entityManager, transaction, ex,
                     MultipleMessagesException.class);
             FacadesHelper.rollbackTransaction(entityManager, transaction, ex);

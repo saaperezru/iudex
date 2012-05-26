@@ -10,8 +10,8 @@ import org.xtremeware.iudex.helper.Config;
 import org.xtremeware.iudex.helper.MultipleMessagesException;
 import org.xtremeware.iudex.vo.ProfessorVo;
 import org.xtremeware.iudex.businesslogic.helper.FacadesTestHelper;
-import org.xtremeware.iudex.presentation.vovw.ProfessorVoVwFull;
 import org.xtremeware.iudex.vo.BinaryRatingVo;
+import org.xtremeware.iudex.vo.ProfessorVoFull;
 import org.xtremeware.iudex.vo.RatingSummaryVo;
 
 /**
@@ -414,7 +414,7 @@ public class ProfessorsFacadeIT {
 
         ProfessorsFacade professorsFacade = Config.getInstance().getFacadeFactory().getProfessorsFacade();
         Long id = 3L;
-        ProfessorVoVwFull pvvf = professorsFacade.getProfessor(id);
+        ProfessorVoFull pvvf = professorsFacade.getProfessor(id);
 
         ProfessorVo pv = entityManager.createQuery("SELECT result FROM Professor result "
                 + "WHERE result.id = :id", ProfessorEntity.class).setParameter("id", id).getSingleResult().toVo();
@@ -439,7 +439,7 @@ public class ProfessorsFacadeIT {
     public void testBL_32_2() throws MultipleMessagesException, Exception {
 
         ProfessorsFacade professorsFacade = Config.getInstance().getFacadeFactory().getProfessorsFacade();
-        ProfessorVoVwFull pvvf = null;
+        ProfessorVoFull pvvf = null;
 
         Long id = 0L;
         pvvf = professorsFacade.getProfessor(id);

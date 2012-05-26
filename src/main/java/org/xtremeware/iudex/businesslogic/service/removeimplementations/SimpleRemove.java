@@ -1,7 +1,7 @@
 package org.xtremeware.iudex.businesslogic.service.removeimplementations;
 
-import org.xtremeware.iudex.dao.Remove;
 import javax.persistence.EntityManager;
+import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Remove;
 import org.xtremeware.iudex.dao.CrudDao;
 import org.xtremeware.iudex.entity.Entity;
 import org.xtremeware.iudex.helper.DataBaseException;

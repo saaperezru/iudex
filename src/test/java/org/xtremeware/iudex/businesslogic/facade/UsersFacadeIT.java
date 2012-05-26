@@ -248,7 +248,7 @@ public class UsersFacadeIT {
         UsersFacade usersFacade = Config.getInstance().getFacadeFactory().
                 getUsersFacade();
         MailingService mailingService = Config.getInstance().getServiceFactory().
-                createMailingService();
+                getMailingService();
 
         MailingConfigVo originalMailingConfig = new MailingConfigVo();
         originalMailingConfig.setSender(ConfigurationVariablesHelper.getVariable(

@@ -76,7 +76,7 @@ public class FacadesHelper {
                 tx.rollback();
             }
         } catch (Exception ex) {
-            Config.getInstance().getServiceFactory().createLogService().error(ex.
+            Config.getInstance().getServiceFactory().getLogService().error(ex.
                     getMessage(), ex);
         }
         if (exception != null) {
@@ -96,7 +96,7 @@ public class FacadesHelper {
                 em.close();
             }
         } catch (Exception ex) {
-            Config.getInstance().getServiceFactory().createLogService().error(ex.
+            Config.getInstance().getServiceFactory().getLogService().error(ex.
                     getMessage(), ex);
         }
     }

@@ -2,15 +2,10 @@ package org.xtremeware.iudex.businesslogic.service;
 
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.businesslogic.InvalidVoException;
-import org.xtremeware.iudex.businesslogic.service.createimplementations.SimpleCreate;
-import org.xtremeware.iudex.businesslogic.service.readimplementations.SimpleRead;
-import org.xtremeware.iudex.businesslogic.service.removeimplementations.SimpleRemove;
-import org.xtremeware.iudex.businesslogic.service.updateimplementations.SimpleUpdate;
+import org.xtremeware.iudex.businesslogic.service.crudinterfaces.*;
 import org.xtremeware.iudex.dao.AbstractDaoBuilder;
 import org.xtremeware.iudex.entity.CourseRatingEntity;
-import org.xtremeware.iudex.helper.DataBaseException;
-import org.xtremeware.iudex.helper.ExternalServiceConnectionException;
-import org.xtremeware.iudex.helper.MultipleMessagesException;
+import org.xtremeware.iudex.helper.*;
 import org.xtremeware.iudex.vo.CourseRatingVo;
 
 /**
@@ -24,52 +19,46 @@ public class CourseRatingsService extends CrudService<CourseRatingVo, CourseRati
      *
      * @param daoFactory
      */
-    public CourseRatingsService(AbstractDaoBuilder daoFactory) {
-        super(daoFactory,
-                new SimpleCreate<CourseRatingEntity>(daoFactory.
-                getCourseRatingDao()),
-                new SimpleRead<CourseRatingEntity>(
-                daoFactory.getCourseRatingDao()),
-                new SimpleUpdate<CourseRatingEntity>(daoFactory.
-                getCourseRatingDao()),
-                new SimpleRemove<CourseRatingEntity>(daoFactory.
-                getCourseRatingDao()));
+    public CourseRatingsService(AbstractDaoBuilder daoFactory,
+            Create create, Read read, Update update, Remove remove) {
+
+        super(daoFactory, create, read, update, remove);
     }
 
     /**
      * Validate the provided CourseRatingVo, if the CourseRatingVo is not
      * correct the methods throws an exception
      *
-     * @param em EntityManager
-     * @param vo CourseRatingVo to validate
+     * @param entityManager EntityManager
+     * @param courseRatingVo CourseRatingVo to validate
      * @throws InvalidVoException
      */
     @Override
-    public void validateVoForCreation(EntityManager em, CourseRatingVo vo) throws
+    public void validateVoForCreation(EntityManager entityManager, CourseRatingVo courseRatingVo) throws
             DataBaseException, MultipleMessagesException {
         MultipleMessagesException multipleMessageException =
                 new MultipleMessagesException();
-        if (vo == null) {
+        if (courseRatingVo == null) {
             multipleMessageException.getMessages().add("Null CourseRatingVo");
             throw multipleMessageException;
         }
-        if (vo.getCourseId() == null) {
+        if (courseRatingVo.getCourseId() == null) {
             multipleMessageException.getMessages().add(
                     "Null courseId in the provided CourseRatingVo");
-        } else if (getDaoFactory().getCourseDao().getById(em, vo.getCourseId()) ==
+        } else if (getDaoFactory().getCourseDao().getById(entityManager, courseRatingVo.getCourseId()) ==
                 null) {
             multipleMessageException.getMessages().add(
                     "No such course  associated with CourseRatingVo.courseId");
         }
-        if (vo.getUserId() == null) {
+        if (courseRatingVo.getUserId() == null) {
             multipleMessageException.addMessage(
                     "Null userId in the provided CourseRatingVo");
-        } else if (getDaoFactory().getUserDao().getById(em, vo.getUserId()) ==
+        } else if (getDaoFactory().getUserDao().getById(entityManager, courseRatingVo.getUserId()) ==
                 null) {
             multipleMessageException.addMessage(
                     "No such user associated with CourseRatingVo.userId");
         }
-        if (vo.getValue() < 0.0 || vo.getValue() > 5.0) {
+        if (courseRatingVo.getValue() < 0.0 || courseRatingVo.getValue() > 5.0) {
             multipleMessageException.addMessage(
                     "int Value in the provided CourseRatingVo " +
                     
@@ -81,11 +70,13 @@ public class CourseRatingsService extends CrudService<CourseRatingVo, CourseRati
     }
     
     @Override
-    public void validateVoForUpdate(EntityManager entityManager, CourseRatingVo valueObject) throws MultipleMessagesException, ExternalServiceConnectionException, DataBaseException {
-        validateVoForCreation(entityManager, valueObject);
+    public void validateVoForUpdate(EntityManager entityManager, CourseRatingVo courseRatingVo) 
+            throws MultipleMessagesException, ExternalServiceConnectionException, DataBaseException {
+        validateVoForCreation(entityManager, courseRatingVo);
+        
         MultipleMessagesException multipleMessageException =
                 new MultipleMessagesException();
-        if (valueObject.getId() == null) {
+        if (courseRatingVo.getId() == null) {
             multipleMessageException.getMessages().add("courseRating.id.null");
             throw multipleMessageException;
         }
@@ -95,23 +86,24 @@ public class CourseRatingsService extends CrudService<CourseRatingVo, CourseRati
      * Returns a CourseRatingEntity using the information in the provided
      * CourseRatingVo.
      *
-     * @param em EntityManager
-     * @param vo CourseRatingVo to be transformed
+     * @param entityManager EntityManager
+     * @param courseRatingVo CourseRatingVo to be transformed
      * @return CourseRatingEntity
      * @throws InvalidVoException
      */
     @Override
-    public CourseRatingEntity voToEntity(EntityManager em, CourseRatingVo vo)
+    public CourseRatingEntity voToEntity(EntityManager entityManager, CourseRatingVo courseRatingVo)
             throws DataBaseException, MultipleMessagesException {
 
         CourseRatingEntity courseRatingEntity = new CourseRatingEntity();
-        courseRatingEntity.setId(vo.getId());
-        courseRatingEntity.setValue(vo.getValue());
+        
+        courseRatingEntity.setId(courseRatingVo.getId());
+        courseRatingEntity.setValue(courseRatingVo.getValue());
 
-        courseRatingEntity.setCourse(getDaoFactory().getCourseDao().getById(em,
-                vo.getCourseId()));
+        courseRatingEntity.setCourse(getDaoFactory().getCourseDao().getById(entityManager,
+                courseRatingVo.getCourseId()));
 
-        courseRatingEntity.setUser(getDaoFactory().getUserDao().getById(em, vo.
+        courseRatingEntity.setUser(getDaoFactory().getUserDao().getById(entityManager, courseRatingVo.
                 getUserId()));
 
         return courseRatingEntity;
@@ -120,17 +112,17 @@ public class CourseRatingsService extends CrudService<CourseRatingVo, CourseRati
     /**
      * Returns a CourseRatingVo associated with the provided userId and courseId
      *
-     * @param em EntityManager
+     * @param entityManager EntityManager
      * @param courseId course identifier
      * @param userId user identifier
      * @return CourseRatingVo
      */
-    public CourseRatingVo getByCourseIdAndUserId(EntityManager em, long courseId,
-            long userId)
+    public CourseRatingVo getByCourseIdAndUserId(EntityManager entityManager, long courseId, long userId)
             throws DataBaseException {
+        
         CourseRatingEntity courseRatingEntity = getDaoFactory().
                 getCourseRatingDao().
-                getByCourseIdAndUserId(em, courseId, userId);
+                getByCourseIdAndUserId(entityManager, courseId, userId);
         if (courseRatingEntity == null) {
             return null;
         }

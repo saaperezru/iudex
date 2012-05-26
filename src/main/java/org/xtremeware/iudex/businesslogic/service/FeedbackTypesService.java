@@ -1,19 +1,12 @@
 package org.xtremeware.iudex.businesslogic.service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.businesslogic.InvalidVoException;
-import org.xtremeware.iudex.businesslogic.service.createimplementations.SimpleCreate;
-import org.xtremeware.iudex.businesslogic.service.readimplementations.SimpleRead;
-import org.xtremeware.iudex.businesslogic.service.removeimplementations.FeedbackTypesRemove;
-import org.xtremeware.iudex.businesslogic.service.updateimplementations.SimpleUpdate;
+import org.xtremeware.iudex.businesslogic.service.crudinterfaces.*;
 import org.xtremeware.iudex.dao.AbstractDaoBuilder;
 import org.xtremeware.iudex.entity.FeedbackTypeEntity;
-import org.xtremeware.iudex.helper.DataBaseException;
-import org.xtremeware.iudex.helper.ExternalServiceConnectionException;
-import org.xtremeware.iudex.helper.MultipleMessagesException;
-import org.xtremeware.iudex.helper.SecurityHelper;
+import org.xtremeware.iudex.helper.*;
 import org.xtremeware.iudex.vo.FeedbackTypeVo;
 
 /**
@@ -27,51 +20,50 @@ public class FeedbackTypesService extends CrudService<FeedbackTypeVo, FeedbackTy
      *
      * @param daoFactory
      */
-    public FeedbackTypesService(AbstractDaoBuilder daoFactory) {
-        super(daoFactory,
-                new SimpleCreate<FeedbackTypeEntity>(daoFactory.
-                getFeedbackTypeDao()),
-                new SimpleRead<FeedbackTypeEntity>(
-                daoFactory.getFeedbackTypeDao()),
-                new SimpleUpdate<FeedbackTypeEntity>(daoFactory.
-                getFeedbackTypeDao()),
-                new FeedbackTypesRemove(daoFactory));
+    public FeedbackTypesService(AbstractDaoBuilder daoFactory,
+            Create create, Read read, Update update, Remove remove) {
+
+        super(daoFactory, create, read, update, remove);
+        
     }
 
     /**
      * Validate the provided FeedbackTypeVo, if the FeedbackTypeVo is not
      * correct the methods throws an exception
      *
-     * @param em EntityManager
-     * @param vo FeedbackTypeVo
+     * @param entityManager EntityManager
+     * @param feedbackTypeVo FeedbackTypeVo
      * @throws InvalidVoException
      */
     @Override
-    public void validateVoForCreation(EntityManager em, FeedbackTypeVo vo)
+    public void validateVoForCreation(EntityManager entityManager, FeedbackTypeVo feedbackTypeVo)
             throws ExternalServiceConnectionException,
             MultipleMessagesException {
         
         MultipleMessagesException multipleMessageException =
                 new MultipleMessagesException();
-        if (vo == null) {
+        if (feedbackTypeVo == null) {
             multipleMessageException.addMessage(
                     "feedbackType.null");
             throw multipleMessageException;
         }
-        if (vo.getName() == null) {
+        if (feedbackTypeVo.getName() == null) {
             multipleMessageException.addMessage(
                     "feedbackType.name.null");
             throw multipleMessageException;
         }
-        vo.setName(SecurityHelper.sanitizeHTML(vo.getName()));
+        feedbackTypeVo.setName(SecurityHelper.sanitizeHTML(feedbackTypeVo.getName()));
     }
     
     @Override
-    public void validateVoForUpdate(EntityManager entityManager, FeedbackTypeVo valueObject) throws MultipleMessagesException, ExternalServiceConnectionException, DataBaseException {
-        validateVoForCreation(entityManager, valueObject);
+    public void validateVoForUpdate(EntityManager entityManager, FeedbackTypeVo feedbackTypeVo) 
+            throws MultipleMessagesException, ExternalServiceConnectionException, DataBaseException {
+        
+        validateVoForCreation(entityManager, feedbackTypeVo);
+        
         MultipleMessagesException multipleMessageException =
                 new MultipleMessagesException();
-        if (valueObject.getId() == null) {
+        if (feedbackTypeVo.getId() == null) {
             multipleMessageException.addMessage(
                     "feedbackType.null");
             throw multipleMessageException;
@@ -101,16 +93,15 @@ public class FeedbackTypesService extends CrudService<FeedbackTypeVo, FeedbackTy
     /**
      * return a list of all different FeedbackTypeVo
      *
-     * @param em EntityManager
+     * @param entityManager EntityManager
      * @return A list of all different FeedbackTypeVo
      */
-    public List<FeedbackTypeVo> list(EntityManager em)
+    public List<FeedbackTypeVo> list(EntityManager entityManager)
             throws DataBaseException {
+        
         List<FeedbackTypeEntity> feedbackTypeEntitys = getDaoFactory().
-                getFeedbackTypeDao().getAll(em);
-        if (feedbackTypeEntitys.isEmpty()) {
-            return null;
-        }
+                getFeedbackTypeDao().getAll(entityManager);
+        
         ArrayList<FeedbackTypeVo> arrayList = new ArrayList<FeedbackTypeVo>();
         for (FeedbackTypeEntity feedbackTypeEntity : feedbackTypeEntitys) {
             arrayList.add(feedbackTypeEntity.toVo());

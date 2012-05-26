@@ -1,7 +1,7 @@
 package org.xtremeware.iudex.businesslogic.facade;
 
 import javax.persistence.EntityManagerFactory;
-import org.xtremeware.iudex.businesslogic.service.ServiceFactory;
+import org.xtremeware.iudex.businesslogic.service.ServiceBuilder;
 
 public class FacadeFactory {
 
@@ -15,7 +15,7 @@ public class FacadeFactory {
     private ProgramsFacade programsFacade;
     private ExceptionsFacade exceptionsFacade;
 
-    public FacadeFactory(ServiceFactory serviceFactory, EntityManagerFactory emFactory) {
+    public FacadeFactory(ServiceBuilder serviceFactory, EntityManagerFactory emFactory) {
         coursesFacade = new CoursesFacade(serviceFactory, emFactory);
         professorsFacade = new ProfessorsFacade(serviceFactory, emFactory);
         subjectsFacade = new SubjectsFacade(serviceFactory, emFactory);

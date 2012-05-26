@@ -10,7 +10,7 @@ import org.xtremeware.iudex.vo.FeedbackVo;
 @NamedQueries({
     @NamedQuery(name = "getByTypeId", query = "SELECT f FROM Feedback f WHERE f.type.id = :feedbackTypeId"),
     @NamedQuery(name = "getFeedbackByContentLike", query = "SELECT f FROM Feedback f WHERE f.content = :query"),
-    @NamedQuery(name = "getAllFeedbacks", query = "SELECT f FROM Feedback f")
+    @NamedQuery(name = "getAllFeedbacks", query = "SELECT f FROM Feedback f ORDER BY f.date DESC")
 })
 @Table(name = "FEEDBACK")
 public class FeedbackEntity implements Serializable, Entity<FeedbackVo> {

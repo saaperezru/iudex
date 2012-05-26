@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="../WEB-INF/templates/default.xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:iudex="http://java.sun.com/jsf/composite/iudex">
+
+    <ui:define name="content">
+
+        <div class="row-fluid">
+            <div class="span4 well">
+                <h3 style="text-align: center;">Comentarios de realimentación</h3>
+                <br/>
+                <h:form id="filterForm">
+                    <div class="control-group">
+                        <label class="">Filtrar por tipo</label>
+                        <div>
+                            <h:selectOneMenu id="type" value="#{listFeedbacks.feedbackTypeId}">
+                                <f:selectItem itemLabel="" />
+                                <f:selectItems value="#{lists.feedbackTypes}" />
+                                <f:validateLongRange minimum="0" />
+                                <f:ajax listener="${listFeedbacks.loadFeedbacks()}" render="@all" />
+                            </h:selectOneMenu>
+                        </div>
+                    </div>
+                </h:form>
+
+            </div>
+            <div class="span8">
+
+                <ui:repeat id="feedbacksList" value="#{listFeedbacks.feedbacks}" var="feedback">
+                    <div class="thumbnail expandable" style="padding: 15px;">
+                        <strong>
+                            <h:outputText value="#{feedback.date}">
+                                <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss aa." />
+                            </h:outputText>
+                        </strong>
+                        <h:outputText value="#{feedback.content}" />
+                    </div>
+                    <br/>   
+                </ui:repeat>
+
+            </div>
+        </div>
+
+    </ui:define>
+
+</ui:composition>

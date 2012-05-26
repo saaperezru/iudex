@@ -33,7 +33,7 @@ public class FeedbacksFacade extends AbstractFacade {
         return list;
     }
     
-    public List<FeedbackVo> getFeedbacksByFeedbackType(long feedbackTypeId) throws Exception {
+    public List<FeedbackVo> getFeedbacksByFeedbackType(long feedbackTypeId) {
         List<FeedbackVo> list = null;
         EntityManager em = null;
         try {

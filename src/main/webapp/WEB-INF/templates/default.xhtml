@@ -15,8 +15,9 @@
         <h:outputStylesheet library="bootstrap" name="css/bootstrap.min.css" />
         <h:outputStylesheet library="bootstrap" name="css/bootstrap-responsive.min.css" />
         <h:outputStylesheet library="css" name="style.css" />
-		<h:outputScript library="primefaces" name="jquery/jquery.js" />
-		<h:outputScript library="jquery" name="jquery.fittext.js" />
+        <h:outputScript library="primefaces" name="jquery/jquery.js" />
+        <h:outputScript library="jquery" name="jquery.fittext.js" />
+        <h:outputScript library="jquery" name="jquery.expander.min.js" />
         <h:outputScript library="bootstrap" name="js/bootstrap.min.js" />
         <h:outputScript library="bootstrap" name="js/bootstrap-tooltip.js" />
     </h:head>
@@ -25,36 +26,38 @@
         <!--navbar-->
         <div class="navbar navbar-fixed-top">
             <div class="navbar-inner">
-                <div class="container offset1 span10">
-                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </a>
-                    <h:link outcome="home" class="brand" value="IUDEX" />
-                    <c:if test="#{user.loggedIn}">
-                        <div class="btn-group pull-right">
-                            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                                <i class="icon-user"></i>#{user.userName}
-                                <span class="caret"></span>
-                            </a>
-                            <h:form>
-                                <ul class="dropdown-menu">
-                                    <li><h:link outcome="editUser" value="Editar cuenta" /></li>
-                                    <li class="divider"></li>
-                                    <li>
-                                        <h:commandLink action="#{user.logOut()}" value="Cerrar sesión" />
-                                    </li>
-                                </ul>
-                            </h:form>
-                        </div>
-                    </c:if>
-                    <div class="nav-collapse">
-                        <ul class="nav">
-                            <li><a href="#about">Acerca de</a></li>
-                            <li><h:link outcome="feedback" value="Contacto" /></li>
-                        </ul>
-                    </div><!--/.nav-collapse -->
+                <div class="offset1">
+                    <div class="span10">
+                        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </a>
+                        <h:link outcome="home" class="brand" value="IUDEX" />
+                        <c:if test="#{user.loggedIn}">
+                            <div class="btn-group pull-right">
+                                <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                                    <i class="icon-user"></i>#{user.userName}
+                                    <span class="caret"></span>
+                                </a>
+                                <h:form>
+                                    <ul class="dropdown-menu">
+                                        <li><h:link outcome="editUser" value="Editar cuenta" /></li>
+                                        <li class="divider"></li>
+                                        <li>
+                                            <h:commandLink action="#{user.logOut()}" value="Cerrar sesión" />
+                                        </li>
+                                    </ul>
+                                </h:form>
+                            </div>
+                        </c:if>
+                        <div class="nav-collapse">
+                            <ul class="nav">
+                                <li><a href="#about">Acerca de</a></li>
+                                <li><h:link outcome="feedback" value="Contacto" /></li>
+                            </ul>
+                        </div><!--/.nav-collapse -->
+                    </div>
                 </div>
             </div>
         </div>
@@ -79,7 +82,14 @@
         <!--end content-->
 
         <script>
-            jQuery(".inline-error").tooltip();
+            jQuery(document).ready(function() {
+                jQuery(".inline-error").tooltip();
+                jQuery(".expandable").expander({
+                    slicePoint: 200,
+                    expandText: "leer más",
+                    userCollapseText: "leer menos"
+                });
+            });
         </script>
     </h:body>
 </html>

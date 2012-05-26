@@ -1,5 +1,6 @@
 package org.xtremeware.iudex.presentation.controller;
 
+import java.io.Serializable;
 import java.util.Date;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -15,7 +16,7 @@ import org.xtremeware.iudex.presentation.helper.ViewHelper;
  */
 @ManagedBean
 @RequestScoped
-public class CreateFeedback {
+public class CreateFeedback implements Serializable {
     
     private Long feedbackTypeId;
     private String content;

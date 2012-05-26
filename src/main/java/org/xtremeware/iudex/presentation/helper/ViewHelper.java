@@ -6,6 +6,7 @@ import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
 import org.xtremeware.iudex.helper.Config;
+import org.xtremeware.iudex.helper.MultipleMessagesException;
 
 /**
  *
@@ -15,15 +16,23 @@ import org.xtremeware.iudex.helper.Config;
 @ApplicationScoped
 public class ViewHelper {
 
-    public static String getExceptionMessage(Exception ex) {
+    public static void addExceptionFacesMessage(String clientId,
+            MultipleMessagesException ex) {
+        FacesContext fc = FacesContext.getCurrentInstance();
+        for (String message : ex.getMessages()) {
+            fc.addMessage(clientId, new FacesMessage(getExceptionMessage(message)));
+        }
+    }
+
+    private static String getExceptionMessage(String message) {
         return Config.getInstance().getFacadeFactory().getExceptionsFacade().
                 getMessage(
-                ex.getMessage(), FacesContext.getCurrentInstance().getViewRoot().
+                message, FacesContext.getCurrentInstance().getViewRoot().
                 getLocale());
     }
 
-    public static FacesMessage getExceptionFacesMessage(Exception ex) {
-        return new FacesMessage(getExceptionMessage(ex));
+    public static void addExceptionFacesMessage(String clientId, Exception ex) {
+        FacesContext.getCurrentInstance().addMessage(clientId, new FacesMessage(getExceptionMessage(ex.getMessage())));
     }
 
     public String addErrorClass(String clientId) {

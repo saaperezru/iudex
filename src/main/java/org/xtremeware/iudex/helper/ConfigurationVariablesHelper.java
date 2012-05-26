@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.xtremeware.iudex.helper;
 
 import org.apache.commons.configuration.PropertiesConfiguration;
@@ -14,6 +10,7 @@ public class ConfigurationVariablesHelper {
 
     private static ConfigurationVariablesHelper instance;
     private PropertiesConfiguration config;
+    public static final String APP_PATH = "app.path";
     public static final String MIN_USERNAME_LENGTH = "user.minUserNameLength";
     public static final String MAX_USERNAME_LENGTH = "user.maxUserNameLength";
    
@@ -26,13 +23,17 @@ public class ConfigurationVariablesHelper {
     public static final String MAX_PROFESSOR_DECRIPTION_LENGTH = "professor.maxProfessorDescriptionLength";
     public static final String MAX_SUBJECT_NAME_LENGTH = "subject.maxNameLength";
     public static final String MAX_SUBJECT_DESCRIPTION_LENGTH = "subject.maxDescriptionLength";
-    public static final String RECAPTCHA_PRIVATE_KEY = "security.reCaptchaPrivateKey";
-    public static final String RECAPTCHA_PUBLIC_KEY = "security.reCaptchaPublicKey";
     public static final String MAILING_SMTP_SERVER = "mailing.smtpServer";
     public static final String MAILING_SENDER_EMAIL_ADDRESS = "mailing.senderEMailAddress";
     public static final String MAILING_SMTP_USER = "mailing.smtpServerUser";
     public static final String MAILING_SMTP_PASSWORD = "mailing.smtpServerPassword";
     public static final String MAILING_SMTP_PORT = "mailing.smtpServerPort";
+    public static final String MAILING_KEYS_EXPIRATION = "mailing.keys.expiration";
+    public static final String MAILING_TEMPLATES_PATH = "mailing.templates.path";
+    public static final String MAILING_TEMPLATES_CONFIRMATION = "mailing.templates.confirmation";
+    public static final String MAILING_TEMPLATES_CONFIRMATION_SUBJECT = "mailing.templates.confirmation.subject";
+    public static final String MAILING_TEMPLATES_RECOVER_PASSWORD = "mailing.templates.recoverPassword";
+    public static final String MAILING_TEMPLATES_RECOVER_PASSWORD_SUBJECT = "mailing.templates.recoverPassword.subject";
     public static final String PERIOD_MIN_YEAR = "period.minYear";
     public static final String PERIOD_MAX_YEAR = "period.maxYear";
     public static final String PERIOD_MAX_SEMESTER = "period.maxSemester";

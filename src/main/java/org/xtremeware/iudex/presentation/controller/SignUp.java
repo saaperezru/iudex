@@ -3,21 +3,16 @@ package org.xtremeware.iudex.presentation.controller;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.model.SelectItem;
 import org.xtremeware.iudex.businesslogic.DuplicityException;
-import org.xtremeware.iudex.businesslogic.facade.ProgramsFacade;
 import org.xtremeware.iudex.businesslogic.facade.UsersFacade;
 import org.xtremeware.iudex.helper.Config;
 import org.xtremeware.iudex.helper.MultipleMessagesException;
 import org.xtremeware.iudex.helper.Role;
 import org.xtremeware.iudex.presentation.helper.ViewHelper;
-import org.xtremeware.iudex.vo.ProgramVo;
 import org.xtremeware.iudex.vo.UserVo;
 
 /**
@@ -108,10 +103,10 @@ public class SignUp {
             usersFacade.addUser(userVo);
             return "success";
         } catch(DuplicityException ex){
-            fc.addMessage("signUpForm", ViewHelper.getExceptionFacesMessage(ex));
+            ViewHelper.addExceptionFacesMessage("signUpForm", ex);
             return "failure";
         } catch (MultipleMessagesException ex) {
-            fc.addMessage("signUpForm", ViewHelper.getExceptionFacesMessage(ex));
+            ViewHelper.addExceptionFacesMessage(password, ex);
             return "failure";
         }
     }

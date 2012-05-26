@@ -8,7 +8,23 @@
         <param-name>javax.faces.PROJECT_STAGE</param-name>
         <param-value>Development</param-value>
     </context-param>
-             
+    
+    <context-param>
+        <param-name>org.apache.myfaces.ERROR_HANDLING</param-name>
+        <param-value>false</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>primefaces.PRIVATE_CAPTCHA_KEY</param-name>
+        <param-value>6Ldw09ESAAAAAP2PpmazMQ9LjxEDODiQMrEt7ZmZ</param-value>
+    </context-param>
+    
+    <context-param>
+        <param-name>primefaces.PUBLIC_CAPTCHA_KEY</param-name>
+        <param-value>6Ldw09ESAAAAALrWMB44DbbT97SJKcsX4dWY1MDh</param-value>
+    </context-param>
+
+
     <session-config>
         <session-timeout>
             30

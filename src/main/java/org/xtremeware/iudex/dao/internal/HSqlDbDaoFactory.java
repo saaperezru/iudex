@@ -1,20 +1,6 @@
 package org.xtremeware.iudex.dao.internal;
 
-import org.xtremeware.iudex.dao.AbstractDaoFactory;
-import org.xtremeware.iudex.dao.CommentDaoInterface;
-import org.xtremeware.iudex.dao.CommentRatingDaoInterface;
-import org.xtremeware.iudex.dao.ConfirmationKeyDaoInterface;
-import org.xtremeware.iudex.dao.CourseDaoInterface;
-import org.xtremeware.iudex.dao.CourseRatingDaoInterface;
-import org.xtremeware.iudex.dao.FeedbackDaoInterface;
-import org.xtremeware.iudex.dao.FeedbackTypeDaoInterface;
-import org.xtremeware.iudex.dao.PeriodDaoInterface;
-import org.xtremeware.iudex.dao.ProfessorDaoInterface;
-import org.xtremeware.iudex.dao.ProfessorRatingDaoInterface;
-import org.xtremeware.iudex.dao.ProgramDaoInterface;
-import org.xtremeware.iudex.dao.SubjectDaoInterface;
-import org.xtremeware.iudex.dao.SubjectRatingDaoInterface;
-import org.xtremeware.iudex.dao.UserDaoInterface;
+import org.xtremeware.iudex.dao.*;
 
 /**
  * DAO factory for an HSQLDB persistence unit
@@ -30,6 +16,7 @@ public class HSqlDbDaoFactory implements AbstractDaoFactory {
     private CourseRatingDaoInterface courseRatingDao;
     private FeedbackDaoInterface feedbackDao;
     private FeedbackTypeDaoInterface feedbackTypeDao;
+    private ForgottenPasswordKeyDaoInterface forgottenPasswordKeyDao;
     private PeriodDaoInterface periodDao;
     private ProfessorDaoInterface professorDao;
     private ProfessorRatingDaoInterface professorRatingDao;
@@ -103,6 +90,14 @@ public class HSqlDbDaoFactory implements AbstractDaoFactory {
             feedbackTypeDao = new FeedbackTypeDao();
         }
         return feedbackTypeDao;
+    }
+
+    @Override
+    public ForgottenPasswordKeyDaoInterface getForgottenPasswordKeyDao() {
+        if (forgottenPasswordKeyDao == null) {
+            forgottenPasswordKeyDao = new ForgottenPasswordKeyDao();
+        }
+        return forgottenPasswordKeyDao;
     }
 
     @Override

@@ -5,7 +5,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpSession;
 import org.xtremeware.iudex.businesslogic.facade.UsersFacade;
 import org.xtremeware.iudex.helper.Config;
 import org.xtremeware.iudex.presentation.helper.ViewHelper;
@@ -49,14 +48,17 @@ public class Login {
     }
 
     public String logIn() {
-        FacesContext fc = FacesContext.getCurrentInstance();
         UsersFacade usersFacade = Config.getInstance().getFacadeFactory().
                 getUsersFacade();
+        FacesContext fc = FacesContext.getCurrentInstance();
+        if(user.getRequiresCaptcha() && fc.getViewRoot().getViewId().equals("/index.xhtml")) {
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("loginMessage", "Has hecho muchos intentos de inicio de sesión fallidos, por ello debemos pedirte algunos datos adicionales");
+            return "requiresCaptcha";
+        }
+        
         try {
             UserVo userVo = usersFacade.logIn(userName, password);
             if (userVo != null) {
-                HttpSession session = (HttpSession) fc.getExternalContext().
-                        getSession(true);
                 user.setId(userVo.getId());
                 user.setFirstName(userVo.getFirstName());
                 user.setLastName(userVo.getLastName());
@@ -64,16 +66,15 @@ public class Login {
                 user.setProgramId(userVo.getProgramsId().get(0));
                 user.setRole(userVo.getRole());
                 user.setLoggedIn(true);
+                user.setFailedLoginAttempts(0);
                 return "success";
             } else {
-                FacesContext.getCurrentInstance().addMessage("loginForm",
-                        new FacesMessage(
-                        "Nombre de usuario o contraseña inválidos"));
+                FacesContext.getCurrentInstance().getExternalContext().getFlash().put("loginMessage", "Nombre de usuario o contraseña inválidos");
             }
         } catch (Exception ex) {
-            FacesContext.getCurrentInstance().addMessage("loginForm",
-                    new FacesMessage(ViewHelper.getExceptionMessage(ex)));
+            ViewHelper.addExceptionFacesMessage("loginForm", ex);
         }
+        user.setFailedLoginAttempts(user.getFailedLoginAttempts() + 1);
         return "failure";
     }
 }

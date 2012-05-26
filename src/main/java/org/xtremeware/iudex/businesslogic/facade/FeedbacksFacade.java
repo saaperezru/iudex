@@ -5,7 +5,6 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
-import org.xtremeware.iudex.businesslogic.DuplicityException;
 import org.xtremeware.iudex.businesslogic.helper.FacadesHelper;
 import org.xtremeware.iudex.businesslogic.service.ServiceFactory;
 import org.xtremeware.iudex.helper.MultipleMessagesException;
@@ -18,7 +17,7 @@ public class FeedbacksFacade extends AbstractFacade {
         super(serviceFactory, emFactory);
     }
 
-    public List<FeedbackTypeVo> getFeedbackTypes() throws Exception {
+    public List<FeedbackTypeVo> getFeedbackTypes() {
         List<FeedbackTypeVo> list = null;
         EntityManager em = null;
         try {
@@ -34,7 +33,7 @@ public class FeedbacksFacade extends AbstractFacade {
         return list;
     }
     
-    public List<FeedbackVo> getFeedbacksByFeedbackType(long feedbackTypeId) throws Exception {
+    public List<FeedbackVo> getFeedbacksByFeedbackType(long feedbackTypeId) {
         List<FeedbackVo> list = null;
         EntityManager em = null;
         try {
@@ -49,7 +48,7 @@ public class FeedbacksFacade extends AbstractFacade {
         return list;
     }
     
-    public List<FeedbackVo> getAllFeedbacks() throws Exception {
+    public List<FeedbackVo> getAllFeedbacks() {
         List<FeedbackVo> list = null;
         EntityManager em = null;
         try {
@@ -64,7 +63,7 @@ public class FeedbacksFacade extends AbstractFacade {
         return list;
     }
 
-    public FeedbackVo addFeedback(long feedbackType, String content, Date date) throws MultipleMessagesException, Exception {
+    public FeedbackVo addFeedback(long feedbackType, String content, Date date) throws MultipleMessagesException {
         FeedbackVo createdVo = null;
         FeedbackVo vo = new FeedbackVo();
         vo.setContent(content);
@@ -81,7 +80,6 @@ public class FeedbacksFacade extends AbstractFacade {
         } catch (Exception e) {
             getServiceFactory().createLogService().error(e.getMessage(), e);
             FacadesHelper.checkException(e, MultipleMessagesException.class);
-            FacadesHelper.checkExceptionAndRollback(em, tx, e, DuplicityException.class);
             FacadesHelper.rollbackTransaction(em, tx, e);
         } finally {
             FacadesHelper.closeEntityManager(em);

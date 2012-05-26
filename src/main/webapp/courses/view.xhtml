@@ -15,25 +15,20 @@
 			<c:if test="#{user.loggedIn}">
 				<div class="row ">
 					<div class="offset5 span7 container">
-						<div class="row">
+						<div class="row-fluid well">
 							<h:form>
-								<h:panelGrid columns="2" cellpadding="5">  
-									<h:outputText value="CALIFICA EL CURSO" />  
-									<p:rating value="#{viewCourse.courseRating}" onRate="showPeriodInput()">  
+									<h:outputText value="CALIFICA EL CURSO" class="span6 fittext-rateInput"/>  
+								<div class="span6">
+									<p:rating value="#{viewCourse.courseRating}" onRate="showCommentInput()">  
 										<p:ajax event="rate" listener="#{viewCourse.handleRate}" update="messages" />  
 									</p:rating>  
-								</h:panelGrid> 
+								</div>
 								<p:growl id="messages" showDetail="true"/> 
 							</h:form>
 						</div>
-						<div class="row hidden" id="periodInput">
+						<div class="row-fluid hidden" id="commentInput">
 							<h:form>
-								¿Cuando tomaste el curso? <h:selectOneMenu/>
-							</h:form>
-						</div>
-						<div class="row">
-							<h:form>
-								<h:inputTextarea value="Cuéntanos tu opinión."/>
+								<h:inputTextarea value="."/>
 							</h:form>
 						</div>
 					</div>
@@ -102,7 +97,7 @@
 								<h:outputText class="fittext-rating" style="text-align: left;" value="#{viewCourse.course.ratingAverage}"/>
 							</div>
 							<div class="span6">
-								<img style="vertical-align: middle;" src="../resources/images/star.png" />
+								<img style="vertical-align: middle;" src="#{request.contextPath}/resources/images/star.png" />
 							</div>
 						</div>
 						<div class="row-fluid">
@@ -139,13 +134,14 @@
 		<script type="text/javascript">
 			$(".fittext-subject").fitText(0.612423);
 			$(".fittext-rating").fitText(0.5);
-			function showPeriodInput(){
+			$(".fittext-rateInput").fitText(1.1);
+			function showCommentInput(){
 				//If it was hidden from the begining, it was using the hidden class
 				// but before removing the class hide it with jquery.
-				$("#periodInput").hide();
-				$("#periodInput").removeClass("hidden");
+				$("#commentInput").hide();
+				$("#commentInput").removeClass("hidden");
 				//Now show it
-				$("#periodInput").show("slow");
+				$("#commentInput").show("slow");
 
 			}
 		</script>

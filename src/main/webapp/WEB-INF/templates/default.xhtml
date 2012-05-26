@@ -19,6 +19,7 @@
         <h:outputStylesheet library="css" name="style.css" />
 		<h:outputScript library="primefaces" name="jquery/jquery.js" />
 		<h:outputScript library="jquery" name="jquery.fittext.js" />
+		<h:outputScript library="jquery" name="jquery.expander.min.js" />
         <h:outputScript library="bootstrap" name="js/bootstrap.min.js" />
         <h:outputScript library="bootstrap" name="js/bootstrap-tooltip.js" />
     </h:head>
@@ -37,7 +38,7 @@
 					<div class="nav-collapse">
                         <ul class="nav pull-left">
                             <li><a href="#about">Acerca de</a></li>
-                            <li><a href="#contact">Contacto</a></li>
+							<li><h:link outcome="feedback" value="Contacto" /></li>
                         </ul>
 						<ul class="nav pull-right">
 							<form id="searchForm" method="get" action="#{request.contextPath}/search.xhtml" class="nav">
@@ -88,7 +89,14 @@
         <!--end content-->
 
         <script>
-            jQuery(".inline-error").tooltip();
+			jQuery(document).ready(function() {
+                jQuery(".inline-error").tooltip();
+                jQuery(".expandable").expander({
+                    slicePoint: 200,
+                    expandText: "leer más",
+                    userCollapseText: "leer menos"
+                });
+            });
         </script>
     </h:body>
 </html>

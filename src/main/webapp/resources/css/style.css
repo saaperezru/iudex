@@ -55,8 +55,9 @@ div.big-media {
     height: 340px;
 }
 
-.float-right {
-    float: right;
+div#recaptcha_widget_div {
+	width: 318px;
+	display: inline-block;
 }
 
 div.share-icon {

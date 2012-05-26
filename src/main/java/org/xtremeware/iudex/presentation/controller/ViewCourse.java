@@ -29,7 +29,7 @@ import org.xtremeware.iudex.vo.CourseRatingVo;
 @ManagedBean
 @ViewScoped
 public class ViewCourse implements Serializable {
-	private Integer[][] listLists = {{1}, {1, 2}, {1, 2, 3}, {1, 2, 3, 4}, {1, 2, 3, 4, 5}};
+	private static Integer[][] listLists = {{1}, {1, 2}, {1, 2, 3}, {1, 2, 3, 4}, {1, 2, 3, 4, 5}};
 
 	public ViewCourse() {
 		id = Long.valueOf(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id"));
@@ -132,7 +132,7 @@ public class ViewCourse implements Serializable {
 	}
 
 	public void handleRate(RateEvent rateEvent) {
-		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Rate Event", "You rated:" + ((Double) rateEvent.getRating()).intValue());
+		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Calificación exitosa", "Has calificado esta materia con un :" + ((Double) rateEvent.getRating()).intValue() + ". ¡Agradecemos tu opinión!");
 
 		FacesContext.getCurrentInstance().addMessage(null, message);
 	}

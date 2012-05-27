@@ -104,7 +104,7 @@ public class CommentsFacadeIT {
         commentVo.setDate(new Date());
         commentVo.setRating(Float.MAX_VALUE);
         commentVo.setUserId(100L);
-        commentVo.setContent(FacadesTestHelper.randomString(2001));
+        commentVo.setContent(FacadesTestHelper.randomString(2050));
         expectedMessages = new String[]{
             "comment.rating.invalidRating",
             "comment.courseId.element.notFound",

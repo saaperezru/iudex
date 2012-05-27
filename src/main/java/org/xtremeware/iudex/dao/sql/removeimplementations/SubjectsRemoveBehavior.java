@@ -14,10 +14,10 @@ import org.xtremeware.iudex.helper.DataBaseException;
 public class SubjectsRemoveBehavior implements Remove {
 
     private AbstractDaoBuilder daoBuilder;
-    private SimpleRemove<SubjectEntity> simpleRemove;
+    private SimpleRemoveBehavior<SubjectEntity> simpleRemove;
 
     public SubjectsRemoveBehavior(AbstractDaoBuilder daoBuilder,
-            SimpleRemove simpleRemove) {
+            SimpleRemoveBehavior simpleRemove) {
         this.daoBuilder = daoBuilder;
         this.simpleRemove = simpleRemove;
     }
@@ -34,7 +34,7 @@ public class SubjectsRemoveBehavior implements Remove {
         getSimpleRemove().remove(entityManager, entity);
     }
 
-    public SimpleRemove<SubjectEntity> getSimpleRemove() {
+    public SimpleRemoveBehavior<SubjectEntity> getSimpleRemove() {
         return simpleRemove;
     }
 

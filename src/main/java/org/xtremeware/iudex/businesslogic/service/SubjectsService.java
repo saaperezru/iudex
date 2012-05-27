@@ -46,11 +46,6 @@ public class SubjectsService extends CrudService<SubjectVo, SubjectEntity> {
             multipleMessageException.addMessage("subject.null");
             throw multipleMessageException;
         }
-        if (subjectVo.getId() == null) {
-            multipleMessageException.addMessage("subject.id.null");
-        } else {
-            subjectVo.setId(Math.abs(subjectVo.getId()));
-        }
 
         if (subjectVo.getDescription() == null) {
             subjectVo.setDescription("");
@@ -77,6 +72,7 @@ public class SubjectsService extends CrudService<SubjectVo, SubjectEntity> {
 
     @Override
     public void validateVoForUpdate(EntityManager entityManager, SubjectVo valueObject) throws MultipleMessagesException, ExternalServiceConnectionException, DataBaseException {
+        
         validateVoForCreation(entityManager, valueObject);
         MultipleMessagesException multipleMessageException = new MultipleMessagesException();
         if (valueObject.getId() == null) {

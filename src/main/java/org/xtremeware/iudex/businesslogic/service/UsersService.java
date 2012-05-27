@@ -172,13 +172,20 @@ public class UsersService extends CrudService<UserVo, UserEntity> {
 
         if (userName == null) {
             exceptions.addMessage("user.userName.null");
-        } else if (userName.isEmpty()) {
-            exceptions.addMessage("user.userName.empty");
+        } else if (userName.length() < MIN_USERNAME_LENGTH) {
+            exceptions.addMessage(
+                    "user.userName.tooShort");
+        } else if (userName.length() > MAX_USERNAME_LENGTH) {
+            exceptions.addMessage(
+                    "user.userName.tooLong");
         }
         if (password == null) {
             exceptions.addMessage("user.password.null");
-        } else if (password.isEmpty()) {
-            exceptions.addMessage("user.password.empty");
+        } else if (password.length() < MIN_USER_PASSWORD_LENGTH) {
+            exceptions.addMessage("user.password.tooShort");
+        } else if (password.length() > MAX_USER_PASSWORD_LENGTH) {
+            exceptions.addMessage(
+                    "user.password.tooLong");
         }
 
         if (!exceptions.getMessages().isEmpty()) {

@@ -22,44 +22,41 @@ public class CoursesService extends CrudService<CourseVo, CourseEntity> {
         MultipleMessagesException multipleMessageException =
                 new MultipleMessagesException();
         if (courseVo == null) {
-            multipleMessageException.addMessage("Null CourseVo");
+            multipleMessageException.addMessage("course.null");
             throw multipleMessageException;
         }
         if (courseVo.getPeriodId() == null) {
             multipleMessageException.addMessage(
-                    "Long periodId in the provided CourseVo cannot be null");
+                    "course.periodId.null");
         } else if (getDaoFactory().getPeriodDao().getById(entityManager,
                 courseVo.getPeriodId()) == null) {
             multipleMessageException.addMessage(
-                    "Long periodId in the provided CourseVo must correspond to"
-                    + " an existing period entity in the database");
+                    "course.periodId.elementNotFound");
         }
         if (courseVo.getProfessorId() == null) {
             multipleMessageException.addMessage(
-                    "Long professorId in the provided CourseVo cannot be null");
+                    "course.professorId.null");
         } else if (getDaoFactory().getProfessorDao().getById(entityManager, courseVo.getProfessorId()) == null) {
             multipleMessageException.addMessage(
-                    "Long professorId in the provided CourseVo must correspond "
-                    + "to an existing professor entity in the database");
+                    "course.professorId.elementNotFound");
         }
         if (courseVo.getSubjectId() == null) {
             multipleMessageException.addMessage(
-                    "Long subjectId in the provided CourseVo cannot be null");
+                    "course.subjectId.null");
         } else if (getDaoFactory().getSubjectDao().getById(entityManager, courseVo.getSubjectId()) == null) {
             multipleMessageException.addMessage(
-                    "Long subjectId in the provided CourseVo must correspond to"
-                    + " an existing subject entity in the database");
+                    "course.subjectId.elementNotFound");
         }
         if (courseVo.getRatingCount() == null) {
             multipleMessageException.addMessage(
-                    "Long ratingCount in the provided CourseVo cannot be null");
+                    "course.ratingCount.null");
         } else if (courseVo.getRatingCount() < 0) {
             multipleMessageException.addMessage(
                     "Long ratingCount in the provided CourseVo must be greater than one");
         }
         if (courseVo.getRatingAverage() == null) {
             multipleMessageException.addMessage(
-                    "Double ratingAverage in the provided CourseVo cannot be null");
+                    "course.ratingAverage.null");
         }
         if (courseVo.getRatingAverage() < 0) {
             multipleMessageException.addMessage(

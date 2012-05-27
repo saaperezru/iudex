@@ -42,6 +42,10 @@ public class ProgramsService extends CrudService<ProgramVo, ProgramEntity> {
                         "program.name.tooShort");
             }
         }
+        if (programVo.getCode() < 0) {
+            multipleMessageException.addMessage(
+                    "program.code.negativeValue");
+        }
         if (!multipleMessageException.getMessages().isEmpty()) {
             throw multipleMessageException;
         }

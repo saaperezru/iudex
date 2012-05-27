@@ -138,7 +138,7 @@ public class FeedbacksFacadeIT {
         FeedbacksFacade ff = Config.getInstance().getFacadeFactory().
                 getFeedbacksFacade();
         List<FeedbackVo> fvs = ff.getFeedbacksByFeedbackType(Long.MAX_VALUE);
-        assertNull(fvs);
+        assertTrue(fvs.isEmpty());
     }
 
     @Test

@@ -51,10 +51,11 @@ public abstract class CrudService<E extends ValueObject, F extends Entity<E>> {
 
     public E create(EntityManager entityManager, E valueObject) throws
             DataBaseException,
-            DuplicityException, 
-            MultipleMessagesException, 
-            DataBaseException,  
+            DuplicityException,
+            MultipleMessagesException,
+            DataBaseException,
             MaxCommentsLimitReachedException {
+        
         validateVoForCreation(entityManager, valueObject);
         try {
             return getCreateInterface().create(entityManager, voToEntity(entityManager, valueObject)).toVo();

@@ -15,10 +15,10 @@ import org.xtremeware.iudex.helper.DataBaseException;
 public class CommentsRemoveBehavior implements Remove<CommentEntity> {
 
     private AbstractDaoBuilder daoBuilder;
-    private SimpleRemove<CommentEntity> simpleRemove;
+    private SimpleRemoveBehavior<CommentEntity> simpleRemove;
 
     public CommentsRemoveBehavior(AbstractDaoBuilder daoBuilder,
-            SimpleRemove simpleRemove) {
+            SimpleRemoveBehavior simpleRemove) {
         this.daoBuilder = daoBuilder;
         this.simpleRemove = simpleRemove;
     }
@@ -40,7 +40,7 @@ public class CommentsRemoveBehavior implements Remove<CommentEntity> {
         return daoBuilder;
     }
 
-    private SimpleRemove<CommentEntity> getSimpleRemove() {
+    private SimpleRemoveBehavior<CommentEntity> getSimpleRemove() {
         return simpleRemove;
     }
 }

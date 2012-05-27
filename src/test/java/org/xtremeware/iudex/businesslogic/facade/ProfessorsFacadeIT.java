@@ -175,7 +175,7 @@ public class ProfessorsFacadeIT {
             FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
         }
 
-        pv.setDescription(FacadesTestHelper.randomString(2001));
+        pv.setDescription(FacadesTestHelper.randomString(2050));
         pv.setFirstName(FacadesTestHelper.randomString(51));
         pv.setLastName(FacadesTestHelper.randomString(51));
         pv.setEmail("");
@@ -306,7 +306,7 @@ public class ProfessorsFacadeIT {
             FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
         }
 
-        pv.setDescription(FacadesTestHelper.randomString(2001));
+        pv.setDescription(FacadesTestHelper.randomString(2050));
         pv.setFirstName(FacadesTestHelper.randomString(51));
         pv.setLastName(FacadesTestHelper.randomString(51));
         pv.setEmail("");

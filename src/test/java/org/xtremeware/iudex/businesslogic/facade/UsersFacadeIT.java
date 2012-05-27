@@ -448,6 +448,7 @@ public class UsersFacadeIT {
         user.setPassword("New password");
         user.setProgramsId(Arrays.asList(new Long[]{2537L, 2556L}));
         user.setRole(Role.ADMINISTRATOR);
+        
         UserVo expectedUser = new UserVo();
         expectedUser.setId(5L);
         expectedUser.setFirstName("New name");
@@ -456,6 +457,7 @@ public class UsersFacadeIT {
         expectedUser.setProgramsId(Arrays.asList(new Long[]{2537L, 2556L}));
         expectedUser.setRole(Role.STUDENT); // Shouldn't change
         expectedUser.setUserName("student4"); // Shouldn't change
+        
         UsersFacade usersFacade = Config.getInstance().getFacadeFactory().
                 getUsersFacade();
         user = usersFacade.editUser(user);

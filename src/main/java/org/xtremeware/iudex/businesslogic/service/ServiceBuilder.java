@@ -179,7 +179,7 @@ public class ServiceBuilder {
             usersService = new UsersService(getDaoFactory(),
                     new UsersCreate(getDaoFactory()),
                     new SimpleRead<UserEntity>(getDaoFactory().getUserDao()),
-                    new SimpleUpdate<UserEntity>(getDaoFactory().getUserDao()),
+                    new UsersUpdate(getDaoFactory().getUserDao()),
                     new SimpleRemove<UserEntity>(getDaoFactory().getUserDao()));
         }
         return usersService;

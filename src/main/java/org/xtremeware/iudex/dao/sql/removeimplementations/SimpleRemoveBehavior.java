@@ -9,7 +9,7 @@ import org.xtremeware.iudex.helper.DataBaseException;
  *
  * @author josebermeo
  */
-public class SimpleRemove<E extends Entity> implements Remove{
+public class SimpleRemoveBehavior<E extends Entity> implements Remove{
 
     @Override
     public void remove(EntityManager entityManager, Entity entity) 

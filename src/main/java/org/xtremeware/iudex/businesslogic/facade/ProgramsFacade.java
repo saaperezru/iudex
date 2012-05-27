@@ -41,7 +41,6 @@ public class ProgramsFacade extends AbstractFacade {
      */
     public ProgramVo addProgram(String programName, int code)
             throws MultipleMessagesException, Exception {
-        ProgramVo createdProgramVoVo = null;
         ProgramVo programVo = new ProgramVo();
         programVo.setName(programName);
         programVo.setCode(code);
@@ -52,7 +51,7 @@ public class ProgramsFacade extends AbstractFacade {
             entityManager = getEntityManagerFactory().createEntityManager();
             transaction = entityManager.getTransaction();
             transaction.begin();
-            createdProgramVoVo = getServiceFactory().getProgramsService().create(entityManager, programVo);
+            programVo = getServiceFactory().getProgramsService().create(entityManager, programVo);
             transaction.commit();
         } catch (MultipleMessagesException exception) {
             throw exception;
@@ -64,7 +63,7 @@ public class ProgramsFacade extends AbstractFacade {
         } finally {
             FacadesHelper.closeEntityManager(entityManager);
         }
-        return createdProgramVoVo;
+        return programVo;
     }
 
     public List<ProgramVo> getProgramsAutocomplete(String programName) throws Exception {

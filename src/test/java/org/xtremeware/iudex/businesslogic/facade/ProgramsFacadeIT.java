@@ -46,7 +46,7 @@ public class ProgramsFacadeIT {
     public void testBL_26_1() throws MultipleMessagesException, Exception {
         String name = FacadesTestHelper.randomString(50);
         ProgramsFacade programsFacade = Config.getInstance().getFacadeFactory().getProgramsFacade();
-        ProgramVo programVo = programsFacade.addProgram(name,FacadesTestHelper.randomInt(4));
+        ProgramVo programVo = programsFacade.addProgram(name, FacadesTestHelper.randomInt(4));
         assertNotNull(programVo);
         assertEquals(name, programVo.getName());
         assertNotNull(programVo.getId());
@@ -55,10 +55,11 @@ public class ProgramsFacadeIT {
     @Test()
     public void testBL_26_2() throws Exception {
         ProgramsFacade programsFacade = Config.getInstance().getFacadeFactory().getProgramsFacade();
+        ProgramVo programVo = null;
         String[] expectedMessages = new String[]{
             "program.name.null"};
         try {
-            ProgramVo programVo = programsFacade.addProgram(null,0);
+            programVo = programsFacade.addProgram(null, 0);
         } catch (MultipleMessagesException ex) {
             FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
         }
@@ -66,7 +67,7 @@ public class ProgramsFacadeIT {
         expectedMessages = new String[]{
             "program.name.tooLong"};
         try {
-            ProgramVo programVo = programsFacade.addProgram(name,0);
+            programVo = programsFacade.addProgram(name, 0);
         } catch (MultipleMessagesException ex) {
             FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
         }
@@ -74,7 +75,16 @@ public class ProgramsFacadeIT {
             "program.name.tooShort"};
 
         try {
-            ProgramVo programVo = programsFacade.addProgram("",0);
+            programVo = programsFacade.addProgram("", 0);
+        } catch (MultipleMessagesException ex) {
+            FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
+        }
+        expectedMessages = new String[]{
+            "program.name.tooShort",
+            "program.code.negativeValue"};
+
+        try {
+            programVo = programsFacade.addProgram("", -1);
         } catch (MultipleMessagesException ex) {
             FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
         }
@@ -87,16 +97,16 @@ public class ProgramsFacadeIT {
         ProgramsFacade programsFacade = Config.getInstance().getFacadeFactory().getProgramsFacade();
         names.add(name);
         assertNotNull(programsFacade.addProgram(name, FacadesTestHelper.randomInt(4)));
-        names.add("PRE"+name);
-        assertNotNull(programsFacade.addProgram("PRE"+name,FacadesTestHelper.randomInt(4)));
+        names.add("PRE" + name);
+        assertNotNull(programsFacade.addProgram("PRE" + name, FacadesTestHelper.randomInt(4)));
 
-        names.add(name+"POS");
-        assertNotNull(programsFacade.addProgram(name+"POS",FacadesTestHelper.randomInt(4)));
+        names.add(name + "POS");
+        assertNotNull(programsFacade.addProgram(name + "POS", FacadesTestHelper.randomInt(4)));
 
-        names.add("PRE"+name+"POS");
-        assertNotNull(programsFacade.addProgram("PRE"+name+"POS",FacadesTestHelper.randomInt(4)));
+        names.add("PRE" + name + "POS");
+        assertNotNull(programsFacade.addProgram("PRE" + name + "POS", FacadesTestHelper.randomInt(4)));
 
-        List<ProgramVo> pvs  = programsFacade.getProgramsAutocomplete(name);
+        List<ProgramVo> pvs = programsFacade.getProgramsAutocomplete(name);
         for (ProgramVo pv : pvs) {
             ProgramVo result = entityManager.createQuery(
                     "SELECT p FROM Program p WHERE p.id =:id", ProgramEntity.class).
@@ -108,7 +118,7 @@ public class ProgramsFacadeIT {
         }
         assertEquals(names.size(), pvs.size());
 
-        pvs  = programsFacade.getProgramsAutocomplete(null);
+        pvs = programsFacade.getProgramsAutocomplete(null);
         assertTrue(pvs.isEmpty());
     }
 
@@ -165,7 +175,7 @@ public class ProgramsFacadeIT {
     @Test
     public void BL_28_1() throws Exception {
         ProgramsFacade programsFacade = Config.getInstance().getFacadeFactory().getProgramsFacade();
-        List<ProgramVo> pvs  = programsFacade.listPrograms();
+        List<ProgramVo> pvs = programsFacade.listPrograms();
         for (ProgramVo pv : pvs) {
             ProgramVo result = entityManager.createQuery(
                     "SELECT p FROM Program p WHERE p.id =:id", ProgramEntity.class).

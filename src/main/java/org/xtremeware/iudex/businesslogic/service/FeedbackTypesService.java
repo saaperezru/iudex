@@ -65,7 +65,7 @@ public class FeedbackTypesService extends CrudService<FeedbackTypeVo, FeedbackTy
                 new MultipleMessagesException();
         if (feedbackTypeVo.getId() == null) {
             multipleMessageException.addMessage(
-                    "feedbackType.null");
+                    "feedbackType.id.null");
             throw multipleMessageException;
         }
     }

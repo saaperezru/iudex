@@ -10,11 +10,7 @@ import junit.framework.AssertionFailedError;
 import org.junit.*;
 import static org.junit.Assert.*;
 import org.xtremeware.iudex.helper.Config;
-import org.xtremeware.iudex.presentation.vovw.CourseVoVwFull;
-import org.xtremeware.iudex.presentation.vovw.ProfessorVoVwSmall;
-import org.xtremeware.iudex.presentation.vovw.SubjectVoVwSmall;
-import org.xtremeware.iudex.vo.CourseVo;
-import org.xtremeware.iudex.vo.RatingSummaryVo;
+import org.xtremeware.iudex.vo.*;
 
 /**
  *
@@ -22,8 +18,8 @@ import org.xtremeware.iudex.vo.RatingSummaryVo;
  */
 public class CoursesFacadeIT {
 
-    public static ProfessorVoVwSmall fabio, mario;
-    public static SubjectVoVwSmall is2, isa, afi;
+    public static ProfessorVoSmall fabio, mario;
+    public static SubjectVoSmall is2, isa, afi;
     public static CourseVo marioIs2, marioIsa, marioAfi, fabioIsa;
 
     public CoursesFacadeIT() {
@@ -37,23 +33,23 @@ public class CoursesFacadeIT {
         RatingSummaryVo rating = new RatingSummaryVo();
         rating.setPositive(3);
         rating.setNegative(0);
-        fabio = new ProfessorVoVwSmall(2, "FABIO AUGUSTO GONZALEZ OSORIO", rating);
+        fabio = new ProfessorVoSmall(2, "FABIO AUGUSTO GONZALEZ OSORIO", rating);
         rating = new RatingSummaryVo();
         rating.setPositive(3);
         rating.setNegative(1);
-        mario = new ProfessorVoVwSmall(1, "MARIO LINARES VASQUEZ", rating);
+        mario = new ProfessorVoSmall(1, "MARIO LINARES VASQUEZ", rating);
         rating = new RatingSummaryVo();
         rating.setPositive(4);
         rating.setNegative(0);
-        is2 = new SubjectVoVwSmall(2016702, "INGENIERIA DE SOFTWARE II",2016702, rating);
+        is2 = new SubjectVoSmall(2016702, "INGENIERIA DE SOFTWARE II",2016702, rating);
         rating = new RatingSummaryVo();
         rating.setPositive(2);
         rating.setNegative(2);
-        isa = new SubjectVoVwSmall(2019772, "INGENIERIA DE SOFTWARE AVANZADA",2019772, rating);
+        isa = new SubjectVoSmall(2019772, "INGENIERIA DE SOFTWARE AVANZADA",2019772, rating);
         rating = new RatingSummaryVo();
         rating.setPositive(3);
         rating.setNegative(1);
-        afi = new SubjectVoVwSmall(2016025, "AUDITORIA FINANCIERA I",2016025, rating);
+        afi = new SubjectVoSmall(2016025, "AUDITORIA FINANCIERA I",2016025, rating);
 
         marioIs2 = new CourseVo();
         marioIs2.setId(1L);
@@ -113,14 +109,14 @@ public class CoursesFacadeIT {
         //TODO: As long as we are still not giving a precise order to the results, i'm not testing the order, just the presence, of the results.
         //First lets look by a subject's name
         String query = "SOFTWARE";
-        List<CourseVoVwFull> search = facade.search(query);
+        List<CourseVoFull> search = facade.search(query);
         assertNotNull(search);
         assertNotSame(search.size(), 0);
-        Set<CourseVoVwFull> expected = new HashSet<CourseVoVwFull>();
-        expected.add(new CourseVoVwFull(marioIs2, is2, mario));
-        expected.add(new CourseVoVwFull(marioIsa, isa, mario));
-        expected.add(new CourseVoVwFull(fabioIsa, isa, fabio));
-        for (CourseVoVwFull result : search) {
+        Set<CourseVoFull> expected = new HashSet<CourseVoFull>();
+        expected.add(new CourseVoFull(marioIs2, is2, mario));
+        expected.add(new CourseVoFull(marioIsa, isa, mario));
+        expected.add(new CourseVoFull(fabioIsa, isa, fabio));
+        for (CourseVoFull result : search) {
             if (!expected.contains(result)) {
                 throw new AssertionFailedError("The following course was not expected for query " + query + ": " + result.toString());
             }
@@ -129,7 +125,7 @@ public class CoursesFacadeIT {
         search = facade.search(query);
         assertNotNull(search);
         assertNotSame(search.size(), 0);
-        for (CourseVoVwFull result : search) {
+        for (CourseVoFull result : search) {
             if (!expected.contains(result)) {
                 throw new AssertionFailedError("The following course was not expected for query " + query + ": " + result.toString());
             }
@@ -139,11 +135,11 @@ public class CoursesFacadeIT {
         search = facade.search(query);
         assertNotNull(search);
         assertNotSame(search.size(), 0);
-        expected = new HashSet<CourseVoVwFull>();
-        expected.add(new CourseVoVwFull(marioIs2, is2, mario));
-        expected.add(new CourseVoVwFull(marioIsa, isa, mario));
-        expected.add(new CourseVoVwFull(marioAfi, afi, mario));
-        for (CourseVoVwFull result : search) {
+        expected = new HashSet<CourseVoFull>();
+        expected.add(new CourseVoFull(marioIs2, is2, mario));
+        expected.add(new CourseVoFull(marioIsa, isa, mario));
+        expected.add(new CourseVoFull(marioAfi, afi, mario));
+        for (CourseVoFull result : search) {
             if (!expected.contains(result)) {
                 throw new AssertionFailedError("The following course was not expected for query " + query + ": " + result.toString());
             }
@@ -152,7 +148,7 @@ public class CoursesFacadeIT {
         search = facade.search(query);
         assertNotNull(search);
         assertNotSame(search.size(), 0);
-        for (CourseVoVwFull result : search) {
+        for (CourseVoFull result : search) {
             if (!expected.contains(result)) {
                 throw new AssertionFailedError("The following course was not expected for query " + query + ": " + result.toString());
             }
@@ -167,7 +163,7 @@ public class CoursesFacadeIT {
         CoursesFacade facade = Config.getInstance().getFacadeFactory().getCoursesFacade();
 
         String query = "' OR 1=1--'";
-        List<CourseVoVwFull> search = facade.search(query);
+        List<CourseVoFull> search = facade.search(query);
         assertNotNull(search);
         assertEquals(search.size(), 0);
         query = "# DROP DATABASE TEST";
@@ -187,7 +183,7 @@ public class CoursesFacadeIT {
     public void test_BL_1_3() {
         CoursesFacade facade = Config.getInstance().getFacadeFactory().getCoursesFacade();
         String query = "";
-        List<CourseVoVwFull> search = facade.search(query);
+        List<CourseVoFull> search = facade.search(query);
         assertNotNull(search);
         assertEquals(search.size(), 0);
     }
@@ -198,10 +194,10 @@ public class CoursesFacadeIT {
     @Test
     public void test_BL_6_1() {
         CoursesFacade facade = Config.getInstance().getFacadeFactory().getCoursesFacade();
-        CourseVoVwFull expectedCourse = new CourseVoVwFull(marioIs2, is2, mario);
+        CourseVoFull expectedCourse = new CourseVoFull(marioIs2, is2, mario);
         long courseId = 1L;
         try {
-            CourseVoVwFull course = facade.getCourse(courseId);
+            CourseVoFull course = facade.getCourse(courseId);
             assertEquals(expectedCourse, course);
         } catch (Exception ex) {
             throw new AssertionFailedError(ex.getMessage());
@@ -217,15 +213,14 @@ public class CoursesFacadeIT {
         CoursesFacade facade = Config.getInstance().getFacadeFactory().getCoursesFacade();
         long courseId = Long.MAX_VALUE;
         try {
-            CourseVoVwFull course = facade.getCourse(courseId);
+            CourseVoFull course = facade.getCourse(courseId);
             assertNull(course);
         } catch (Exception ex) {
-            ex.printStackTrace();
             throw new AssertionFailedError(ex.getMessage());
         }
         courseId = Long.MIN_VALUE;
         try {
-            CourseVoVwFull course = facade.getCourse(courseId);
+            CourseVoFull course = facade.getCourse(courseId);
             assertNull(course);
         } catch (Exception ex) {
             throw new AssertionFailedError(ex.getMessage());
@@ -241,7 +236,7 @@ public class CoursesFacadeIT {
         CoursesFacade facade = Config.getInstance().getFacadeFactory().getCoursesFacade();
         long courseId = 5L;
         try {
-            CourseVoVwFull course = facade.getCourse(courseId);
+            CourseVoFull course = facade.getCourse(courseId);
             assertEquals(course.getRatingAverage(), 0.0, 0);
             assertEquals(course.getRatingCount(), 0, 0);
         } catch (Exception ex) {

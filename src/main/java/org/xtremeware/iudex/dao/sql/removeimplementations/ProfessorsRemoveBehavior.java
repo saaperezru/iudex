@@ -17,10 +17,10 @@ import org.xtremeware.iudex.helper.DataBaseException;
 public class ProfessorsRemoveBehavior implements Remove {
 
     private AbstractDaoBuilder daoBuilder;
-    private SimpleRemove<ProfessorEntity> simpleRemove;
+    private SimpleRemoveBehavior<ProfessorEntity> simpleRemove;
 
     public ProfessorsRemoveBehavior(AbstractDaoBuilder daoBuilder,
-            SimpleRemove simpleRemove) {
+            SimpleRemoveBehavior simpleRemove) {
         this.daoBuilder = daoBuilder;
         this.simpleRemove = simpleRemove;
     }
@@ -37,7 +37,7 @@ public class ProfessorsRemoveBehavior implements Remove {
         getSimpleRemove().remove(entityManager, entity);
     }
 
-    private SimpleRemove<ProfessorEntity> getSimpleRemove() {
+    private SimpleRemoveBehavior<ProfessorEntity> getSimpleRemove() {
         return simpleRemove;
     }
     

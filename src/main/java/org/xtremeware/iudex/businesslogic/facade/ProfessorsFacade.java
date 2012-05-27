@@ -16,7 +16,7 @@ public class ProfessorsFacade extends AbstractFacade {
 
     public Map<Long, String> getProfessorsAutocomplete(String programName) throws Exception {
         EntityManager entityManager = null;
-        Map<Long, String> professorsIdAndNames = null;
+        Map<Long, String> professorsIdAndNames = new HashMap<Long, String>();;
         if (isNotNull(programName)) {
             try {
                 entityManager = getEntityManagerFactory().createEntityManager();
@@ -32,8 +32,6 @@ public class ProfessorsFacade extends AbstractFacade {
             } finally {
                 FacadesHelper.closeEntityManager(entityManager);
             }
-        } else {
-            professorsIdAndNames = new HashMap<Long, String>();
         }
         return professorsIdAndNames;
     }

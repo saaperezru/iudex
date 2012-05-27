@@ -76,6 +76,7 @@ public class SubjectsService extends CrudService<SubjectVo, SubjectEntity> {
 
     @Override
     public void validateVoForUpdate(EntityManager entityManager, SubjectVo valueObject) throws MultipleMessagesException, ExternalServiceConnectionException, DataBaseException {
+        
         validateVoForCreation(entityManager, valueObject);
         MultipleMessagesException multipleMessageException = new MultipleMessagesException();
         if (valueObject.getId() == null) {

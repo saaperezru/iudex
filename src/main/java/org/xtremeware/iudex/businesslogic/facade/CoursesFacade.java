@@ -32,48 +32,49 @@ public class CoursesFacade extends AbstractFacade {
      * @return A list of CourseVoVwFull with the information of the found
      * courses.
      */
-    public List<CourseVoVwFull> search(String query) {
+    public List<CourseVoFull> search(String query) {
         EntityManager entityManager = null;
-        List<CourseVoVwFull> list = new ArrayList<CourseVoVwFull>();
+        List<CourseVoFull> list = new ArrayList<CourseVoFull>();
         if (query == null) {
             return null;
         }
         if (!query.isEmpty()) {
 
             Set<Long> coursesIds = new HashSet<Long>();
-            HashMap<Long, ProfessorVoVwSmall> professorsVoVws = new HashMap<Long, ProfessorVoVwSmall>();
-            HashMap<Long, SubjectVoVwSmall> subjectsVoVws = new HashMap<Long, SubjectVoVwSmall>();
+            HashMap<Long, ProfessorVoSmall> professorsVos = new HashMap<Long, ProfessorVoSmall>();
+            HashMap<Long, SubjectVoSmall> subjectsVos = new HashMap<Long, SubjectVoSmall>();
             try {
                 entityManager = getEntityManagerFactory().createEntityManager();
+
                 List<ProfessorVo> professors = getServiceFactory().getProfessorsService().getByNameLike(entityManager, query);
                 for (ProfessorVo professorVo : professors) {
-                    if (!professorsVoVws.containsKey(professorVo.getId())) {
+                    if (!professorsVos.containsKey(professorVo.getId())) {
                         RatingSummaryVo rating = getServiceFactory().getProfessorRatingsService().getSummary(entityManager, professorVo.getId());
-                        professorsVoVws.put(professorVo.getId(), VoVwFactory.getProfessorVoVwSmall(professorVo, rating));
-                    }
+                        professorsVos.put(professorVo.getId(), new ProfessorVoSmall(professorVo, rating));
 
-                    List<SubjectVo> professorsSubjects = getServiceFactory().getSubjectsService().getByProfessorId(entityManager, professorVo.getId());
-                    for (SubjectVo subjectVo : professorsSubjects) {
-                        if (!subjectsVoVws.containsKey(subjectVo.getId())) {
-                            RatingSummaryVo rating = getServiceFactory().getSubjectRatingsService().getSummary(entityManager, subjectVo.getId());
-                            subjectsVoVws.put(subjectVo.getId(), VoVwFactory.getSubjectVoVwSmall(subjectVo, rating));
+                        List<SubjectVo> professorsSubjects = getServiceFactory().getSubjectsService().getByProfessorId(entityManager, professorVo.getId());
+                        for (SubjectVo subjectVo : professorsSubjects) {
+                            if (!subjectsVos.containsKey(subjectVo.getId())) {
+                                rating = getServiceFactory().getSubjectRatingsService().getSummary(entityManager, subjectVo.getId());
+                                subjectsVos.put(subjectVo.getId(), new SubjectVoSmall(subjectVo, rating));
+                            }
                         }
                     }
                 }
                 List<SubjectVo> subjects = getServiceFactory().getSubjectsService().getByNameLike(entityManager, query);
                 for (SubjectVo subjectVo : subjects) {
-                    if (!subjectsVoVws.containsKey(subjectVo.getId())) {
+                    if (!subjectsVos.containsKey(subjectVo.getId())) {
                         RatingSummaryVo rating = getServiceFactory().getSubjectRatingsService().getSummary(entityManager, subjectVo.getId());
-                        subjectsVoVws.put(subjectVo.getId(), VoVwFactory.getSubjectVoVwSmall(subjectVo, rating));
-                    }
+                        subjectsVos.put(subjectVo.getId(), new SubjectVoSmall(subjectVo, rating));
+                        
+                        List<ProfessorVo> subjectsProfessors = getServiceFactory().getProfessorsService().getBySubjectId(entityManager, subjectVo.getId());
+                        for (ProfessorVo professorVo : subjectsProfessors) {
+                            if (!professorsVos.containsKey(professorVo.getId())) {
+                                rating = getServiceFactory().getProfessorRatingsService().getSummary(entityManager, professorVo.getId());
+                                professorsVos.put(professorVo.getId(), new ProfessorVoSmall(professorVo, rating));
+                            }
 
-                    List<ProfessorVo> subjectsProfessors = getServiceFactory().getProfessorsService().getBySubjectId(entityManager, subjectVo.getId());
-                    for (ProfessorVo professorVo : subjectsProfessors) {
-                        if (!professorsVoVws.containsKey(professorVo.getId())) {
-                            RatingSummaryVo rating = getServiceFactory().getProfessorRatingsService().getSummary(entityManager, professorVo.getId());
-                            professorsVoVws.put(professorVo.getId(), VoVwFactory.getProfessorVoVwSmall(professorVo, rating));
                         }
-
                     }
                 }
 
@@ -82,7 +83,8 @@ public class CoursesFacade extends AbstractFacade {
                     for (CourseVo courseVo : getServiceFactory().createCoursesService().getByProfessorId(entityManager, professorVo.getId())) {
                         //If this course is still not in the set of results, add it.
                         if (!coursesIds.contains(courseVo.getId())) {
-                            list.add(VoVwFactory.getCourseVoVwFull(courseVo, subjectsVoVws.get(courseVo.getSubjectId()), professorsVoVws.get(courseVo.getProfessorId())));
+                            coursesIds.add(courseVo.getId());
+                            list.add(new CourseVoFull(courseVo, subjectsVos.get(courseVo.getSubjectId()), professorsVos.get(courseVo.getProfessorId())));
                         }
                     }
                 }
@@ -90,7 +92,7 @@ public class CoursesFacade extends AbstractFacade {
                     for (CourseVo courseVo : getServiceFactory().createCoursesService().getBySubjectId(entityManager, subjectVo.getId())) {
                         //If this course is still not in the set of results, add it.
                         if (!coursesIds.contains(courseVo.getId())) {
-                            list.add(VoVwFactory.getCourseVoVwFull(courseVo, subjectsVoVws.get(courseVo.getSubjectId()), professorsVoVws.get(courseVo.getProfessorId())));
+                            list.add(new CourseVoFull(courseVo, subjectsVos.get(courseVo.getSubjectId()), professorsVos.get(courseVo.getProfessorId())));
                         }
                     }
 
@@ -106,21 +108,22 @@ public class CoursesFacade extends AbstractFacade {
         return list;
     }
 
-    public CourseVo addCourse(long professorId, long subjectId, long periodId) throws MultipleMessagesException, Exception {
-        CourseVo createdVo = null;
+    public CourseVo addCourse(long professorId, long subjectId, long periodId) 
+            throws MultipleMessagesException, Exception {
+        CourseVo courseVo = null;
         EntityManager em = null;
         EntityTransaction tx = null;
         try {
-            CourseVo vo = new CourseVo();
-            vo.setPeriodId(periodId);
-            vo.setProfessorId(professorId);
-            vo.setSubjectId(subjectId);
-            vo.setRatingCount(0L);
-            vo.setRatingAverage(0.0);
+            courseVo = new CourseVo();
+            courseVo.setPeriodId(periodId);
+            courseVo.setProfessorId(professorId);
+            courseVo.setSubjectId(subjectId);
+            courseVo.setRatingCount(0L);
+            courseVo.setRatingAverage(0.0);
             em = getEntityManagerFactory().createEntityManager();
             tx = em.getTransaction();
             tx.begin();
-            createdVo = getServiceFactory().createCoursesService().create(em, vo);
+            courseVo = getServiceFactory().createCoursesService().create(em, courseVo);
             tx.commit();
         } catch (MultipleMessagesException e) {
             throw e;
@@ -132,7 +135,7 @@ public class CoursesFacade extends AbstractFacade {
         } finally {
             FacadesHelper.closeEntityManager(em);
         }
-        return createdVo;
+        return courseVo;
     }
 
     public void removeCourse(long courseId) throws Exception {
@@ -152,30 +155,30 @@ public class CoursesFacade extends AbstractFacade {
         }
     }
 
-    public CourseVoVwFull getCourse(long courseId) {
-        EntityManager em = null;
-        CourseVoVwFull voVw = null;
+    public CourseVoFull getCourse(long courseId) {
+        EntityManager entityManager = null;
+        CourseVoFull courseVoFull = null;
         try {
-            em = getEntityManagerFactory().createEntityManager();
-            CourseVo vo = getServiceFactory().createCoursesService().getById(em, courseId);
+            entityManager = getEntityManagerFactory().createEntityManager();
+            CourseVo vo = getServiceFactory().createCoursesService().getById(entityManager, courseId);
             if (vo == null) {
                 return null;
             }
-            SubjectVo subjectVo = getServiceFactory().getSubjectsService().getById(em, vo.getSubjectId());
-            ProfessorVo professorVo = getServiceFactory().getProfessorsService().getById(em, vo.getProfessorId());
+            SubjectVo subjectVo = getServiceFactory().getSubjectsService().getById(entityManager, vo.getSubjectId());
+            ProfessorVo professorVo = getServiceFactory().getProfessorsService().getById(entityManager, vo.getProfessorId());
             //TODO: The received summaries could be NULL. It is still pending to manage this case sucessfully
-            SubjectVoVwSmall subjectVoVwSmall = VoVwFactory.getSubjectVoVwSmall(subjectVo, getServiceFactory().getSubjectRatingsService().getSummary(em, subjectVo.getId()));
-            ProfessorVoVwSmall professorVoVwSmall = VoVwFactory.getProfessorVoVwSmall(professorVo, getServiceFactory().getProfessorRatingsService().getSummary(em, professorVo.getId()));
+            SubjectVoSmall subjectVoSmall = new SubjectVoSmall(subjectVo, getServiceFactory().getSubjectRatingsService().getSummary(entityManager, subjectVo.getId()));
+            ProfessorVoSmall professorVoSmall = new ProfessorVoSmall(professorVo, getServiceFactory().getProfessorRatingsService().getSummary(entityManager, professorVo.getId()));
 
-            voVw = VoVwFactory.getCourseVoVwFull(vo, subjectVoVwSmall, professorVoVwSmall);
+            courseVoFull = new CourseVoFull(vo, subjectVoSmall, professorVoSmall);
 
         } catch (Exception e) {
             getServiceFactory().getLogService().error(e.getMessage(), e);
             throw new RuntimeException(e);
         } finally {
-            FacadesHelper.closeEntityManager(em);
+            FacadesHelper.closeEntityManager(entityManager);
         }
-        return voVw;
+        return courseVoFull;
     }
 
     public CourseRatingVo rateCourse(long courseId, long userId, float value) throws MultipleMessagesException, Exception {
@@ -268,16 +271,16 @@ public class CoursesFacade extends AbstractFacade {
         HashMap<Long, ProfessorVoSmall> professorsidAndSmallRepresentation = new HashMap<Long, ProfessorVoSmall>();
         try {
             entityManager = getEntityManagerFactory().createEntityManager();
-            
+
             List<CourseVo> courseVos = getServiceFactory().createCoursesService().getBySubjectId(entityManager, subjectId);
-            
+
             SubjectVo subjectVo = getServiceFactory().getSubjectsService().getById(entityManager, subjectId);
             RatingSummaryVo SubjectSummary = getServiceFactory().getSubjectRatingsService().getSummary(entityManager, subjectId);
             SubjectVoSmall subject = new SubjectVoSmall(subjectVo, SubjectSummary);
-            
+
             for (CourseVo courseVo : courseVos) {
                 if (!professorsidAndSmallRepresentation.containsKey(courseVo.getProfessorId())) {
-                    
+
                     ProfessorVo professorVo = getServiceFactory().
                             getProfessorsService().getById(entityManager, courseVo.getProfessorId());
                     RatingSummaryVo professorSumary = getServiceFactory().getProfessorRatingsService().getSummary(entityManager, courseVo.getProfessorId());

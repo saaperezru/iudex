@@ -42,7 +42,7 @@ public class MySqlDaoBuilder implements AbstractDaoBuilder {
         if (commentDao == null) {
             commentDao = new SQLCommentDao(
                     new CommentsRemoveBehavior(
-                    this, new SimpleRemove<CommentEntity>()));
+                    this, new SimpleRemoveBehavior<CommentEntity>()));
         }
         return commentDao;
     }
@@ -59,7 +59,7 @@ public class MySqlDaoBuilder implements AbstractDaoBuilder {
     public ConfirmationKeyDao getConfirmationKeyDao() {
         if (confirmationKeyDao == null) {
             confirmationKeyDao = new SQLConfirmationKeyDao(
-                    new SimpleRemove<ConfirmationKeyEntity>());
+                    new SimpleRemoveBehavior<ConfirmationKeyEntity>());
         }
         return confirmationKeyDao;
     }
@@ -69,7 +69,7 @@ public class MySqlDaoBuilder implements AbstractDaoBuilder {
         if (courseDao == null) {
             courseDao = new SQLCourseDao(
                     new CoursesRemoveBehavior(
-                    this, new SimpleRemove<CourseEntity>()));
+                    this, new SimpleRemoveBehavior<CourseEntity>()));
         }
         return courseDao;
     }
@@ -78,7 +78,7 @@ public class MySqlDaoBuilder implements AbstractDaoBuilder {
     public CourseRatingDao getCourseRatingDao() {
         if (courseRatingDao == null) {
             courseRatingDao = new SQLCourseRatingDao(
-                    new SimpleRemove<CourseRatingEntity>());
+                    new SimpleRemoveBehavior<CourseRatingEntity>());
         }
         return courseRatingDao;
     }
@@ -87,7 +87,7 @@ public class MySqlDaoBuilder implements AbstractDaoBuilder {
     public FeedbackDao getFeedbackDao() {
         if (feedbackDao == null) {
             feedbackDao = new SQLFeedbackDao(
-                    new SimpleRemove<FeedbackEntity>());
+                    new SimpleRemoveBehavior<FeedbackEntity>());
         }
         return feedbackDao;
     }
@@ -96,7 +96,7 @@ public class MySqlDaoBuilder implements AbstractDaoBuilder {
     public FeedbackTypeDao getFeedbackTypeDao() {
         if (feedbackTypeDao == null) {
             feedbackTypeDao = new SQLFeedbackTypeDao(
-                    new SimpleRemove<FeedbackTypeEntity>());
+                    new SimpleRemoveBehavior<FeedbackTypeEntity>());
         }
         return feedbackTypeDao;
     }
@@ -106,7 +106,7 @@ public class MySqlDaoBuilder implements AbstractDaoBuilder {
         if (periodDao == null) {
             periodDao = new SQLPeriodDao(
                     new PeriodRemoveBehavior(
-                    this, new SimpleRemove<PeriodEntity>()));
+                    this, new SimpleRemoveBehavior<PeriodEntity>()));
         }
         return periodDao;
     }
@@ -116,7 +116,7 @@ public class MySqlDaoBuilder implements AbstractDaoBuilder {
         if (professorDao == null) {
             professorDao = new SQLProfessorDao(
                     new ProfessorsRemoveBehavior(
-                    this, new SimpleRemove<ProfessorEntity>()));
+                    this, new SimpleRemoveBehavior<ProfessorEntity>()));
         }
         return professorDao;
     }
@@ -133,7 +133,7 @@ public class MySqlDaoBuilder implements AbstractDaoBuilder {
     public ProgramDao getProgramDao() {
         if (programDao == null) {
             programDao = new SQLProgramDao(
-                    new SimpleRemove<ProgramEntity>());
+                    new SimpleRemoveBehavior<ProgramEntity>());
         }
         return programDao;
     }
@@ -143,7 +143,7 @@ public class MySqlDaoBuilder implements AbstractDaoBuilder {
         if (subjectDao == null) {
             subjectDao = new SQLSubjectDao(
                     new SubjectsRemoveBehavior(
-                    this, new SimpleRemove<SubjectEntity>()));
+                    this, new SimpleRemoveBehavior<SubjectEntity>()));
         }
         return subjectDao;
     }
@@ -161,7 +161,7 @@ public class MySqlDaoBuilder implements AbstractDaoBuilder {
         if (userDao == null) {
             userDao = new SQLUserDao(
                     new UsersRemoveBehavior(
-                    this, new SimpleRemove<UserEntity>()));
+                    this, new SimpleRemoveBehavior<UserEntity>()));
         }
         return userDao;
     }

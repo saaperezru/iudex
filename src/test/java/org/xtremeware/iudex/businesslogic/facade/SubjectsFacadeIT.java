@@ -6,7 +6,6 @@ import javax.persistence.PersistenceException;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.xtremeware.iudex.businesslogic.DuplicityException;
 import org.xtremeware.iudex.helper.Config;
@@ -163,7 +162,7 @@ public class SubjectsFacadeIT {
         String subjectName = "MATEMATICAS BASICAS";
         String subjectDescription = "Materia para nivelacion en la facultad de ingenieria.";
 
-        subjectVo.setId(null);
+        
         subjectVo.setName(subjectName);
         subjectVo.setCode(subjectCode);
         subjectVo.setDescription(subjectDescription);
@@ -428,7 +427,7 @@ public class SubjectsFacadeIT {
             subjectsFacade.updateSubject(subjectVo);
         } catch (MultipleMessagesException e) {
             assertEquals(e.getMessages().size(), 1);
-            assertEquals(e.getMessages().get(0), "subject.id.null");
+            assertEquals(e.getMessages().get(0), "subject.name.null");
         }
     }
 

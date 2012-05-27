@@ -427,7 +427,7 @@ public class SubjectsFacadeIT {
             subjectsFacade.updateSubject(subjectVo);
         } catch (MultipleMessagesException e) {
             assertEquals(e.getMessages().size(), 1);
-            assertEquals(e.getMessages().get(0), "subject.name.null");
+            assertEquals(e.getMessages().get(0), "subject.id.null");
         }
     }
 

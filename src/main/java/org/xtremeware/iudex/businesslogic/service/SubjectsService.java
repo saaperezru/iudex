@@ -46,11 +46,6 @@ public class SubjectsService extends CrudService<SubjectVo, SubjectEntity> {
             multipleMessageException.addMessage("subject.null");
             throw multipleMessageException;
         }
-        if (subjectVo.getId() == null) {
-            multipleMessageException.addMessage("subject.id.null");
-        } else {
-            subjectVo.setId(Math.abs(subjectVo.getId()));
-        }
 
         if (subjectVo.getDescription() == null) {
             subjectVo.setDescription("");
@@ -61,6 +56,10 @@ public class SubjectsService extends CrudService<SubjectVo, SubjectEntity> {
             multipleMessageException.addMessage("subject.description.tooLong");
         }
 
+        if (subjectVo.getCode() < 0){
+            multipleMessageException.addMessage("subject.code.negativeValue");
+        }
+        
         if (subjectVo.getName() == null || subjectVo.getName().equals("")) {
             multipleMessageException.addMessage("subject.name.null");
         } else {

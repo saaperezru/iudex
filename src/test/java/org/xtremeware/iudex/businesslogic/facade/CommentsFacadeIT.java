@@ -11,7 +11,6 @@ import org.xtremeware.iudex.entity.CommentEntity;
 import org.xtremeware.iudex.helper.Config;
 import org.xtremeware.iudex.helper.DataBaseException;
 import org.xtremeware.iudex.helper.MultipleMessagesException;
-import org.xtremeware.iudex.presentation.vovw.CommentVoVwFull;
 import org.xtremeware.iudex.vo.BinaryRatingVo;
 import org.xtremeware.iudex.vo.CommentVo;
 import org.xtremeware.iudex.vo.CommentVoFull;
@@ -351,7 +350,8 @@ public class CommentsFacadeIT {
         CommentsFacade commentsFacade = Config.getInstance().getFacadeFactory().
                 getCommentsFacade();
         Long id = 0L;
-        List<CommentVoFull> commentsByCourseId = commentsFacade.getCommentsByCourseId(id);
+        List<CommentVoFull> commentsByCourseId = commentsFacade.
+                getCommentsByCourseId(id);
         assertEquals(0, commentsByCourseId.size());
 
         id = Long.MAX_VALUE;

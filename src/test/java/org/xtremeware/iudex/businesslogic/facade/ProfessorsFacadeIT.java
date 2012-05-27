@@ -10,7 +10,6 @@ import org.xtremeware.iudex.helper.Config;
 import org.xtremeware.iudex.helper.MultipleMessagesException;
 import org.xtremeware.iudex.vo.ProfessorVo;
 import org.xtremeware.iudex.businesslogic.helper.FacadesTestHelper;
-import org.xtremeware.iudex.presentation.vovw.ProfessorVoVwFull;
 import org.xtremeware.iudex.vo.BinaryRatingVo;
 import org.xtremeware.iudex.vo.ProfessorVoFull;
 import org.xtremeware.iudex.vo.RatingSummaryVo;

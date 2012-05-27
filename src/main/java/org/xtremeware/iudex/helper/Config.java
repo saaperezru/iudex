@@ -5,7 +5,7 @@ import java.util.logging.Logger;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import org.xtremeware.iudex.businesslogic.facade.FacadeFactory;
-import org.xtremeware.iudex.businesslogic.service.ServiceFactory;
+import org.xtremeware.iudex.businesslogic.service.ServiceBuilder;
 import org.xtremeware.iudex.dao.AbstractDaoBuilder;
 import org.xtremeware.iudex.dao.sql.MySqlDaoBuilder;
 import org.xtremeware.iudex.vo.MailingConfigVo;
@@ -29,7 +29,7 @@ public class Config {
     private EntityManagerFactory persistenceUnit;
     private AbstractDaoBuilder daoFactory;
     private static Config instance;
-    private ServiceFactory serviceFactory;
+    private ServiceBuilder serviceFactory;
     private FacadeFactory facadeFactory;
 
     private Config(String persistenceUnit, AbstractDaoBuilder daoFactory) throws
@@ -53,7 +53,7 @@ public class Config {
                 getVariable(ConfigurationVariablesHelper.MAILING_SMTP_PORT)));
         mailingConf.setSmtpUser(ConfigurationVariablesHelper.getVariable(
                 ConfigurationVariablesHelper.MAILING_SMTP_USER));
-        this.serviceFactory = new ServiceFactory(daoFactory, mailingConf);
+        this.serviceFactory = new ServiceBuilder(daoFactory, mailingConf);
         facadeFactory = new FacadeFactory(serviceFactory, this.persistenceUnit);
     }
 
@@ -78,7 +78,7 @@ public class Config {
         return persistenceUnit;
     }
 
-    public ServiceFactory getServiceFactory() {
+    public ServiceBuilder getServiceFactory() {
         return serviceFactory;
     }
 

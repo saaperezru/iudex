@@ -4,13 +4,14 @@ import java.util.*;
 import javax.persistence.*;
 import org.xtremeware.iudex.businesslogic.DuplicityException;
 import org.xtremeware.iudex.businesslogic.helper.FacadesHelper;
-import org.xtremeware.iudex.businesslogic.service.ServiceFactory;
+import org.xtremeware.iudex.businesslogic.service.ServiceBuilder;
+import org.xtremeware.iudex.businesslogic.service.SubjectRatingsService;
 import org.xtremeware.iudex.helper.*;
 import org.xtremeware.iudex.vo.*;
 
 public class SubjectsFacade extends AbstractFacade {
 
-    public SubjectsFacade(ServiceFactory serviceFactory, EntityManagerFactory emFactory) {
+    public SubjectsFacade(ServiceBuilder serviceFactory, EntityManagerFactory emFactory) {
         super(serviceFactory, emFactory);
     }
 
@@ -22,14 +23,14 @@ public class SubjectsFacade extends AbstractFacade {
             if (isNotNull(subjectName)) {
                 entityManager = getEntityManagerFactory().createEntityManager();
                 List<SubjectVo> subjectVos = getServiceFactory().
-                        createSubjectsService().
+                        getSubjectsService().
                         getByNameLike(entityManager, subjectName);
                 for (SubjectVo subjectVo : subjectVos) {
                     subjectsIdAndName.put(subjectVo.getId(), subjectVo.getName());
                 }
             }
         } catch (Exception exception) {
-            getServiceFactory().createLogService().error(exception.getMessage(), exception);
+            getServiceFactory().getLogService().error(exception.getMessage(), exception);
             FacadesHelper.checkException(exception, ExternalServiceConnectionException.class);
             throw new RuntimeException(exception);
         } finally {
@@ -44,11 +45,11 @@ public class SubjectsFacade extends AbstractFacade {
         try {
             entityManager = getEntityManagerFactory().createEntityManager();
             subjectRatingVo = getServiceFactory().
-                    createSubjectRatingsService().
+                    getSubjectRatingsService().
                     getByEvaluatedObjectAndUserId(entityManager, subjectId, userId);
 
         } catch (Exception exception) {
-            getServiceFactory().createLogService().error(exception.getMessage(), exception);
+            getServiceFactory().getLogService().error(exception.getMessage(), exception);
             throw new RuntimeException(exception);
         } finally {
             FacadesHelper.closeEntityManager(entityManager);
@@ -64,15 +65,15 @@ public class SubjectsFacade extends AbstractFacade {
             entityManager = getEntityManagerFactory().createEntityManager();
 
             SubjectVo subjectVo = getServiceFactory().
-                    createSubjectsService().getById(entityManager, subjectId);
+                    getSubjectsService().getById(entityManager, subjectId);
 
             if (isNotNull(subjectVo)) {
                 ratingSummaryVo = getServiceFactory().
-                        createSubjectRatingsService().getSummary(entityManager, subjectId);
+                        getSubjectRatingsService().getSummary(entityManager, subjectId);
             }
 
         } catch (Exception exception) {
-            getServiceFactory().createLogService().error(exception.getMessage(), exception);
+            getServiceFactory().getLogService().error(exception.getMessage(), exception);
             throw new RuntimeException(exception);
         } finally {
             FacadesHelper.closeEntityManager(entityManager);
@@ -95,12 +96,15 @@ public class SubjectsFacade extends AbstractFacade {
             transaction = entityManager.getTransaction();
             transaction.begin();
             
+            SubjectRatingsService subjectRatingsService1 = getServiceFactory().
+                                                                   getSubjectRatingsService();
+            
             ratingVo = getServiceFactory().
-                    createSubjectRatingsService().create(entityManager, binaryRatingVo);
+                    getSubjectRatingsService().create(entityManager, binaryRatingVo);
             
             transaction.commit();
         } catch (Exception e) {
-            getServiceFactory().createLogService().error(e.getMessage(), e);
+            getServiceFactory().getLogService().error(e.getMessage(), e);
             FacadesHelper.checkException(e, MultipleMessagesException.class);
             FacadesHelper.checkExceptionAndRollback(entityManager, transaction, e, DuplicityException.class);
             FacadesHelper.rollbackTransaction(entityManager, transaction, e);
@@ -117,12 +121,12 @@ public class SubjectsFacade extends AbstractFacade {
             entityManager = getEntityManagerFactory().createEntityManager();
             transaction = entityManager.getTransaction();
             transaction.begin();
-            subjectVo = getServiceFactory().createSubjectsService().create(entityManager, subjectVo);
+            subjectVo = getServiceFactory().getSubjectsService().create(entityManager, subjectVo);
             transaction.commit();
         } catch (MultipleMessagesException e) {
             throw e;
         } catch (Exception exception) {
-            getServiceFactory().createLogService().error(exception.getMessage(), exception);
+            getServiceFactory().getLogService().error(exception.getMessage(), exception);
             FacadesHelper.checkException(exception, MultipleMessagesException.class);
             FacadesHelper.checkExceptionAndRollback(
                     entityManager, transaction, exception, DuplicityException.class);
@@ -140,10 +144,10 @@ public class SubjectsFacade extends AbstractFacade {
             entityManager = getEntityManagerFactory().createEntityManager();
             transaction = entityManager.getTransaction();
             transaction.begin();
-            getServiceFactory().createSubjectsService().remove(entityManager, sbjectId);
+            getServiceFactory().getSubjectsService().remove(entityManager, sbjectId);
             transaction.commit();
         } catch (Exception exception) {
-            getServiceFactory().createLogService().error(exception.getMessage(), exception);
+            getServiceFactory().getLogService().error(exception.getMessage(), exception);
             FacadesHelper.checkExceptionAndRollback(entityManager, transaction, exception, DataBaseException.class);
             FacadesHelper.rollbackTransaction(entityManager, transaction, exception);
         } finally {
@@ -160,11 +164,11 @@ public class SubjectsFacade extends AbstractFacade {
             entityManager = getEntityManagerFactory().createEntityManager();
             transaction = entityManager.getTransaction();
             transaction.begin();
-            subjectVo = getServiceFactory().createSubjectsService().update(entityManager, subjectVo);
+            subjectVo = getServiceFactory().getSubjectsService().update(entityManager, subjectVo);
             transaction.commit();
 
         } catch (Exception exception) {
-            getServiceFactory().createLogService().error(exception.getMessage(), exception);
+            getServiceFactory().getLogService().error(exception.getMessage(), exception);
             FacadesHelper.checkException(exception, MultipleMessagesException.class);
             FacadesHelper.checkExceptionAndRollback(
                     entityManager, transaction, exception, DuplicityException.class);
@@ -181,10 +185,10 @@ public class SubjectsFacade extends AbstractFacade {
         SubjectVoFull subjectVoFull = null;
         try {
             entityManager = getEntityManagerFactory().createEntityManager();
-            subjectVoFull = new SubjectVoFull(getServiceFactory().createSubjectsService().getById(entityManager, subjectId), getServiceFactory().createSubjectRatingsService().getSummary(entityManager, subjectId));
+            subjectVoFull = new SubjectVoFull(getServiceFactory().getSubjectsService().getById(entityManager, subjectId), getServiceFactory().getSubjectRatingsService().getSummary(entityManager, subjectId));
 
         } catch (Exception exception) {
-            getServiceFactory().createLogService().error(exception.getMessage(), exception);
+            getServiceFactory().getLogService().error(exception.getMessage(), exception);
             throw new RuntimeException(exception);
         } finally {
             FacadesHelper.closeEntityManager(entityManager);

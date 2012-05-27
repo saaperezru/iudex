@@ -10,7 +10,7 @@ import org.xtremeware.iudex.vo.*;
 
 public class CommentsFacade extends AbstractFacade {
 
-    public CommentsFacade(ServiceFactory serviceFactory,
+    public CommentsFacade(ServiceBuilder serviceFactory,
             EntityManagerFactory emFactory) {
         super(serviceFactory, emFactory);
     }
@@ -28,7 +28,7 @@ public class CommentsFacade extends AbstractFacade {
                     vo);
             tx.commit();
         } catch (Exception e) {
-            getServiceFactory().createLogService().error(e.getMessage(), e);
+            getServiceFactory().getLogService().error(e.getMessage(), e);
             FacadesHelper.checkException(e, MultipleMessagesException.class);
             FacadesHelper.checkException(e, MaxCommentsLimitReachedException.class);
             FacadesHelper.checkExceptionAndRollback(em, tx, e, DuplicityException.class);
@@ -50,7 +50,7 @@ public class CommentsFacade extends AbstractFacade {
             getServiceFactory().createCommentsService().remove(em, commentId);
             tx.commit();
         } catch (Exception e) {
-            getServiceFactory().createLogService().error(e.getMessage(), e);
+            getServiceFactory().getLogService().error(e.getMessage(), e);
             FacadesHelper.rollbackTransaction(em, tx, e);
         } finally {
             FacadesHelper.closeEntityManager(em);
@@ -73,7 +73,7 @@ public class CommentsFacade extends AbstractFacade {
                 if (!users.containsKey(commentVo.getUserId())) {
                     users.put(commentVo.getUserId(),
                             new UserVoSmall(getServiceFactory().
-                            createUsersService().getById(em,
+                            getUsersService().getById(em,
                             commentVo.getUserId())));
                 }
                 if (commentVo.isAnonymous()) {
@@ -86,7 +86,7 @@ public class CommentsFacade extends AbstractFacade {
             }
 
         } catch (Exception e) {
-            getServiceFactory().createLogService().error(e.getMessage(), e);
+            getServiceFactory().getLogService().error(e.getMessage(), e);
             throw new RuntimeException(e);
         } finally {
             FacadesHelper.closeEntityManager(em);
@@ -99,10 +99,10 @@ public class CommentsFacade extends AbstractFacade {
         RatingSummaryVo summary = null;
         try {
             em = getEntityManagerFactory().createEntityManager();
-            summary = getServiceFactory().createCommentRatingService().
+            summary = getServiceFactory().getCommentRatingService().
                     getSummary(em, commentId);
         } catch (Exception e) {
-            getServiceFactory().createLogService().error(e.getMessage(), e);
+            getServiceFactory().getLogService().error(e.getMessage(), e);
             throw new RuntimeException(e);
         } finally {
             FacadesHelper.closeEntityManager(em);
@@ -115,10 +115,10 @@ public class CommentsFacade extends AbstractFacade {
         BinaryRatingVo rating = null;
         try {
             em = getEntityManagerFactory().createEntityManager();
-            rating = getServiceFactory().createCommentRatingService().
+            rating = getServiceFactory().getCommentRatingService().
                     getByEvaluatedObjectAndUserId(em, commentId, userId);
         } catch (Exception e) {
-            getServiceFactory().createLogService().error(e.getMessage(), e);
+            getServiceFactory().getLogService().error(e.getMessage(), e);
             throw new RuntimeException(e);
         } finally {
             FacadesHelper.closeEntityManager(em);
@@ -140,11 +140,11 @@ public class CommentsFacade extends AbstractFacade {
             entityManager = getEntityManagerFactory().createEntityManager();
             tx = entityManager.getTransaction();
             tx.begin();
-            rating = getServiceFactory().createCommentRatingService().create(entityManager, vo);
+            rating = getServiceFactory().getCommentRatingService().create(entityManager, vo);
             tx.commit();
 
         } catch (Exception e) {
-            getServiceFactory().createLogService().error(e.getMessage(), e);
+            getServiceFactory().getLogService().error(e.getMessage(), e);
             FacadesHelper.checkException(e, MultipleMessagesException.class);
             FacadesHelper.checkExceptionAndRollback(entityManager, tx, e, DuplicityException.class);
             FacadesHelper.rollbackTransaction(entityManager, tx, e);

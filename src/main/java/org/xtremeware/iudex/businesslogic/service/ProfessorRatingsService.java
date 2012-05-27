@@ -1,8 +1,8 @@
 package org.xtremeware.iudex.businesslogic.service;
 
 import javax.persistence.EntityManager;
-import org.xtremeware.iudex.businesslogic.service.readimplementations.SimpleRead;
-import org.xtremeware.iudex.businesslogic.service.removeimplementations.SimpleRemove;
+import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Read;
+import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Remove;
 import org.xtremeware.iudex.dao.AbstractDaoBuilder;
 import org.xtremeware.iudex.entity.ProfessorRatingEntity;
 import org.xtremeware.iudex.helper.DataBaseException;
@@ -10,13 +10,10 @@ import org.xtremeware.iudex.helper.ExternalServiceConnectionException;
 import org.xtremeware.iudex.helper.MultipleMessagesException;
 import org.xtremeware.iudex.vo.BinaryRatingVo;
 
-public class ProfessorRatingsService extends RatingService< ProfessorRatingEntity> {
+public class ProfessorRatingsService extends BinaryRatingService< ProfessorRatingEntity> {
 
-    public ProfessorRatingsService(AbstractDaoBuilder daoFactory) {
-        super(daoFactory,
-                new SimpleRead<ProfessorRatingEntity>(daoFactory.getProfessorRatingDao()),
-                new SimpleRemove<ProfessorRatingEntity>(daoFactory.getProfessorRatingDao()),
-                daoFactory.getProfessorRatingDao());
+    public ProfessorRatingsService(AbstractDaoBuilder daoFactory, Read read, Remove remove) {
+        super(daoFactory,read,remove,daoFactory.getProfessorRatingDao());
     }
 
     @Override

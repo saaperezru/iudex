@@ -20,7 +20,7 @@ public class ExceptionsFacade {
                     ConfigurationVariablesHelper.getVariable(
                     ConfigurationVariablesHelper.EXCEPTIONS_BUNDLE_BASE_NAME);
         } catch (ExternalServiceConnectionException ex) {
-            Config.getInstance().getServiceFactory().createLogService().error(ex.getMessage(), ex);
+            Config.getInstance().getServiceFactory().getLogService().error(ex.getMessage(), ex);
         }
     }
 
@@ -33,7 +33,7 @@ public class ExceptionsFacade {
             return ResourceBundle.getBundle(bundleBaseName, locale).getString(
                     key);
         } catch (Exception ex) {
-            Config.getInstance().getServiceFactory().createLogService().debug(
+            Config.getInstance().getServiceFactory().getLogService().debug(
                     ex.getMessage(), ex);
             return key;
         }

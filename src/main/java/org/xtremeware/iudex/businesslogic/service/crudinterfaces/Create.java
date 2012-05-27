@@ -2,6 +2,7 @@ package org.xtremeware.iudex.businesslogic.service.crudinterfaces;
 
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.businesslogic.DuplicityException;
+import org.xtremeware.iudex.businesslogic.service.MaxCommentsLimitReachedException;
 import org.xtremeware.iudex.entity.Entity;
 import org.xtremeware.iudex.helper.DataBaseException;
 
@@ -12,5 +13,5 @@ import org.xtremeware.iudex.helper.DataBaseException;
 public interface Create<E extends Entity> {
 
     public E create(EntityManager entityManager, E entity)
-            throws DataBaseException, DuplicityException;
+            throws DataBaseException, DuplicityException, MaxCommentsLimitReachedException;
 }

@@ -2,31 +2,25 @@ package org.xtremeware.iudex.businesslogic.service;
 
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.businesslogic.InvalidVoException;
-import org.xtremeware.iudex.businesslogic.service.readimplementations.SimpleRead;
-import org.xtremeware.iudex.businesslogic.service.removeimplementations.SimpleRemove;
+import org.xtremeware.iudex.businesslogic.service.crudinterfaces.*;
 import org.xtremeware.iudex.dao.AbstractDaoBuilder;
 import org.xtremeware.iudex.entity.CommentRatingEntity;
-import org.xtremeware.iudex.helper.DataBaseException;
-import org.xtremeware.iudex.helper.ExternalServiceConnectionException;
-import org.xtremeware.iudex.helper.MultipleMessagesException;
+import org.xtremeware.iudex.helper.*;
 import org.xtremeware.iudex.vo.BinaryRatingVo;
 
 /**
  *
  * @author josebermeo
  */
-public class CommentRatingsService extends RatingService<CommentRatingEntity> {
+public class CommentRatingsService extends BinaryRatingService<CommentRatingEntity> {
 
     /**
      * CommentRatingsService constructor
      *
      * @param daoFactory
      */
-    public CommentRatingsService(AbstractDaoBuilder daoFactory) {
-        super(daoFactory,
-                new SimpleRead<CommentRatingEntity>(daoFactory.getCommentRatingDao()),
-                new SimpleRemove<CommentRatingEntity>(daoFactory.getCommentRatingDao()),
-                daoFactory.getCommentRatingDao());
+    public CommentRatingsService(AbstractDaoBuilder daoFactory, Read read, Remove remove) {
+        super(daoFactory,read,remove,daoFactory.getCommentRatingDao());
     }
 
     /**

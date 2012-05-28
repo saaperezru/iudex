@@ -38,4 +38,8 @@ public class SubjectVoVwFull implements ValueObject{
     public String getName() {
         return vo.getName();
     }
+    
+    public int getCode() {
+        return vo.getCode();
+    }
 }

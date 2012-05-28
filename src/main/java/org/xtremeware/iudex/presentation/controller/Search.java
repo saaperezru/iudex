@@ -1,9 +1,7 @@
 package org.xtremeware.iudex.presentation.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
@@ -11,6 +9,7 @@ import javax.faces.context.FacesContext;
 import org.xtremeware.iudex.businesslogic.facade.CoursesFacade;
 import org.xtremeware.iudex.helper.Config;
 import org.xtremeware.iudex.presentation.vovw.CourseVoVwFull;
+import org.xtremeware.iudex.vo.CourseVoFull;
 
 /**
  *
@@ -21,11 +20,11 @@ import org.xtremeware.iudex.presentation.vovw.CourseVoVwFull;
 public class Search {
 
 	private String query ;
-	private List<CourseVoVwFull> courses;
+	private List<CourseVoFull> courses;
 
 	;
 
-    public List<CourseVoVwFull> getCourses() {
+    public List<CourseVoFull> getCourses() {
 		CoursesFacade coursesFacade = Config.getInstance().getFacadeFactory().getCoursesFacade();
 		try {
 			this.courses = coursesFacade.search(this.getQuery());
@@ -42,7 +41,7 @@ public class Search {
 		return query;
 	}
 
-	public void setCourses(List<CourseVoVwFull> courses) {
+	public void setCourses(List<CourseVoFull> courses) {
 		this.courses = courses;
 	}
 

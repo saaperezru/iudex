@@ -5,8 +5,6 @@ package org.xtremeware.iudex.businesslogic.facade;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import org.junit.*;
 import static org.junit.Assert.*;
@@ -18,9 +16,7 @@ import org.xtremeware.iudex.helper.MultipleMessagesException;
 import org.xtremeware.iudex.presentation.vovw.CourseVoVwFull;
 import org.xtremeware.iudex.presentation.vovw.ProfessorVoVwSmall;
 import org.xtremeware.iudex.presentation.vovw.SubjectVoVwSmall;
-import org.xtremeware.iudex.vo.CourseRatingVo;
-import org.xtremeware.iudex.vo.CourseVo;
-import org.xtremeware.iudex.vo.RatingSummaryVo;
+import org.xtremeware.iudex.vo.*;
 
 /**
  *
@@ -28,8 +24,8 @@ import org.xtremeware.iudex.vo.RatingSummaryVo;
  */
 public class CoursesFacadeIT {
 
-	public static ProfessorVoVwSmall fabio, mario;
-	public static SubjectVoVwSmall is2, isa, afi;
+	public static ProfessorVoSmall fabio, mario;
+	public static SubjectVoSmall is2, isa, afi;
 	public static CourseVo marioIs2, marioIsa, marioAfi, fabioIsa;
 	private EntityManager entityManager;
 
@@ -38,67 +34,68 @@ public class CoursesFacadeIT {
 		entityManager = FacadesTestHelper.createEntityManagerFactory().createEntityManager();
 	}
 
-	@BeforeClass
-	public static void setUpClass() throws Exception {
+    @BeforeClass
+    public static void setUpClass() throws Exception {
+
+        FacadesTestHelper.initializeDatabase();
+
+        RatingSummaryVo rating = new RatingSummaryVo();
+        rating.setPositive(3);
+        rating.setNegative(0);
+        fabio = new ProfessorVoSmall(2, "FABIO AUGUSTO GONZALEZ OSORIO", rating);
+        rating = new RatingSummaryVo();
+        rating.setPositive(3);
+        rating.setNegative(1);
+        mario = new ProfessorVoSmall(1, "MARIO LINARES VASQUEZ", rating);
+        rating = new RatingSummaryVo();
+        rating.setPositive(4);
+        rating.setNegative(0);
+        is2 = new SubjectVoSmall(2016702, "INGENIERIA DE SOFTWARE II", 2016702, rating);
+        rating = new RatingSummaryVo();
+        rating.setPositive(2);
+        rating.setNegative(2);
+        isa = new SubjectVoSmall(2019772, "INGENIERIA DE SOFTWARE AVANZADA", 2019772, rating);
+        rating = new RatingSummaryVo();
+        rating.setPositive(3);
+        rating.setNegative(1);
+        afi = new SubjectVoSmall(2016025, "AUDITORIA FINANCIERA I", 2016025, rating);
+
+        marioIs2 = new CourseVo();
+        marioIs2.setId(1L);
+        marioIs2.setPeriodId(1L);
+        marioIs2.setProfessorId(mario.getId());
+        marioIs2.setSubjectId(is2.getId());
+        marioIs2.setRatingAverage(4.3);
+        marioIs2.setRatingCount(4L);
+
+        marioIsa = new CourseVo();
+        marioIsa.setId(2L);
+        marioIsa.setPeriodId(1L);
+        marioIsa.setProfessorId(mario.getId());
+        marioIsa.setSubjectId(isa.getId());
+        marioIsa.setRatingAverage(4.2);
+        marioIsa.setRatingCount(4L);
+
+        marioAfi = new CourseVo();
+        marioAfi.setId(3L);
+        marioAfi.setPeriodId(1L);
+        marioAfi.setProfessorId(mario.getId());
+        marioAfi.setSubjectId(afi.getId());
+        marioAfi.setRatingAverage(3.1);
+        marioAfi.setRatingCount(4L);
+
+        fabioIsa = new CourseVo();
+        fabioIsa.setId(4L);
+        fabioIsa.setPeriodId(1L);
+        fabioIsa.setProfessorId(fabio.getId());
+        fabioIsa.setSubjectId(isa.getId());
+        fabioIsa.setRatingAverage(3.7);
+        fabioIsa.setRatingCount(4L);
+
+        Class.forName("org.h2.Driver");
 
 
-		FacadesTestHelper.initializeDatabase();
-
-		RatingSummaryVo rating = new RatingSummaryVo();
-		rating.setPositive(3);
-		rating.setNegative(0);
-		fabio = new ProfessorVoVwSmall(2, "FABIO AUGUSTO GONZALEZ OSORIO", rating);
-		rating = new RatingSummaryVo();
-		rating.setPositive(3);
-		rating.setNegative(1);
-		mario = new ProfessorVoVwSmall(1, "MARIO LINARES VASQUEZ", rating);
-		rating = new RatingSummaryVo();
-		rating.setPositive(4);
-		rating.setNegative(0);
-		is2 = new SubjectVoVwSmall(2016702, "INGENIERIA DE SOFTWARE II", rating);
-		rating = new RatingSummaryVo();
-		rating.setPositive(2);
-		rating.setNegative(2);
-		isa = new SubjectVoVwSmall(2019772, "INGENIERIA DE SOFTWARE AVANZADA", rating);
-		rating = new RatingSummaryVo();
-		rating.setPositive(3);
-		rating.setNegative(1);
-		afi = new SubjectVoVwSmall(2016025, "AUDITORIA FINANCIERA I", rating);
-
-		marioIs2 = new CourseVo();
-		marioIs2.setId(1L);
-		marioIs2.setPeriodId(1L);
-		marioIs2.setProfessorId(mario.getId());
-		marioIs2.setSubjectId(is2.getId());
-		marioIs2.setRatingAverage(4.3);
-		marioIs2.setRatingCount(4L);
-
-		marioIsa = new CourseVo();
-		marioIsa.setId(2L);
-		marioIsa.setPeriodId(1L);
-		marioIsa.setProfessorId(mario.getId());
-		marioIsa.setSubjectId(isa.getId());
-		marioIsa.setRatingAverage(4.2);
-		marioIsa.setRatingCount(4L);
-
-		marioAfi = new CourseVo();
-		marioAfi.setId(3L);
-		marioAfi.setPeriodId(1L);
-		marioAfi.setProfessorId(mario.getId());
-		marioAfi.setSubjectId(afi.getId());
-		marioAfi.setRatingAverage(3.1);
-		marioAfi.setRatingCount(4L);
-
-		fabioIsa = new CourseVo();
-		fabioIsa.setId(4L);
-		fabioIsa.setPeriodId(1L);
-		fabioIsa.setProfessorId(fabio.getId());
-		fabioIsa.setSubjectId(isa.getId());
-		fabioIsa.setRatingAverage(3.7);
-		fabioIsa.setRatingCount(4L);
-
-		Class.forName("org.h2.Driver");
-
+		
 
 	}
 
@@ -119,14 +116,14 @@ public class CoursesFacadeIT {
 		//TODO: As long as we are still not giving a precise order to the results, i'm not testing the order, just the presence, of the results.
 		//First lets look by a subject's name
 		String query = "SOFTWARE";
-		List<CourseVoVwFull> search = facade.search(query);
+		List<CourseVoFull> search = facade.search(query);
 		assertNotNull(search);
 		assertNotSame(search.size(), 0);
-		Set<CourseVoVwFull> expected = new HashSet<CourseVoVwFull>();
-		expected.add(new CourseVoVwFull(marioIs2, is2, mario));
-		expected.add(new CourseVoVwFull(marioIsa, isa, mario));
-		expected.add(new CourseVoVwFull(fabioIsa, isa, fabio));
-		for (CourseVoVwFull result : search) {
+		Set<CourseVoFull> expected = new HashSet<CourseVoFull>();
+		expected.add(new CourseVoFull(marioIs2, is2, mario));
+		expected.add(new CourseVoFull(marioIsa, isa, mario));
+		expected.add(new CourseVoFull(fabioIsa, isa, fabio));
+		for (CourseVoFull result : search) {
 			if (!expected.contains(result)) {
 				fail("The following course was not expected for query " + query + ": " + result.toString());
 			}
@@ -135,7 +132,7 @@ public class CoursesFacadeIT {
 		search = facade.search(query);
 		assertNotNull(search);
 		assertNotSame(search.size(), 0);
-		for (CourseVoVwFull result : search) {
+		for (CourseVoFull result : search) {
 			if (!expected.contains(result)) {
 				fail("The following course was not expected for query " + query + ": " + result.toString());
 			}
@@ -145,11 +142,11 @@ public class CoursesFacadeIT {
 		search = facade.search(query);
 		assertNotNull(search);
 		assertNotSame(search.size(), 0);
-		expected = new HashSet<CourseVoVwFull>();
-		expected.add(new CourseVoVwFull(marioIs2, is2, mario));
-		expected.add(new CourseVoVwFull(marioIsa, isa, mario));
-		expected.add(new CourseVoVwFull(marioAfi, afi, mario));
-		for (CourseVoVwFull result : search) {
+		expected = new HashSet<CourseVoFull>();
+		expected.add(new CourseVoFull(marioIs2, is2, mario));
+		expected.add(new CourseVoFull(marioIsa, isa, mario));
+		expected.add(new CourseVoFull(marioAfi, afi, mario));
+		for (CourseVoFull result : search) {
 			if (!expected.contains(result)) {
 				fail("The following course was not expected for query " + query + ": " + result.toString());
 			}
@@ -158,7 +155,7 @@ public class CoursesFacadeIT {
 		search = facade.search(query);
 		assertNotNull(search);
 		assertNotSame(search.size(), 0);
-		for (CourseVoVwFull result : search) {
+		for (CourseVoFull result : search) {
 			if (!expected.contains(result)) {
 				fail("The following course was not expected for query " + query + ": " + result.toString());
 			}
@@ -173,7 +170,7 @@ public class CoursesFacadeIT {
 		CoursesFacade facade = Config.getInstance().getFacadeFactory().getCoursesFacade();
 
 		String query = "' OR 1=1--'";
-		List<CourseVoVwFull> search = facade.search(query);
+		List<CourseVoFull> search = facade.search(query);
 		assertNotNull(search);
 		assertEquals(search.size(), 0);
 		query = "# DROP DATABASE TEST";
@@ -193,7 +190,7 @@ public class CoursesFacadeIT {
 	public void test_BL_1_3() {
 		CoursesFacade facade = Config.getInstance().getFacadeFactory().getCoursesFacade();
 		String query = "";
-		List<CourseVoVwFull> search = facade.search(query);
+		List<CourseVoFull> search = facade.search(query);
 		assertNotNull(search);
 		assertEquals(search.size(), 0);
 	}
@@ -204,10 +201,10 @@ public class CoursesFacadeIT {
 	@Test
 	public void test_BL_6_1() {
 		CoursesFacade facade = Config.getInstance().getFacadeFactory().getCoursesFacade();
-		CourseVoVwFull expectedCourse = new CourseVoVwFull(marioIs2, is2, mario);
+		CourseVoFull expectedCourse = new CourseVoFull(marioIs2, is2, mario);
 		long courseId = 1L;
 		try {
-			CourseVoVwFull course = facade.getCourse(courseId);
+			CourseVoFull course = facade.getCourse(courseId);
 			assertEquals(expectedCourse, course);
 		} catch (Exception ex) {
 			fail(ex.getMessage());
@@ -223,7 +220,7 @@ public class CoursesFacadeIT {
 		CoursesFacade facade = Config.getInstance().getFacadeFactory().getCoursesFacade();
 		long courseId = Long.MAX_VALUE;
 		try {
-			CourseVoVwFull course = facade.getCourse(courseId);
+			CourseVoFull course = facade.getCourse(courseId);
 			assertNull(course);
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -231,7 +228,7 @@ public class CoursesFacadeIT {
 		}
 		courseId = Long.MIN_VALUE;
 		try {
-			CourseVoVwFull course = facade.getCourse(courseId);
+			CourseVoFull course = facade.getCourse(courseId);
 			assertNull(course);
 		} catch (Exception ex) {
 			fail(ex.getMessage());
@@ -247,7 +244,7 @@ public class CoursesFacadeIT {
 		CoursesFacade facade = Config.getInstance().getFacadeFactory().getCoursesFacade();
 		long courseId = 5L;
 		try {
-			CourseVoVwFull course = facade.getCourse(courseId);
+			CourseVoFull course = facade.getCourse(courseId);
 			assertEquals(course.getRatingAverage(), 0.0, 0);
 			assertEquals(course.getRatingCount(), 0, 0);
 		} catch (Exception ex) {
@@ -337,7 +334,7 @@ public class CoursesFacadeIT {
 				facade.removeCourse(i);
 			} catch (Exception e) {
 				assertEquals(RuntimeException.class, e.getClass());
-				assertEquals(e.getCause().getMessage(), "No entity found for id " + String.valueOf(i) + "while triying to delete the associated record");
+				assertEquals("entity.notFound",e.getCause().getMessage());
 			}
 		}
 
@@ -347,13 +344,13 @@ public class CoursesFacadeIT {
 	public void getByProfessorIdTest() {
 		CoursesFacade facade = Config.getInstance().getFacadeFactory().getCoursesFacade();
 
-		HashSet<CourseVoVwFull> expected = new HashSet<CourseVoVwFull>();
-		expected.add(new CourseVoVwFull(marioIs2, is2, mario));
-		expected.add(new CourseVoVwFull(marioIsa, isa, mario));
-		expected.add(new CourseVoVwFull(marioAfi, afi, mario));
+		HashSet<CourseVoFull> expected = new HashSet<CourseVoFull>();
+		expected.add(new CourseVoFull(marioIs2, is2, mario));
+		expected.add(new CourseVoFull(marioIsa, isa, mario));
+		expected.add(new CourseVoFull(marioAfi, afi, mario));
 
-		List<CourseVoVwFull> search = facade.getByProfessorId(mario.getId());
-		for (CourseVoVwFull result : search) {
+		List<CourseVoFull> search = facade.getByProfessorId(mario.getId());
+		for (CourseVoFull result : search) {
 			if (!expected.contains(result)) {
 				fail("The following course was not expected for the professor Id " + mario.getId() + ": " + result.toString());
 			}
@@ -364,12 +361,12 @@ public class CoursesFacadeIT {
 	public void getBySubjectId() {
 		CoursesFacade facade = Config.getInstance().getFacadeFactory().getCoursesFacade();
 
-		HashSet<CourseVoVwFull> expected = new HashSet<CourseVoVwFull>();
-		expected.add(new CourseVoVwFull(marioIsa, isa, mario));
-		expected.add(new CourseVoVwFull(fabioIsa, isa, fabio));
+		HashSet<CourseVoFull> expected = new HashSet<CourseVoFull>();
+		expected.add(new CourseVoFull(marioIsa, isa, mario));
+		expected.add(new CourseVoFull(fabioIsa, isa, fabio));
 
-		List<CourseVoVwFull> search = facade.getBySubjectId(isa.getId());
-		for (CourseVoVwFull result : search) {
+		List<CourseVoFull> search = facade.getBySubjectId(isa.getId());
+		for (CourseVoFull result : search) {
 			if (!expected.contains(result)) {
 				fail("The following course was not expected for the professor Id " + mario.getId() + ": " + result.toString());
 			}
@@ -382,7 +379,7 @@ public class CoursesFacadeIT {
 		//Rate a non-existing course and a non-existing user, with an invalid rating value
 		rateCommentInvalidInputry(facade, Long.MIN_VALUE, Long.MIN_VALUE, -0.1f, new String[]{"courseRating.courseId.notFound", "courseRating.userId.notFound", "courseRating.value.invalidRange"});
 		//Rate a existing course and a user, with an invalid rating value
-		rateCommentInvalidInputry(facade, 1L, 1L, -0.1f, new String[]{"courseRating.value.invalidRange"});
+		rateCommentInvalidInputry(facade, 5L, 1L, -0.1f, new String[]{"courseRating.value.invalidRange"});
 
 		//Rate a valid course, with valid user and valid value
 		try {

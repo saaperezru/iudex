@@ -10,7 +10,7 @@ import org.xtremeware.iudex.helper.DataBaseException;
  * @author healarconr
  */
 public interface ForgottenPasswordKeyDaoInterface extends
-        CrudDaoInterface<ForgottenPasswordKeyEntity> {
+        CrudDao<ForgottenPasswordKeyEntity> {
 
     /**
      * Returns a ForgottenPasswordKeyEntity which key matches the given key.

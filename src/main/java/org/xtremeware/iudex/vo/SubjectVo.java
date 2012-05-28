@@ -4,6 +4,7 @@ package org.xtremeware.iudex.vo;
 public class SubjectVo extends IdentifiableValueObject<Long> implements ValueObject{
 
     private String name;
+    private int code;
     private String description;
 
     @Override
@@ -15,10 +16,10 @@ public class SubjectVo extends IdentifiableValueObject<Long> implements ValueObj
             return false;
         }
         final SubjectVo other = (SubjectVo) obj;
-        if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
+        if ((this.name == null) ? (other.name != null) : !this.name.equals(other.name)) {
             return false;
         }
-        if ((this.name == null) ? (other.name != null) : !this.name.equals(other.name)) {
+        if (this.code != other.code) {
             return false;
         }
         if ((this.description == null) ? (other.description != null) : !this.description.equals(other.description)) {
@@ -29,17 +30,18 @@ public class SubjectVo extends IdentifiableValueObject<Long> implements ValueObj
 
     @Override
     public int hashCode() {
-        int hash = 3;
-        hash = 71 * hash + (this.id != null ? this.id.hashCode() : 0);
+        int hash = 7;
         hash = 71 * hash + (this.name != null ? this.name.hashCode() : 0);
+        hash = 71 * hash + this.code;
         hash = 71 * hash + (this.description != null ? this.description.hashCode() : 0);
         return hash;
     }
 
     @Override
     public String toString() {
-        return "SubjectVo{" + "id=" + id + ", name=" + name + ", description=" + description + '}';
+        return "SubjectVo{" + "name=" + name + ", code=" + code + ", description=" + description + '}';
     }
+
 
     public String getDescription() {
         return description;
@@ -56,5 +58,12 @@ public class SubjectVo extends IdentifiableValueObject<Long> implements ValueObj
     public void setName(String name) {
         this.name = name;
     }
-    
+
+    public int getCode() {
+        return code;
+    }
+
+    public void setCode(int code) {
+        this.code = code;
+    }
 }

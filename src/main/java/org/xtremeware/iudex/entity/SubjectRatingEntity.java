@@ -2,28 +2,29 @@ package org.xtremeware.iudex.entity;
 
 import java.io.Serializable;
 import javax.persistence.*;
-import org.xtremeware.iudex.vo.SubjectRatingVo;
+import org.xtremeware.iudex.vo.BinaryRatingVo;
 
 @javax.persistence.Entity(name = "SubjectRating")
 @NamedQueries({
     @NamedQuery(name = "getSubjectRatingBySubjectId",
     query = "SELECT result FROM SubjectRating result "
-    + "WHERE result.subject.id = :subjectId"),
+    + "WHERE result.subject.id = :evaluatedObjectId"),
     @NamedQuery(name = "getSubjectRatingBySubjectIdAndUserId",
     query = "SELECT result FROM SubjectRating result "
-    + "WHERE result.subject.id = :subjectId AND result.user.id = :userId"),
-    @NamedQuery(name = "getSubjectRatingByUserId",
+    + "WHERE result.subject.id = :evaluatedObjectId AND result.user.id = :userId"),
+    @NamedQuery(name = "getSubjectRatingByIdUser",
     query = "SELECT result FROM SubjectRating result "
     + "WHERE result.user.id = :user"),
     @NamedQuery(name = "countPositiveSubjectRating",
     query = "SELECT COUNT (result) FROM SubjectRating result "
-    + "WHERE result.subject.id = :subjectId AND result.value = 1"),
+    + "WHERE result.subject.id = :evaluatedObjectId AND result.value = 1"),
     @NamedQuery(name = "countNegativeSubjectRating",
     query = "SELECT COUNT (result) FROM SubjectRating result "
-    + "WHERE result.subject.id = :subjectId AND result.value = -1")
+    + "WHERE result.subject.id = :evaluatedObjectId AND result.value = -1")
 })
-@Table(name = "SUBJECT_RATING")
-public class SubjectRatingEntity implements Serializable, Entity<SubjectRatingVo> {
+@Table( name = "SUBJECT_RATING",
+            uniqueConstraints = { @UniqueConstraint( columnNames = { "ID_USER_", "ID_SUBJECT" } ) } )
+public class SubjectRatingEntity implements Serializable, Entity<BinaryRatingVo>, BinaryRatingEntity {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -40,12 +41,12 @@ public class SubjectRatingEntity implements Serializable, Entity<SubjectRatingVo
     private int value;
 
     @Override
-    public SubjectRatingVo toVo() {
-        SubjectRatingVo vo = new SubjectRatingVo();
+    public BinaryRatingVo toVo() {
+        BinaryRatingVo vo = new BinaryRatingVo();
 
         vo.setId(this.getId());
         vo.setEvaluatedObjectId(this.getSubject().getId());
-        vo.setUser(this.getUser().getId());
+        vo.setUserId(this.getUser().getId());
         vo.setValue(this.getValue());
 
         return vo;
@@ -98,10 +99,12 @@ public class SubjectRatingEntity implements Serializable, Entity<SubjectRatingVo
         this.user = user;
     }
 
+    @Override
     public int getValue() {
         return this.value;
     }
 
+    @Override
     public void setValue(int value) {
         this.value = value;
     }

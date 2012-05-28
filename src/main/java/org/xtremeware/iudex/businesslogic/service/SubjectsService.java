@@ -3,12 +3,8 @@ package org.xtremeware.iudex.businesslogic.service;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
-import org.xtremeware.iudex.businesslogic.InvalidVoException;
-import org.xtremeware.iudex.businesslogic.service.createimplementations.SimpleCreate;
-import org.xtremeware.iudex.businesslogic.service.readimplementations.SimpleRead;
-import org.xtremeware.iudex.businesslogic.service.removeimplementations.SubjectsRemove;
-import org.xtremeware.iudex.businesslogic.service.updateimplementations.SimpleUpdate;
-import org.xtremeware.iudex.dao.AbstractDaoFactory;
+import org.xtremeware.iudex.businesslogic.service.crudinterfaces.*;
+import org.xtremeware.iudex.dao.AbstractDaoBuilder;
 import org.xtremeware.iudex.entity.SubjectEntity;
 import org.xtremeware.iudex.helper.*;
 import org.xtremeware.iudex.vo.SubjectVo;
@@ -27,12 +23,9 @@ public class SubjectsService extends CrudService<SubjectVo, SubjectEntity> {
      *
      * @param daoFactory
      */
-    public SubjectsService(AbstractDaoFactory daoFactory) {
-        super(daoFactory,
-                new SimpleCreate<SubjectEntity>(daoFactory.getSubjectDao()),
-                new SimpleRead<SubjectEntity>(daoFactory.getSubjectDao()),
-                new SimpleUpdate<SubjectEntity>(daoFactory.getSubjectDao()),
-                new SubjectsRemove(daoFactory));
+    public SubjectsService(AbstractDaoBuilder daoFactory,
+            Create create, Read read, Update update, Remove remove) {
+        super(daoFactory, create, read, update, remove);
         MAX_SUBJECT_NAME_LENGTH = Integer.parseInt(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAX_SUBJECT_NAME_LENGTH));
         MAX_SUBJECT_DESCRIPTION_LENGTH = Integer.parseInt(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAX_SUBJECT_DESCRIPTION_LENGTH));
     }
@@ -41,38 +34,37 @@ public class SubjectsService extends CrudService<SubjectVo, SubjectEntity> {
      * Validate the provided SubjectVo, if the SubjectVo is not correct the
      * method throws an exception
      *
-     * @param em EntityManager
-     * @param vo SubjectVo
+     * @param entityManager EntityManager
+     * @param subjectVo SubjectVo
      * @throws InvalidVoException
      */
     @Override
-    public void validateVo(EntityManager em, SubjectVo vo)
+    public void validateVoForCreation(EntityManager entityManager, SubjectVo subjectVo)
             throws ExternalServiceConnectionException, MultipleMessagesException {
         MultipleMessagesException multipleMessageException = new MultipleMessagesException();
-        if (vo == null) {
+        if (subjectVo == null) {
             multipleMessageException.addMessage("subject.null");
             throw multipleMessageException;
         }
-        if (vo.getId() == null) {
-            multipleMessageException.addMessage("subject.id.null");
-        } else {
-            vo.setId(Math.abs(vo.getId()));
+
+        if (subjectVo.getDescription() == null) {
+            subjectVo.setDescription("");
         }
 
-        if (vo.getDescription() == null) {
-            vo.setDescription("");
-        }
-
-        vo.setDescription(SecurityHelper.sanitizeHTML(vo.getDescription()));
-        if (vo.getDescription().length() > MAX_SUBJECT_DESCRIPTION_LENGTH) {
+        subjectVo.setDescription(SecurityHelper.sanitizeHTML(subjectVo.getDescription()));
+        if (subjectVo.getDescription().length() > MAX_SUBJECT_DESCRIPTION_LENGTH) {
             multipleMessageException.addMessage("subject.description.tooLong");
         }
 
-        if (vo.getName() == null || vo.getName().equals("")) {
+        if (subjectVo.getCode() < 0){
+            multipleMessageException.addMessage("subject.code.negativeValue");
+        }
+        
+        if (subjectVo.getName() == null || subjectVo.getName().equals("")) {
             multipleMessageException.addMessage("subject.name.null");
         } else {
-            vo.setName(SecurityHelper.sanitizeHTML(vo.getName()));
-            if (vo.getName().length() > MAX_SUBJECT_NAME_LENGTH) {
+            subjectVo.setName(SecurityHelper.sanitizeHTML(subjectVo.getName()));
+            if (subjectVo.getName().length() > MAX_SUBJECT_NAME_LENGTH) {
                 multipleMessageException.addMessage("subject.name.tooLong");
             }
         }
@@ -82,24 +74,34 @@ public class SubjectsService extends CrudService<SubjectVo, SubjectEntity> {
         }
     }
 
+    @Override
+    public void validateVoForUpdate(EntityManager entityManager, SubjectVo valueObject) throws MultipleMessagesException, ExternalServiceConnectionException, DataBaseException {
+        
+        validateVoForCreation(entityManager, valueObject);
+        MultipleMessagesException multipleMessageException = new MultipleMessagesException();
+        if (valueObject.getId() == null) {
+            multipleMessageException.addMessage("subject.id.null");
+            throw multipleMessageException;
+        }
+    }
+
     /**
      * Returns a SubjectEntity using the information in the provided SubjectVo.
      *
-     * @param em EntityManager
+     * @param entityManager EntityManager
      * @param vo SubjectVo
      * @return SubjectEntity
      * @throws InvalidVoException
      */
     @Override
-    public SubjectEntity voToEntity(EntityManager em, SubjectVo vo)
+    public SubjectEntity voToEntity(EntityManager entityManager, SubjectVo valueObject)
             throws ExternalServiceConnectionException, MultipleMessagesException {
 
-		validateVo(em, vo);
-
-		SubjectEntity subjectEntity = new SubjectEntity();
-		subjectEntity.setId(vo.getId());
-		subjectEntity.setName(vo.getName());
-		subjectEntity.setDescription(vo.getDescription());
+        SubjectEntity subjectEntity = new SubjectEntity();
+        subjectEntity.setId(valueObject.getId());
+        subjectEntity.setName(valueObject.getName());
+        subjectEntity.setDescription(valueObject.getDescription());
+        subjectEntity.setCode(valueObject.getCode());
 
 		return subjectEntity;
 	}
@@ -148,22 +150,23 @@ public class SubjectsService extends CrudService<SubjectVo, SubjectEntity> {
 		return arrayList;
 	}
 
-	/**
-	 * Returns a list of SubjectVos that had been taught by the specified
-	 * professor.
-	 *
-	 * @param em EntityManager
-	 * @param professorId Professor's id to look for subjects.
-	 * @return A list of SubjectVo
-	 */
-	public List<SubjectVo> getByProfessorId(EntityManager em, long professorId)
-			throws DataBaseException {
-		List<SubjectEntity> subjectEntitys = getDaoFactory().getSubjectDao().
-				getByProfessorId(em, professorId);
-		ArrayList<SubjectVo> arrayList = new ArrayList<SubjectVo>();
-		for (SubjectEntity subjectEntity : subjectEntitys) {
-			arrayList.add(subjectEntity.toVo());
-		}
-		return arrayList;
-	}
+    /**
+     * Returns a list of SubjectVos that had been taught by the specified
+     * professor.
+     *
+     * @param entityManager EntityManager
+     * @param professorId Professor's id to look for subjects.
+     * @return A list of SubjectVo
+     */
+    public List<SubjectVo> getByProfessorId(EntityManager entityManager, long professorId)
+            throws DataBaseException {
+        List<SubjectEntity> subjectEntitys = getDaoFactory().getSubjectDao().
+                getByProfessorId(entityManager, professorId);
+
+        ArrayList<SubjectVo> subjectVos = new ArrayList<SubjectVo>();
+        for (SubjectEntity subjectEntity : subjectEntitys) {
+            subjectVos.add(subjectEntity.toVo());
+        }
+        return subjectVos;
+    }
 }

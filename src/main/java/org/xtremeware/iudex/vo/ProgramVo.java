@@ -3,6 +3,8 @@ package org.xtremeware.iudex.vo;
 public class ProgramVo extends IdentifiableValueObject<Long> implements ValueObject {
 
     private String name;
+    private int code;
+
 
     @Override
     public boolean equals(Object obj) {
@@ -13,10 +15,10 @@ public class ProgramVo extends IdentifiableValueObject<Long> implements ValueObj
             return false;
         }
         final ProgramVo other = (ProgramVo) obj;
-        if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
+        if ((this.name == null) ? (other.name != null) : !this.name.equals(other.name)) {
             return false;
         }
-        if ((this.name == null) ? (other.name != null) : !this.name.equals(other.name)) {
+        if (this.code != other.code) {
             return false;
         }
         return true;
@@ -24,16 +26,17 @@ public class ProgramVo extends IdentifiableValueObject<Long> implements ValueObj
 
     @Override
     public int hashCode() {
-        int hash = 3;
-        hash = 89 * hash + (this.id != null ? this.id.hashCode() : 0);
-        hash = 89 * hash + (this.name != null ? this.name.hashCode() : 0);
+        int hash = 7;
+        hash = 47 * hash + (this.name != null ? this.name.hashCode() : 0);
+        hash = 47 * hash + this.code;
         return hash;
     }
 
     @Override
     public String toString() {
-        return "ProgramVo{" + "id=" + id + ", name=" + name + '}';
+        return "ProgramVo{" + "name=" + name + ", code=" + code + '}';
     }
+
 
     public String getName() {
         return name;
@@ -41,5 +44,13 @@ public class ProgramVo extends IdentifiableValueObject<Long> implements ValueObj
 
     public void setName(String name) {
         this.name = name;
+    }
+    
+    public int getCode() {
+        return code;
+    }
+
+    public void setCode(int code) {
+        this.code = code;
     }
 }

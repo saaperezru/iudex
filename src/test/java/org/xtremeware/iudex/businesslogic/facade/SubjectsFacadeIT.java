@@ -1,11 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.xtremeware.iudex.businesslogic.facade;
 
 import java.util.Map;
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceException;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -15,11 +12,11 @@ import org.xtremeware.iudex.helper.Config;
 import org.xtremeware.iudex.helper.ConfigurationVariablesHelper;
 import org.xtremeware.iudex.helper.DataBaseException;
 import org.xtremeware.iudex.helper.MultipleMessagesException;
-import org.xtremeware.iudex.presentation.vovw.SubjectVoVwFull;
 import org.xtremeware.iudex.vo.RatingSummaryVo;
-import org.xtremeware.iudex.vo.SubjectRatingVo;
 import org.xtremeware.iudex.vo.SubjectVo;
 import org.xtremeware.iudex.businesslogic.helper.FacadesTestHelper;
+import org.xtremeware.iudex.vo.BinaryRatingVo;
+import org.xtremeware.iudex.vo.SubjectVoFull;
 
 /**
  *
@@ -43,6 +40,7 @@ public class SubjectsFacadeIT {
         entityManager = FacadesTestHelper.createEntityManagerFactory().createEntityManager();
     }
 
+    //@Ignore
     @Test
     public void test_BL_12_1() throws DataBaseException,
             MultipleMessagesException, Exception {
@@ -51,7 +49,7 @@ public class SubjectsFacadeIT {
         Long[] subjects = {2016702L, 2021814L, 2016025L};
         int[] ratings = {-1, 0, 1};
 
-        SubjectRatingVo subjectRatingVo;
+        BinaryRatingVo subjectRatingVo;
 
         for (int i = 0; i < subjects.length; i++) {
 
@@ -61,7 +59,7 @@ public class SubjectsFacadeIT {
                     userId);
 
             assertNotNull(subjectRatingVo);
-            assertEquals(subjectRatingVo.getUser(),
+            assertEquals(subjectRatingVo.getUserId(),
                     userId);
             assertEquals(subjectRatingVo.getEvaluatedObjectId(),
                     subjects[i]);
@@ -70,6 +68,7 @@ public class SubjectsFacadeIT {
 
     }
 
+    //@Ignore
     @Test
     public void test_BL_12_2() throws Exception {
 
@@ -86,10 +85,11 @@ public class SubjectsFacadeIT {
         }
     }
 
+    //@Ignore
     @Test
     public void test_BL_12_3() throws MultipleMessagesException,
             Exception {
-        SubjectRatingVo subjectRatingVo;
+        BinaryRatingVo subjectRatingVo;
 
         Long userId = 2L;
         Long subjectId = 2016702L;
@@ -122,10 +122,11 @@ public class SubjectsFacadeIT {
 
     }
 
+    //@Ignore
     @Test
     public void test_BL_12_4() throws MultipleMessagesException,
             Exception {
-        SubjectRatingVo subjectRatingVo;
+        BinaryRatingVo subjectRatingVo;
 
         Long userId = 2L;
         Long subjectId = 2016025L;
@@ -150,91 +151,140 @@ public class SubjectsFacadeIT {
 
     }
 
+    //@Ignore
     @Test
     public void test_BL_16_1() throws MultipleMessagesException, Exception {
 
-        Long subjectId = 1234567L;
+        SubjectVo subjectVo = new SubjectVo();
+        Long createdSubjectId;
+
+        int subjectCode = 1234567;
         String subjectName = "MATEMATICAS BASICAS";
         String subjectDescription = "Materia para nivelacion en la facultad de ingenieria.";
 
-        subjectsFacade.addSubject(subjectId, subjectName, subjectDescription);
+        
+        subjectVo.setName(subjectName);
+        subjectVo.setCode(subjectCode);
+        subjectVo.setDescription(subjectDescription);
 
-        SubjectVoVwFull subjectVoVw = subjectsFacade.getSubject(subjectId);
+        createdSubjectId = subjectsFacade.addSubject(subjectVo).getId();
 
-        assertEquals(subjectVoVw.getId(), subjectId);
-        assertEquals(subjectVoVw.getName(), subjectName);
-        assertEquals(subjectVoVw.getDescription(), subjectDescription);
+        SubjectVoFull subjectVoFull = subjectsFacade.getSubject(createdSubjectId);
+
+        assertEquals(subjectVoFull.getId(), createdSubjectId);
+        assertEquals(subjectVoFull.getName(), subjectName);
+        assertEquals(subjectVoFull.getDescription(), subjectDescription);
+        assertEquals(subjectVoFull.getCode(), subjectCode);
 
 
-        subjectId = 2468013L;
+        subjectCode = 2468013;
         subjectName = "LECTO-ESCRITURA";
         subjectDescription = "Materia para nivelacion en la facultad de ingenieria.";
+        subjectVo.setId(null);
+        subjectVo.setName(subjectName);
+        subjectVo.setCode(subjectCode);
+        subjectVo.setDescription(subjectDescription);
 
-        subjectId = subjectsFacade.addSubject(subjectId, subjectName, subjectDescription).getId();
+        createdSubjectId = subjectsFacade.addSubject(subjectVo).getId();
 
-        subjectVoVw = subjectsFacade.getSubject(subjectId);
+        subjectVoFull = subjectsFacade.getSubject(createdSubjectId);
 
-        assertEquals(subjectVoVw.getId(), subjectId);
-        assertEquals(subjectVoVw.getName(), subjectName);
-        assertEquals(subjectVoVw.getDescription(), subjectDescription);
+        assertEquals(subjectVoFull.getId(), createdSubjectId);
+        assertEquals(subjectVoFull.getName(), subjectName);
+        assertEquals(subjectVoFull.getDescription(), subjectDescription);
 
-        subjectId = 5555555L;
+        subjectCode = 5555555;
         subjectName = FacadesTestHelper.randomString(Integer.parseInt(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAX_SUBJECT_NAME_LENGTH)));
         subjectDescription = "";
         String injectedJavascriptCode = "<script type=" + '"' + "text/javascript" + '"' + ">document.getElementById(" + '"' + "demo" + '"' + ").innerHTML=Date();</script>";
 
-        subjectId = subjectsFacade.addSubject(subjectId, subjectName, subjectDescription + injectedJavascriptCode).getId();
+        subjectVo.setId(null);
+        subjectVo.setName(subjectName);
+        subjectVo.setCode(subjectCode);
+        subjectVo.setDescription(subjectDescription + injectedJavascriptCode);
 
-        subjectVoVw = subjectsFacade.getSubject(subjectId);
+        createdSubjectId = subjectsFacade.addSubject(subjectVo).getId();
 
-        assertEquals(subjectVoVw.getId(), subjectId);
-        assertEquals(subjectVoVw.getName(), subjectName);
-        assertEquals(subjectVoVw.getDescription(), subjectDescription);
+        subjectVoFull = subjectsFacade.getSubject(createdSubjectId);
+
+        assertEquals(subjectVoFull.getId(), createdSubjectId);
+        assertEquals(subjectVoFull.getName(), subjectName);
+        assertEquals(subjectVoFull.getDescription(), subjectDescription);
 
 
-        subjectId = 7654321L;
+        subjectCode = 7654321;
         subjectName = "A";
         subjectDescription = FacadesTestHelper.randomString(Integer.parseInt(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAX_SUBJECT_DESCRIPTION_LENGTH)));
 
-        subjectId = subjectsFacade.addSubject(subjectId, subjectName, subjectDescription).getId();
+        subjectVo.setId(null);
+        subjectVo.setName(subjectName);
+        subjectVo.setCode(subjectCode);
+        subjectVo.setDescription(subjectDescription);
+        createdSubjectId = subjectsFacade.addSubject(subjectVo).getId();
 
-        subjectVoVw = subjectsFacade.getSubject(subjectId);
+        subjectVoFull = subjectsFacade.getSubject(createdSubjectId);
 
-        assertEquals(subjectVoVw.getId(), subjectId);
-        assertEquals(subjectVoVw.getName(), subjectName);
-        assertEquals(subjectVoVw.getDescription(), subjectDescription);
+        assertEquals(subjectVoFull.getId(), createdSubjectId);
+        assertEquals(subjectVoFull.getName(), subjectName);
+        assertEquals(subjectVoFull.getDescription(), subjectDescription);
 
 
-        subjectId = 1234568L;
+        subjectCode = 1234568;
         subjectName = "MATEMATICAS BASICAS";
         subjectDescription = "Materia para nivelacion en la facultad de ciencias.";
 
-        subjectsFacade.addSubject(subjectId, subjectName, subjectDescription);
+        subjectVo.setId(null);
+        subjectVo.setName(subjectName);
+        subjectVo.setCode(subjectCode);
+        subjectVo.setDescription(subjectDescription);
 
-        subjectVoVw = subjectsFacade.getSubject(subjectId);
+        createdSubjectId = subjectsFacade.addSubject(subjectVo).getId();
 
-        assertEquals(subjectVoVw.getId(), subjectId);
-        assertEquals(subjectVoVw.getName(), subjectName);
-        assertEquals(subjectVoVw.getDescription(), subjectDescription);
+        subjectVoFull = subjectsFacade.getSubject(createdSubjectId);
+
+        assertEquals(subjectVoFull.getId(), createdSubjectId);
+        assertEquals(subjectVoFull.getName(), subjectName);
+        assertEquals(subjectVoFull.getDescription(), subjectDescription);
     }
 
+    //@Ignore
     @Test
     public void test_BL_16_2() throws Exception {
 
+        SubjectVo subjectVo = new SubjectVo();
+
         try {
-            subjectsFacade.addSubject(null, null, null);
+            subjectVo.setId(null);
+            subjectVo.setName(null);
+            subjectVo.setCode(5343451);
+            subjectVo.setDescription(null);
+            subjectsFacade.addSubject(subjectVo);
             fail();
         } catch (MultipleMessagesException ex) {
-            assertTrue(ex.getMessages().size() == 2);
-            assertTrue(ex.getMessages().contains("subject.id.null"));
+            assertTrue(ex.getMessages().size() == 1);
             assertTrue(ex.getMessages().contains("subject.name.null"));
+        }
+
+        try {
+            subjectVo.setId(79L);
+            subjectVo.setName("Materia convenio con los Andes");
+            subjectVo.setCode(5343251);
+            subjectVo.setDescription(null);
+            subjectsFacade.addSubject(subjectVo);
+            fail();
+        } catch (RuntimeException ex) {
+            assertEquals(ex.getCause().getClass(), PersistenceException.class);
         }
 
         try {
             String tooLongName = FacadesTestHelper.randomString(Integer.parseInt(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAX_SUBJECT_NAME_LENGTH)) + 1);
             String tooLongDescription = FacadesTestHelper.randomString(Integer.parseInt(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAX_SUBJECT_DESCRIPTION_LENGTH)) + 1);
 
-            subjectsFacade.addSubject(Long.MIN_VALUE, tooLongName, tooLongDescription);
+            subjectVo.setId(Long.MIN_VALUE);
+            subjectVo.setName(tooLongName);
+            subjectVo.setCode(0);
+            subjectVo.setDescription(tooLongDescription);
+            subjectsFacade.addSubject(subjectVo);
 
             fail();
 
@@ -246,7 +296,12 @@ public class SubjectsFacadeIT {
 
         try {
             String injectedCodeInDescription = "<script type=" + '"' + "text/javascript" + '"' + ">document.getElementById(" + '"' + "demo" + '"' + ").innerHTML=Date();</script>";
-            subjectsFacade.addSubject(0L, "", injectedCodeInDescription + "Hola");
+
+            subjectVo.setId(0L);
+            subjectVo.setName("");
+            subjectVo.setCode(0);
+            subjectVo.setDescription(injectedCodeInDescription + "Hola");
+            subjectsFacade.addSubject(subjectVo);
             fail();
         } catch (MultipleMessagesException ex) {
             assertTrue(ex.getMessages().size() == 1);
@@ -257,97 +312,151 @@ public class SubjectsFacadeIT {
         try {
             String injectedCodeInName = "<h1>Los profesores son unos tiranos</h1>";
             String tooLongDescription = FacadesTestHelper.randomString(Integer.parseInt(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAX_SUBJECT_DESCRIPTION_LENGTH)) + 1);
-            subjectsFacade.addSubject(null, injectedCodeInName, tooLongDescription);
+
+            subjectVo.setId(null);
+            subjectVo.setName(injectedCodeInName);
+            subjectVo.setCode(-1);
+            subjectVo.setDescription(tooLongDescription);
+            subjectsFacade.addSubject(subjectVo);
             fail();
         } catch (MultipleMessagesException ex) {
             assertTrue(ex.getMessages().size() == 2);
-            assertTrue(ex.getMessages().contains("subject.id.null"));
             assertTrue(ex.getMessages().contains("subject.description.tooLong"));
+            assertTrue(ex.getMessages().contains("subject.code.negativeValue"));
         }
 
     }
 
+    //@Ignore
     @Test
     public void test_BL_16_3() throws MultipleMessagesException, Exception {
-        try{
-            subjectsFacade.addSubject(2016702L, "Algoritmos", null);
+        try {
+            SubjectVo subjectVo = new SubjectVo();
+            subjectVo.setId(null);
+            subjectVo.setName("Algoritmos");
+            subjectVo.setCode(2019855);
+            subjectVo.setDescription(null);
+            subjectsFacade.addSubject(subjectVo);
             fail();
-        }catch(Exception ex){
-            assertEquals(RuntimeException.class, ex.getClass());
+        } catch (DuplicityException ex) {
+            assertEquals(1, 1);
         }
     }
 
+    //@Ignore
     @Test
     public void test_BL_17_1() throws Exception {
+        SubjectVo subjectVo = new SubjectVo();
+
         Long subjectId = 2033859L;
         String newSubjectName = "INTRODUCCION A LAS FINANZAS";
         String newSubjectDescription = "Se bajo la exigencia del curso.";
-        subjectsFacade.updateSubject(subjectId, newSubjectName, newSubjectDescription);
+        int newCode = 4555460;
 
-        SubjectVoVwFull subject = subjectsFacade.getSubject(subjectId);
+        subjectVo.setId(subjectId);
+        subjectVo.setName(newSubjectName);
+        subjectVo.setCode(newCode);
+        subjectVo.setDescription(newSubjectDescription);
+        subjectsFacade.updateSubject(subjectVo);
+
+        SubjectVoFull subject = subjectsFacade.getSubject(subjectId);
 
         assertEquals(subject.getId(), subjectId);
         assertEquals(subject.getName(), newSubjectName);
         assertEquals(subject.getDescription(), newSubjectDescription);
+        assertEquals(subject.getCode(), newCode);
 
         subjectId = 2039461L;
         newSubjectName = "SEGURIDAD VIAL";
         newSubjectDescription = "Se tratan temas sobre auditorias de seguridad vial";
-        subjectsFacade.updateSubject(subjectId, newSubjectName, newSubjectDescription);
+        newCode = 9009843;
+        subjectVo.setId(subjectId);
+        subjectVo.setName(newSubjectName);
+        subjectVo.setCode(newCode);
+        subjectVo.setDescription(newSubjectDescription);
+        subjectsFacade.updateSubject(subjectVo);
 
         subject = subjectsFacade.getSubject(subjectId);
 
         assertEquals(subject.getId(), subjectId);
         assertEquals(subject.getName(), newSubjectName);
         assertEquals(subject.getDescription(), newSubjectDescription);
+        assertEquals(subject.getCode(), newCode);
 
         subjectId = 2039372L;
         newSubjectName = "SOFTWARE";
         newSubjectDescription = "Los dos cursos se condensaron en uno solo.";
-        subjectsFacade.updateSubject(subjectId, newSubjectName, newSubjectDescription);
+        newCode = subjectId.intValue();
+        subjectVo.setId(subjectId);
+        subjectVo.setName(newSubjectName);
+        subjectVo.setCode(newCode);
+        subjectVo.setDescription(newSubjectDescription);
+        subjectsFacade.updateSubject(subjectVo);
 
         subject = subjectsFacade.getSubject(subjectId);
 
         assertEquals(subject.getId(), subjectId);
         assertEquals(subject.getName(), newSubjectName);
         assertEquals(subject.getDescription(), newSubjectDescription);
+        assertEquals(subject.getCode(), newCode);
     }
 
+    //@Ignore
     @Test
     public void test_BL_17_2() throws MultipleMessagesException, Exception {
+        SubjectVo subjectVo = new SubjectVo();
+
         Long subjectId = 2016722L;
         String newSubjectName = "SOFTWARE";
         String newSubjectDescription = "Los dos cursos se condensaron en uno solo.";
 
-        SubjectVo subject = subjectsFacade.updateSubject(subjectId, newSubjectName, newSubjectDescription);
+        subjectVo.setId(subjectId);
+        subjectVo.setName(newSubjectName);
+        subjectVo.setCode(subjectId.intValue());
+        subjectVo.setDescription(newSubjectDescription);
+
+        SubjectVo subject = subjectsFacade.updateSubject(subjectVo);
 
         assertNull(subject);
 
         try {
-            subjectsFacade.updateSubject(null, null, null);
+            subjectVo.setId(null);
+            subjectVo.setName("Nombre");
+            subjectVo.setCode(0);
+            subjectVo.setDescription(null);
+            subjectsFacade.updateSubject(subjectVo);
         } catch (MultipleMessagesException e) {
-            assertEquals(e.getMessages().size(), 2);
-            assertTrue(e.getMessages().contains("subject.id.null"));
-            assertTrue(e.getMessages().contains("subject.name.null"));
+            assertEquals(e.getMessages().size(), 1);
+            assertEquals(e.getMessages().get(0), "subject.id.null");
         }
     }
 
+    //@Ignore
     @Test
     public void test_BL_17_3() throws Exception {
+        SubjectVo subjectVo = new SubjectVo();
         try {
-            subjectsFacade.updateSubject(null, null, null);
+            subjectVo.setId(2033859L);
+            subjectVo.setName(null);
+            subjectVo.setCode(-5789);
+            subjectVo.setDescription(null);
+            subjectsFacade.updateSubject(subjectVo);
             fail();
         } catch (MultipleMessagesException ex) {
             assertEquals(ex.getMessages().size(), 2);
-            assertTrue(ex.getMessages().contains("subject.id.null"));
             assertTrue(ex.getMessages().contains("subject.name.null"));
+            assertTrue(ex.getMessages().contains("subject.code.negativeValue"));
         }
 
         try {
             String tooLongName = FacadesTestHelper.randomString(Integer.parseInt(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAX_SUBJECT_NAME_LENGTH)) + 1);
             String tooLongDescription = FacadesTestHelper.randomString(Integer.parseInt(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAX_SUBJECT_DESCRIPTION_LENGTH)) + 1);
 
-            subjectsFacade.updateSubject(Long.MIN_VALUE, tooLongName, tooLongDescription);
+            subjectVo.setId(2039461L);
+            subjectVo.setName(tooLongName);
+            subjectVo.setCode(479387);
+            subjectVo.setDescription(tooLongDescription);
+            subjectsFacade.updateSubject(subjectVo);
 
             fail();
 
@@ -359,7 +468,11 @@ public class SubjectsFacadeIT {
 
         try {
             String injectedCodeInDescription = "<script type=" + '"' + "text/javascript" + '"' + ">document.getElementById(" + '"' + "demo" + '"' + ").innerHTML=Date();</script>";
-            subjectsFacade.updateSubject(0L, "", injectedCodeInDescription + "Hola");
+            subjectVo.setId(0L);
+            subjectVo.setName("");
+            subjectVo.setCode(0);
+            subjectVo.setDescription(injectedCodeInDescription + "Hola");
+            subjectsFacade.updateSubject(subjectVo);
             fail();
         } catch (MultipleMessagesException ex) {
             assertTrue(ex.getMessages().size() == 1);
@@ -370,15 +483,32 @@ public class SubjectsFacadeIT {
         try {
             String injectedCodeInName = "<h1>Los profesores son unos tiranos</h1>";
             String tooLongDescription = FacadesTestHelper.randomString(Integer.parseInt(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAX_SUBJECT_DESCRIPTION_LENGTH)) + 1);
-            subjectsFacade.updateSubject(null, injectedCodeInName, tooLongDescription);
+            subjectVo.setId(2039461L);
+            subjectVo.setName(injectedCodeInName);
+            subjectVo.setCode(0);
+            subjectVo.setDescription(tooLongDescription);
+            subjectsFacade.updateSubject(subjectVo);
             fail();
         } catch (MultipleMessagesException ex) {
-            assertEquals(ex.getMessages().size(), 2);
-            assertTrue(ex.getMessages().contains("subject.id.null"));
+            assertEquals(ex.getMessages().size(), 1);
             assertTrue(ex.getMessages().contains("subject.description.tooLong"));
         }
+
+        /*try {
+            subjectVo.setId(2039372L);
+            subjectVo.setName("Materia con nuevo nombre");
+            subjectVo.setCode(2019772);
+            subjectVo.setDescription("No se tuvo mucha imaginación con el nombre de esta materia.");
+            // TODO: Resolve problem with rollback
+            subjectsFacade.updateSubject(subjectVo);
+            fail();
+        } catch (DuplicityException ex) {
+            assertTrue(true);
+        }*/
+
     }
 
+    //@Ignore
     @Test
     public void test_BL_18_1() throws Exception {
 
@@ -391,6 +521,7 @@ public class SubjectsFacadeIT {
 
     }
 
+    //@Ignore
     @Test
     public void test_BL_18_2() throws Exception {
         Long[] subjects = {2016722L, 9283792L, 7409261L, 7583632L};
@@ -399,10 +530,12 @@ public class SubjectsFacadeIT {
                 subjectsFacade.removeSubject(subjectId);
                 fail();
             } catch (DataBaseException ex) {
+                assertEquals("entity.notFound", ex.getMessage());
             }
         }
     }
 
+    //@Ignore
     @Test
     public void test_BL_29_1() throws Exception {
         String string;
@@ -436,11 +569,13 @@ public class SubjectsFacadeIT {
 
     }
 
+    //@Ignore
     @Test
     public void test_BL_29_2() throws Exception {
         assertEquals(subjectsFacade.getSubjectsAutocomplete(null).size(), 0);
     }
 
+    //@Ignore
     @Test
     public void test_BL_30_1() throws Exception {
         RatingSummaryVo ratingSummary;
@@ -454,6 +589,7 @@ public class SubjectsFacadeIT {
         assertEquals(ratingSummary.getNegative(), 2);
     }
 
+    //@Ignore
     @Test
     public void test_BL_30_2() throws Exception {
 

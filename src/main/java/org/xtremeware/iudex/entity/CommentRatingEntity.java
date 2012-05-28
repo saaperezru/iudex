@@ -2,26 +2,27 @@ package org.xtremeware.iudex.entity;
 
 import java.io.Serializable;
 import javax.persistence.*;
-import org.xtremeware.iudex.vo.CommentRatingVo;
+import org.xtremeware.iudex.vo.BinaryRatingVo;
 
 @javax.persistence.Entity(name = "CommentRating")
 @NamedQueries({
     @NamedQuery(name = "getCommentRatingByCommentId",
     query = "SELECT result FROM CommentRating result "
-    + "WHERE result.comment.id = :commentId"),
+    + "WHERE result.comment.id = :evaluatedObjectId"),
     @NamedQuery(name = "getCommentRatingByCommentIdAndUserId",
     query = "SELECT result FROM CommentRating result "
-    + "WHERE result.comment.id = :commentId AND result.user.id = :userId"),
+    + "WHERE result.comment.id = :evaluatedObjectId AND result.user.id = :userId"),
     @NamedQuery(name = "getCommentRatingByUserId",
     query = "SELECT result FROM CommentRating result "
     + "WHERE result.user.id = :userId"),
     @NamedQuery(name = "countPositiveCommentRating", query = "SELECT COUNT(result) FROM CommentRating result "
-    + "WHERE result.comment.id = :commentId AND result.value = 1"),
+    + "WHERE result.comment.id = :evaluatedObjectId AND result.value = 1"),
     @NamedQuery(name = "countNegativeCommentRating", query = "SELECT COUNT(result) FROM CommentRating result "
-    + "WHERE result.comment.id = :commentId AND result.value = -1")
+    + "WHERE result.comment.id = :evaluatedObjectId AND result.value = -1")
 })
-@Table(name = "COMMENT_RATING")
-public class CommentRatingEntity implements Serializable, Entity<CommentRatingVo> {
+@Table( name = "COMMENT_RATING",
+            uniqueConstraints = { @UniqueConstraint( columnNames = { "ID_USER_", "ID_COMMENT_" } ) } )
+public class CommentRatingEntity implements Serializable, Entity<BinaryRatingVo>, BinaryRatingEntity {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -38,11 +39,11 @@ public class CommentRatingEntity implements Serializable, Entity<CommentRatingVo
     private int value;
 
     @Override
-    public CommentRatingVo toVo() {
-        CommentRatingVo vo = new CommentRatingVo();
+    public BinaryRatingVo toVo() {
+        BinaryRatingVo vo = new BinaryRatingVo();
         vo.setId(getId());
         vo.setEvaluatedObjectId(getComment().getId());
-        vo.setUser(getUser().getId());
+        vo.setUserId(getUser().getId());
         vo.setValue(getValue());
         return vo;
     }
@@ -100,10 +101,12 @@ public class CommentRatingEntity implements Serializable, Entity<CommentRatingVo
         this.user = user;
     }
 
+    @Override
     public int getValue() {
         return value;
     }
 
+    @Override
     public void setValue(int value) {
         this.value = value;
     }

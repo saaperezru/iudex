@@ -11,7 +11,6 @@ import javax.faces.application.ConfigurableNavigationHandler;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.RequestScoped;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import org.primefaces.event.RateEvent;
@@ -19,7 +18,7 @@ import org.xtremeware.iudex.businesslogic.facade.FacadeFactory;
 import org.xtremeware.iudex.helper.Config;
 import org.xtremeware.iudex.helper.MultipleMessagesException;
 import org.xtremeware.iudex.presentation.vovw.*;
-import org.xtremeware.iudex.vo.CourseRatingVo;
+import org.xtremeware.iudex.vo.*;
 
 
 /**
@@ -34,54 +33,50 @@ public class ViewCourse implements Serializable {
 	public ViewCourse() {
 		id = Long.valueOf(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id"));
 	}
-	private CourseVoVwFull course;
-	private List<CommentVoVwFull> comments;
-	private ProfessorVoVwFull professor;
-	private SubjectVoVwFull subject;
+	private CourseVoFull course;
+	private List<CommentVoFull> comments;
+	private ProfessorVoFull professor;
+	private SubjectVoFull subject;
 	private Long id;
 	private CourseRatingVo courseRating;
 	@ManagedProperty(value = "#{user}")
 	private User user;
 
-	public Long getId() {
-		return id;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public List<CommentVoFull> getComments() {
+        return comments;
+    }
 
-	public List<CommentVoVwFull> getComments() {
-		return comments;
-	}
+    public void setComments(List<CommentVoFull> comments) {
+        this.comments = comments;
+    }
 
-	public void setComments(List<CommentVoVwFull> comments) {
-		this.comments = comments;
-	}
+    public CourseVoFull getCourse() {
+        return course;
+    }
 
-	public CourseVoVwFull getCourse() {
-		return course;
-	}
+    public void setCourse(CourseVoFull course) {
+        this.course = course;
+    }
 
-	public void setCourse(CourseVoVwFull course) {
-		this.course = course;
-	}
+    public ProfessorVoFull getProfessor() {
+        return professor;
+    }
 
-	public ProfessorVoVwFull getProfessor() {
-		return professor;
-	}
+    public void setProfessor(ProfessorVoFull professor) {
+        this.professor = professor;
+    }
 
-	public void setProfessor(ProfessorVoVwFull professor) {
-		this.professor = professor;
-	}
+    public SubjectVoFull getSubject() {
+        return subject;
+    }
 
-	public SubjectVoVwFull getSubject() {
-		return subject;
-	}
-
-	public void setSubject(SubjectVoVwFull subject) {
-		this.subject = subject;
-	}
+    public void setSubject(SubjectVoFull subject) {
+        this.subject = subject;
+    }
 
 	public User getUser() {
 		return user;
@@ -149,7 +144,7 @@ public class ViewCourse implements Serializable {
 				subject = facadesFactory.getSubjectsFacade().getSubject(course.getProfessor().getId());
 				comments = facadesFactory.getCommentsFacade().getCommentsByCourseId(id);
 			} catch (Exception ex) {
-				Config.getInstance().getServiceFactory().createLogService().error(ex.getMessage(), ex);
+				Config.getInstance().getServiceFactory().getLogService().error(ex.getMessage(), ex);
 				((ConfigurableNavigationHandler) FacesContext.getCurrentInstance().getApplication().getNavigationHandler()).performNavigation("notfound");
 			}
 		}

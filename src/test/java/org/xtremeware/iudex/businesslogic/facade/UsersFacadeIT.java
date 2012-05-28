@@ -248,7 +248,7 @@ public class UsersFacadeIT {
         UsersFacade usersFacade = Config.getInstance().getFacadeFactory().
                 getUsersFacade();
         MailingService mailingService = Config.getInstance().getServiceFactory().
-                createMailingService();
+                getMailingService();
 
         MailingConfigVo originalMailingConfig = new MailingConfigVo();
         originalMailingConfig.setSender(ConfigurationVariablesHelper.getVariable(
@@ -452,6 +452,7 @@ public class UsersFacadeIT {
         user.setPassword("New password");
         user.setProgramsId(Arrays.asList(new Long[]{2537L, 2556L}));
         user.setRole(Role.ADMINISTRATOR);
+        
         UserVo expectedUser = new UserVo();
         expectedUser.setId(5L);
         expectedUser.setFirstName("New name");
@@ -460,6 +461,7 @@ public class UsersFacadeIT {
         expectedUser.setProgramsId(Arrays.asList(new Long[]{2537L, 2556L}));
         expectedUser.setRole(Role.STUDENT); // Shouldn't change
         expectedUser.setUserName("student4"); // Shouldn't change
+        
         UsersFacade usersFacade = Config.getInstance().getFacadeFactory().
                 getUsersFacade();
         user = usersFacade.editUser(user);
@@ -574,8 +576,7 @@ public class UsersFacadeIT {
         user.setFirstName(FacadesTestHelper.randomString(10));
         user.setLastName(FacadesTestHelper.randomString(10));
         user.setUserName(FacadesTestHelper.randomString(MAX_USERNAME_LENGTH + 1));
-        user.setPassword(FacadesTestHelper.randomString(MAX_USER_PASSWORD_LENGTH +
-                1));
+        user.setPassword(FacadesTestHelper.randomString(MAX_USER_PASSWORD_LENGTH +1));
         List<Long> programsId = user.getProgramsId();
         programsId.add(null);
 

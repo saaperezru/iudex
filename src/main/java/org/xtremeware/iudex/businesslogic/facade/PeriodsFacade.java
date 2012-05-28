@@ -1,37 +1,33 @@
 package org.xtremeware.iudex.businesslogic.facade;
 
-import java.util.ArrayList;
-import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
+import java.util.*;
+import javax.persistence.*;
 import org.xtremeware.iudex.businesslogic.DuplicityException;
 import org.xtremeware.iudex.businesslogic.helper.FacadesHelper;
-import org.xtremeware.iudex.businesslogic.service.ServiceFactory;
-import org.xtremeware.iudex.helper.DataBaseException;
-import org.xtremeware.iudex.helper.MultipleMessagesException;
+import org.xtremeware.iudex.businesslogic.service.ServiceBuilder;
+import org.xtremeware.iudex.helper.*;
 import org.xtremeware.iudex.vo.PeriodVo;
 
 public class PeriodsFacade extends AbstractFacade {
 
-    public PeriodsFacade(ServiceFactory serviceFactory, EntityManagerFactory emFactory) {
+    public PeriodsFacade(ServiceBuilder serviceFactory, EntityManagerFactory emFactory) {
         super(serviceFactory, emFactory);
     }
 
-    public void removePeriod(long id) throws DataBaseException {
-        EntityManager em = null;
-        EntityTransaction tx = null;
+    public void removePeriod(long periodId) throws DataBaseException {
+        EntityManager entityManager = null;
+        EntityTransaction transaction = null;
         try {
-            em = getEntityManagerFactory().createEntityManager();
-            tx = em.getTransaction();
-            tx.begin();
-            getServiceFactory().createPeriodsService().remove(em, id);
-            tx.commit();
-        } catch (DataBaseException e) {
-            getServiceFactory().createLogService().error(e.getMessage(), e);
-            FacadesHelper.rollbackTransaction(em, tx, e);
+            entityManager = getEntityManagerFactory().createEntityManager();
+            transaction = entityManager.getTransaction();
+            transaction.begin();
+            getServiceFactory().getPeriodsService().remove(entityManager, periodId);
+            transaction.commit();
+        } catch (DataBaseException exception) {
+            getServiceFactory().getLogService().error(exception.getMessage(), exception);
+            FacadesHelper.rollbackTransaction(entityManager, transaction, exception);
         } finally {
-            FacadesHelper.closeEntityManager(em);
+            FacadesHelper.closeEntityManager(entityManager);
         }
     }
 
@@ -46,43 +42,43 @@ public class PeriodsFacade extends AbstractFacade {
      */
     public PeriodVo addPeriod(int year, int semester) 
             throws MultipleMessagesException, DataBaseException, DuplicityException {
-        PeriodVo createdVo = null;
-        PeriodVo vo = new PeriodVo();
-        vo.setYear(year);
-        vo.setSemester(semester);
-        EntityManager em = null;
-        EntityTransaction tx = null;
+       
+        PeriodVo periodVo = new PeriodVo();
+        periodVo.setYear(year);
+        periodVo.setSemester(semester);
+        EntityManager entityManager = null;
+        EntityTransaction transaction = null;
         try {
-            em = getEntityManagerFactory().createEntityManager();
-            tx = em.getTransaction();
-            tx.begin();
-            createdVo = getServiceFactory().createPeriodsService().create(em, vo);
-            tx.commit();
-        } catch (Exception e) {
-            getServiceFactory().createLogService().error(e.getMessage(), e);
-            FacadesHelper.checkException(e, MultipleMessagesException.class);
-            FacadesHelper.checkExceptionAndRollback(em, tx, e, DuplicityException.class);
-            FacadesHelper.rollbackTransaction(em, tx, e);
+            entityManager = getEntityManagerFactory().createEntityManager();
+            transaction = entityManager.getTransaction();
+            transaction.begin();
+            periodVo = getServiceFactory().getPeriodsService().create(entityManager, periodVo);
+            transaction.commit();
+        } catch (Exception exception) {
+            getServiceFactory().getLogService().error(exception.getMessage(), exception);
+            FacadesHelper.checkException(exception, MultipleMessagesException.class);
+            FacadesHelper.checkExceptionAndRollback(entityManager, transaction, exception, DuplicityException.class);
+            FacadesHelper.rollbackTransaction(entityManager, transaction, exception);
         }finally {
-            FacadesHelper.closeEntityManager(em);
+            FacadesHelper.closeEntityManager(entityManager);
         }
-        return createdVo;
+        return periodVo;
     }
 
     public List<PeriodVo> listPeriods() throws Exception {
-        List<PeriodVo> list = new ArrayList<PeriodVo>();
-        EntityManager em = null;
+        List<PeriodVo> periodVos = new ArrayList<PeriodVo>();
+        EntityManager entityManager = null;
         try {
-            em = getEntityManagerFactory().createEntityManager();
-            list = getServiceFactory().createPeriodsService().list(em);
+            entityManager = getEntityManagerFactory().createEntityManager();
+            periodVos = getServiceFactory().getPeriodsService().list(entityManager);
 
-        } catch (Exception e) {
-            getServiceFactory().createLogService().error(e.getMessage(), e);
-            throw new RuntimeException(e);
+        } catch (Exception enException) {
+            getServiceFactory().getLogService().error(enException.getMessage(), enException);
+            throw new RuntimeException(enException);
         } finally {
-            FacadesHelper.closeEntityManager(em);
+            FacadesHelper.closeEntityManager(entityManager);
         }
-        return list;
+        return periodVos;
 
     }
 }

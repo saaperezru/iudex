@@ -157,8 +157,7 @@ public class PeriodsFacadeIT {
             periodsFacade.removePeriod(id);
         } catch (Exception ex) {
             assertEquals(RuntimeException.class, ex.getClass());
-            assertEquals("No entity found for id " + String.valueOf(id)
-                    + "while triying to delete the associated record", ex.getCause().getMessage());
+            assertEquals("entity.notFound", ex.getCause().getMessage());
             int size = entityManager.createQuery(
                     "SELECT COUNT(p) FROM Course p WHERE period.id = :id",
                     Long.class).setParameter("id", id).getSingleResult().
@@ -170,8 +169,7 @@ public class PeriodsFacadeIT {
             periodsFacade.removePeriod(id);
         } catch (Exception ex) {
             assertEquals(RuntimeException.class, ex.getClass());
-            assertEquals("No entity found for id " + String.valueOf(id)
-                    + "while triying to delete the associated record", ex.getCause().getMessage());
+            assertEquals("entity.notFound", ex.getCause().getMessage());
             int size = entityManager.createQuery(
                     "SELECT COUNT(p) FROM Course p WHERE period.id = :id",
                     Long.class).setParameter("id", id).getSingleResult().
@@ -183,8 +181,7 @@ public class PeriodsFacadeIT {
             periodsFacade.removePeriod(id);
         } catch (Exception ex) {
             assertEquals(RuntimeException.class, ex.getClass());
-            assertEquals("No entity found for id " + String.valueOf(id)
-                    + "while triying to delete the associated record", ex.getCause().getMessage());
+            assertEquals("entity.notFound", ex.getCause().getMessage());
             int size = entityManager.createQuery(
                     "SELECT COUNT(p) FROM Course p WHERE period.id = :id",
                     Long.class).setParameter("id", id).getSingleResult().
@@ -196,8 +193,7 @@ public class PeriodsFacadeIT {
             periodsFacade.removePeriod(id);
         } catch (Exception ex) {
             assertEquals(RuntimeException.class, ex.getClass());
-            assertEquals("No entity found for id " + String.valueOf(id)
-                    + "while triying to delete the associated record", ex.getCause().getMessage());
+            assertEquals("entity.notFound", ex.getCause().getMessage());
             int size = entityManager.createQuery(
                     "SELECT COUNT(p) FROM Course p WHERE period.id = :id",
                     Long.class).setParameter("id", id).getSingleResult().

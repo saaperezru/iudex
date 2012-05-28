@@ -1,33 +1,23 @@
 package org.xtremeware.iudex.businesslogic.service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import javax.persistence.EntityManager;
-import org.xtremeware.iudex.businesslogic.service.createimplementations.SimpleCreate;
-import org.xtremeware.iudex.businesslogic.service.readimplementations.SimpleRead;
-import org.xtremeware.iudex.businesslogic.service.removeimplementations.CoursesRemove;
-import org.xtremeware.iudex.businesslogic.service.updateimplementations.SimpleUpdate;
-import org.xtremeware.iudex.dao.AbstractDaoFactory;
+import org.xtremeware.iudex.businesslogic.service.crudinterfaces.*;
+import org.xtremeware.iudex.dao.AbstractDaoBuilder;
 import org.xtremeware.iudex.entity.CourseEntity;
-import org.xtremeware.iudex.helper.DataBaseException;
-import org.xtremeware.iudex.helper.ExternalServiceConnectionException;
-import org.xtremeware.iudex.helper.MultipleMessagesException;
-import org.xtremeware.iudex.helper.SecurityHelper;
+import org.xtremeware.iudex.helper.*;
 import org.xtremeware.iudex.vo.CourseVo;
 
 public class CoursesService extends CrudService<CourseVo, CourseEntity> {
 
-	public CoursesService(AbstractDaoFactory daoFactory) {
-		super(daoFactory,
-				new SimpleCreate<CourseEntity>(daoFactory.getCourseDao()),
-				new SimpleRead<CourseEntity>(daoFactory.getCourseDao()),
-				new SimpleUpdate<CourseEntity>(daoFactory.getCourseDao()),
-				new CoursesRemove(daoFactory));
-	}
+    public CoursesService(AbstractDaoBuilder daoFactory,
+            Create create, Read read, Update update, Remove remove) {
+        super(daoFactory, create, read, update, remove);
+
+    }
 
 	@Override
-	public void validateVo(EntityManager em, CourseVo course) throws
-			MultipleMessagesException, DataBaseException {
+	protected void validateVoForCreation(EntityManager entityManager, CourseVo course) throws MultipleMessagesException, ExternalServiceConnectionException, DataBaseException {
 		MultipleMessagesException multipleMessageException =
 				new MultipleMessagesException();
 		if (course == null) {
@@ -37,7 +27,7 @@ public class CoursesService extends CrudService<CourseVo, CourseEntity> {
 		if (course.getPeriodId() == null) {
 			multipleMessageException.addMessage(
 					"course.periodId.null");
-		} else if (getDaoFactory().getPeriodDao().getById(em,
+		} else if (getDaoFactory().getPeriodDao().getById(entityManager,
 				course.getPeriodId()) == null) {
 			multipleMessageException.addMessage(
 					"course.periodId.notFound");
@@ -45,14 +35,14 @@ public class CoursesService extends CrudService<CourseVo, CourseEntity> {
 		if (course.getProfessorId() == null) {
 			multipleMessageException.addMessage(
 					"course.professorId.null");
-		} else if (getDaoFactory().getProfessorDao().getById(em, course.getProfessorId()) == null) {
+		} else if (getDaoFactory().getProfessorDao().getById(entityManager, course.getProfessorId()) == null) {
 			multipleMessageException.addMessage(
 					"course.professorId.notFound");
 		}
 		if (course.getSubjectId() == null) {
 			multipleMessageException.addMessage(
 					"course.subjectId.null");
-		} else if (getDaoFactory().getSubjectDao().getById(em, course.getSubjectId()) == null) {
+		} else if (getDaoFactory().getSubjectDao().getById(entityManager, course.getSubjectId()) == null) {
 			multipleMessageException.addMessage("course.subjectId.notFound");
 		}
 		if ((course.getRatingCount() == 0 && course.getRatingAverage() != 0)) {
@@ -73,52 +63,73 @@ public class CoursesService extends CrudService<CourseVo, CourseEntity> {
 		}
 	}
 
-	public List<CourseVo> getByProfessorId(EntityManager em, long professorId)
-			throws DataBaseException {
-		List<CourseVo> list = new ArrayList<CourseVo>();
-		for (CourseEntity c : getDaoFactory().getCourseDao().getByProfessorId(em,
-				professorId)) {
-			list.add(c.toVo());
-		}
-		return list;
-	}
+    @Override
+    public void validateVoForUpdate(EntityManager entityManager, CourseVo courseVo)
+            throws MultipleMessagesException, ExternalServiceConnectionException, DataBaseException {
+        validateVoForCreation(entityManager, courseVo);
+        MultipleMessagesException multipleMessageException =
+                new MultipleMessagesException();
+        if (courseVo.getId() == null) {
+            multipleMessageException.addMessage("course.id.null");
+            throw multipleMessageException;
+        }
+    }
 
-	public List<CourseVo> getBySubjectId(EntityManager em, long subjectId)
-			throws DataBaseException {
-		List<CourseVo> list = new ArrayList<CourseVo>();
-		for (CourseEntity c : getDaoFactory().getCourseDao().getBySubjectId(em,
-				subjectId)) {
-			list.add(c.toVo());
-		}
-		return list;
-	}
+    public List<CourseVo> getByProfessorId(EntityManager entityManager, long professorId)
+            throws DataBaseException {
 
-	public List<CourseVo> getSimilarCourses(EntityManager em,
-			String professorName, String subjectName, Long preiodId)
-			throws ExternalServiceConnectionException, DataBaseException {
-		professorName = SecurityHelper.sanitizeHTML(professorName);
-		subjectName = SecurityHelper.sanitizeHTML(subjectName);
-		List<CourseVo> list = new ArrayList<CourseVo>();
-		for (CourseEntity c : getDaoFactory().getCourseDao().
-				getCoursesByProfessorNameLikeAndSubjectNameLike(em,
-				professorName, subjectName, preiodId)) {
-			list.add(c.toVo());
-		}
-		return list;
-	}
+        List<CourseVo> list = new ArrayList<CourseVo>();
+        List<CourseEntity> courseEntitys = getDaoFactory().getCourseDao().getByProfessorId(entityManager,
+                professorId);
+        for (CourseEntity courseEntity : courseEntitys) {
+            list.add(courseEntity.toVo());
+        }
+        return list;
+    }
 
-	@Override
-	public CourseEntity voToEntity(EntityManager em, CourseVo vo) throws
-			ExternalServiceConnectionException, MultipleMessagesException,
-			DataBaseException {
-		validateVo(em, vo);
-		CourseEntity course = new CourseEntity();
-		course.setId(vo.getId());
-		course.setPeriod(getDaoFactory().getPeriodDao().getById(em, vo.getPeriodId()));
-		course.setProfessor(getDaoFactory().getProfessorDao().getById(em, vo.getProfessorId()));
-		course.setSubject(getDaoFactory().getSubjectDao().getById(em, vo.getSubjectId()));
-		course.setRatingAverage(vo.getRatingAverage());
-		course.setRatingCount(vo.getRatingCount());
-		return course;
-	}
+    public List<CourseVo> getBySubjectId(EntityManager entityManager, long subjectId)
+            throws DataBaseException {
+        List<CourseVo> list = new ArrayList<CourseVo>();
+        List<CourseEntity> courseEntitys = getDaoFactory().getCourseDao().getBySubjectId(entityManager,
+                subjectId);
+        for (CourseEntity courseEntity : courseEntitys) {
+            list.add(courseEntity.toVo());
+        }
+        return list;
+    }
+
+    public List<CourseVo> getSimilarCourses(EntityManager em,
+            String professorName, String subjectName, Long preiodId)
+            throws ExternalServiceConnectionException, DataBaseException {
+
+        professorName = SecurityHelper.sanitizeHTML(professorName);
+        subjectName = SecurityHelper.sanitizeHTML(subjectName);
+        List<CourseEntity> coursesByProfessorNameLikeAndSubjectNameLike = getDaoFactory().getCourseDao().
+                getCoursesByProfessorNameLikeAndSubjectNameLike(em,
+                professorName, subjectName, preiodId);
+
+        List<CourseVo> list = new ArrayList<CourseVo>();
+
+        for (CourseEntity courseEntity : coursesByProfessorNameLikeAndSubjectNameLike) {
+            list.add(courseEntity.toVo());
+        }
+        return list;
+    }
+
+    @Override
+    public CourseEntity voToEntity(EntityManager entityManager, CourseVo courseVo)
+            throws ExternalServiceConnectionException, MultipleMessagesException,
+            DataBaseException {
+
+        CourseEntity course = new CourseEntity();
+        course.setId(courseVo.getId());
+        course.setPeriod(getDaoFactory().getPeriodDao().getById(entityManager, courseVo.getPeriodId()));
+        course.setProfessor(getDaoFactory().getProfessorDao().getById(entityManager, courseVo.getProfessorId()));
+        course.setSubject(getDaoFactory().getSubjectDao().getById(entityManager, courseVo.getSubjectId()));
+        course.setRatingAverage(courseVo.getRatingAverage());
+        course.setRatingCount(courseVo.getRatingCount());
+        return course;
+    }
+
+	
 }

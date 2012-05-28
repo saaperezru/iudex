@@ -1,13 +1,11 @@
 package org.xtremeware.iudex.businesslogic.service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import javax.persistence.EntityManager;
-import org.xtremeware.iudex.businesslogic.DuplicityException;
 import org.xtremeware.iudex.businesslogic.InvalidVoException;
-import org.xtremeware.iudex.dao.AbstractDaoFactory;
-import org.xtremeware.iudex.entity.CommentEntity;
-import org.xtremeware.iudex.entity.CommentRatingEntity;
+import org.xtremeware.iudex.businesslogic.service.crudinterfaces.*;
+import org.xtremeware.iudex.dao.AbstractDaoBuilder;
+import org.xtremeware.iudex.entity.*;
 import org.xtremeware.iudex.helper.*;
 import org.xtremeware.iudex.vo.CommentVo;
 
@@ -16,107 +14,99 @@ import org.xtremeware.iudex.vo.CommentVo;
  *
  * @author juan
  */
-public class CommentsService {
+public class CommentsService extends CrudService<CommentVo, CommentEntity> {
 
     public final int MAX_COMMENT_LENGTH;
-    public final int MAX_COMMENTS_PER_DAY;
-    private AbstractDaoFactory daoFactory;
 
     /**
      * Constructor
      *
      * @param daoFactory a daoFactory
      */
-    public CommentsService(AbstractDaoFactory daoFactory) throws ExternalServiceConnectionException {
-        this.daoFactory = daoFactory;
-        MAX_COMMENTS_PER_DAY = Integer.parseInt(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAX_COMMENTS_PER_DAY));
+    public CommentsService(AbstractDaoBuilder daoFactory,
+            Create create, Read read, Update update, Remove remove) {
+
+        super(daoFactory, create, read, update, remove);
         MAX_COMMENT_LENGTH = Integer.parseInt(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAX_COMMENT_LENGTH));
 
-    }
-
-    private AbstractDaoFactory getDaoFactory() {
-        return daoFactory;
     }
 
     /**
      * Returns a list with all the comments associated to a course
      *
-     * @param em the entity manager
+     * @param entityManager the entity manager
      * @param courseId the Id of the course
      * @return comments in the specified course
      */
-    public List<CommentVo> getByCourseId(EntityManager em, long courseId)
+    public List<CommentVo> getByCourseId(EntityManager entityManager, long courseId)
             throws DataBaseException {
-        List<CommentEntity> entities = getDaoFactory().getCommentDao().getByCourseId(em, courseId);
-        
-        List<CommentVo> vos = new ArrayList<CommentVo>();
+        List<CommentEntity> commentEntitys = getDaoFactory().getCommentDao().getByCourseId(entityManager, courseId);
 
-        if (entities.isEmpty()) {
-            return vos;
+        List<CommentVo> commentVos = new ArrayList<CommentVo>();
+
+        for (CommentEntity commentEntity : commentEntitys) {
+            commentVos.add(commentEntity.toVo());
         }
 
-        for (CommentEntity e : entities) {
-            vos.add(e.toVo());
-        }
-
-        return vos;
+        return commentVos;
     }
 
     /**
      * Validates whether the CommentVo object satisfies the business rules and
      * contains correct references to other objects
      *
-     * @param em the entity manager
-     * @param vo the CommentVo
+     * @param entityManager the entity manager
+     * @param commentVo the CommentVo
      * @throws InvalidVoException in case the business rules are violated
      */
-    public void validateVo(EntityManager em, CommentVo vo) throws
-             MultipleMessagesException, DataBaseException {
+    @Override
+    public void validateVoForCreation(EntityManager entityManager, CommentVo commentVo)
+            throws MultipleMessagesException, DataBaseException {
 
         MultipleMessagesException multipleMessageException = new MultipleMessagesException();
 
-        if (vo == null) {
+        if (commentVo == null) {
             multipleMessageException.addMessage(
                     "comment.null");
             throw multipleMessageException;
         }
 
-        if (vo.getContent() == null) {
+        if (commentVo.getContent() == null) {
             multipleMessageException.addMessage(
                     "comment.content.null");
         } else {
-            vo.setContent(SecurityHelper.sanitizeHTML(vo.getContent()));
-            if (vo.getContent().length() < 1 || vo.getContent().length() > MAX_COMMENT_LENGTH) {
+            commentVo.setContent(SecurityHelper.sanitizeHTML(commentVo.getContent()));
+            if (commentVo.getContent().length() < 1 || commentVo.getContent().length() > MAX_COMMENT_LENGTH) {
                 multipleMessageException.addMessage(
                         "comment.content.invalidSize");
             }
         }
 
-        if (vo.getCourseId() == null) {
+        if (commentVo.getCourseId() == null) {
             multipleMessageException.addMessage(
                     "comment.courseId.null");
-        } else if (getDaoFactory().getCourseDao().getById(em, vo.getCourseId()) == null) {
+        } else if (getDaoFactory().getCourseDao().getById(entityManager, commentVo.getCourseId()) == null) {
             multipleMessageException.addMessage(
                     "comment.courseId.element.notFound");
         }
 
-        if (vo.getDate() == null) {
+        if (commentVo.getDate() == null) {
             multipleMessageException.addMessage(
                     "comment.date.null");
         }
 
-        if (vo.getUserId() == null) {
+        if (commentVo.getUserId() == null) {
             multipleMessageException.addMessage(
                     "comment.userId.null");
-        } else if (getDaoFactory().getUserDao().getById(em, vo.getUserId()) == null) {
+        } else if (getDaoFactory().getUserDao().getById(entityManager, commentVo.getUserId()) == null) {
             multipleMessageException.addMessage(
                     "comment.userId.element.notFound");
         }
 
-        if (vo.getRating() == null) {
+        if (commentVo.getRating() == null) {
             multipleMessageException.addMessage(
                     "comment.rating.null");
-        } else if (vo.getRating() < 0.0F || vo.getRating() > 5.0F) {
+        } else if (commentVo.getRating() < 0.0F || commentVo.getRating() > 5.0F) {
             multipleMessageException.addMessage(
                     "comment.rating.invalidRating");
         }
@@ -129,78 +119,37 @@ public class CommentsService {
     /**
      * Creates a Entity with the data of the value object
      *
-     * @param em the entity manager
-     * @param vo the CommentVo
+     * @param entityManager the entity manager
+     * @param commentVo the CommentVo
      * @return an Entity with the Comment value object data
      * @throws InvalidVoException
      */
-    public CommentEntity voToEntity(EntityManager em, CommentVo vo)
+    @Override
+    public CommentEntity voToEntity(EntityManager entityManager, CommentVo commentVo)
             throws ExternalServiceConnectionException, MultipleMessagesException,
             DataBaseException {
 
-        validateVo(em, vo);
-
         CommentEntity entity = new CommentEntity();
 
-        entity.setAnonymous(vo.isAnonymous());
-        entity.setContent(vo.getContent());
-        entity.setDate(vo.getDate());
-        entity.setId(vo.getId());
-        entity.setRating(vo.getRating());
+        entity.setAnonymous(commentVo.isAnonymous());
+        entity.setContent(commentVo.getContent());
+        entity.setDate(commentVo.getDate());
+        entity.setId(commentVo.getId());
+        entity.setRating(commentVo.getRating());
 
-        entity.setCourse(getDaoFactory().getCourseDao().getById(em, vo.getCourseId()));
-        entity.setUser(getDaoFactory().getUserDao().getById(em, vo.getUserId()));
+        entity.setCourse(getDaoFactory().getCourseDao().getById(entityManager, commentVo.getCourseId()));
+        entity.setUser(getDaoFactory().getUserDao().getById(entityManager, commentVo.getUserId()));
 
         return entity;
     }
 
-    public CommentVo create(EntityManager em, CommentVo vo)
-            throws MultipleMessagesException, ExternalServiceConnectionException,
-            DataBaseException, MaxCommentsLimitReachedException, DuplicityException, DataBaseException {
-        validateVo(em, vo);
-
-        if (checkUserCommentsCounter(em, vo.getUserId()) >= MAX_COMMENTS_PER_DAY) {
-            throw new MaxCommentsLimitReachedException("Maximum comments per day reached");
+    @Override
+    protected void validateVoForUpdate(EntityManager entityManager, CommentVo valueObject) throws MultipleMessagesException, ExternalServiceConnectionException, DataBaseException {
+        validateVoForCreation(entityManager, valueObject);
+        MultipleMessagesException multipleMessageException = new MultipleMessagesException();
+        if (valueObject.getId() == null) {
+            multipleMessageException.addMessage("comment.id.null");
+            throw multipleMessageException;
         }
-
-        return getDaoFactory().getCommentDao().persist(em, voToEntity(em, vo)).toVo();
-    }
-
-    /**
-     * Returns the number of comments submitted by a user on the current date
-     *
-     * @param em entity manager
-     * @param userId id of the user
-     * @return number of comments submitted on the current day
-     */
-    public int checkUserCommentsCounter(EntityManager em, Long userId) throws DataBaseException {
-        return getDaoFactory().getCommentDao().getUserCommentsCounter(em, userId);
-    }
-
-    public CommentVo update(EntityManager em, CommentVo vo)
-            throws ExternalServiceConnectionException, MultipleMessagesException, DataBaseException {
-        validateVo(em, vo);
-        return getDaoFactory().getCommentDao().merge(em, voToEntity(em, vo)).toVo();
-
-    }
-
-    /**
-     * Remove the comment and all the CommentRatings associated to him
-     *
-     * @param em entity manager
-     * @param id id of the comment
-     */
-    public void remove(EntityManager em, long id) throws DataBaseException {
-        List<CommentRatingEntity> ratings = getDaoFactory().getCommentRatingDao().getByCommentId(em, id);
-
-        for (CommentRatingEntity rating : ratings) {
-            getDaoFactory().getCommentRatingDao().remove(em, rating.getId());
-        }
-        getDaoFactory().getCommentDao().remove(em, id);
-    }
-
-    public CommentVo getById(EntityManager em, long id)
-            throws DataBaseException {
-        return getDaoFactory().getCommentDao().getById(em, id).toVo();
     }
 }

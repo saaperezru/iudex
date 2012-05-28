@@ -2,29 +2,30 @@ package org.xtremeware.iudex.businesslogic.service.createimplementations;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import javax.persistence.EntityManager;
-import org.xtremeware.iudex.businesslogic.DuplicityException;
-import org.xtremeware.iudex.businesslogic.service.crudinterfaces.CreateInterface;
-import org.xtremeware.iudex.dao.AbstractDaoFactory;
+import org.xtremeware.iudex.dao.AbstractDaoBuilder;
 import org.xtremeware.iudex.entity.ConfirmationKeyEntity;
 import org.xtremeware.iudex.entity.UserEntity;
-import org.xtremeware.iudex.helper.ConfigurationVariablesHelper;
 import org.xtremeware.iudex.helper.DataBaseException;
 import org.xtremeware.iudex.helper.SecurityHelper;
+import javax.persistence.EntityManager;
+import org.xtremeware.iudex.businesslogic.DuplicityException;
+import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Create;
+import org.xtremeware.iudex.helper.ConfigurationVariablesHelper;
 
 /**
  *
  * @author josebermeo
  */
-public class UsersCreate implements CreateInterface<UserEntity> {
-    private AbstractDaoFactory daoFactory;
+public class UsersCreate implements Create<UserEntity> {
+    private AbstractDaoBuilder daoFactory;
 
-    public UsersCreate(AbstractDaoFactory daoFactory) {
+    public UsersCreate(AbstractDaoBuilder daoFactory) {
         this.daoFactory = daoFactory;
     }
 
     @Override
-    public UserEntity create(EntityManager em, UserEntity entity) throws DataBaseException, DuplicityException {
+    public UserEntity create(EntityManager entityManager, UserEntity entity)
+            throws DataBaseException, DuplicityException {
         //It is not possible to create users that are already active
         entity.setActive(false);
         //Hash password
@@ -39,15 +40,14 @@ public class UsersCreate implements CreateInterface<UserEntity> {
         //Associate confirmation key with user
         entity.setConfirmationKey(confirmationKeyEntity);
 
-        entity = getDaoFactory().getUserDao().persist(em, entity);
+        entity = getDaoFactory().getUserDao().persist(entityManager, entity);
         confirmationKeyEntity.setUser(entity);
         //persist confirmation key
-        getDaoFactory().getConfirmationKeyDao().persist(em, confirmationKeyEntity);
-
+        getDaoFactory().getConfirmationKeyDao().persist(entityManager, confirmationKeyEntity);
         return entity;
     }
 
-    private AbstractDaoFactory getDaoFactory() {
+    private AbstractDaoBuilder getDaoFactory() {
         return daoFactory;
     }
     

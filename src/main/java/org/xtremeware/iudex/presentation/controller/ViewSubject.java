@@ -21,28 +21,29 @@ import org.xtremeware.iudex.presentation.vovw.SubjectVoVwFull;
 @RequestScoped
 public class ViewSubject {
 
-	public class courseInfo{
-		private CourseVoVwFull course;
-		private List<CommentVoVwFull> comments;
+    public class courseInfo {
 
-		public courseInfo(CourseVoVwFull course, List<CommentVoVwFull> comments) {
-			this.course = course;
-			this.comments = comments;
-		}
+        private CourseVoVwFull course;
+        private List<CommentVoVwFull> comments;
 
-		public List<CommentVoVwFull> getComments() {
-			return comments;
-		}
+        public courseInfo(CourseVoVwFull course, List<CommentVoVwFull> comments) {
+            this.course = course;
+            this.comments = comments;
+        }
 
-		public CourseVoVwFull getCourse() {
-			return course;
-		}
-		
-	}
+        public List<CommentVoVwFull> getComments() {
+            return comments;
+        }
+
+        public CourseVoVwFull getCourse() {
+            return course;
+        }
+    }
     @ManagedProperty(value = "#{param['id']}")
     private long id;
-	private SubjectVoVwFull subject ;
-	private List<courseInfo> courses;
+    private SubjectVoVwFull subject;
+    private List<courseInfo> courses;
+
     public long getId() {
         return id;
     }
@@ -51,27 +52,26 @@ public class ViewSubject {
         this.id = id;
     }
 
-	public SubjectVoVwFull getSubject() {
-		return subject;
-	}
-
-	public List<courseInfo> getCourses() {
-		return courses;
-	}
-
-
-    public void preRenderView() {
-		try {
-			subject = Config.getInstance().getFacadeFactory().getSubjectsFacade().getSubject(id);
-			if (subject==null){
-				((ConfigurableNavigationHandler) FacesContext.getCurrentInstance().getApplication().getNavigationHandler()).performNavigation("notfound");
-			}
-			for (CourseVoVwFull c :Config.getInstance().getFacadeFactory().getCoursesFacade().getBySubjectId(id)){
-				courses.add(new courseInfo(c, Config.getInstance().getFacadeFactory().getCommentsFacade().getCommentsByCourseId(c.getId())));
-			}
-		} catch (Exception ex) {
-			//TODO : Deal with the exception
-			Logger.getLogger(ViewSubject.class.getName()).log(Level.SEVERE, null, ex);
-		}
+    public SubjectVoVwFull getSubject() {
+        return subject;
     }
+
+    public List<courseInfo> getCourses() {
+        return courses;
+    }
+
+//    public void preRenderView() {
+//        try {
+//            subject = Config.getInstance().getFacadeFactory().getSubjectsFacade().getSubject(id);
+//            if (subject == null) {
+//                ((ConfigurableNavigationHandler) FacesContext.getCurrentInstance().getApplication().getNavigationHandler()).performNavigation("notfound");
+//            }
+//            for (CourseVoVwFull c : Config.getInstance().getFacadeFactory().getCoursesFacade().getBySubjectId(id)) {
+//                courses.add(new courseInfo(c, Config.getInstance().getFacadeFactory().getCommentsFacade().getCommentsByCourseId(c.getId())));
+//            }
+//        } catch (Exception ex) {
+//            //TODO : Deal with the exception
+//            Logger.getLogger(ViewSubject.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//    }
 }

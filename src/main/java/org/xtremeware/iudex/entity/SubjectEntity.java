@@ -18,10 +18,13 @@ public class SubjectEntity implements Serializable, Entity<SubjectVo> {
 
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID_SUBJECT")
     private Long id;
     @Column(name = "NAME", nullable = false, length = 50, unique = true)
     private String name;
+    @Column(name = "CODE", nullable = false, unique = true)
+    private int code;
     @Column(name = "DESCRIPTION", length = 2000)
     private String description;
 
@@ -35,6 +38,7 @@ public class SubjectEntity implements Serializable, Entity<SubjectVo> {
         } else {
             vo.setDescription("");
         }
+		vo.setCode(this.getCode());
         return vo;
     }
 
@@ -51,20 +55,39 @@ public class SubjectEntity implements Serializable, Entity<SubjectVo> {
                 (this.id == null || !this.id.equals(other.id))) {
             return false;
         }
+        if ((this.name == null) ? (other.name != null) : !this.name.equals(other.name)) {
+            return false;
+        }
+        if (this.code != other.code) {
+            return false;
+        }
+        if ((this.description == null) ? (other.description != null) : !this.description.equals(other.description)) {
+            return false;
+        }
         return true;
     }
 
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 41 * hash + (this.id != null ? this.id.hashCode() : 0);
+        hash = 89 * hash + (this.id != null ? this.id.hashCode() : 0);
+        hash = 89 * hash + (this.name != null ? this.name.hashCode() : 0);
+        hash = 89 * hash + this.code;
+        hash = 89 * hash + (this.description != null ? this.description.hashCode() : 0);
         return hash;
     }
 
     @Override
     public String toString() {
-        return "SubjectEntity{" + "id=" + id + ", name=" + name +
-                ", description=" + description + '}';
+        return "SubjectEntity{" + "id=" + id + ", name=" + name + ", code=" + code + ", description=" + description + '}';
+    }
+
+    public int getCode() {
+        return code;
+    }
+
+    public void setCode(int code) {
+        this.code = code;
     }
 
     public String getDescription() {
@@ -91,5 +114,5 @@ public class SubjectEntity implements Serializable, Entity<SubjectVo> {
 
     public void setName(String name) {
         this.name = name;
-    }
+    } 
 }

@@ -24,12 +24,15 @@ public class ProgramEntity implements Serializable, Entity<ProgramVo> {
     private Long id;
     @Column(name = "NAME", length = 50, nullable = false, unique = true)
     private String name;
+    @Column(name = "CODE", nullable = false, unique = true)
+    private int code;
 
     @Override
     public ProgramVo toVo() {
         ProgramVo vo = new ProgramVo();
         vo.setId(this.getId());
         vo.setName(SecurityHelper.sanitizeHTML(this.getName()));
+        vo.setCode(this.getCode());
         return vo;
     }
 
@@ -45,19 +48,27 @@ public class ProgramEntity implements Serializable, Entity<ProgramVo> {
         if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
             return false;
         }
+        if ((this.name == null) ? (other.name != null) : !this.name.equals(other.name)) {
+            return false;
+        }
+        if (this.code != other.code) {
+            return false;
+        }
         return true;
     }
 
     @Override
     public int hashCode() {
-        int hash = 5;
-        hash = 19 * hash + (this.id != null ? this.id.hashCode() : 0);
+        int hash = 7;
+        hash = 23 * hash + (this.id != null ? this.id.hashCode() : 0);
+        hash = 23 * hash + (this.name != null ? this.name.hashCode() : 0);
+        hash = 23 * hash + this.code;
         return hash;
     }
 
     @Override
     public String toString() {
-        return "ProgramEntity{" + "id=" + id + ", name=" + name + '}';
+        return "ProgramEntity{" + "id=" + id + ", name=" + name + ", code=" + code + '}';
     }
 
     @Override
@@ -76,5 +87,13 @@ public class ProgramEntity implements Serializable, Entity<ProgramVo> {
 
     public void setName(String name) {
         this.name = name;
+    }
+    
+    public int getCode() {
+        return code;
+    }
+
+    public void setCode(int code) {
+        this.code = code;
     }
 }

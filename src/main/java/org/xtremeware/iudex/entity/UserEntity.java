@@ -10,7 +10,7 @@ import org.xtremeware.iudex.vo.UserVo;
 
 @javax.persistence.Entity(name = "User")
 @NamedQueries({
-    @NamedQuery(name = "getUserByUserNameAndPassword",
+    @NamedQuery(name = "getUserByUsernameAndPassword",
     query =
     "SELECT u FROM User u WHERE u.userName = :userName AND u.password = :password"),
     @NamedQuery(name = "getUserByUserName", query =

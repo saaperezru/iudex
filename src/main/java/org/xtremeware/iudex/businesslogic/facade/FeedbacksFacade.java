@@ -5,47 +5,48 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
+import org.xtremeware.iudex.businesslogic.DuplicityException;
 import org.xtremeware.iudex.businesslogic.helper.FacadesHelper;
-import org.xtremeware.iudex.businesslogic.service.ServiceFactory;
+import org.xtremeware.iudex.businesslogic.service.ServiceBuilder;
 import org.xtremeware.iudex.helper.MultipleMessagesException;
-import org.xtremeware.iudex.vo.FeedbackTypeVo;
-import org.xtremeware.iudex.vo.FeedbackVo;
+import org.xtremeware.iudex.vo.*;
 
 public class FeedbacksFacade extends AbstractFacade {
 
-    public FeedbacksFacade(ServiceFactory serviceFactory, EntityManagerFactory emFactory) {
+    public FeedbacksFacade(ServiceBuilder serviceFactory, EntityManagerFactory emFactory) {
         super(serviceFactory, emFactory);
     }
 
-    public List<FeedbackTypeVo> getFeedbackTypes() {
-        List<FeedbackTypeVo> list = null;
-        EntityManager em = null;
+    public List<FeedbackTypeVo> getFeedbackTypes() throws Exception {
+        List<FeedbackTypeVo> feedbackTypeVos = null;
+        EntityManager entityManager = null;
         try {
-            em = getEntityManagerFactory().createEntityManager();
-            list = getServiceFactory().createFeedbackTypesService().list(em);
+            entityManager = getEntityManagerFactory().createEntityManager();
+            feedbackTypeVos = getServiceFactory().getFeedbackTypesService().list(entityManager);
 
-        } catch (Exception e) {
-            getServiceFactory().createLogService().error(e.getMessage(), e);
-            throw new RuntimeException(e);
+        } catch (Exception exception) {
+            getServiceFactory().getLogService().error(exception.getMessage(), exception);
+            throw new RuntimeException(exception);
         } finally {
-            FacadesHelper.closeEntityManager(em);
+            FacadesHelper.closeEntityManager(entityManager);
         }
-        return list;
+        return feedbackTypeVos;
     }
     
     public List<FeedbackVo> getFeedbacksByFeedbackType(long feedbackTypeId) {
-        List<FeedbackVo> list = null;
-        EntityManager em = null;
+        List<FeedbackVo> feedbackVos = null;
+        EntityManager entityManager = null;
         try {
-            em = getEntityManagerFactory().createEntityManager();
-            list = getServiceFactory().createFeedbacksService().getFeedbacksByFeedbackType(em,feedbackTypeId);
-        } catch (Exception e) {
-            getServiceFactory().createLogService().error(e.getMessage(), e);
-            throw new RuntimeException(e);
+            entityManager = getEntityManagerFactory().createEntityManager();
+            feedbackVos = getServiceFactory().
+                    getFeedbacksService().getFeedbacksByFeedbackType(entityManager, feedbackTypeId);
+        } catch (Exception exception) {
+            getServiceFactory().getLogService().error(exception.getMessage(), exception);
+            throw new RuntimeException(exception);
         } finally {
-            FacadesHelper.closeEntityManager(em);
+            FacadesHelper.closeEntityManager(entityManager);
         }
-        return list;
+        return feedbackVos;
     }
     
     public List<FeedbackVo> getAllFeedbacks() {
@@ -53,9 +54,9 @@ public class FeedbacksFacade extends AbstractFacade {
         EntityManager em = null;
         try {
             em = getEntityManagerFactory().createEntityManager();
-            list = getServiceFactory().createFeedbacksService().getAllFeedbacks(em);
+            list = getServiceFactory().getFeedbacksService().getAllFeedbacks(em);
         } catch (Exception e) {
-            getServiceFactory().createLogService().error(e.getMessage(), e);
+            getServiceFactory().getLogService().error(e.getMessage(), e);
             throw new RuntimeException(e);
         } finally {
             FacadesHelper.closeEntityManager(em);
@@ -63,27 +64,30 @@ public class FeedbacksFacade extends AbstractFacade {
         return list;
     }
 
-    public FeedbackVo addFeedback(long feedbackType, String content, Date date) throws MultipleMessagesException {
-        FeedbackVo createdVo = null;
-        FeedbackVo vo = new FeedbackVo();
-        vo.setContent(content);
-        vo.setDate(date);
-        vo.setFeedbackTypeId(feedbackType);
-        EntityManager em = null;
-        EntityTransaction tx = null;
+ 
+
+    public FeedbackVo addFeedback(long feedbackType, String feedbackcontent, Date date) throws MultipleMessagesException, Exception {
+        
+        FeedbackVo feedbackVo = new FeedbackVo();
+        feedbackVo.setContent(feedbackcontent);
+        feedbackVo.setDate(date);
+        feedbackVo.setFeedbackTypeId(feedbackType);
+        EntityManager entityManager = null;
+        EntityTransaction transaction = null;
         try {
-            em = getEntityManagerFactory().createEntityManager();
-            tx = em.getTransaction();
-            tx.begin();
-            createdVo = getServiceFactory().createFeedbacksService().create(em, vo);
-            tx.commit();
-        } catch (Exception e) {
-            getServiceFactory().createLogService().error(e.getMessage(), e);
-            FacadesHelper.checkException(e, MultipleMessagesException.class);
-            FacadesHelper.rollbackTransaction(em, tx, e);
+            entityManager = getEntityManagerFactory().createEntityManager();
+            transaction = entityManager.getTransaction();
+            transaction.begin();
+            feedbackVo = getServiceFactory().getFeedbacksService().create(entityManager, feedbackVo);
+            transaction.commit();
+        } catch (Exception exception) {
+            getServiceFactory().getLogService().error(exception.getMessage(), exception);
+            FacadesHelper.checkException(exception, MultipleMessagesException.class);
+            FacadesHelper.checkExceptionAndRollback(entityManager, transaction, exception, DuplicityException.class);
+            FacadesHelper.rollbackTransaction(entityManager, transaction, exception);
         } finally {
-            FacadesHelper.closeEntityManager(em);
+            FacadesHelper.closeEntityManager(entityManager);
         }
-        return createdVo;
+        return feedbackVo;
     }
 }

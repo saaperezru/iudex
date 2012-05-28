@@ -1,9 +1,9 @@
 package org.xtremeware.iudex.businesslogic.service.createimplementations;
 
-import org.xtremeware.iudex.businesslogic.service.crudinterfaces.CreateInterface;
+import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Create;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.businesslogic.DuplicityException;
-import org.xtremeware.iudex.dao.CrudDaoInterface;
+import org.xtremeware.iudex.dao.CrudDao;
 import org.xtremeware.iudex.entity.Entity;
 import org.xtremeware.iudex.helper.DataBaseException;
 
@@ -11,20 +11,21 @@ import org.xtremeware.iudex.helper.DataBaseException;
  *
  * @author josebermeo
  */
-public class SimpleCreate<E extends Entity> implements CreateInterface<E>{
+public class SimpleCreate<E extends Entity> implements Create<E>{
     
-    private CrudDaoInterface<E> dao;
+    private CrudDao<E> crudDao;
 
-    public SimpleCreate(CrudDaoInterface<E> dao) {
-        this.dao = dao;
+    public SimpleCreate(CrudDao<E> dao) {
+        this.crudDao = dao;
     }
 
     @Override
-    public E create(EntityManager em, E entity) throws DataBaseException, DuplicityException {
-        return getDao().persist(em, entity);
+    public E create(EntityManager entityManager, E entity)
+            throws DataBaseException, DuplicityException {
+        return getCrudDao().persist(entityManager, entity);
     }
 
-    private CrudDaoInterface<E> getDao(){
-        return dao;
+    private CrudDao<E> getCrudDao(){
+        return crudDao;
     }
 }

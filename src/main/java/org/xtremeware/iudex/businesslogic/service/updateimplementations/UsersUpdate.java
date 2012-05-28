@@ -1,8 +1,8 @@
 package org.xtremeware.iudex.businesslogic.service.updateimplementations;
 
 import javax.persistence.EntityManager;
-import org.xtremeware.iudex.businesslogic.service.crudinterfaces.UpdateInterface;
-import org.xtremeware.iudex.dao.CrudDaoInterface;
+import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Update;
+import org.xtremeware.iudex.dao.CrudDao;
 import org.xtremeware.iudex.entity.UserEntity;
 import org.xtremeware.iudex.helper.DataBaseException;
 import org.xtremeware.iudex.helper.SecurityHelper;
@@ -11,11 +11,11 @@ import org.xtremeware.iudex.helper.SecurityHelper;
  *
  * @author healarconr
  */
-public class UsersUpdate implements UpdateInterface<UserEntity> {
+public class UsersUpdate implements Update<UserEntity> {
 
-    private CrudDaoInterface<UserEntity> dao;
+    private CrudDao<UserEntity> dao;
 
-    public UsersUpdate(CrudDaoInterface<UserEntity> dao) {
+    public UsersUpdate(CrudDao<UserEntity> dao) {
         this.dao = dao;
     }
 
@@ -32,7 +32,7 @@ public class UsersUpdate implements UpdateInterface<UserEntity> {
         }
     }
 
-    public CrudDaoInterface<UserEntity> getDao() {
+    public CrudDao<UserEntity> getDao() {
         return dao;
     }
 }

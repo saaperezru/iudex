@@ -9,7 +9,6 @@ import org.junit.*;
 import static org.junit.Assert.*;
 import org.xtremeware.iudex.entity.ProgramEntity;
 import org.xtremeware.iudex.helper.Config;
-import org.xtremeware.iudex.helper.DataBaseException;
 import org.xtremeware.iudex.helper.MultipleMessagesException;
 import org.xtremeware.iudex.vo.ProgramVo;
 
@@ -47,7 +46,7 @@ public class ProgramsFacadeIT {
     public void testBL_26_1() throws MultipleMessagesException, Exception {
         String name = FacadesTestHelper.randomString(50);
         ProgramsFacade programsFacade = Config.getInstance().getFacadeFactory().getProgramsFacade();
-        ProgramVo programVo = programsFacade.addProgram(name);
+        ProgramVo programVo = programsFacade.addProgram(name, FacadesTestHelper.randomInt(4));
         assertNotNull(programVo);
         assertEquals(name, programVo.getName());
         assertNotNull(programVo.getId());
@@ -56,10 +55,11 @@ public class ProgramsFacadeIT {
     @Test()
     public void testBL_26_2() throws Exception {
         ProgramsFacade programsFacade = Config.getInstance().getFacadeFactory().getProgramsFacade();
+        ProgramVo programVo = null;
         String[] expectedMessages = new String[]{
             "program.name.null"};
         try {
-            ProgramVo programVo = programsFacade.addProgram(null);
+            programVo = programsFacade.addProgram(null, 0);
         } catch (MultipleMessagesException ex) {
             FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
         }
@@ -67,7 +67,7 @@ public class ProgramsFacadeIT {
         expectedMessages = new String[]{
             "program.name.tooLong"};
         try {
-            ProgramVo programVo = programsFacade.addProgram(name);
+            programVo = programsFacade.addProgram(name, 0);
         } catch (MultipleMessagesException ex) {
             FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
         }
@@ -75,30 +75,38 @@ public class ProgramsFacadeIT {
             "program.name.tooShort"};
 
         try {
-            ProgramVo programVo = programsFacade.addProgram("");
+            programVo = programsFacade.addProgram("", 0);
+        } catch (MultipleMessagesException ex) {
+            FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
+        }
+        expectedMessages = new String[]{
+            "program.name.tooShort",
+            "program.code.negativeValue"};
+
+        try {
+            programVo = programsFacade.addProgram("", -1);
         } catch (MultipleMessagesException ex) {
             FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
         }
     }
-    
+
     @Test
     public void BL_29_1() throws Exception {
         String name = FacadesTestHelper.randomString(10);
         Set<String> names = new TreeSet<String>();
         ProgramsFacade programsFacade = Config.getInstance().getFacadeFactory().getProgramsFacade();
         names.add(name);
-        assertNotNull(programsFacade.addProgram(name));
-        
-        names.add("PRE"+name);
-        assertNotNull(programsFacade.addProgram("PRE"+name));
-        
-        names.add(name+"POS");
-        assertNotNull(programsFacade.addProgram(name+"POS"));
-        
-        names.add("PRE"+name+"POS");
-        assertNotNull(programsFacade.addProgram("PRE"+name+"POS"));
-        
-        List<ProgramVo> pvs  = programsFacade.getProgramsAutocomplete(name);
+        assertNotNull(programsFacade.addProgram(name, FacadesTestHelper.randomInt(4)));
+        names.add("PRE" + name);
+        assertNotNull(programsFacade.addProgram("PRE" + name, FacadesTestHelper.randomInt(4)));
+
+        names.add(name + "POS");
+        assertNotNull(programsFacade.addProgram(name + "POS", FacadesTestHelper.randomInt(4)));
+
+        names.add("PRE" + name + "POS");
+        assertNotNull(programsFacade.addProgram("PRE" + name + "POS", FacadesTestHelper.randomInt(4)));
+
+        List<ProgramVo> pvs = programsFacade.getProgramsAutocomplete(name);
         for (ProgramVo pv : pvs) {
             ProgramVo result = entityManager.createQuery(
                     "SELECT p FROM Program p WHERE p.id =:id", ProgramEntity.class).
@@ -109,8 +117,8 @@ public class ProgramsFacadeIT {
             assertTrue(names.contains(pv.getName()));
         }
         assertEquals(names.size(), pvs.size());
-        
-        pvs  = programsFacade.getProgramsAutocomplete(null);
+
+        pvs = programsFacade.getProgramsAutocomplete(null);
         assertTrue(pvs.isEmpty());
     }
 
@@ -131,9 +139,7 @@ public class ProgramsFacadeIT {
             programsFacade.removeProgram(id);
         } catch (Exception ex) {
             assertEquals(RuntimeException.class, ex.getClass());
-            assertEquals("No entity found for id "
-                    + String.valueOf(id)
-                    + "while triying to delete the associated record", ex.getCause().getMessage());
+            assertEquals("entity.notFound", ex.getCause().getMessage());
         }
 
         id = 2541L;
@@ -141,43 +147,35 @@ public class ProgramsFacadeIT {
             programsFacade.removeProgram(id);
         } catch (Exception ex) {
             assertEquals(RuntimeException.class, ex.getClass());
-            assertEquals("No entity found for id "
-                    + String.valueOf(id)
-                    + "while triying to delete the associated record", ex.getCause().getMessage());
+            assertEquals("entity.notFound", ex.getCause().getMessage());
         }
         id = Long.MAX_VALUE;
         try {
             programsFacade.removeProgram(id);
         } catch (Exception ex) {
             assertEquals(RuntimeException.class, ex.getClass());
-            assertEquals("No entity found for id "
-                    + String.valueOf(id)
-                    + "while triying to delete the associated record", ex.getCause().getMessage());
+            assertEquals("entity.notFound", ex.getCause().getMessage());
         }
         id = Long.MIN_VALUE;
         try {
             programsFacade.removeProgram(id);
         } catch (Exception ex) {
             assertEquals(RuntimeException.class, ex.getClass());
-            assertEquals("No entity found for id "
-                    + String.valueOf(id)
-                    + "while triying to delete the associated record", ex.getCause().getMessage());
+            assertEquals("entity.notFound", ex.getCause().getMessage());
         }
         id = 0L;
         try {
             programsFacade.removeProgram(id);
         } catch (Exception ex) {
             assertEquals(RuntimeException.class, ex.getClass());
-            assertEquals("No entity found for id "
-                    + String.valueOf(id)
-                    + "while triying to delete the associated record", ex.getCause().getMessage());
+            assertEquals("entity.notFound", ex.getCause().getMessage());
         }
     }
 
     @Test
     public void BL_28_1() throws Exception {
         ProgramsFacade programsFacade = Config.getInstance().getFacadeFactory().getProgramsFacade();
-        List<ProgramVo> pvs  = programsFacade.listPrograms();
+        List<ProgramVo> pvs = programsFacade.listPrograms();
         for (ProgramVo pv : pvs) {
             ProgramVo result = entityManager.createQuery(
                     "SELECT p FROM Program p WHERE p.id =:id", ProgramEntity.class).

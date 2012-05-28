@@ -2,24 +2,24 @@ package org.xtremeware.iudex.entity;
 
 import java.io.Serializable;
 import javax.persistence.*;
-import org.xtremeware.iudex.vo.ProfessorRatingVo;
+import org.xtremeware.iudex.vo.BinaryRatingVo;
 
 @javax.persistence.Entity(name = "ProfessorRating")
 @NamedQueries({
-    @NamedQuery(name = "getRatingByProfessorId",
-    query = "SELECT r FROM ProfessorRating r WHERE r.professor.id = :professor"),
-    @NamedQuery(name = "getRatingByProfessorIdAndUserId",
-    query = "SELECT r FROM ProfessorRating r WHERE r.professor.id = :professor AND r.user.id = :user"),
-    @NamedQuery(name = "getRatingByUserId",
-    query = "SELECT r FROM ProfessorRating r WHERE r.user.id = :user"),
+    @NamedQuery(name = "getProfessorRatingByProfessorId",
+    query = "SELECT r FROM ProfessorRating r WHERE r.professor.id = :evaluatedObjectId"),
+    @NamedQuery(name = "getProfessorRatingByProfessorIdAndUserId",
+    query = "SELECT r FROM ProfessorRating r WHERE r.professor.id = :evaluatedObjectId AND r.user.id = :userId"),
+    @NamedQuery(name = "getProfessorRatingByUserId",
+    query = "SELECT r FROM ProfessorRating r WHERE r.user.id = :userId"),
     @NamedQuery(name = "countPositiveProfessorRating",
     query = "SELECT COUNT (result) FROM ProfessorRating result "
-    + "WHERE result.professor.id = :professorId AND result.value = 1"),
+    + "WHERE result.professor.id = :evaluatedObjectId AND result.value = 1"),
     @NamedQuery(name = "countNegativeProfessorRating",
     query = "SELECT COUNT (result) FROM ProfessorRating result "
-    + "WHERE result.professor.id = :professorId AND result.value = -1")})
+    + "WHERE result.professor.id = :evaluatedObjectId AND result.value = -1")})
 @Table(name = "PROFESSOR_RATING")
-public class ProfessorRatingEntity implements Serializable, Entity<ProfessorRatingVo> {
+public class ProfessorRatingEntity implements Serializable, Entity<BinaryRatingVo>, BinaryRatingEntity {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -36,25 +36,36 @@ public class ProfessorRatingEntity implements Serializable, Entity<ProfessorRati
     private int value;
 
     @Override
-    public ProfessorRatingVo toVo() {
-        ProfessorRatingVo vo = new ProfessorRatingVo();
+    public BinaryRatingVo toVo() {
+        BinaryRatingVo vo = new BinaryRatingVo();
 
         vo.setId(getId());
         vo.setEvaluatedObjectId(getProfessor().getId());
-        vo.setUser(getUser().getId());
+        vo.setUserId(getUser().getId());
         vo.setValue(getValue());
 
         return vo;
     }
 
     @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof ProfessorRatingEntity)) {
+    public boolean equals(Object obj) {
+        if (obj == null) {
             return false;
         }
-        ProfessorRatingEntity other = (ProfessorRatingEntity) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final ProfessorRatingEntity other = (ProfessorRatingEntity) obj;
+        if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
+            return false;
+        }
+        if (this.professor != other.professor && (this.professor == null || !this.professor.equals(other.professor))) {
+            return false;
+        }
+        if (this.user != other.user && (this.user == null || !this.user.equals(other.user))) {
+            return false;
+        }
+        if (this.value != other.value) {
             return false;
         }
         return true;
@@ -98,10 +109,12 @@ public class ProfessorRatingEntity implements Serializable, Entity<ProfessorRati
         this.user = user;
     }
 
+    @Override
     public int getValue() {
         return this.value;
     }
 
+    @Override
     public void setValue(int value) {
         this.value = value;
     }

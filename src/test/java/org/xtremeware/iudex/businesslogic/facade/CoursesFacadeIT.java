@@ -6,10 +6,14 @@ import org.xtremeware.iudex.businesslogic.helper.FacadesTestHelper;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import javax.persistence.EntityManager;
 import junit.framework.AssertionFailedError;
 import org.junit.*;
 import static org.junit.Assert.*;
+import org.xtremeware.iudex.businesslogic.DuplicityException;
+import org.xtremeware.iudex.entity.CourseEntity;
 import org.xtremeware.iudex.helper.Config;
+import org.xtremeware.iudex.helper.MultipleMessagesException;
 import org.xtremeware.iudex.vo.*;
 
 /**
@@ -21,6 +25,7 @@ public class CoursesFacadeIT {
     public static ProfessorVoSmall fabio, mario;
     public static SubjectVoSmall is2, isa, afi;
     public static CourseVo marioIs2, marioIsa, marioAfi, fabioIsa;
+    private EntityManager entityManager;
 
     public CoursesFacadeIT() {
     }
@@ -41,15 +46,15 @@ public class CoursesFacadeIT {
         rating = new RatingSummaryVo();
         rating.setPositive(4);
         rating.setNegative(0);
-        is2 = new SubjectVoSmall(2016702, "INGENIERIA DE SOFTWARE II",2016702, rating);
+        is2 = new SubjectVoSmall(2016702, "INGENIERIA DE SOFTWARE II", 2016702, rating);
         rating = new RatingSummaryVo();
         rating.setPositive(2);
         rating.setNegative(2);
-        isa = new SubjectVoSmall(2019772, "INGENIERIA DE SOFTWARE AVANZADA",2019772, rating);
+        isa = new SubjectVoSmall(2019772, "INGENIERIA DE SOFTWARE AVANZADA", 2019772, rating);
         rating = new RatingSummaryVo();
         rating.setPositive(3);
         rating.setNegative(1);
-        afi = new SubjectVoSmall(2016025, "AUDITORIA FINANCIERA I",2016025, rating);
+        afi = new SubjectVoSmall(2016025, "AUDITORIA FINANCIERA I", 2016025, rating);
 
         marioIs2 = new CourseVo();
         marioIs2.setId(1L);
@@ -94,10 +99,13 @@ public class CoursesFacadeIT {
 
     @Before
     public void setUp() {
+        entityManager = FacadesTestHelper.createEntityManagerFactory().createEntityManager();
     }
 
     @After
     public void tearDown() {
+        entityManager.clear();
+        entityManager.close();
     }
 
     /**
@@ -244,25 +252,65 @@ public class CoursesFacadeIT {
         }
 
     }
+
     /**
      * Test of courses creation success.
      */
-//	@Test
-//	public void test_BL_4_1() {
-//		CoursesFacade facade = Config.getInstance().getFacadeFactory().getCoursesFacade();
-//		try {
-//			CourseVo expected = new CourseVo();
-//			expected.setPeriodId(1L);
-//			expected.setProfessorId(2L);
-//			expected.setSubjectId(1L);
-//			expected.setRatingAverage(0.0);
-//			expected.setRatingCount(0L);
-//
-//			facade.addCourse(fabio.getId(), is2.getId(), 1L);
-//
-//		} catch (InvalidVoException ex) {
-//			throw new AssertionFailedError(ex.getMessage());
-//		}
-//		throw new AssertionFailedError("Unfinished test");
-//	}
+    @Test
+    public void test_BL_4_1() throws Exception {
+        CoursesFacade facade = Config.getInstance().getFacadeFactory().getCoursesFacade();
+
+        CourseVo expected = new CourseVo();
+        expected.setPeriodId(1L);
+        expected.setProfessorId(mario.getId());
+        expected.setSubjectId(isa.getId());
+        expected.setRatingAverage(0.0);
+        expected.setRatingCount(0L);
+        CourseVo addCourse = facade.addCourse(expected.getProfessorId(), expected.getSubjectId(), expected.getPeriodId());
+        assertNotNull(addCourse);
+        assertNotNull(addCourse.getId());
+        expected.setId(addCourse.getId());
+        assertTrue(expected.equals(addCourse));
+        CourseEntity find = entityManager.find(CourseEntity.class, addCourse.getId());
+        assertTrue(addCourse.equals(find.toVo()));
+    }
+
+    @Test
+    public void test_BL_4_2() throws DuplicityException {
+        CoursesFacade facade = Config.getInstance().getFacadeFactory().getCoursesFacade();
+
+        String[] expectedMessages = new String[]{
+            "course.professorId.elementNotFound",
+            "course.periodId.elementNotFound",
+            "course.subjectId.elementNotFound"
+        };
+        try {
+            facade.addCourse(Long.MAX_VALUE, Long.MAX_VALUE, Long.MAX_VALUE);
+        } catch (MultipleMessagesException ex) {
+            FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
+        }
+        
+        try {
+            facade.addCourse(Long.MIN_VALUE, Long.MIN_VALUE, Long.MIN_VALUE);
+        } catch (MultipleMessagesException ex) {
+            FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
+        }
+        
+        try {
+            facade.addCourse(0L, 0L, 0L);
+        } catch (MultipleMessagesException ex) {
+            FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
+        }
+    }
+    
+    @Test
+    public void test_BL_4_3() throws DuplicityException {
+        CoursesFacade facade = Config.getInstance().getFacadeFactory().getCoursesFacade();
+
+        try {
+            facade.addCourse(mario.getId(), isa.getId(), 1L);
+        } catch (Exception ex) {
+            assertEquals(DuplicityException.class, ex.getClass());
+        }
+    }
 }

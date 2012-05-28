@@ -38,9 +38,7 @@ public class CommentsFacadeIT {
 
     @Before
     public void setUp() {
-
         entityManager = FacadesTestHelper.createEntityManagerFactory().createEntityManager();
-
     }
 
     @After

@@ -14,10 +14,10 @@
 		<div class="container comments-container">
 			<c:if test="#{user.loggedIn}">
 				<div class="row ">
-					<div class="offset5 span7 container">
-						<div class="row-fluid well">
-							<h:form>
-									<h:outputText value="CALIFICA EL CURSO" class="span6 fittext-rateInput"/>  
+					<div class="offset5 span7 ">
+						<div class="row-fluid">
+							<h:form class="well">
+								<h:outputText value="CALIFICA EL CURSO" class="span6 fittext-rateInput"/>  
 								<div class="span6">
 									<p:rating value="#{viewCourse.courseRating}" onRate="showCommentInput()">  
 										<p:ajax event="rate" listener="#{viewCourse.handleRate}" update="messages" />  
@@ -27,8 +27,30 @@
 							</h:form>
 						</div>
 						<div class="row-fluid hidden" id="commentInput">
+							<!-- Beginning of comment -->
 							<h:form>
-								<h:inputTextarea value="."/>
+							<div class="row-fluid">
+								<div class="comment span12">
+									<div class="comment-container span12">
+										<div class="comment-rating">
+											Calificación del curso : 
+											<ui:repeat var="i" value="#{viewCourse.buildArrayCeil(viewCourse.courseRating)}">
+												<span class="icon-star"/>
+											</ui:repeat>
+										</div>
+										<div class="comment-photo thumbnail">
+											<img src="#{user.imageUrl}" alt="profesor x" />
+											<h5>#{user.firstName}</h5>
+											<p>CARRERA</p>
+										</div>
+										<p>
+											<h:inputTextarea/>
+										</p>
+									</div>
+								</div>
+
+							</div><!--/row-->
+							<!-- Ending of comment -->
 							</h:form>
 						</div>
 					</div>
@@ -49,7 +71,7 @@
 											</ui:repeat>
 										</div>
 										<div class="comment-photo thumbnail">
-											<img src="../resources/images/anonymous.jpg" alt="profesor x" />
+											<img src="#{user.imageUrl}" alt="profesor x" />
 											<h5>#{comment.user.name}</h5>
 											<p>CARRERA</p>
 										</div>

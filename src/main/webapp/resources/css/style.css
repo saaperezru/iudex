@@ -3,10 +3,14 @@ html {
 }
 
 body {
-    padding-top: 60px;
 	height: 100%;
 }
-
+body>.container{
+    padding-top: 60px;
+}
+body>.container-fluid{
+    padding-top: 60px;
+}
 .comments-container{
 	height: 100%;
 }

@@ -109,7 +109,7 @@ public class CoursesFacade extends AbstractFacade {
     }
 
     public CourseVo addCourse(long professorId, long subjectId, long periodId) 
-            throws MultipleMessagesException, Exception {
+            throws MultipleMessagesException, DuplicityException {
         CourseVo courseVo = null;
         EntityManager em = null;
         EntityTransaction tx = null;

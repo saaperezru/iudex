@@ -75,7 +75,7 @@ public class ServiceBuilder {
         return courseRatingsService;
     }
 
-    public CoursesService createCoursesService() {
+    public CoursesService getCoursesService() {
         if (coursesService == null) {
             coursesService = new CoursesService(getDaoFactory(),
                     new SimpleCreate<CourseEntity>(getDaoFactory().getCourseDao()),

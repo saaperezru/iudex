@@ -57,7 +57,7 @@ public class PeriodsFacade extends AbstractFacade {
         } catch (Exception exception) {
             getServiceFactory().getLogService().error(exception.getMessage(), exception);
             FacadesHelper.checkException(exception, MultipleMessagesException.class);
-            FacadesHelper.checkExceptionAndRollback(entityManager, transaction, exception, DuplicityException.class);
+            FacadesHelper.checkDuplicityViolation(entityManager, transaction, exception);
             FacadesHelper.rollbackTransaction(entityManager, transaction, exception);
         }finally {
             FacadesHelper.closeEntityManager(entityManager);

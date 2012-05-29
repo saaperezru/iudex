@@ -272,8 +272,8 @@ public class SubjectsFacadeIT {
             subjectVo.setDescription(null);
             subjectsFacade.addSubject(subjectVo);
             fail();
-        } catch (RuntimeException ex) {
-            assertEquals(ex.getCause().getClass(), PersistenceException.class);
+        } catch (Exception ex) {
+            assertEquals(ex.getCause().getClass(), DataBaseException.class);
         }
 
         try {
@@ -449,8 +449,8 @@ public class SubjectsFacadeIT {
         }
 
         try {
-            String tooLongName = FacadesTestHelper.randomString(Integer.parseInt(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAX_SUBJECT_NAME_LENGTH)) + 1);
-            String tooLongDescription = FacadesTestHelper.randomString(Integer.parseInt(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAX_SUBJECT_DESCRIPTION_LENGTH)) + 1);
+            String tooLongName = FacadesTestHelper.randomString(Integer.parseInt(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAX_SUBJECT_NAME_LENGTH)) + 10);
+            String tooLongDescription = FacadesTestHelper.randomString(Integer.parseInt(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAX_SUBJECT_DESCRIPTION_LENGTH)) + 10);
 
             subjectVo.setId(2039461L);
             subjectVo.setName(tooLongName);

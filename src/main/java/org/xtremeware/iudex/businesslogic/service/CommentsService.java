@@ -40,6 +40,7 @@ public class CommentsService extends CrudService<CommentVo, CommentEntity> {
      */
     public List<CommentVo> getByCourseId(EntityManager entityManager, long courseId)
             throws DataBaseException {
+        
         List<CommentEntity> commentEntitys = getDaoFactory().getCommentDao().getByCourseId(entityManager, courseId);
 
         List<CommentVo> commentVos = new ArrayList<CommentVo>();

@@ -136,12 +136,6 @@ public abstract class SQLBinaryRatingDao<E extends Entity> implements BinaryRati
         checkEntityManager(entityManager);
         try {
             entityManager.persist(entity);
-        } catch (PersistenceException ex) {
-            // TODO: Resolve this hibernate coupling
-            if (ex.getCause() instanceof ConstraintViolationException) {
-                throw new DataBaseException("entity.exists", ex.getCause());
-            }
-            throw ex;
         } catch (Exception ex) {
             throw new DataBaseException(ex.getMessage(), ex.getCause());
         }
@@ -161,12 +155,6 @@ public abstract class SQLBinaryRatingDao<E extends Entity> implements BinaryRati
         checkEntityManager(entityManager);
         try {
             return entityManager.merge(entity);
-        } catch (PersistenceException ex) {
-            // TODO: Resolve this hibernate coupling
-            if (ex.getCause() instanceof ConstraintViolationException) {
-                throw new DataBaseException("entity.exists", ex.getCause());
-            }
-            throw ex;
         } catch (Exception ex) {
             throw new DataBaseException(ex.getMessage(), ex.getCause());
         }

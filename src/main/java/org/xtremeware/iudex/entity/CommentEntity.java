@@ -49,7 +49,11 @@ public class CommentEntity implements Serializable, Entity<CommentVo> {
         vo.setId(getId());
         vo.setContent(SecurityHelper.sanitizeHTML(getContent()));
         vo.setDate(getDate());
-        vo.setUserId(getUser().getId());
+        if(getUser() == null){
+            vo.setUserId(null);
+        } else {
+            vo.setUserId(getUser().getId());
+        }
         vo.setCourseId(getCourse().getId());
         vo.setAnonymous(isAnonymous());
         vo.setRating(getRating());

@@ -1,8 +1,6 @@
 package org.xtremeware.iudex.dao.sql;
 
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceException;
-import org.hibernate.exception.ConstraintViolationException;
 import org.xtremeware.iudex.dao.CrudDao;
 import org.xtremeware.iudex.dao.Remove;
 import org.xtremeware.iudex.entity.Entity;
@@ -22,11 +20,6 @@ public abstract class SQLCrudDao<E extends Entity> implements CrudDao<E> {
         checkEntityManager(entityManager);
         try {
             entityManager.persist(entity);
-        } catch (PersistenceException ex) {
-            if (ex.getCause() instanceof ConstraintViolationException) {
-                throw new DataBaseException("entity.exists", ex.getCause());
-            }
-            throw ex;
         } catch (Exception ex) {
             throw new DataBaseException(ex.getMessage(), ex.getCause());
         }
@@ -39,11 +32,6 @@ public abstract class SQLCrudDao<E extends Entity> implements CrudDao<E> {
         checkEntityManager(entityManager);
         try {
             return entityManager.merge(entity);
-        } catch (PersistenceException ex) {
-            if (ex.getCause() instanceof ConstraintViolationException) {
-                throw new DataBaseException("entity.exists", ex.getCause());
-            }
-            throw ex;
         } catch (Exception ex) {
             throw new DataBaseException(ex.getMessage(), ex.getCause());
         }

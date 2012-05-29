@@ -82,7 +82,7 @@ public class SubjectsFacade extends AbstractFacade {
     }
 
     public BinaryRatingVo rateSubject(long userId, long subjectId, int value) 
-            throws MultipleMessagesException, Exception {
+            throws MultipleMessagesException, DuplicityException {
         EntityManager entityManager = null;
         EntityTransaction transaction = null;
         BinaryRatingVo ratingVo = null;
@@ -103,18 +103,18 @@ public class SubjectsFacade extends AbstractFacade {
                     getSubjectRatingsService().create(entityManager, binaryRatingVo);
             
             transaction.commit();
-        } catch (Exception e) {
-            getServiceFactory().getLogService().error(e.getMessage(), e);
-            FacadesHelper.checkException(e, MultipleMessagesException.class);
-            FacadesHelper.checkExceptionAndRollback(entityManager, transaction, e, DuplicityException.class);
-            FacadesHelper.rollbackTransaction(entityManager, transaction, e);
+        } catch (Exception exception) {
+            getServiceFactory().getLogService().error(exception.getMessage(), exception);
+            FacadesHelper.checkException(exception, MultipleMessagesException.class);
+            FacadesHelper.checkDuplicityViolation(entityManager, transaction, exception);
+            FacadesHelper.rollbackTransaction(entityManager, transaction, exception);
         } finally {
             FacadesHelper.closeEntityManager(entityManager);
         }
         return ratingVo;
     }
 
-    public SubjectVo addSubject(SubjectVo subjectVo) throws MultipleMessagesException, Exception {
+    public SubjectVo addSubject(SubjectVo subjectVo) throws MultipleMessagesException, DuplicityException {
         EntityManager entityManager = null;
         EntityTransaction transaction = null;
         try {
@@ -123,13 +123,10 @@ public class SubjectsFacade extends AbstractFacade {
             transaction.begin();
             subjectVo = getServiceFactory().getSubjectsService().create(entityManager, subjectVo);
             transaction.commit();
-        } catch (MultipleMessagesException e) {
-            throw e;
         } catch (Exception exception) {
             getServiceFactory().getLogService().error(exception.getMessage(), exception);
             FacadesHelper.checkException(exception, MultipleMessagesException.class);
-            FacadesHelper.checkExceptionAndRollback(
-                    entityManager, transaction, exception, DuplicityException.class);
+            FacadesHelper.checkDuplicityViolation(entityManager, transaction, exception);
             FacadesHelper.rollbackTransaction(entityManager, transaction, exception);
         } finally {
             FacadesHelper.closeEntityManager(entityManager);
@@ -155,7 +152,7 @@ public class SubjectsFacade extends AbstractFacade {
         }
     }
 
-    public SubjectVo updateSubject(SubjectVo subjectVo) throws MultipleMessagesException, Exception {
+    public SubjectVo updateSubject(SubjectVo subjectVo) throws MultipleMessagesException, DuplicityException {
 
         EntityManager entityManager = null;
         EntityTransaction transaction = null;
@@ -170,8 +167,7 @@ public class SubjectsFacade extends AbstractFacade {
         } catch (Exception exception) {
             getServiceFactory().getLogService().error(exception.getMessage(), exception);
             FacadesHelper.checkException(exception, MultipleMessagesException.class);
-            FacadesHelper.checkExceptionAndRollback(
-                    entityManager, transaction, exception, DuplicityException.class);
+            FacadesHelper.checkDuplicityViolation(entityManager, transaction, exception);
             FacadesHelper.rollbackTransaction(entityManager, transaction, exception);
         } finally {
             FacadesHelper.closeEntityManager(entityManager);

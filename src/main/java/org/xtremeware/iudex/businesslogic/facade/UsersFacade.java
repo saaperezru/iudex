@@ -6,6 +6,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import org.xtremeware.iudex.businesslogic.DuplicityException;
+
 import org.xtremeware.iudex.businesslogic.helper.FacadesHelper;
 import org.xtremeware.iudex.businesslogic.service.InactiveUserException;
 import org.xtremeware.iudex.businesslogic.service.ServiceBuilder;
@@ -66,9 +67,9 @@ public class UsersFacade extends AbstractFacade {
             entityManager = getEntityManagerFactory().createEntityManager();
             transaction = entityManager.getTransaction();
             transaction.begin();
-			UsersService usersService = getServiceFactory().getUsersService();
+            UsersService usersService = getServiceFactory().getUsersService();
             newUser = usersService.create(entityManager, user);
-			
+
             // TODO: The confirmation email message should be configurable
             Map<String, String> data = new HashMap<String, String>();
             data.put("userName", newUser.getUserName());
@@ -86,8 +87,7 @@ public class UsersFacade extends AbstractFacade {
             transaction.commit();
         } catch (Exception exception) {
             getServiceFactory().getLogService().error(exception.getMessage(), exception);
-            FacadesHelper.checkExceptionAndRollback(entityManager, transaction, exception,
-                    DuplicityException.class);
+            FacadesHelper.checkDuplicityViolation(entityManager, transaction, exception);
             FacadesHelper.checkExceptionAndRollback(entityManager, transaction, exception,
                     MultipleMessagesException.class);
             FacadesHelper.rollbackTransaction(entityManager, transaction, exception);
@@ -132,7 +132,7 @@ public class UsersFacade extends AbstractFacade {
      * @return the updated user
      * @throws MultipleMessagesException if there are validation problems
      */
-    public UserVo editUser(UserVo userVo) throws MultipleMessagesException {
+    public UserVo editUser(UserVo userVo) throws MultipleMessagesException, DuplicityException {
         EntityManager entityManager = null;
         EntityTransaction transaction = null;
         UserVo updatedUserVo = null;
@@ -143,11 +143,12 @@ public class UsersFacade extends AbstractFacade {
             updatedUserVo = getServiceFactory().getUsersService().update(entityManager,
                     userVo);
             transaction.commit();
-        } catch (Exception ex) {
-            getServiceFactory().getLogService().error(ex.getMessage(), ex);
-            FacadesHelper.checkExceptionAndRollback(entityManager, transaction, ex,
+        } catch (Exception exception) {
+            getServiceFactory().getLogService().error(exception.getMessage(), exception);
+            FacadesHelper.checkDuplicityViolation(entityManager, transaction, exception);
+            FacadesHelper.checkExceptionAndRollback(entityManager, transaction, exception,
                     MultipleMessagesException.class);
-            FacadesHelper.rollbackTransaction(entityManager, transaction, ex);
+            FacadesHelper.rollbackTransaction(entityManager, transaction, exception);
         } finally {
             FacadesHelper.closeEntityManager(entityManager);
         }

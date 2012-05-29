@@ -26,10 +26,17 @@ public class CoursesFacadeIT {
     public static ProfessorVoFull fabio, mario;
     public static SubjectVoFull is2, isa, afi;
     public static CourseVo marioIs2, marioIsa, marioAfi, fabioIsa;
-    private EntityManager entityManager;
+    private static EntityManager entityManager;
 
     @Before
     public void setUp() {
+        
+    }
+
+    @BeforeClass
+    public static void setUpClass() throws Exception {
+        FacadesTestHelper.initializeDatabase();
+        Class.forName("org.h2.Driver");
         entityManager = FacadesTestHelper.createEntityManagerFactory().createEntityManager();
 
         RatingSummaryVo rating = new RatingSummaryVo();
@@ -38,35 +45,35 @@ public class CoursesFacadeIT {
 
         ProfessorVo professorVo = entityManager.createQuery(
                 "SELECT p FROM Professor p WHERE p.id =:id", ProfessorEntity.class).
-                setParameter("id", 2).getSingleResult().toVo();
+                setParameter("id", 2L).getSingleResult().toVo();
         fabio = new ProfessorVoFull(professorVo, rating);
         rating = new RatingSummaryVo();
         rating.setPositive(3);
         rating.setNegative(1);
         professorVo = entityManager.createQuery(
                 "SELECT p FROM Professor p WHERE p.id =:id", ProfessorEntity.class).
-                setParameter("id", 1).getSingleResult().toVo();
+                setParameter("id", 1L).getSingleResult().toVo();
         mario = new ProfessorVoFull(professorVo, rating);
         rating = new RatingSummaryVo();
         rating.setPositive(4);
         rating.setNegative(0);
         SubjectVo subjectVo = entityManager.createQuery(
                 "SELECT p FROM Subject p WHERE p.id =:id", SubjectEntity.class).
-                setParameter("id", 1).getSingleResult().toVo();
+                setParameter("id", 2016702L).getSingleResult().toVo();
         is2 = new SubjectVoFull(subjectVo, rating);
         rating = new RatingSummaryVo();
         rating.setPositive(2);
         rating.setNegative(2);
         subjectVo = entityManager.createQuery(
                 "SELECT p FROM Subject p WHERE p.id =:id", SubjectEntity.class).
-                setParameter("id", 1).getSingleResult().toVo();
+                setParameter("id", 2019772L).getSingleResult().toVo();
         isa = new SubjectVoFull(subjectVo, rating);
         rating = new RatingSummaryVo();
         rating.setPositive(3);
         rating.setNegative(1);
         subjectVo = entityManager.createQuery(
                 "SELECT p FROM Subject p WHERE p.id =:id", SubjectEntity.class).
-                setParameter("id", 1).getSingleResult().toVo();
+                setParameter("id", 2016025L).getSingleResult().toVo();
         afi = new SubjectVoFull(subjectVo, rating);
 
         marioIs2 = new CourseVo();
@@ -100,12 +107,6 @@ public class CoursesFacadeIT {
         fabioIsa.setSubjectId(isa.getVo().getId());
         fabioIsa.setRatingAverage(3.7);
         fabioIsa.setRatingCount(4L);
-    }
-
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-        FacadesTestHelper.initializeDatabase();
-        Class.forName("org.h2.Driver");
     }
 
     @AfterClass

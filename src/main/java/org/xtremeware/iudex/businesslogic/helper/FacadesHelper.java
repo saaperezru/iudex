@@ -2,7 +2,10 @@ package org.xtremeware.iudex.businesslogic.helper;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import org.hibernate.exception.ConstraintViolationException;
+import org.xtremeware.iudex.businesslogic.DuplicityException;
 import org.xtremeware.iudex.helper.Config;
+import org.xtremeware.iudex.helper.DataBaseException;
 
 /**
  *
@@ -10,36 +13,55 @@ import org.xtremeware.iudex.helper.Config;
  */
 public class FacadesHelper {
 
-    private static <E extends Exception> void checkException(EntityManager em,
-            EntityTransaction tx, Exception ex, Class<E> exceptionClass,
+    private static <E extends Exception> void checkException(EntityManager entityManager,
+            EntityTransaction transaction, Exception exception, Class<E> exceptionClass,
             boolean rollback) throws
             E {
-        if (exceptionClass.isInstance(ex)) {
+        if (exceptionClass.isInstance(exception)) {
             if (rollback) {
-                rollbackTransaction(em, tx);
+                rollbackTransaction(entityManager, transaction);
             }
-            throw exceptionClass.cast(ex);
+            throw exceptionClass.cast(exception);
         }
     }
 
     /**
-     * Checks if the exception is an instance of the exception class. If so, 
+     * Checks if the exception is an instance of the exception class. If so,
      * rolls back the transaction and then throws the exception.
-     * @param em the entity manager
-     * @param tx the transaction
-     * @param ex the exception to check
+     *
+     * @param entityManager the entity manager
+     * @param transaction the transaction
+     * @param exception the exception to check
      * @param exceptionClass the exception class
      */
     public static <E extends Exception> void checkExceptionAndRollback(
-            EntityManager em,
-            EntityTransaction tx, Exception ex, Class<E> exceptionClass) throws
+            EntityManager entityManager,
+            EntityTransaction transaction, Exception exception, Class<E> exceptionClass) throws
             E {
-        checkException(em, tx, ex, exceptionClass, true);
+        checkException(entityManager, transaction, exception, exceptionClass, true);
+    }
+
+    public static void checkDuplicityViolation(
+            EntityManager entityManager,
+            EntityTransaction transaction, Throwable exception) throws DuplicityException {
+        if (exception != null) {
+            if (exception instanceof ConstraintViolationException) {
+                checkExceptionAndRollback(
+                        entityManager,
+                        transaction,
+                        new DuplicityException("entity.exists", exception.getCause()),
+                        DuplicityException.class);
+            }else{
+                checkDuplicityViolation(entityManager, transaction,  exception.getCause());
+            }
+        }
+
     }
 
     /**
-     * Checks if the exception is an instance of the exception class. If so, throws
-     * it.
+     * Checks if the exception is an instance of the exception class. If so,
+     * throws it.
+     *
      * @param ex the exception to check
      * @param exceptionClass the exception class
      */
@@ -76,8 +98,7 @@ public class FacadesHelper {
                 tx.rollback();
             }
         } catch (Exception ex) {
-            Config.getInstance().getServiceFactory().getLogService().error(ex.
-                    getMessage(), ex);
+            Config.getInstance().getServiceFactory().getLogService().error(ex.getMessage(), ex);
         }
         if (exception != null) {
             throw new RuntimeException(exception);
@@ -96,8 +117,7 @@ public class FacadesHelper {
                 em.close();
             }
         } catch (Exception ex) {
-            Config.getInstance().getServiceFactory().getLogService().error(ex.
-                    getMessage(), ex);
+            Config.getInstance().getServiceFactory().getLogService().error(ex.getMessage(), ex);
         }
     }
 }

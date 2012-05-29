@@ -73,7 +73,7 @@ public class CoursesFacade extends AbstractFacade {
 
 
                     for (ProfessorVo professorVo : professors) {
-                        for (CourseVo courseVo : getServiceFactory().createCoursesService().getByProfessorId(entityManager, professorVo.getId())) {
+                        for (CourseVo courseVo : getServiceFactory().getCoursesService().getByProfessorId(entityManager, professorVo.getId())) {
                             //If this course is still not in the set of results, add it.
                             if (!coursesIds.contains(courseVo.getId())) {
                                 coursesIds.add(courseVo.getId());
@@ -82,7 +82,7 @@ public class CoursesFacade extends AbstractFacade {
                         }
                     }
                     for (SubjectVo subjectVo : subjects) {
-                        for (CourseVo courseVo : getServiceFactory().createCoursesService().getBySubjectId(entityManager, subjectVo.getId())) {
+                        for (CourseVo courseVo : getServiceFactory().getCoursesService().getBySubjectId(entityManager, subjectVo.getId())) {
                             //If this course is still not in the set of results, add it.
                             if (!coursesIds.contains(courseVo.getId())) {
                                 listOfFoundCourses.add(new CourseVoFull(courseVo, subjectsVo.get(courseVo.getSubjectId()), professorsVo.get(courseVo.getProfessorId())));
@@ -105,8 +105,8 @@ public class CoursesFacade extends AbstractFacade {
     public CourseVo addCourse(long professorId, long subjectId, long periodId)
             throws MultipleMessagesException, DuplicityException {
         CourseVo courseVo = null;
-        EntityManager em = null;
-        EntityTransaction tx = null;
+        EntityManager entityManager = null;
+        EntityTransaction transaction = null;
         try {
             courseVo = new CourseVo();
             courseVo.setPeriodId(periodId);
@@ -114,32 +114,32 @@ public class CoursesFacade extends AbstractFacade {
             courseVo.setSubjectId(subjectId);
             courseVo.setRatingCount(0L);
             courseVo.setRatingAverage(0.0);
-            em = getEntityManagerFactory().createEntityManager();
-            tx = em.getTransaction();
-            tx.begin();
-            courseVo = getServiceFactory().createCoursesService().create(em, courseVo);
-            tx.commit();
+            entityManager = getEntityManagerFactory().createEntityManager();
+            transaction = entityManager.getTransaction();
+            transaction.begin();
+            courseVo = getServiceFactory().getCoursesService().create(entityManager, courseVo);
+            transaction.commit();
         } catch (MultipleMessagesException e) {
             throw e;
-        } catch (Exception e) {
-            getServiceFactory().getLogService().error(e.getMessage(), e);
-            FacadesHelper.checkException(e, MultipleMessagesException.class);
-            FacadesHelper.checkExceptionAndRollback(em, tx, e, DuplicityException.class);
-            FacadesHelper.rollbackTransaction(em, tx, e);
+        } catch (Exception exception) {
+            getServiceFactory().getLogService().error(exception.getMessage(), exception);
+            FacadesHelper.checkException(exception, MultipleMessagesException.class);
+            FacadesHelper.checkDuplicityViolation(entityManager, transaction, exception);
+            FacadesHelper.rollbackTransaction(entityManager, transaction, exception);
         } finally {
-            FacadesHelper.closeEntityManager(em);
+            FacadesHelper.closeEntityManager(entityManager);
         }
         return courseVo;
     }
 
-    public void removeCourse(long courseId) throws Exception {
+    public void removeCourse(long courseId) {
         EntityManager em = null;
         EntityTransaction tx = null;
         try {
             em = getEntityManagerFactory().createEntityManager();
             tx = em.getTransaction();
             tx.begin();
-            getServiceFactory().createCoursesService().remove(em, courseId);
+            getServiceFactory().getCoursesService().remove(em, courseId);
             tx.commit();
         } catch (Exception e) {
             getServiceFactory().getLogService().error(e.getMessage(), e);
@@ -154,7 +154,7 @@ public class CoursesFacade extends AbstractFacade {
         CourseVoFull courseVoFull = null;
         try {
             entityManager = getEntityManagerFactory().createEntityManager();
-            CourseVo vo = getServiceFactory().createCoursesService().getById(entityManager, courseId);
+            CourseVo vo = getServiceFactory().getCoursesService().getById(entityManager, courseId);
             if (vo == null) {
                 return null;
             }
@@ -172,9 +172,10 @@ public class CoursesFacade extends AbstractFacade {
         return courseVoFull;
     }
 
-    public CourseRatingVo rateCourse(long courseId, long userId, float value) throws MultipleMessagesException, Exception {
-        EntityManager em = null;
-        EntityTransaction tx = null;
+    public CourseRatingVo rateCourse(long courseId, long userId, float value)
+            throws MultipleMessagesException, DuplicityException {
+        EntityManager entityManager = null;
+        EntityTransaction transaction = null;
         CourseRatingVo rating = null;
         try {
             CourseRatingVo vo = new CourseRatingVo();
@@ -182,28 +183,28 @@ public class CoursesFacade extends AbstractFacade {
             vo.setUserId(userId);
             vo.setValue(value);
 
-            em = getEntityManagerFactory().createEntityManager();
-            tx = em.getTransaction();
-            tx.begin();
-            rating = getServiceFactory().getCourseRatingsService().getByCourseIdAndUserId(em, courseId, userId);
+            entityManager = getEntityManagerFactory().createEntityManager();
+            transaction = entityManager.getTransaction();
+            transaction.begin();
+            rating = getServiceFactory().getCourseRatingsService().getByCourseIdAndUserId(entityManager, courseId, userId);
             //If there is no existing record in the database, create it
             if (rating == null) {
-                rating = getServiceFactory().getCourseRatingsService().create(em, vo);
+                rating = getServiceFactory().getCourseRatingsService().create(entityManager, vo);
             } else {
                 //Otherwise update the existing one
                 //But first verify bussines rules
 
                 rating.setValue(value);
-                getServiceFactory().getCourseRatingsService().update(em, rating);
+                getServiceFactory().getCourseRatingsService().update(entityManager, rating);
             }
-            tx.commit();
-        } catch (Exception e) {
-            getServiceFactory().getLogService().error(e.getMessage(), e);
-            FacadesHelper.checkException(e, MultipleMessagesException.class);
-            FacadesHelper.checkExceptionAndRollback(em, tx, e, DuplicityException.class);
-            FacadesHelper.rollbackTransaction(em, tx, e);
+            transaction.commit();
+        } catch (Exception exception) {
+            getServiceFactory().getLogService().error(exception.getMessage(), exception);
+            FacadesHelper.checkException(exception, MultipleMessagesException.class);
+            FacadesHelper.checkDuplicityViolation(entityManager, transaction, exception);
+            FacadesHelper.rollbackTransaction(entityManager, transaction, exception);
         } finally {
-            FacadesHelper.closeEntityManager(em);
+            FacadesHelper.closeEntityManager(entityManager);
         }
         return rating;
     }
@@ -233,7 +234,7 @@ public class CoursesFacade extends AbstractFacade {
         try {
             entityManager = getEntityManagerFactory().createEntityManager();
             List<CourseVo> similarCourses = getServiceFactory().
-                    createCoursesService().getSimilarCourses(entityManager, professorName, subjectName, periodId);
+                    getCoursesService().getSimilarCourses(entityManager, professorName, subjectName, periodId);
             for (CourseVo courseVo : similarCourses) {
                 if (!professorsVos.containsKey(courseVo.getProfessorId())) {
                     ProfessorVo professorVo = getServiceFactory().
@@ -263,7 +264,7 @@ public class CoursesFacade extends AbstractFacade {
         HashMap<Long, ProfessorVo> professorsVo = new HashMap<Long, ProfessorVo>();
         try {
             entityManager = getEntityManagerFactory().createEntityManager();
-            List<CourseVo> courseVos = getServiceFactory().createCoursesService().getBySubjectId(entityManager, subjectId);
+            List<CourseVo> courseVos = getServiceFactory().getCoursesService().getBySubjectId(entityManager, subjectId);
             SubjectVo subjectVo = getServiceFactory().getSubjectsService().getById(entityManager, subjectId);
             for (CourseVo courseVo : courseVos) {
                 if (!professorsVo.containsKey(courseVo.getProfessorId())) {
@@ -294,10 +295,10 @@ public class CoursesFacade extends AbstractFacade {
         EntityManager entityManager = null;
         List<CourseVoFull> coursesList = new ArrayList<CourseVoFull>();
         HashMap<Long, SubjectVo> subjectsVo = new HashMap<Long, SubjectVo>();
-        
+
         try {
             entityManager = getEntityManagerFactory().createEntityManager();
-            List<CourseVo> courses = getServiceFactory().createCoursesService().getByProfessorId(entityManager, professorId);
+            List<CourseVo> courses = getServiceFactory().getCoursesService().getByProfessorId(entityManager, professorId);
             ProfessorVo professorVo = getServiceFactory().getProfessorsService().getById(entityManager, professorId);
             for (CourseVo courseVo : courses) {
                 if (!subjectsVo.containsKey(courseVo.getSubjectId())) {

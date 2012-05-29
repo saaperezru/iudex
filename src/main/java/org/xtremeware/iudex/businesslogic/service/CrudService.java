@@ -55,17 +55,11 @@ public abstract class CrudService<E extends ValueObject, F extends Entity<E>> {
             MultipleMessagesException,
             DataBaseException,
             MaxCommentsLimitReachedException {
-        
+
         validateVoForCreation(entityManager, valueObject);
-        try {
-            return getCreateInterface().create(entityManager, voToEntity(entityManager, valueObject)).toVo();
-        } catch (DataBaseException ex) {
-            if (ex.getMessage().equals("entity.exists")) {
-                throw new DuplicityException("entity.exists", ex.getCause());
-            } else {
-                throw ex;
-            }
-        }
+
+        return getCreateInterface().create(entityManager, voToEntity(entityManager, valueObject)).toVo();
+
 
     }
 
@@ -90,20 +84,14 @@ public abstract class CrudService<E extends ValueObject, F extends Entity<E>> {
             DuplicityException {
         validateVoForUpdate(entityManager, valueObject);
 
-        try {
-            F entity = getUpdateInterface().update(entityManager, voToEntity(entityManager, valueObject));
-            if (entity != null) {
-                return entity.toVo();
-            } else {
-                return null;
-            }
-        } catch (DataBaseException ex) {
-            if (ex.getMessage().equals("entity.exists")) {
-                throw new DuplicityException("entity.exists", ex.getCause());
-            } else {
-                throw ex;
-            }
+
+        F entity = getUpdateInterface().update(entityManager, voToEntity(entityManager, valueObject));
+        if (entity != null) {
+            return entity.toVo();
+        } else {
+            return null;
         }
+
     }
 
     protected abstract void validateVoForCreation(EntityManager entityManager, E valueObject)

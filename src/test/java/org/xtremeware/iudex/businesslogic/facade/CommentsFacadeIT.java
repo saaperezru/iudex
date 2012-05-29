@@ -323,7 +323,7 @@ public class CommentsFacadeIT {
                 "SELECT COUNT(c) FROM Comment c WHERE c.course.id = :id",
                 Long.class).
                 setParameter("id", id).getSingleResult().intValue();
-        assertEquals(3, size);
+        assertEquals(4, size);
         for (CommentVo commentVo : commentsByCourseId) {
             CommentVo result = entityManager.createQuery(
                     "SELECT c FROM Comment c WHERE c.id = :id",

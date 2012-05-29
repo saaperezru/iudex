@@ -414,8 +414,9 @@ INSERT into SUBJECT_RATING values ('28','2042911','4',1);
 -- INSERT INTO COMMENT_
 -- 
 INSERT into COMMENT_ values ('1','1','1','Muy buen curso','2012-01-26 14:43:24','4.5','0');
-INSERT into COMMENT_ values ('2','2','1','PÉSIMO curso','2012-01-26 14:43:24','2.5','1');
-INSERT into COMMENT_ values ('3','2','1','áño <script> for (;;){alert(1);}</script>','2012-01-26 14:43:24','2.5','1');
+INSERT into COMMENT_ values ('2','2','1','PÉSIMO curso','2012-01-26 14:43:24','2.5','0');
+INSERT into COMMENT_ values ('3','2','1','áño <script> for (;;){alert(1);}</script>','2012-01-26 14:43:24','2.5','0');
+INSERT into COMMENT_ values ('4',null,'1','áño <script> for (;;){alert(1);}</script>','2012-01-26 14:43:24','4.5','1');
 
 
 -- INSERT INTO COMMENT_RATING

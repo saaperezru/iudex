@@ -2,7 +2,6 @@ package org.xtremeware.iudex.businesslogic.facade;
 
 import java.util.*;
 import javax.persistence.*;
-import org.xtremeware.iudex.businesslogic.DuplicityException;
 import org.xtremeware.iudex.businesslogic.helper.FacadesHelper;
 import org.xtremeware.iudex.businesslogic.service.ServiceBuilder;
 import org.xtremeware.iudex.helper.MultipleMessagesException;
@@ -49,8 +48,7 @@ public class ProfessorsFacade extends AbstractFacade {
         } catch (Exception exception) {
             getServiceFactory().getLogService().error(exception.getMessage(), exception);
             FacadesHelper.checkException(exception, MultipleMessagesException.class);
-            FacadesHelper.checkExceptionAndRollback(
-                    entityManager, transaction, exception, DuplicityException.class);
+            FacadesHelper.checkDuplicityViolation(entityManager, transaction, exception);
             FacadesHelper.rollbackTransaction(entityManager, transaction, exception);
         } finally {
             FacadesHelper.closeEntityManager(entityManager);
@@ -71,7 +69,7 @@ public class ProfessorsFacade extends AbstractFacade {
         } catch (Exception exception) {
             getServiceFactory().getLogService().error(exception.getMessage(), exception);
             FacadesHelper.checkException(exception, MultipleMessagesException.class);
-            FacadesHelper.checkExceptionAndRollback(entityManager, transaction, exception, DuplicityException.class);
+            FacadesHelper.checkDuplicityViolation(entityManager, transaction, exception);
             FacadesHelper.rollbackTransaction(entityManager, transaction, exception);
         } finally {
             FacadesHelper.closeEntityManager(entityManager);
@@ -133,8 +131,7 @@ public class ProfessorsFacade extends AbstractFacade {
         } catch (Exception exception) {
             getServiceFactory().getLogService().error(exception.getMessage(), exception);
             FacadesHelper.checkException(exception, MultipleMessagesException.class);
-            FacadesHelper.checkExceptionAndRollback(
-                    entityManager, transaction, exception, DuplicityException.class);
+            FacadesHelper.checkDuplicityViolation(entityManager, transaction, exception);
             FacadesHelper.rollbackTransaction(entityManager, transaction, exception);
         } finally {
             FacadesHelper.closeEntityManager(entityManager);

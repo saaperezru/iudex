@@ -40,7 +40,7 @@ public class ProgramsFacade extends AbstractFacade {
      * errors) and throws an exception if data isn't valid.
      */
     public ProgramVo addProgram(String programName, int code)
-            throws MultipleMessagesException, Exception {
+            throws MultipleMessagesException, DuplicityException {
         ProgramVo programVo = new ProgramVo();
         programVo.setName(programName);
         programVo.setCode(code);
@@ -58,7 +58,7 @@ public class ProgramsFacade extends AbstractFacade {
         } catch (Exception exception) {
             getServiceFactory().getLogService().error(exception.getMessage(), exception);
             FacadesHelper.checkException(exception, MultipleMessagesException.class);
-            FacadesHelper.checkExceptionAndRollback(entityManager, transaction, exception, DuplicityException.class);
+            FacadesHelper.checkDuplicityViolation(entityManager, transaction, exception);
             FacadesHelper.rollbackTransaction(entityManager, transaction, exception);
         } finally {
             FacadesHelper.closeEntityManager(entityManager);

@@ -36,7 +36,7 @@ public class ProfessorsFacadeIT {
         entityManager.clear();
         entityManager.close();
     }
-    @Ignore
+    //@Ignore
     @Test
     public void testBL_8_1() throws MultipleMessagesException, Exception {
         ProfessorsFacade pf = Config.getInstance().getFacadeFactory().getProfessorsFacade();
@@ -45,7 +45,7 @@ public class ProfessorsFacadeIT {
         int value = 1;
         BinaryRatingVo rateProfessor = pf.rateProfessor(professorId, userId, value);
     }
-    @Ignore
+    //@Ignore
     @Test
     public void testBL_8_2() throws Exception {
         ProfessorsFacade pf = Config.getInstance().getFacadeFactory().getProfessorsFacade();
@@ -84,7 +84,7 @@ public class ProfessorsFacadeIT {
             FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
         }
     }
-    @Ignore
+    //@Ignore
     @Test
     public void testBL_8_3() throws MultipleMessagesException, Exception {
         ProfessorsFacade pf = Config.getInstance().getFacadeFactory().getProfessorsFacade();
@@ -102,7 +102,7 @@ public class ProfessorsFacadeIT {
         assertEquals(id, rateProfessor.getId());
         assertEquals(value, rateProfessor.getValue());
     }
-    @Ignore
+    //@Ignore
     @Test
     public void testBL_8_4() throws MultipleMessagesException, Exception {
         ProfessorsFacade pf = Config.getInstance().getFacadeFactory().getProfessorsFacade();
@@ -120,7 +120,7 @@ public class ProfessorsFacadeIT {
         assertEquals(id, rateProfessor.getId());
         assertEquals(value, rateProfessor.getValue());
     }
-    @Ignore
+    //@Ignore
     @Test
     public void testBL_13_1() throws MultipleMessagesException, Exception {
         ProfessorsFacade pf = Config.getInstance().getFacadeFactory().getProfessorsFacade();
@@ -136,7 +136,7 @@ public class ProfessorsFacadeIT {
         ProfessorVo result = entityManager.createQuery("SELECT p FROM Professor p WHERE p.id = :id", ProfessorEntity.class).setParameter("id", pv.getId()).getSingleResult().toVo();
         assertTrue(result.equals(pv));
     }
-    @Ignore
+    //@Ignore
     @Test
     public void testBL_13_2() throws Exception {
         ProfessorsFacade pf = Config.getInstance().getFacadeFactory().getProfessorsFacade();
@@ -172,8 +172,8 @@ public class ProfessorsFacadeIT {
         }
 
         pv.setDescription(FacadesTestHelper.randomString(2050));
-        pv.setFirstName(FacadesTestHelper.randomString(51));
-        pv.setLastName(FacadesTestHelper.randomString(51));
+        pv.setFirstName(FacadesTestHelper.randomString(60));
+        pv.setLastName(FacadesTestHelper.randomString(60));
         pv.setEmail("");
         pv.setImageUrl("");
         pv.setWebsite("");
@@ -193,9 +193,9 @@ public class ProfessorsFacadeIT {
         pv.setDescription("");
         pv.setFirstName("");
         pv.setLastName("");
-        pv.setEmail(FacadesTestHelper.randomString(51));
-        pv.setImageUrl(FacadesTestHelper.randomString(51));
-        pv.setWebsite(FacadesTestHelper.randomString(51));
+        pv.setEmail(FacadesTestHelper.randomString(60));
+        pv.setImageUrl(FacadesTestHelper.randomString(60));
+        pv.setWebsite(FacadesTestHelper.randomString(60));
 
         expectedMessages = new String[]{
             "professor.firstName.empty",
@@ -225,11 +225,11 @@ public class ProfessorsFacadeIT {
 
         try {
             pv = pf.addProfessor(pv);
-        } catch (Exception ex) {
-            assertEquals(DuplicityException.class, ex.getClass());
+        } catch (Exception e) {
+            assertTrue(e instanceof DuplicityException);
         }
     }
-    
+    //@Ignore
     @Test
     public void testBL_14_1() throws MultipleMessagesException, Exception {
 
@@ -266,7 +266,7 @@ public class ProfessorsFacadeIT {
         assertEquals(webSite, result.getWebsite());
         assertTrue(result.equals(pv));
     }
-    
+    //@Ignore
     @Test
     public void testBL_14_2() throws MultipleMessagesException, Exception {
         ProfessorsFacade pf = Config.getInstance().getFacadeFactory().getProfessorsFacade();
@@ -303,8 +303,8 @@ public class ProfessorsFacadeIT {
         }
 
         pv.setDescription(FacadesTestHelper.randomString(2050));
-        pv.setFirstName(FacadesTestHelper.randomString(51));
-        pv.setLastName(FacadesTestHelper.randomString(51));
+        pv.setFirstName(FacadesTestHelper.randomString(60));
+        pv.setLastName(FacadesTestHelper.randomString(60));
         pv.setEmail("");
         pv.setImageUrl("");
         pv.setWebsite("");
@@ -324,9 +324,9 @@ public class ProfessorsFacadeIT {
         pv.setDescription("");
         pv.setFirstName("");
         pv.setLastName("");
-        pv.setEmail(FacadesTestHelper.randomString(51));
-        pv.setImageUrl(FacadesTestHelper.randomString(51));
-        pv.setWebsite(FacadesTestHelper.randomString(51));
+        pv.setEmail(FacadesTestHelper.randomString(60));
+        pv.setImageUrl(FacadesTestHelper.randomString(60));
+        pv.setWebsite(FacadesTestHelper.randomString(60));
 
         expectedMessages = new String[]{
             "professor.firstName.empty",
@@ -350,12 +350,12 @@ public class ProfessorsFacadeIT {
         pv.setWebsite("www.docentes.unal.edu.co/mlinaresv");
 
         try{
-        ProfessorVo pe = pf.editProfessor(pv);
+            ProfessorVo pe = pf.editProfessor(pv);
         }catch(Exception e){
             Throwable cause = e.getCause();
         }
     }
-    @Ignore
+    //@Ignore
     @Test
     public void testBL_14_3() throws MultipleMessagesException, Exception {
 
@@ -379,7 +379,7 @@ public class ProfessorsFacadeIT {
         result = pf.editProfessor(pv);
         assertNull(result);
     }
-    @Ignore
+    //@Ignore
     @Test
     public void testBL_31_1() throws MultipleMessagesException, Exception {
 
@@ -395,7 +395,7 @@ public class ProfessorsFacadeIT {
                 + "WHERE result.professor.id = :id AND result.value = -1", Long.class).setParameter("id", id).getSingleResult().intValue();
         assertTrue(count == professorRatingSummary.getNegative());
     }
-    @Ignore
+    //@Ignore
     @Test
     public void testBL_31_2() throws MultipleMessagesException, Exception {
 
@@ -418,7 +418,7 @@ public class ProfessorsFacadeIT {
         assertTrue(0 == professorRatingSummary.getNegative());
 
     }
-    @Ignore
+    //@Ignore
     @Test
     public void testBL_32_1() throws MultipleMessagesException, Exception {
 
@@ -444,7 +444,7 @@ public class ProfessorsFacadeIT {
                 + "WHERE result.professor.id = :id AND result.value = -1", Long.class).setParameter("id", id).getSingleResult().intValue();
         assertTrue(count == professorVoFull.getRatingSummary().getNegative());
     }
-    @Ignore
+    //@Ignore
     @Test
     public void testBL_32_2() throws MultipleMessagesException, Exception {
 
@@ -463,7 +463,7 @@ public class ProfessorsFacadeIT {
         pvvf = professorsFacade.getProfessor(id);
         assertNull(pvvf);
     }
-    @Ignore
+    //@Ignore
     @Test
     public void testBL_33_1() throws MultipleMessagesException, Exception {
 
@@ -482,7 +482,7 @@ public class ProfessorsFacadeIT {
 
 
     }
-    @Ignore
+    //@Ignore
     @Test
     public void testBL_33_2() throws MultipleMessagesException, Exception {
 
@@ -514,7 +514,7 @@ public class ProfessorsFacadeIT {
         prv = professorsFacade.getProfessorRatingByUserId(professorId, userId);
         assertNull(prv);
     }
-    @Ignore
+    //@Ignore
     @Test
     public void testBL_34_1() throws MultipleMessagesException, Exception {
         ProfessorsFacade pf = Config.getInstance().getFacadeFactory().getProfessorsFacade();
@@ -560,7 +560,7 @@ public class ProfessorsFacadeIT {
         assertTrue(professorsAutocomplete.isEmpty());
 
     }
-    @Ignore
+    //@Ignore
     @Test
     public void testBL_34_2() throws MultipleMessagesException, Exception {
         ProfessorsFacade pf = Config.getInstance().getFacadeFactory().getProfessorsFacade();
@@ -573,7 +573,7 @@ public class ProfessorsFacadeIT {
         professorsAutocomplete = pf.getProfessorsAutocomplete(null);
         assertTrue(professorsAutocomplete.isEmpty());
     }
-    @Ignore
+    //@Ignore
     @Test
     public void testBL_15_1() throws MultipleMessagesException, Exception {
 
@@ -590,7 +590,7 @@ public class ProfessorsFacadeIT {
         count = entityManager.createQuery("SELECT COUNT(c) FROM Course c WHERE c.professor.id = :id", Long.class).setParameter("id", id).getSingleResult().intValue();
         assertTrue(0 == count);
     }
-    @Ignore
+    //@Ignore
     @Test
     public void testBL_15_2() throws MultipleMessagesException, Exception {
 

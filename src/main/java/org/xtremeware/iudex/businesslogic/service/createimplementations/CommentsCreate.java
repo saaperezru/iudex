@@ -28,7 +28,7 @@ public class CommentsCreate implements Create<CommentEntity> {
     public CommentEntity create(EntityManager entityManager, CommentEntity entity) 
             throws DataBaseException, DuplicityException, MaxCommentsLimitReachedException {
         if (checkUserCommentsCounter(entityManager, entity.getUser().getId()) >= MAX_COMMENTS_PER_DAY) {
-            
+            throw new MaxCommentsLimitReachedException(entity.getUser().toVo(), entity.getCourse().toVo());
         }
         return getDaoFactory().getCommentDao().persist(entityManager, entity);
     }

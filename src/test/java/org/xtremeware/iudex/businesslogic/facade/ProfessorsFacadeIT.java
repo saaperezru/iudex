@@ -1,19 +1,14 @@
 package org.xtremeware.iudex.businesslogic.facade;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import javax.persistence.EntityManager;
 import org.junit.*;
 import static org.junit.Assert.*;
 import org.xtremeware.iudex.businesslogic.DuplicityException;
 import org.xtremeware.iudex.entity.ProfessorEntity;
-import org.xtremeware.iudex.helper.Config;
-import org.xtremeware.iudex.helper.MultipleMessagesException;
-import org.xtremeware.iudex.vo.ProfessorVo;
+import org.xtremeware.iudex.helper.*;
 import org.xtremeware.iudex.businesslogic.helper.FacadesTestHelper;
-import org.xtremeware.iudex.vo.BinaryRatingVo;
-import org.xtremeware.iudex.vo.ProfessorVoFull;
-import org.xtremeware.iudex.vo.RatingSummaryVo;
+import org.xtremeware.iudex.vo.*;
 
 /**
  *
@@ -429,25 +424,25 @@ public class ProfessorsFacadeIT {
 
         ProfessorsFacade professorsFacade = Config.getInstance().getFacadeFactory().getProfessorsFacade();
         Long id = 3L;
-        ProfessorVoFull pvvf = professorsFacade.getProfessor(id);
+        ProfessorVoFull professorVoFull = professorsFacade.getProfessor(id);
 
         ProfessorVo pv = entityManager.createQuery("SELECT result FROM Professor result "
                 + "WHERE result.id = :id", ProfessorEntity.class).setParameter("id", id).getSingleResult().toVo();
-        assertEquals(pv.getId(), pvvf.getId());
-        assertEquals(pv.getDescription(), pvvf.getDescription());
-        assertEquals(pv.getEmail(), pvvf.getEmail());
-        assertEquals(pv.getFirstName(), pvvf.getFirstName());
-        assertEquals(pv.getImageUrl(), pvvf.getImageUrl());
-        assertEquals(pv.getLastName(), pvvf.getLastName());
-        assertEquals(pv.getWebsite(), pvvf.getWebsite());
+        assertEquals(pv.getId(), professorVoFull.getVo().getId());
+        assertEquals(pv.getDescription(), professorVoFull.getVo().getDescription());
+        assertEquals(pv.getEmail(), professorVoFull.getVo().getEmail());
+        assertEquals(pv.getFirstName(), professorVoFull.getVo().getFirstName());
+        assertEquals(pv.getImageUrl(), professorVoFull.getVo().getImageUrl());
+        assertEquals(pv.getLastName(), professorVoFull.getVo().getLastName());
+        assertEquals(pv.getWebsite(), professorVoFull.getVo().getWebsite());
 
         int count = entityManager.createQuery("SELECT COUNT (result) FROM ProfessorRating result "
                 + "WHERE result.professor.id = :id AND result.value = 1", Long.class).setParameter("id", id).getSingleResult().intValue();
-        assertTrue(count == pvvf.getRatingSummary().getPositive());
+        assertTrue(count == professorVoFull.getRatingSummary().getPositive());
 
         count = entityManager.createQuery("SELECT COUNT (result) FROM ProfessorRating result "
                 + "WHERE result.professor.id = :id AND result.value = -1", Long.class).setParameter("id", id).getSingleResult().intValue();
-        assertTrue(count == pvvf.getRatingSummary().getNegative());
+        assertTrue(count == professorVoFull.getRatingSummary().getNegative());
     }
     @Ignore
     @Test

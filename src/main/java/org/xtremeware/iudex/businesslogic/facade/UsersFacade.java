@@ -5,7 +5,6 @@ import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
-import javax.xml.rpc.ServiceFactory;
 import org.xtremeware.iudex.businesslogic.DuplicityException;
 import org.xtremeware.iudex.businesslogic.helper.FacadesHelper;
 import org.xtremeware.iudex.businesslogic.service.InactiveUserException;

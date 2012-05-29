@@ -13,7 +13,6 @@ import org.xtremeware.iudex.helper.DataBaseException;
 import org.xtremeware.iudex.helper.MultipleMessagesException;
 import org.xtremeware.iudex.vo.BinaryRatingVo;
 import org.xtremeware.iudex.vo.CommentVo;
-import org.xtremeware.iudex.vo.CommentVoFull;
 import org.xtremeware.iudex.vo.RatingSummaryVo;
 
 /**
@@ -319,26 +318,25 @@ public class CommentsFacadeIT {
         CommentsFacade commentsFacade = Config.getInstance().getFacadeFactory().
                 getCommentsFacade();
         Long id = 1L;
-        List<CommentVoFull> commentsByCourseId = commentsFacade.getCommentsByCourseId(id);
+        List<CommentVo> commentsByCourseId = commentsFacade.getCommentsByCourseId(id);
         int size = entityManager.createQuery(
                 "SELECT COUNT(c) FROM Comment c WHERE c.course.id = :id",
                 Long.class).
                 setParameter("id", id).getSingleResult().intValue();
         assertEquals(3, size);
-        for (CommentVoFull cvvf : commentsByCourseId) {
+        for (CommentVo commentVo : commentsByCourseId) {
             CommentVo result = entityManager.createQuery(
                     "SELECT c FROM Comment c WHERE c.id = :id",
                     CommentEntity.class).
-                    setParameter("id", cvvf.getId()).getSingleResult().toVo();
-            if (cvvf.isAnonymous()) {
-                assertNull(cvvf.getUser());
+                    setParameter("id", commentVo.getId()).getSingleResult().toVo();
+            if (commentVo.isAnonymous()) {
+                assertNull(commentVo.getUserId());
             } else {
-                assertNotNull(cvvf.getUser());
-                assertEquals(result.getUserId(), cvvf.getUser().getId());
+                assertNotNull(commentVo.getUserId());
+                assertEquals(result.getUserId(), commentVo.getUserId());
             }
-            assertEquals(result.getContent(), cvvf.getContent());
-            assertEquals(result.getId(), cvvf.getId());
-            assertEquals(result.getRating(), cvvf.getCourseRating());
+            assertEquals(result.getContent(), commentVo.getContent());
+            assertEquals(result.getId(), commentVo.getId());
         }
 
     }
@@ -348,7 +346,7 @@ public class CommentsFacadeIT {
         CommentsFacade commentsFacade = Config.getInstance().getFacadeFactory().
                 getCommentsFacade();
         Long id = 0L;
-        List<CommentVoFull> commentsByCourseId = commentsFacade.
+        List<CommentVo> commentsByCourseId = commentsFacade.
                 getCommentsByCourseId(id);
         assertEquals(0, commentsByCourseId.size());
 

@@ -57,41 +57,22 @@ public class CommentsFacade extends AbstractFacade {
         }
     }
 
-    public List<CommentVoFull> getCommentsByCourseId(long courseId) {
+    public List<CommentVo> getCommentsByCourseId(long courseId) {
         EntityManager em = null;
-        List<CommentVoFull> commentVoFulls = new ArrayList<CommentVoFull>();
+        List<CommentVo> commentVos = new ArrayList<CommentVo>();
         try {
             em = getEntityManagerFactory().createEntityManager();
 
-            List<CommentVo> comments = getServiceFactory().createCommentsService().
+            commentVos = getServiceFactory().createCommentsService().
                     getByCourseId(em, courseId);
-
-            HashMap<Long, UserVoSmall> users =
-                    new HashMap<Long, UserVoSmall>();
-
-            for (CommentVo commentVo : comments) {
-                if (!users.containsKey(commentVo.getUserId())) {
-                    users.put(commentVo.getUserId(),
-                            new UserVoSmall(getServiceFactory().
-                            getUsersService().getById(em,
-                            commentVo.getUserId())));
-                }
-                if (commentVo.isAnonymous()) {
-                    commentVoFulls.add(new CommentVoFull(commentVo,
-                            null, getCommentRatingSummary(commentVo.getId())));
-                } else {
-                    commentVoFulls.add(new CommentVoFull(commentVo, users.get(commentVo.getUserId()), getCommentRatingSummary(commentVo.getId())));
-
-                }
-            }
-
         } catch (Exception e) {
             getServiceFactory().getLogService().error(e.getMessage(), e);
             throw new RuntimeException(e);
         } finally {
             FacadesHelper.closeEntityManager(em);
         }
-        return commentVoFulls;
+        
+        return commentVos;
     }
 
     public RatingSummaryVo getCommentRatingSummary(long commentId) {

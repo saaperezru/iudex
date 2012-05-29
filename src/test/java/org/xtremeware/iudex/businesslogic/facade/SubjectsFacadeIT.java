@@ -171,10 +171,10 @@ public class SubjectsFacadeIT {
 
         SubjectVoFull subjectVoFull = subjectsFacade.getSubject(createdSubjectId);
 
-        assertEquals(subjectVoFull.getId(), createdSubjectId);
-        assertEquals(subjectVoFull.getName(), subjectName);
-        assertEquals(subjectVoFull.getDescription(), subjectDescription);
-        assertEquals(subjectVoFull.getCode(), subjectCode);
+        assertEquals(subjectVoFull.getVo().getId(), createdSubjectId);
+        assertEquals(subjectVoFull.getVo().getName(), subjectName);
+        assertEquals(subjectVoFull.getVo().getDescription(), subjectDescription);
+        assertEquals(subjectVoFull.getVo().getCode(), subjectCode);
 
 
         subjectCode = 2468013;
@@ -189,9 +189,9 @@ public class SubjectsFacadeIT {
 
         subjectVoFull = subjectsFacade.getSubject(createdSubjectId);
 
-        assertEquals(subjectVoFull.getId(), createdSubjectId);
-        assertEquals(subjectVoFull.getName(), subjectName);
-        assertEquals(subjectVoFull.getDescription(), subjectDescription);
+        assertEquals(subjectVoFull.getVo().getId(), createdSubjectId);
+        assertEquals(subjectVoFull.getVo().getName(), subjectName);
+        assertEquals(subjectVoFull.getVo().getDescription(), subjectDescription);
 
         subjectCode = 5555555;
         subjectName = FacadesTestHelper.randomString(Integer.parseInt(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAX_SUBJECT_NAME_LENGTH)));
@@ -207,9 +207,9 @@ public class SubjectsFacadeIT {
 
         subjectVoFull = subjectsFacade.getSubject(createdSubjectId);
 
-        assertEquals(subjectVoFull.getId(), createdSubjectId);
-        assertEquals(subjectVoFull.getName(), subjectName);
-        assertEquals(subjectVoFull.getDescription(), subjectDescription);
+        assertEquals(subjectVoFull.getVo().getId(), createdSubjectId);
+        assertEquals(subjectVoFull.getVo().getName(), subjectName);
+        assertEquals(subjectVoFull.getVo().getDescription(), subjectDescription);
 
 
         subjectCode = 7654321;
@@ -224,9 +224,9 @@ public class SubjectsFacadeIT {
 
         subjectVoFull = subjectsFacade.getSubject(createdSubjectId);
 
-        assertEquals(subjectVoFull.getId(), createdSubjectId);
-        assertEquals(subjectVoFull.getName(), subjectName);
-        assertEquals(subjectVoFull.getDescription(), subjectDescription);
+        assertEquals(subjectVoFull.getVo().getId(), createdSubjectId);
+        assertEquals(subjectVoFull.getVo().getName(), subjectName);
+        assertEquals(subjectVoFull.getVo().getDescription(), subjectDescription);
 
 
         subjectCode = 1234568;
@@ -242,9 +242,9 @@ public class SubjectsFacadeIT {
 
         subjectVoFull = subjectsFacade.getSubject(createdSubjectId);
 
-        assertEquals(subjectVoFull.getId(), createdSubjectId);
-        assertEquals(subjectVoFull.getName(), subjectName);
-        assertEquals(subjectVoFull.getDescription(), subjectDescription);
+        assertEquals(subjectVoFull.getVo().getId(), createdSubjectId);
+        assertEquals(subjectVoFull.getVo().getName(), subjectName);
+        assertEquals(subjectVoFull.getVo().getDescription(), subjectDescription);
     }
 
     //@Ignore
@@ -361,10 +361,10 @@ public class SubjectsFacadeIT {
 
         SubjectVoFull subject = subjectsFacade.getSubject(subjectId);
 
-        assertEquals(subject.getId(), subjectId);
-        assertEquals(subject.getName(), newSubjectName);
-        assertEquals(subject.getDescription(), newSubjectDescription);
-        assertEquals(subject.getCode(), newCode);
+        assertEquals(subject.getVo().getId(), subjectId);
+        assertEquals(subject.getVo().getName(), newSubjectName);
+        assertEquals(subject.getVo().getDescription(), newSubjectDescription);
+        assertEquals(subject.getVo().getCode(), newCode);
 
         subjectId = 2039461L;
         newSubjectName = "SEGURIDAD VIAL";
@@ -378,10 +378,10 @@ public class SubjectsFacadeIT {
 
         subject = subjectsFacade.getSubject(subjectId);
 
-        assertEquals(subject.getId(), subjectId);
-        assertEquals(subject.getName(), newSubjectName);
-        assertEquals(subject.getDescription(), newSubjectDescription);
-        assertEquals(subject.getCode(), newCode);
+        assertEquals(subject.getVo().getId(), subjectId);
+        assertEquals(subject.getVo().getName(), newSubjectName);
+        assertEquals(subject.getVo().getDescription(), newSubjectDescription);
+        assertEquals(subject.getVo().getCode(), newCode);
 
         subjectId = 2039372L;
         newSubjectName = "SOFTWARE";
@@ -395,10 +395,10 @@ public class SubjectsFacadeIT {
 
         subject = subjectsFacade.getSubject(subjectId);
 
-        assertEquals(subject.getId(), subjectId);
-        assertEquals(subject.getName(), newSubjectName);
-        assertEquals(subject.getDescription(), newSubjectDescription);
-        assertEquals(subject.getCode(), newCode);
+        assertEquals(subject.getVo().getId(), subjectId);
+        assertEquals(subject.getVo().getName(), newSubjectName);
+        assertEquals(subject.getVo().getDescription(), newSubjectDescription);
+        assertEquals(subject.getVo().getCode(), newCode);
     }
 
     //@Ignore

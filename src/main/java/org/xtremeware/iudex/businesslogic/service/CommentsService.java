@@ -40,7 +40,7 @@ public class CommentsService extends CrudService<CommentVo, CommentEntity> {
      */
     public List<CommentVo> getByCourseId(EntityManager entityManager, long courseId)
             throws DataBaseException {
-        
+
         List<CommentEntity> commentEntitys = getDaoFactory().getCommentDao().getByCourseId(entityManager, courseId);
 
         List<CommentVo> commentVos = new ArrayList<CommentVo>();
@@ -96,13 +96,21 @@ public class CommentsService extends CrudService<CommentVo, CommentEntity> {
                     "comment.date.null");
         }
 
-        if (commentVo.getUserId() == null) {
-            multipleMessageException.addMessage(
-                    "comment.userId.null");
-        } else if (getDaoFactory().getUserDao().getById(entityManager, commentVo.getUserId()) == null) {
-            multipleMessageException.addMessage(
-                    "comment.userId.element.notFound");
+        if (commentVo.isAnonymous()) {
+            if (commentVo.getUserId() != null) {
+                multipleMessageException.addMessage(
+                        "comment.userId.NotNull");
+            }
+        } else {
+            if (commentVo.getUserId() == null) {
+                multipleMessageException.addMessage(
+                        "comment.userId.null");
+            } else if (getDaoFactory().getUserDao().getById(entityManager, commentVo.getUserId()) == null) {
+                multipleMessageException.addMessage(
+                        "comment.userId.element.notFound");
+            }
         }
+
 
         if (commentVo.getRating() == null) {
             multipleMessageException.addMessage(

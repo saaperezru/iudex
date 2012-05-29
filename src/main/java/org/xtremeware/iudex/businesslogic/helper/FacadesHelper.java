@@ -5,7 +5,6 @@ import javax.persistence.EntityTransaction;
 import org.hibernate.exception.ConstraintViolationException;
 import org.xtremeware.iudex.businesslogic.DuplicityException;
 import org.xtremeware.iudex.helper.Config;
-import org.xtremeware.iudex.helper.DataBaseException;
 
 /**
  *

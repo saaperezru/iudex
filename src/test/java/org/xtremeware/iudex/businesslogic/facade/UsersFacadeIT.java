@@ -2,6 +2,7 @@ package org.xtremeware.iudex.businesslogic.facade;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -14,6 +15,7 @@ import org.xtremeware.iudex.businesslogic.service.InactiveUserException;
 import org.xtremeware.iudex.businesslogic.service.MailingService;
 import org.xtremeware.iudex.entity.UserEntity;
 import org.xtremeware.iudex.helper.*;
+import org.xtremeware.iudex.vo.CommentVo;
 import org.xtremeware.iudex.vo.MailingConfigVo;
 import org.xtremeware.iudex.vo.UserVo;
 
@@ -196,9 +198,8 @@ public class UsersFacadeIT {
 
         user.setFirstName(FacadesTestHelper.randomString(10));
         user.setLastName(FacadesTestHelper.randomString(10));
-        user.setUserName(FacadesTestHelper.randomString(MAX_USERNAME_LENGTH + 1));
-        user.setPassword(FacadesTestHelper.randomString(MAX_USER_PASSWORD_LENGTH +
-                1));
+        user.setUserName(FacadesTestHelper.randomString(MAX_USERNAME_LENGTH + 10));
+        user.setPassword(FacadesTestHelper.randomString(MAX_USER_PASSWORD_LENGTH +10));
         List<Long> programsId = user.getProgramsId();
         programsId.add(null);
 
@@ -575,8 +576,8 @@ public class UsersFacadeIT {
 
         user.setFirstName(FacadesTestHelper.randomString(10));
         user.setLastName(FacadesTestHelper.randomString(10));
-        user.setUserName(FacadesTestHelper.randomString(MAX_USERNAME_LENGTH + 1));
-        user.setPassword(FacadesTestHelper.randomString(MAX_USER_PASSWORD_LENGTH +1));
+        user.setUserName(FacadesTestHelper.randomString(MAX_USERNAME_LENGTH + 10));
+        user.setPassword(FacadesTestHelper.randomString(MAX_USER_PASSWORD_LENGTH +10));
         List<Long> programsId = user.getProgramsId();
         programsId.add(null);
 
@@ -606,5 +607,21 @@ public class UsersFacadeIT {
         } catch (MultipleMessagesException ex) {
             FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
         }
+    }
+    
+    @Test
+    public void testDoubleRaitingCommentDeleted() throws MultipleMessagesException, Exception {
+        CommentVo commentVo = new CommentVo();
+        commentVo.setAnonymous(false);
+        commentVo.setContent("MUY MAL CURSO");
+        commentVo.setCourseId(1L);
+        commentVo.setDate(new Date());
+        commentVo.setRating(1F);
+        commentVo.setUserId(6L);
+        CommentVo addComment = Config.getInstance().getFacadeFactory().getCommentsFacade().addComment(commentVo);
+        
+        Config.getInstance().getFacadeFactory().getCommentsFacade().rateComment(addComment.getId(), 6L, 1);
+        
+        Config.getInstance().getFacadeFactory().getUsersFacade().removeUser(6L);
     }
 }

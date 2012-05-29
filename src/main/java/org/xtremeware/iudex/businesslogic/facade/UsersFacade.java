@@ -231,4 +231,21 @@ public class UsersFacade extends AbstractFacade {
             FacadesHelper.closeEntityManager(em);
         }
     }
+    
+    public void removeUser(long userId) {
+        EntityManager entityManager = null;
+        EntityTransaction transaction = null;
+        try {
+            entityManager = getEntityManagerFactory().createEntityManager();
+            transaction = entityManager.getTransaction();
+            transaction.begin();
+            getServiceFactory().getUsersService().remove(entityManager, userId);
+            transaction.commit();
+        } catch (Exception exception) {
+            getServiceFactory().getLogService().error(exception.getMessage(), exception);
+            FacadesHelper.rollbackTransaction(entityManager, transaction, exception);
+        } finally {
+            FacadesHelper.closeEntityManager(entityManager);
+        }
+    }
 }

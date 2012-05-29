@@ -32,8 +32,9 @@ public class UsersRemoveBehavior implements Remove {
         removeProfessorRatings(entityManager, entity.getId());
         removeCourseRatings(entityManager, entity.getId());
         removeSubjectRatings(entityManager, entity.getId());
-        removeCommentRatings(entityManager, entity.getId());
         removeComments(entityManager, entity.getId());
+        removeCommentRatings(entityManager, entity.getId());
+        
         getSimpleRemove().remove(entityManager, entity);
     }
 

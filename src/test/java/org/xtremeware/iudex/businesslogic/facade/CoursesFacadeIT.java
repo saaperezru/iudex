@@ -418,7 +418,6 @@ public class CoursesFacadeIT {
         } catch (MultipleMessagesException ex) {
             FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
         } catch (Exception ex) {
-            ex.printStackTrace();
             fail("An unexpected exception ocurred");
         }
     }

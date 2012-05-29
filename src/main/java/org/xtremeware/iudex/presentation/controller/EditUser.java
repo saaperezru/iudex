@@ -7,6 +7,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
+import org.xtremeware.iudex.businesslogic.DuplicityException;
 import org.xtremeware.iudex.businesslogic.facade.UsersFacade;
 import org.xtremeware.iudex.businesslogic.service.InactiveUserException;
 import org.xtremeware.iudex.helper.Config;
@@ -78,7 +79,7 @@ public class EditUser {
         this.user = user;
     }
 
-    public void editUser() {
+    public void editUser() throws DuplicityException {
         FacesContext fc = FacesContext.getCurrentInstance();
         UsersFacade usersFacade = Config.getInstance().getFacadeFactory().
                 getUsersFacade();

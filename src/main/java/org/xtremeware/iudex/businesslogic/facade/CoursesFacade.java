@@ -133,19 +133,19 @@ public class CoursesFacade extends AbstractFacade {
     }
 
     public void removeCourse(long courseId) {
-        EntityManager em = null;
-        EntityTransaction tx = null;
+        EntityManager entityManager = null;
+        EntityTransaction transaction = null;
         try {
-            em = getEntityManagerFactory().createEntityManager();
-            tx = em.getTransaction();
-            tx.begin();
-            getServiceFactory().getCoursesService().remove(em, courseId);
-            tx.commit();
-        } catch (Exception e) {
-            getServiceFactory().getLogService().error(e.getMessage(), e);
-            FacadesHelper.rollbackTransaction(em, tx, e);
+            entityManager = getEntityManagerFactory().createEntityManager();
+            transaction = entityManager.getTransaction();
+            transaction.begin();
+            getServiceFactory().getCoursesService().remove(entityManager, courseId);
+            transaction.commit();
+        } catch (Exception exception) {
+            getServiceFactory().getLogService().error(exception.getMessage(), exception);
+            FacadesHelper.rollbackTransaction(entityManager, transaction, exception);
         } finally {
-            FacadesHelper.closeEntityManager(em);
+            FacadesHelper.closeEntityManager(entityManager);
         }
     }
 
@@ -186,17 +186,9 @@ public class CoursesFacade extends AbstractFacade {
             entityManager = getEntityManagerFactory().createEntityManager();
             transaction = entityManager.getTransaction();
             transaction.begin();
-            rating = getServiceFactory().getCourseRatingsService().getByCourseIdAndUserId(entityManager, courseId, userId);
-            //If there is no existing record in the database, create it
-            if (rating == null) {
-                rating = getServiceFactory().getCourseRatingsService().create(entityManager, vo);
-            } else {
-                //Otherwise update the existing one
-                //But first verify bussines rules
-
-                rating.setValue(value);
-                getServiceFactory().getCourseRatingsService().update(entityManager, rating);
-            }
+            
+            rating = getServiceFactory().getCourseRatingsService().create(entityManager, vo);
+            
             transaction.commit();
         } catch (Exception exception) {
             getServiceFactory().getLogService().error(exception.getMessage(), exception);

@@ -46,7 +46,7 @@ public class ProgramsFacadeIT {
     public void testBL_26_1() throws MultipleMessagesException, Exception {
         String name = FacadesTestHelper.randomString(50);
         ProgramsFacade programsFacade = Config.getInstance().getFacadeFactory().getProgramsFacade();
-        ProgramVo programVo = programsFacade.addProgram(name, FacadesTestHelper.randomInt(4));
+        ProgramVo programVo = programsFacade.createProgram(name, FacadesTestHelper.randomInt(4));
         assertNotNull(programVo);
         assertEquals(name, programVo.getName());
         assertNotNull(programVo.getId());
@@ -59,7 +59,7 @@ public class ProgramsFacadeIT {
         String[] expectedMessages = new String[]{
             "program.name.null"};
         try {
-            programVo = programsFacade.addProgram(null, 0);
+            programVo = programsFacade.createProgram(null, 0);
         } catch (MultipleMessagesException ex) {
             FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
         }
@@ -67,7 +67,7 @@ public class ProgramsFacadeIT {
         expectedMessages = new String[]{
             "program.name.tooLong"};
         try {
-            programVo = programsFacade.addProgram(name, 0);
+            programVo = programsFacade.createProgram(name, 0);
         } catch (MultipleMessagesException ex) {
             FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
         }
@@ -75,7 +75,7 @@ public class ProgramsFacadeIT {
             "program.name.tooShort"};
 
         try {
-            programVo = programsFacade.addProgram("", 0);
+            programVo = programsFacade.createProgram("", 0);
         } catch (MultipleMessagesException ex) {
             FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
         }
@@ -84,7 +84,7 @@ public class ProgramsFacadeIT {
             "program.code.negativeValue"};
 
         try {
-            programVo = programsFacade.addProgram("", -1);
+            programVo = programsFacade.createProgram("", -1);
         } catch (MultipleMessagesException ex) {
             FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
         }
@@ -96,15 +96,15 @@ public class ProgramsFacadeIT {
         Set<String> names = new TreeSet<String>();
         ProgramsFacade programsFacade = Config.getInstance().getFacadeFactory().getProgramsFacade();
         names.add(name);
-        assertNotNull(programsFacade.addProgram(name, FacadesTestHelper.randomInt(4)));
+        assertNotNull(programsFacade.createProgram(name, FacadesTestHelper.randomInt(4)));
         names.add("PRE" + name);
-        assertNotNull(programsFacade.addProgram("PRE" + name, FacadesTestHelper.randomInt(4)));
+        assertNotNull(programsFacade.createProgram("PRE" + name, FacadesTestHelper.randomInt(4)));
 
         names.add(name + "POS");
-        assertNotNull(programsFacade.addProgram(name + "POS", FacadesTestHelper.randomInt(4)));
+        assertNotNull(programsFacade.createProgram(name + "POS", FacadesTestHelper.randomInt(4)));
 
         names.add("PRE" + name + "POS");
-        assertNotNull(programsFacade.addProgram("PRE" + name + "POS", FacadesTestHelper.randomInt(4)));
+        assertNotNull(programsFacade.createProgram("PRE" + name + "POS", FacadesTestHelper.randomInt(4)));
 
         List<ProgramVo> pvs = programsFacade.getProgramsAutocomplete(name);
         for (ProgramVo pv : pvs) {
@@ -125,8 +125,8 @@ public class ProgramsFacadeIT {
     @Test
     public void testBL_27_1() throws MultipleMessagesException, Exception {
         ProgramsFacade programsFacade = Config.getInstance().getFacadeFactory().getProgramsFacade();
-        programsFacade.removeProgram(2532L);
-        programsFacade.removeProgram(2541L);
+        programsFacade.deleteProgram(2532L);
+        programsFacade.deleteProgram(2541L);
 
 
     }
@@ -136,7 +136,7 @@ public class ProgramsFacadeIT {
         ProgramsFacade programsFacade = Config.getInstance().getFacadeFactory().getProgramsFacade();
         Long id = 2532L;
         try {
-            programsFacade.removeProgram(id);
+            programsFacade.deleteProgram(id);
         } catch (Exception ex) {
             assertEquals(RuntimeException.class, ex.getClass());
             assertEquals("entity.notFound", ex.getCause().getMessage());
@@ -144,28 +144,28 @@ public class ProgramsFacadeIT {
 
         id = 2541L;
         try {
-            programsFacade.removeProgram(id);
+            programsFacade.deleteProgram(id);
         } catch (Exception ex) {
             assertEquals(RuntimeException.class, ex.getClass());
             assertEquals("entity.notFound", ex.getCause().getMessage());
         }
         id = Long.MAX_VALUE;
         try {
-            programsFacade.removeProgram(id);
+            programsFacade.deleteProgram(id);
         } catch (Exception ex) {
             assertEquals(RuntimeException.class, ex.getClass());
             assertEquals("entity.notFound", ex.getCause().getMessage());
         }
         id = Long.MIN_VALUE;
         try {
-            programsFacade.removeProgram(id);
+            programsFacade.deleteProgram(id);
         } catch (Exception ex) {
             assertEquals(RuntimeException.class, ex.getClass());
             assertEquals("entity.notFound", ex.getCause().getMessage());
         }
         id = 0L;
         try {
-            programsFacade.removeProgram(id);
+            programsFacade.deleteProgram(id);
         } catch (Exception ex) {
             assertEquals(RuntimeException.class, ex.getClass());
             assertEquals("entity.notFound", ex.getCause().getMessage());

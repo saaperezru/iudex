@@ -42,7 +42,7 @@ public class CreateFeedback implements Serializable {
 	public void submit() {
 		try {
 			Config.getInstance().getFacadeFactory().getFeedbacksFacade().
-					addFeedback(feedbackTypeId, content, new Date());
+					createFeedback(feedbackTypeId, content, new Date());
 			feedbackTypeId = null;
 			content = null;
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(

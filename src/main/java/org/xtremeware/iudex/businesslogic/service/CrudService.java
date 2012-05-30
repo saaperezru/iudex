@@ -18,15 +18,15 @@ public abstract class CrudService<E extends ValueObject, F extends Entity<E>> {
     private Create<F> create;
     private Read<F> read;
     private Update<F> update;
-    private Remove remove;
+    private Delete delete;
 
     public CrudService(AbstractDaoBuilder daoFactory,
-            Create create, Read read, Update update, Remove remove) {
+            Create create, Read read, Update update, Delete delete) {
         this.daoFactory = daoFactory;
         this.create = create;
         this.read = read;
         this.update = update;
-        this.remove = remove;
+        this.delete = delete;
     }
 
     protected AbstractDaoBuilder getDaoFactory() {
@@ -41,8 +41,8 @@ public abstract class CrudService<E extends ValueObject, F extends Entity<E>> {
         return read;
     }
 
-    private Remove getRemoveInterface() {
-        return remove;
+    private Delete getDeleteInterface() {
+        return delete;
     }
 
     private Update<F> getUpdateInterface() {
@@ -63,7 +63,7 @@ public abstract class CrudService<E extends ValueObject, F extends Entity<E>> {
 
     }
 
-    public E getById(EntityManager entityManager, long valueObjectid) throws DataBaseException {
+    public E read(EntityManager entityManager, long valueObjectid) throws DataBaseException {
         F result = getReadInterface().getById(entityManager, valueObjectid);
         if (result == null) {
             return null;
@@ -72,9 +72,9 @@ public abstract class CrudService<E extends ValueObject, F extends Entity<E>> {
         }
     }
 
-    public void remove(EntityManager entityManager, long valueObjectid)
+    public void delete(EntityManager entityManager, long valueObjectid)
             throws DataBaseException {
-        getRemoveInterface().remove(entityManager, valueObjectid);
+        getDeleteInterface().delete(entityManager, valueObjectid);
     }
 
     public E update(EntityManager entityManager, E valueObject)

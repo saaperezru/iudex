@@ -3,8 +3,6 @@ package org.xtremeware.iudex.dao.sql;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
-import javax.persistence.PersistenceException;
-import javax.validation.ConstraintViolationException;
 import org.xtremeware.iudex.dao.BinaryRatingDao;
 import org.xtremeware.iudex.dao.CrudDao;
 import org.xtremeware.iudex.entity.Entity;
@@ -15,7 +13,7 @@ import org.xtremeware.iudex.vo.RatingSummaryVo;
  *
  * @author josebermeo
  */
-public abstract class SQLBinaryRatingDao<E extends Entity> implements BinaryRatingDao<E>, CrudDao<E> {
+public abstract class SqlBinaryRatingDao<E extends Entity> implements BinaryRatingDao<E>, CrudDao<E> {
 
     /**
      * Returns a list of rating entities given the evaluated object
@@ -131,7 +129,7 @@ public abstract class SQLBinaryRatingDao<E extends Entity> implements BinaryRati
      * @return The received entity after being persisted
      */
     @Override
-    public E persist(EntityManager entityManager, E entity)
+    public void create(EntityManager entityManager, E entity)
             throws DataBaseException {
         checkEntityManager(entityManager);
         try {
@@ -139,7 +137,6 @@ public abstract class SQLBinaryRatingDao<E extends Entity> implements BinaryRati
         } catch (Exception ex) {
             throw new DataBaseException(ex.getMessage(), ex.getCause());
         }
-        return entity;
     }
 
     /**
@@ -150,7 +147,7 @@ public abstract class SQLBinaryRatingDao<E extends Entity> implements BinaryRati
      * @return The received entity after being merged and persisted
      */
     @Override
-    public E merge(EntityManager entityManager, E entity)
+    public E update(EntityManager entityManager, E entity)
             throws DataBaseException {
         checkEntityManager(entityManager);
         try {
@@ -166,10 +163,10 @@ public abstract class SQLBinaryRatingDao<E extends Entity> implements BinaryRati
      * @param entityManager EntityManager with which the entity will be deleted
      */
     @Override
-    public void remove(EntityManager entityManager, long id)
+    public void delete(EntityManager entityManager, long id)
             throws DataBaseException {
         checkEntityManager(entityManager);
-        E entity = getById(entityManager, id);
+        E entity = read(entityManager, id);
         if (entity == null) {
             throw new DataBaseException("entity.notFound");
         }
@@ -189,7 +186,7 @@ public abstract class SQLBinaryRatingDao<E extends Entity> implements BinaryRati
      * @return The received entity after being merged and persisted
      */
     @Override
-    public E getById(EntityManager entityManager, long id)
+    public E read(EntityManager entityManager, long id)
             throws DataBaseException {
         checkEntityManager(entityManager);
         try {

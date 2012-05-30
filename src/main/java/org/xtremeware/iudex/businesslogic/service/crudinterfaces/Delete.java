@@ -8,8 +8,8 @@ import org.xtremeware.iudex.helper.DataBaseException;
  *
  * @author josebermeo
  */
-public interface Remove<E extends Entity> {
+public interface Delete<E extends Entity> {
 
-    public void remove(EntityManager entityManager, Long entityId)
+    public void delete(EntityManager entityManager, Long entityId)
             throws DataBaseException;
 }

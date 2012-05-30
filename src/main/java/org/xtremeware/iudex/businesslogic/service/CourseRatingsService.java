@@ -4,7 +4,6 @@ import javax.persistence.EntityManager;
 import org.xtremeware.iudex.businesslogic.InvalidVoException;
 import org.xtremeware.iudex.businesslogic.service.crudinterfaces.*;
 import org.xtremeware.iudex.dao.AbstractDaoBuilder;
-import org.xtremeware.iudex.entity.CourseEntity;
 import org.xtremeware.iudex.entity.CourseRatingEntity;
 import org.xtremeware.iudex.helper.*;
 import org.xtremeware.iudex.vo.CourseRatingVo;
@@ -21,9 +20,9 @@ public class CourseRatingsService extends CrudService<CourseRatingVo, CourseRati
      * @param daoFactory
      */
     public CourseRatingsService(AbstractDaoBuilder daoFactory,
-            Create create, Read read, Update update, Remove remove) {
+            Create create, Read read, Update update, Delete delete) {
 
-        super(daoFactory, create, read, update, remove);
+        super(daoFactory, create, read, update, delete);
     }
 
 	/**
@@ -45,7 +44,7 @@ public class CourseRatingsService extends CrudService<CourseRatingVo, CourseRati
 		if (valueObject.getCourseId() == null) {
 			multipleMessageException.getMessages().add(
 					"courseRating.courseId.null");
-		} else if (getDaoFactory().getCourseDao().getById(entityManager, valueObject.getCourseId())
+		} else if (getDaoFactory().getCourseDao().read(entityManager, valueObject.getCourseId())
 				== null) {
 			multipleMessageException.getMessages().add(
 					"courseRating.courseId.notFound");
@@ -53,7 +52,7 @@ public class CourseRatingsService extends CrudService<CourseRatingVo, CourseRati
 		if (valueObject.getUserId() == null) {
 			multipleMessageException.addMessage(
 					"courseRating.userId.null");
-		} else if (getDaoFactory().getUserDao().getById(entityManager, valueObject.getUserId())
+		} else if (getDaoFactory().getUserDao().read(entityManager, valueObject.getUserId())
 				== null) {
 			multipleMessageException.addMessage(
 					"courseRating.userId.notFound");
@@ -98,10 +97,10 @@ public class CourseRatingsService extends CrudService<CourseRatingVo, CourseRati
         courseRatingEntity.setId(courseRatingVo.getId());
         courseRatingEntity.setValue(courseRatingVo.getValue());
 
-        courseRatingEntity.setCourse(getDaoFactory().getCourseDao().getById(entityManager,
+        courseRatingEntity.setCourse(getDaoFactory().getCourseDao().read(entityManager,
                 courseRatingVo.getCourseId()));
 
-        courseRatingEntity.setUser(getDaoFactory().getUserDao().getById(entityManager, courseRatingVo.getUserId()));
+        courseRatingEntity.setUser(getDaoFactory().getUserDao().read(entityManager, courseRatingVo.getUserId()));
 
 		return courseRatingEntity;
 	}

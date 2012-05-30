@@ -1,21 +1,20 @@
 package org.xtremeware.iudex.dao.sql;
 
 import javax.persistence.EntityManager;
-import org.xtremeware.iudex.dao.CrudDao;
-import org.xtremeware.iudex.dao.Remove;
+import org.xtremeware.iudex.dao.*;
 import org.xtremeware.iudex.entity.Entity;
 import org.xtremeware.iudex.helper.DataBaseException;
 
-public abstract class SQLCrudDao<E extends Entity> implements CrudDao<E> {
+public abstract class SqlCrudDao<E extends Entity> implements CrudDao<E> {
 
-    private Remove remove;
+    private Delete delete;
 
-    public SQLCrudDao(Remove remove) {
-        this.remove = remove;
+    public SqlCrudDao(Delete delete) {
+        this.delete = delete;
     }
 
     @Override
-    public E persist(EntityManager entityManager, E entity)
+    public void create(EntityManager entityManager, E entity)
             throws DataBaseException {
         checkEntityManager(entityManager);
         try {
@@ -23,11 +22,10 @@ public abstract class SQLCrudDao<E extends Entity> implements CrudDao<E> {
         } catch (Exception ex) {
             throw new DataBaseException(ex.getMessage(), ex.getCause());
         }
-        return entity;
     }
 
     @Override
-    public E merge(EntityManager entityManager, E entity)
+    public E update(EntityManager entityManager, E entity)
             throws DataBaseException {
         checkEntityManager(entityManager);
         try {
@@ -38,28 +36,28 @@ public abstract class SQLCrudDao<E extends Entity> implements CrudDao<E> {
     }
 
     @Override
-    public void remove(EntityManager entityManager, long entityId)
+    public void delete(EntityManager entityManager, long entityId)
             throws DataBaseException {
 
         checkEntityManager(entityManager);
 
-        E entity = getById(entityManager, entityId);
+        E entity = read(entityManager, entityId);
         if (entity == null) {
             throw new DataBaseException("entity.notFound");
         }
         try {
-            getRemove().remove(entityManager, entity);
+            getDelete().delete(entityManager, entity);
         } catch (Exception e) {
             throw new DataBaseException(e.getMessage(), e.getCause());
         }
     }
 
-    private Remove getRemove() {
-        return remove;
+    private Delete getDelete() {
+        return delete;
     }
 
     @Override
-    public E getById(EntityManager entityManager, long entityId)
+    public E read(EntityManager entityManager, long entityId)
             throws DataBaseException {
         checkEntityManager(entityManager);
         try {

@@ -131,7 +131,7 @@ public class ProfessorsFacadeIT {
         pv.setEmail("jdbermeol@gmail.com");
         pv.setImageUrl("www.ing.unal.edu.co/progsfac/civil_agricola/images/stories/Civil__Agricola/Profesores/villarreal.meglan.adela.png");
         pv.setWebsite("www.docentes.unal.edu.co/avillarrealme");
-        pv = pf.addProfessor(pv);
+        pv = pf.createProfessor(pv);
 
         ProfessorVo result = entityManager.createQuery("SELECT p FROM Professor p WHERE p.id = :id", ProfessorEntity.class).setParameter("id", pv.getId()).getSingleResult().toVo();
         assertTrue(result.equals(pv));
@@ -145,7 +145,7 @@ public class ProfessorsFacadeIT {
         String[] expectedMessages = new String[]{
             "professor.null"};
         try {
-            pv = pf.addProfessor(null);
+            pv = pf.createProfessor(null);
         } catch (MultipleMessagesException ex) {
             FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
         }
@@ -166,7 +166,7 @@ public class ProfessorsFacadeIT {
             "professor.imageUrl.null",
             "professor.website.null"};
         try {
-            pv = pf.addProfessor(pv);
+            pv = pf.createProfessor(pv);
         } catch (MultipleMessagesException ex) {
             FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
         }
@@ -185,7 +185,7 @@ public class ProfessorsFacadeIT {
             "professor.email.empty",
             "professor.website.empty"};
         try {
-            pv = pf.addProfessor(pv);
+            pv = pf.createProfessor(pv);
         } catch (MultipleMessagesException ex) {
             FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
         }
@@ -205,7 +205,7 @@ public class ProfessorsFacadeIT {
             "professor.imageUrl.invalidImage",
             "professor.website.invalidWebsite"};
         try {
-            pv = pf.addProfessor(pv);
+            pv = pf.createProfessor(pv);
         } catch (MultipleMessagesException ex) {
             FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
         }
@@ -224,7 +224,7 @@ public class ProfessorsFacadeIT {
         pv.setWebsite("www.docentes.unal.edu.co/avillarrealme");
 
         try {
-            pv = pf.addProfessor(pv);
+            pv = pf.createProfessor(pv);
         } catch (Exception e) {
             assertTrue(e instanceof DuplicityException);
         }
@@ -241,7 +241,7 @@ public class ProfessorsFacadeIT {
         pv.setEmail("jdbermeo@gmail.com");
         pv.setImageUrl("www.ing.unal.edu.co/progsfac/sistemas/images/stories/Civil__Agricola/Profesores/villarreal.meglan.adela.png");
         pv.setWebsite("www.docentes.unal.edu.co/avillarrealmer");
-        pv = pf.addProfessor(pv);
+        pv = pf.createProfessor(pv);
         
         String description = FacadesTestHelper.randomString(50);
         pv.setDescription(description);
@@ -255,7 +255,7 @@ public class ProfessorsFacadeIT {
         pv.setImageUrl(image);
         String webSite = "www.docentes.unal.edu.co/avill";
         pv.setWebsite(webSite);
-        pv = pf.editProfessor(pv);
+        pv = pf.updateProfessor(pv);
 
         ProfessorVo result = entityManager.createQuery("SELECT p FROM Professor p WHERE p.id = :id", ProfessorEntity.class).setParameter("id", pv.getId()).getSingleResult().toVo();
         assertEquals(description, result.getDescription());
@@ -275,7 +275,7 @@ public class ProfessorsFacadeIT {
         String[] expectedMessages = new String[]{
             "professor.null"};
         try {
-            pv = pf.editProfessor(null);
+            pv = pf.updateProfessor(null);
         } catch (MultipleMessagesException ex) {
             FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
         }
@@ -297,7 +297,7 @@ public class ProfessorsFacadeIT {
             "professor.imageUrl.null",
             "professor.website.null"};
         try {
-            pv = pf.editProfessor(pv);
+            pv = pf.updateProfessor(pv);
         } catch (MultipleMessagesException ex) {
             FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
         }
@@ -316,7 +316,7 @@ public class ProfessorsFacadeIT {
             "professor.email.empty",
             "professor.website.empty"};
         try {
-            pv = pf.editProfessor(pv);
+            pv = pf.updateProfessor(pv);
         } catch (MultipleMessagesException ex) {
             FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
         }
@@ -336,7 +336,7 @@ public class ProfessorsFacadeIT {
             "professor.imageUrl.invalidImage",
             "professor.website.invalidWebsite"};
         try {
-            pv = pf.editProfessor(pv);
+            pv = pf.updateProfessor(pv);
         } catch (MultipleMessagesException ex) {
             FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
         }
@@ -350,7 +350,7 @@ public class ProfessorsFacadeIT {
         pv.setWebsite("www.docentes.unal.edu.co/mlinaresv");
 
         try{
-            ProfessorVo pe = pf.editProfessor(pv);
+            ProfessorVo pe = pf.updateProfessor(pv);
         }catch(Exception e){
             Throwable cause = e.getCause();
         }
@@ -368,15 +368,15 @@ public class ProfessorsFacadeIT {
         pv.setEmail("jdbermeol@gmail.com");
         pv.setImageUrl("www.ing.unal.edu.co/progsfac/civil_agricola/images/stories/Civil__Agricola/Profesores/villarreal.meglan.adela.png");
         pv.setWebsite("www.docentes.unal.edu.co/avillarrealme");
-        ProfessorVo result = pf.editProfessor(pv);
+        ProfessorVo result = pf.updateProfessor(pv);
         assertNull(result);
 
         pv.setId(Long.MAX_VALUE);
-        result = pf.editProfessor(pv);
+        result = pf.updateProfessor(pv);
         assertNull(result);
 
         pv.setId(0L);
-        result = pf.editProfessor(pv);
+        result = pf.updateProfessor(pv);
         assertNull(result);
     }
     //@Ignore
@@ -527,7 +527,7 @@ public class ProfessorsFacadeIT {
         pv.setEmail("jdbermeol1@gmail.com");
         pv.setImageUrl("www.ing.unal.edu.co/progsfac/civil_agricola1/images/stories/Civil__Agricola/Profesores/villarreal.meglan.adela.png");
         pv.setWebsite("www.docentes.unal.edu.co/avillarrealme1");
-        pv = pf.addProfessor(pv);
+        pv = pf.createProfessor(pv);
         Long id1 = pv.getId();
 
         pv.setId(null);
@@ -537,7 +537,7 @@ public class ProfessorsFacadeIT {
         pv.setEmail("jdbermeol2@gmail.com");
         pv.setImageUrl("www.ing.unal.edu.co/progsfac/civil_agricola2/images/stories/Civil__Agricola/Profesores/villarreal.meglan.adela.png");
         pv.setWebsite("www.docentes.unal.edu.co/avillarrealme2");
-        pv = pf.addProfessor(pv);
+        pv = pf.createProfessor(pv);
         Long id2 = pv.getId();
 
         Map<Long, String> professorsAutocomplete = pf.getProfessorsAutocomplete(lastName);
@@ -579,7 +579,7 @@ public class ProfessorsFacadeIT {
 
         ProfessorsFacade professorsFacade = Config.getInstance().getFacadeFactory().getProfessorsFacade();
         Long id = 3L;
-        professorsFacade.removeProfessor(id);
+        professorsFacade.deleteProfessor(id);
 
         int count = entityManager.createQuery("SELECT COUNT(p) FROM Professor p WHERE p.id =:id", Long.class).setParameter("id", id).getSingleResult().intValue();
         assertTrue(0 == count);
@@ -598,7 +598,7 @@ public class ProfessorsFacadeIT {
         Long id = Long.MAX_VALUE;
 
         try {
-            professorsFacade.removeProfessor(id);
+            professorsFacade.deleteProfessor(id);
         } catch (Exception ex) {
             assertEquals(RuntimeException.class, ex.getClass());
             assertEquals("entity.notFound", ex.getCause().getMessage());
@@ -606,7 +606,7 @@ public class ProfessorsFacadeIT {
 
         id = Long.MIN_VALUE;
         try {
-            professorsFacade.removeProfessor(id);
+            professorsFacade.deleteProfessor(id);
         } catch (Exception ex) {
             assertEquals(RuntimeException.class, ex.getClass());
             assertEquals("entity.notFound", ex.getCause().getMessage());
@@ -614,7 +614,7 @@ public class ProfessorsFacadeIT {
 
         id = 0L;
         try {
-            professorsFacade.removeProfessor(id);
+            professorsFacade.deleteProfessor(id);
         } catch (Exception ex) {
             assertEquals(RuntimeException.class, ex.getClass());
             assertEquals("entity.notFound", ex.getCause().getMessage());

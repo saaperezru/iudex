@@ -21,9 +21,9 @@ public class FeedbackTypesService extends CrudService<FeedbackTypeVo, FeedbackTy
      * @param daoFactory
      */
     public FeedbackTypesService(AbstractDaoBuilder daoFactory,
-            Create create, Read read, Update update, Remove remove) {
+            Create create, Read read, Update update, Delete delete) {
 
-        super(daoFactory, create, read, update, remove);
+        super(daoFactory, create, read, update, delete);
         
     }
 

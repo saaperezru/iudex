@@ -12,10 +12,10 @@ import org.xtremeware.iudex.helper.DataBaseException;
  *
  * @author healarconr
  */
-public class SQLSubjectDao extends SQLCrudDao<SubjectEntity> implements SubjectDao {
+public class SqlSubjectDao extends SqlCrudDao<SubjectEntity> implements SubjectDao {
 
-    public SQLSubjectDao(Remove remove) {
-        super(remove);
+    public SqlSubjectDao(Delete delete) {
+        super(delete);
     }
 
     /**

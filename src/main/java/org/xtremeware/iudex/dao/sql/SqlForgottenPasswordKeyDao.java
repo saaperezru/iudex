@@ -1,9 +1,8 @@
 package org.xtremeware.iudex.dao.sql;
 
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import org.xtremeware.iudex.dao.ForgottenPasswordKeyDaoInterface;
-import org.xtremeware.iudex.dao.Remove;
+import javax.persistence.*;
+import org.xtremeware.iudex.dao.ForgottenPasswordKeyDao;
+import org.xtremeware.iudex.dao.Delete;
 import org.xtremeware.iudex.entity.ForgottenPasswordKeyEntity;
 import org.xtremeware.iudex.helper.DataBaseException;
 
@@ -11,11 +10,11 @@ import org.xtremeware.iudex.helper.DataBaseException;
  *
  * @author healarconr
  */
-public class ForgottenPasswordKeyDao extends SQLCrudDao<ForgottenPasswordKeyEntity>
-        implements ForgottenPasswordKeyDaoInterface {
+public class SqlForgottenPasswordKeyDao extends SqlCrudDao<ForgottenPasswordKeyEntity>
+        implements ForgottenPasswordKeyDao {
 	
-	public ForgottenPasswordKeyDao(Remove remove) {
-        super(remove);
+	public SqlForgottenPasswordKeyDao(Delete delete) {
+        super(delete);
     }
 
     @Override

@@ -26,7 +26,8 @@ public class CourseRate implements Create<CourseRatingEntity> {
             CourseRatingEntity courseRatingEntity = getDaoFactory().getCourseRatingDao().
                     getByCourseIdAndUserId(entityManager, entity.getCourse().getId(), entity.getUser().getId());
             if (courseRatingEntity == null) {
-                return getDaoFactory().getCourseRatingDao().persist(entityManager, entity);
+                getDaoFactory().getCourseRatingDao().create(entityManager, entity);
+                return entity;
             } else {
                 courseRatingEntity.setValue(entity.getValue());
                 return courseRatingEntity;

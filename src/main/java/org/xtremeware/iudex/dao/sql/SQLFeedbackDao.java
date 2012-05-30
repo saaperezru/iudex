@@ -12,10 +12,10 @@ import org.xtremeware.iudex.helper.DataBaseException;
  *
  * @author saaperezru
  */
-public class SQLFeedbackDao extends SQLCrudDao<FeedbackEntity> implements FeedbackDao {
+public class SqlFeedbackDao extends SQLCrudDao<FeedbackEntity> implements FeedbackDao {
 
-    public SQLFeedbackDao(Remove remove) {
-        super(remove);
+    public SqlFeedbackDao(Delete delete) {
+        super(delete);
     }
 
     /**

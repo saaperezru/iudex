@@ -1,9 +1,9 @@
-package org.xtremeware.iudex.dao.sql.removeimplementations;
+package org.xtremeware.iudex.dao.sql.deleteimplementations;
 
 import java.util.List;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.dao.AbstractDaoBuilder;
-import org.xtremeware.iudex.dao.Remove;
+import org.xtremeware.iudex.dao.Delete;
 import org.xtremeware.iudex.entity.*;
 import org.xtremeware.iudex.helper.DataBaseException;
 
@@ -11,15 +11,15 @@ import org.xtremeware.iudex.helper.DataBaseException;
  *
  * @author josebermeo
  */
-public class SubjectsRemoveBehavior implements Remove {
+public class SubjectsDeleteBehavior implements Delete {
 
     private AbstractDaoBuilder daoBuilder;
-    private SimpleRemoveBehavior<SubjectEntity> simpleRemove;
+    private SimpleDeleteBehavior<SubjectEntity> simpleDelete;
 
-    public SubjectsRemoveBehavior(AbstractDaoBuilder daoBuilder,
-            SimpleRemoveBehavior simpleRemove) {
+    public SubjectsDeleteBehavior(AbstractDaoBuilder daoBuilder,
+            SimpleDeleteBehavior simpleDelete) {
         this.daoBuilder = daoBuilder;
-        this.simpleRemove = simpleRemove;
+        this.simpleDelete = simpleDelete;
     }
 
     private AbstractDaoBuilder getDaoBuilder() {
@@ -27,34 +27,34 @@ public class SubjectsRemoveBehavior implements Remove {
     }
     
     @Override
-    public void remove(EntityManager entityManager, Entity entity) 
+    public void delete(EntityManager entityManager, Entity entity) 
             throws DataBaseException {
-        removeSubjectRatings(entityManager, entity.getId());
-        removeCourses(entityManager, entity.getId());
-        getSimpleRemove().remove(entityManager, entity);
+        deleteSubjectRatings(entityManager, entity.getId());
+        deleteCourses(entityManager, entity.getId());
+        getSimpleRemove().delete(entityManager, entity);
     }
 
-    public SimpleRemoveBehavior<SubjectEntity> getSimpleRemove() {
-        return simpleRemove;
+    public SimpleDeleteBehavior<SubjectEntity> getSimpleRemove() {
+        return simpleDelete;
     }
 
-    private void removeSubjectRatings(EntityManager entityManager, Long entityId)
+    private void deleteSubjectRatings(EntityManager entityManager, Long entityId)
             throws DataBaseException {
 
         List<SubjectRatingEntity> subjectRatings = getDaoBuilder().getSubjectRatingDao().
                 getByEvaluatedObjectId(entityManager, entityId);
         for (SubjectRatingEntity subjectRatingEntity : subjectRatings) {
-            getDaoBuilder().getSubjectRatingDao().remove(entityManager, subjectRatingEntity.getId());
+            getDaoBuilder().getSubjectRatingDao().delete(entityManager, subjectRatingEntity.getId());
         }
     }
     
-    private void removeCourses(EntityManager entityManager, Long entityId)
+    private void deleteCourses(EntityManager entityManager, Long entityId)
             throws DataBaseException {
         List<CourseEntity> courseEntitys = getDaoBuilder().
                 getCourseDao().getBySubjectId(entityManager, entityId);
         for (CourseEntity courseEntity : courseEntitys) {
             getDaoBuilder().
-                getCourseDao().remove(entityManager, courseEntity.getId());
+                getCourseDao().delete(entityManager, courseEntity.getId());
         }
     }
 }

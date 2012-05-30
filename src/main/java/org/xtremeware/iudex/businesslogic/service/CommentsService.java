@@ -24,9 +24,9 @@ public class CommentsService extends CrudService<CommentVo, CommentEntity> {
      * @param daoFactory a daoFactory
      */
     public CommentsService(AbstractDaoBuilder daoFactory,
-            Create create, Read read, Update update, Remove remove) {
+            Create create, Read read, Update update, Delete delete) {
 
-        super(daoFactory, create, read, update, remove);
+        super(daoFactory, create, read, update, delete);
         MAX_COMMENT_LENGTH = Integer.parseInt(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAX_COMMENT_LENGTH));
 
     }
@@ -86,7 +86,7 @@ public class CommentsService extends CrudService<CommentVo, CommentEntity> {
         if (commentVo.getCourseId() == null) {
             multipleMessageException.addMessage(
                     "comment.courseId.null");
-        } else if (getDaoFactory().getCourseDao().getById(entityManager, commentVo.getCourseId()) == null) {
+        } else if (getDaoFactory().getCourseDao().read(entityManager, commentVo.getCourseId()) == null) {
             multipleMessageException.addMessage(
                     "comment.courseId.element.notFound");
         }
@@ -105,7 +105,7 @@ public class CommentsService extends CrudService<CommentVo, CommentEntity> {
             if (commentVo.getUserId() == null) {
                 multipleMessageException.addMessage(
                         "comment.userId.null");
-            } else if (getDaoFactory().getUserDao().getById(entityManager, commentVo.getUserId()) == null) {
+            } else if (getDaoFactory().getUserDao().read(entityManager, commentVo.getUserId()) == null) {
                 multipleMessageException.addMessage(
                         "comment.userId.element.notFound");
             }
@@ -146,8 +146,8 @@ public class CommentsService extends CrudService<CommentVo, CommentEntity> {
         entity.setId(commentVo.getId());
         entity.setRating(commentVo.getRating());
 
-        entity.setCourse(getDaoFactory().getCourseDao().getById(entityManager, commentVo.getCourseId()));
-        entity.setUser(getDaoFactory().getUserDao().getById(entityManager, commentVo.getUserId()));
+        entity.setCourse(getDaoFactory().getCourseDao().read(entityManager, commentVo.getCourseId()));
+        entity.setUser(getDaoFactory().getUserDao().read(entityManager, commentVo.getUserId()));
 
         return entity;
     }

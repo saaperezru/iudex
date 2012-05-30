@@ -6,7 +6,7 @@ import org.xtremeware.iudex.entity.SubjectRatingEntity;
  *
  * @author josebermeo
  */
-public class SQLSubjectRatingDao extends SQLBinaryRatingDao<SubjectRatingEntity> {
+public class SqlSubjectRatingDao extends SqlBinaryRatingDao<SubjectRatingEntity> {
 
     @Override
     protected Class getEntityClass() {

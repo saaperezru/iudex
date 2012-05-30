@@ -9,7 +9,7 @@ import org.xtremeware.iudex.helper.DataBaseException;
  *
  * @author healarconr
  */
-public interface ForgottenPasswordKeyDaoInterface extends
+public interface ForgottenPasswordKeyDao extends
         CrudDao<ForgottenPasswordKeyEntity> {
 
     /**

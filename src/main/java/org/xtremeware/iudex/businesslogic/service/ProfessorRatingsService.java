@@ -2,7 +2,7 @@ package org.xtremeware.iudex.businesslogic.service;
 
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Read;
-import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Remove;
+import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Delete;
 import org.xtremeware.iudex.dao.AbstractDaoBuilder;
 import org.xtremeware.iudex.entity.ProfessorRatingEntity;
 import org.xtremeware.iudex.helper.DataBaseException;
@@ -12,8 +12,8 @@ import org.xtremeware.iudex.vo.BinaryRatingVo;
 
 public class ProfessorRatingsService extends BinaryRatingService< ProfessorRatingEntity> {
 
-    public ProfessorRatingsService(AbstractDaoBuilder daoFactory, Read read, Remove remove) {
-        super(daoFactory,read,remove,daoFactory.getProfessorRatingDao());
+    public ProfessorRatingsService(AbstractDaoBuilder daoFactory, Read read, Delete delete) {
+        super(daoFactory,read,delete,daoFactory.getProfessorRatingDao());
     }
 
     @Override
@@ -31,14 +31,14 @@ public class ProfessorRatingsService extends BinaryRatingService< ProfessorRatin
         if (binaryRatingVo.getEvaluatedObjectId() == null) {
             multipleMessageException.addMessage(
                     "professorRating.professorId.null");
-        } else if (getDaoFactory().getProfessorDao().getById(entityManager, binaryRatingVo.getEvaluatedObjectId()) == null) {
+        } else if (getDaoFactory().getProfessorDao().read(entityManager, binaryRatingVo.getEvaluatedObjectId()) == null) {
             multipleMessageException.addMessage(
                     "professorRating.professorId.element.notFound");
         }
         if (binaryRatingVo.getUserId() == null) {
             multipleMessageException.addMessage(
                     "professorRating.userId.null");
-        } else if (getDaoFactory().getUserDao().getById(entityManager, binaryRatingVo.getUserId())
+        } else if (getDaoFactory().getUserDao().read(entityManager, binaryRatingVo.getUserId())
                 == null) {
             multipleMessageException.addMessage(
                     "professorRating.userId.element.notFound");
@@ -61,9 +61,9 @@ public class ProfessorRatingsService extends BinaryRatingService< ProfessorRatin
         ProfessorRatingEntity entity = new ProfessorRatingEntity();
         entity.setId(binaryRatingVo.getId());
         entity.setProfessor(getDaoFactory().getProfessorDao().
-                getById(entityManager, binaryRatingVo.getEvaluatedObjectId()));
+                read(entityManager, binaryRatingVo.getEvaluatedObjectId()));
         entity.setUser(getDaoFactory().getUserDao().
-                getById(entityManager, binaryRatingVo.getUserId()));
+                read(entityManager, binaryRatingVo.getUserId()));
         entity.setValue(binaryRatingVo.getValue());
         return entity;
     }

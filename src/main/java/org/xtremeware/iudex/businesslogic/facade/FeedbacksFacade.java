@@ -17,7 +17,7 @@ public class FeedbacksFacade extends AbstractFacade {
         super(serviceFactory, emFactory);
     }
 
-    public List<FeedbackTypeVo> getFeedbackTypes() throws Exception {
+    public List<FeedbackTypeVo> getFeedbackTypes(){
         List<FeedbackTypeVo> feedbackTypeVos = null;
         EntityManager entityManager = null;
         try {
@@ -66,7 +66,8 @@ public class FeedbacksFacade extends AbstractFacade {
 
  
 
-    public FeedbackVo addFeedback(long feedbackType, String feedbackcontent, Date date) throws MultipleMessagesException, DuplicityException {
+    public FeedbackVo createFeedback(long feedbackType, String feedbackcontent, Date date) 
+            throws MultipleMessagesException, DuplicityException {
         
         FeedbackVo feedbackVo = new FeedbackVo();
         feedbackVo.setContent(feedbackcontent);

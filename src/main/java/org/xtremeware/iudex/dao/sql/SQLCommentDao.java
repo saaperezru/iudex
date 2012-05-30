@@ -12,10 +12,10 @@ import org.xtremeware.iudex.helper.DataBaseException;
  *
  * @author saaperezru
  */
-public class SQLCommentDao extends SQLCrudDao<CommentEntity> implements CommentDao {
+public class SqlCommentDao extends SqlCrudDao<CommentEntity> implements CommentDao {
 
-    public SQLCommentDao(Remove remove) {
-        super(remove);
+    public SqlCommentDao(Delete delete) {
+        super(delete);
     }
 
     /**

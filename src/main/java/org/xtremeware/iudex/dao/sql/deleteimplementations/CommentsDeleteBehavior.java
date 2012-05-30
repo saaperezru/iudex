@@ -1,9 +1,9 @@
-package org.xtremeware.iudex.dao.sql.removeimplementations;
+package org.xtremeware.iudex.dao.sql.deleteimplementations;
 
 import java.util.List;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.dao.AbstractDaoBuilder;
-import org.xtremeware.iudex.dao.Remove;
+import org.xtremeware.iudex.dao.Delete;
 import org.xtremeware.iudex.entity.CommentEntity;
 import org.xtremeware.iudex.entity.CommentRatingEntity;
 import org.xtremeware.iudex.helper.DataBaseException;
@@ -12,35 +12,35 @@ import org.xtremeware.iudex.helper.DataBaseException;
  *
  * @author josebermeo
  */
-public class CommentsRemoveBehavior implements Remove<CommentEntity> {
+public class CommentsDeleteBehavior implements Delete<CommentEntity> {
 
     private AbstractDaoBuilder daoBuilder;
-    private SimpleRemoveBehavior<CommentEntity> simpleRemove;
+    private SimpleDeleteBehavior<CommentEntity> simpleDelete;
 
-    public CommentsRemoveBehavior(AbstractDaoBuilder daoBuilder,
-            SimpleRemoveBehavior simpleRemove) {
+    public CommentsDeleteBehavior(AbstractDaoBuilder daoBuilder,
+            SimpleDeleteBehavior simpleDelete) {
         this.daoBuilder = daoBuilder;
-        this.simpleRemove = simpleRemove;
+        this.simpleDelete = simpleDelete;
     }
 
     @Override
-    public void remove(EntityManager entityManager, CommentEntity entity)
+    public void delete(EntityManager entityManager, CommentEntity entity)
             throws DataBaseException {
         List<CommentRatingEntity> commentRatings = getDaoBuilder().
                 getCommentRatingDao().getByEvaluatedObjectId(entityManager, entity.getId());
         
         for (CommentRatingEntity rating : commentRatings) {
-            getDaoBuilder().getCommentRatingDao().remove(entityManager, rating.getId());
+            getDaoBuilder().getCommentRatingDao().delete(entityManager, rating.getId());
         }
         
-        getSimpleRemove().remove(entityManager, entity);
+        getSimpleDelete().delete(entityManager, entity);
     }
 
     private AbstractDaoBuilder getDaoBuilder() {
         return daoBuilder;
     }
 
-    private SimpleRemoveBehavior<CommentEntity> getSimpleRemove() {
-        return simpleRemove;
+    private SimpleDeleteBehavior<CommentEntity> getSimpleDelete() {
+        return simpleDelete;
     }
 }

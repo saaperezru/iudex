@@ -276,7 +276,7 @@ public class CoursesFacadeIT {
             expected.setRatingAverage(0.0);
             expected.setRatingCount(0L);
 
-            CourseVo result = facade.addCourse(fabio.getVo().getId(), is2.getVo().getId(), 1L);
+            CourseVo result = facade.createCourse(fabio.getVo().getId(), is2.getVo().getId(), 1L);
             assertEquals(expected, result);
             assertTrue("Invalid id for created course", result.getId() > 0);
 
@@ -296,13 +296,13 @@ public class CoursesFacadeIT {
         CoursesFacade facade = Config.getInstance().getFacadeFactory().getCoursesFacade();
         String[] expectedMessage = new String[]{"course.professorId.notFound", "course.subjectId.notFound", "course.periodId.notFound"};
         try {
-            CourseVo result = facade.addCourse(Long.MAX_VALUE, Long.MAX_VALUE, Long.MAX_VALUE);
+            CourseVo result = facade.createCourse(Long.MAX_VALUE, Long.MAX_VALUE, Long.MAX_VALUE);
         } catch (MultipleMessagesException ex) {
             FacadesTestHelper.checkExceptionMessages(ex, expectedMessage);
         }
         expectedMessage = new String[]{"course.periodId.notFound"};
         try {
-            CourseVo result = facade.addCourse(fabio.getVo().getId(), afi.getVo().getId(), Long.MAX_VALUE);
+            CourseVo result = facade.createCourse(fabio.getVo().getId(), afi.getVo().getId(), Long.MAX_VALUE);
         } catch (MultipleMessagesException ex) {
             FacadesTestHelper.checkExceptionMessages(ex, expectedMessage);
         }
@@ -316,7 +316,7 @@ public class CoursesFacadeIT {
     public void test_BL_4_3() throws Exception {
         CoursesFacade facade = Config.getInstance().getFacadeFactory().getCoursesFacade();
         try {
-            facade.addCourse(mario.getVo().getId(), is2.getVo().getId(), 1L);
+            facade.createCourse(mario.getVo().getId(), is2.getVo().getId(), 1L);
             fail("No exception was thrown for a duplicity case");
         } catch (DuplicityException ex) {
             assertEquals("entity.exists", ex.getMessage());
@@ -326,9 +326,9 @@ public class CoursesFacadeIT {
     @Test
     public void test_BL_19_1() throws Exception {
         CoursesFacade facade = Config.getInstance().getFacadeFactory().getCoursesFacade();
-        long listToRemove[] = {1L, 2L};
-        for (long i : listToRemove) {
-            facade.removeCourse(i);
+        long listTodelete[] = {1L, 2L};
+        for (long i : listTodelete) {
+            facade.deleteCourse(i);
             assertNull(facade.getCourse(i));
         }
 
@@ -337,10 +337,10 @@ public class CoursesFacadeIT {
     @Test
     public void test_BL_19_2() throws Exception {
         CoursesFacade facade = Config.getInstance().getFacadeFactory().getCoursesFacade();
-        long listToRemove[] = {Long.MAX_VALUE, Long.MIN_VALUE};
-        for (long i : listToRemove) {
+        long listTodelete[] = {Long.MAX_VALUE, Long.MIN_VALUE};
+        for (long i : listTodelete) {
             try {
-                facade.removeCourse(i);
+                facade.deleteCourse(i);
             } catch (Exception e) {
                 assertEquals(RuntimeException.class, e.getClass());
                 assertEquals("entity.notFound", e.getCause().getMessage());

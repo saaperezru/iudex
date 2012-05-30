@@ -11,8 +11,8 @@ import org.xtremeware.iudex.vo.BinaryRatingVo;
 
 public class SubjectRatingsService extends BinaryRatingService<SubjectRatingEntity> {
 
-    public SubjectRatingsService(AbstractDaoBuilder daoFactory, Read read, Remove remove) {
-        super(daoFactory,read,remove,daoFactory.getSubjectRatingDao());
+    public SubjectRatingsService(AbstractDaoBuilder daoFactory, Read read, Delete delete) {
+        super(daoFactory,read,delete,daoFactory.getSubjectRatingDao());
     }
 
     @Override
@@ -28,12 +28,12 @@ public class SubjectRatingsService extends BinaryRatingService<SubjectRatingEnti
         }
         if (binaryRatingVo.getEvaluatedObjectId() == null) {
             multipleMessageException.addMessage("subjectRating.subjectId.null");
-        } else if (getDaoFactory().getSubjectDao().getById(entityManager, binaryRatingVo.getEvaluatedObjectId()) == null) {
+        } else if (getDaoFactory().getSubjectDao().read(entityManager, binaryRatingVo.getEvaluatedObjectId()) == null) {
             multipleMessageException.addMessage("subjectRating.subjectId.element.notFound");
         }
         if (binaryRatingVo.getUserId() == null) {
             multipleMessageException.addMessage("subjectRating.userId.null");
-        } else if (getDaoFactory().getUserDao().getById(entityManager, binaryRatingVo.getUserId()) == null) {
+        } else if (getDaoFactory().getUserDao().read(entityManager, binaryRatingVo.getUserId()) == null) {
             multipleMessageException.addMessage("subjectRating.userId.element.notFound");
         }
         if (!multipleMessageException.getMessages().isEmpty()) {
@@ -51,10 +51,10 @@ public class SubjectRatingsService extends BinaryRatingService<SubjectRatingEnti
 
         SubjectRatingEntity entity = new SubjectRatingEntity();
         entity.setId(binaryRatingVo.getId());
-        entity.setSubject(getDaoFactory().getSubjectDao().getById(entityManager,
+        entity.setSubject(getDaoFactory().getSubjectDao().read(entityManager,
                 binaryRatingVo.getEvaluatedObjectId()));
         entity.setUser(getDaoFactory().getUserDao().
-                getById(entityManager, binaryRatingVo.getUserId()));
+                read(entityManager, binaryRatingVo.getUserId()));
         entity.setValue(binaryRatingVo.getValue());
         return entity;
     }

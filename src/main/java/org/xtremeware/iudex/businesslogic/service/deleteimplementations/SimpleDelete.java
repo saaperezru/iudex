@@ -1,7 +1,7 @@
-package org.xtremeware.iudex.businesslogic.service.removeimplementations;
+package org.xtremeware.iudex.businesslogic.service.deleteimplementations;
 
 import javax.persistence.EntityManager;
-import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Remove;
+import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Delete;
 import org.xtremeware.iudex.dao.CrudDao;
 import org.xtremeware.iudex.entity.Entity;
 import org.xtremeware.iudex.helper.DataBaseException;
@@ -10,18 +10,18 @@ import org.xtremeware.iudex.helper.DataBaseException;
  *
  * @author josebermeo
  */
-public class SimpleRemove<E extends Entity> implements Remove {
+public class SimpleDelete<E extends Entity> implements Delete {
 
     private CrudDao<E> dao;
 
-    public SimpleRemove(CrudDao<E> dao) {
+    public SimpleDelete(CrudDao<E> dao) {
         this.dao = dao;
     }
 
     @Override
-    public void remove(EntityManager entityManager, Long entityId)
+    public void delete(EntityManager entityManager, Long entityId)
             throws DataBaseException {
-        getDao().remove(entityManager, entityId);
+        getDao().delete(entityManager, entityId);
     }
 
     public CrudDao<E> getDao() {

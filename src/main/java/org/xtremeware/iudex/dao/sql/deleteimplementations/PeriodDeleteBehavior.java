@@ -1,9 +1,9 @@
-package org.xtremeware.iudex.dao.sql.removeimplementations;
+package org.xtremeware.iudex.dao.sql.deleteimplementations;
 
 import java.util.List;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.dao.AbstractDaoBuilder;
-import org.xtremeware.iudex.dao.Remove;
+import org.xtremeware.iudex.dao.Delete;
 import org.xtremeware.iudex.entity.CourseEntity;
 import org.xtremeware.iudex.entity.Entity;
 import org.xtremeware.iudex.entity.PeriodEntity;
@@ -13,25 +13,25 @@ import org.xtremeware.iudex.helper.DataBaseException;
  *
  * @author josebermeo
  */
-public class PeriodRemoveBehavior implements Remove {
+public class PeriodDeleteBehavior implements Delete {
 
     private AbstractDaoBuilder daoBuilder;
-    private SimpleRemoveBehavior<PeriodEntity> simpleRemove;
+    private SimpleDeleteBehavior<PeriodEntity> simpleRemove;
 
-    public PeriodRemoveBehavior(AbstractDaoBuilder daoBuilder,
-            SimpleRemoveBehavior simpleRemove) {
+    public PeriodDeleteBehavior(AbstractDaoBuilder daoBuilder,
+            SimpleDeleteBehavior simpleRemove) {
         this.daoBuilder = daoBuilder;
         this.simpleRemove = simpleRemove;
     }
 
     @Override
-    public void remove(EntityManager entityManager, Entity entity)
+    public void delete(EntityManager entityManager, Entity entity)
             throws DataBaseException {
         removeCourses(entityManager, entity.getId());
-        getSimpleRemove().remove(entityManager, entity);
+        getSimpleRemove().delete(entityManager, entity);
     }
 
-    private SimpleRemoveBehavior<PeriodEntity> getSimpleRemove() {
+    private SimpleDeleteBehavior<PeriodEntity> getSimpleRemove() {
         return simpleRemove;
     }
 
@@ -41,7 +41,7 @@ public class PeriodRemoveBehavior implements Remove {
                 getCourseDao().getByPeriodId(entityManager, entityId);
         for (CourseEntity courseEntity : courseEntitys) {
             getDaoBuilder().
-                    getCourseDao().remove(entityManager, courseEntity.getId());
+                    getCourseDao().delete(entityManager, courseEntity.getId());
         }
     }
 

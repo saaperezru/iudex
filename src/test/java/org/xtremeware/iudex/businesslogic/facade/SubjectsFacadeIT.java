@@ -2,7 +2,6 @@ package org.xtremeware.iudex.businesslogic.facade;
 
 import java.util.Map;
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceException;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -167,7 +166,7 @@ public class SubjectsFacadeIT {
         subjectVo.setCode(subjectCode);
         subjectVo.setDescription(subjectDescription);
 
-        createdSubjectId = subjectsFacade.addSubject(subjectVo).getId();
+        createdSubjectId = subjectsFacade.createSubject(subjectVo).getId();
 
         SubjectVoFull subjectVoFull = subjectsFacade.getSubject(createdSubjectId);
 
@@ -185,7 +184,7 @@ public class SubjectsFacadeIT {
         subjectVo.setCode(subjectCode);
         subjectVo.setDescription(subjectDescription);
 
-        createdSubjectId = subjectsFacade.addSubject(subjectVo).getId();
+        createdSubjectId = subjectsFacade.createSubject(subjectVo).getId();
 
         subjectVoFull = subjectsFacade.getSubject(createdSubjectId);
 
@@ -203,7 +202,7 @@ public class SubjectsFacadeIT {
         subjectVo.setCode(subjectCode);
         subjectVo.setDescription(subjectDescription + injectedJavascriptCode);
 
-        createdSubjectId = subjectsFacade.addSubject(subjectVo).getId();
+        createdSubjectId = subjectsFacade.createSubject(subjectVo).getId();
 
         subjectVoFull = subjectsFacade.getSubject(createdSubjectId);
 
@@ -220,7 +219,7 @@ public class SubjectsFacadeIT {
         subjectVo.setName(subjectName);
         subjectVo.setCode(subjectCode);
         subjectVo.setDescription(subjectDescription);
-        createdSubjectId = subjectsFacade.addSubject(subjectVo).getId();
+        createdSubjectId = subjectsFacade.createSubject(subjectVo).getId();
 
         subjectVoFull = subjectsFacade.getSubject(createdSubjectId);
 
@@ -238,7 +237,7 @@ public class SubjectsFacadeIT {
         subjectVo.setCode(subjectCode);
         subjectVo.setDescription(subjectDescription);
 
-        createdSubjectId = subjectsFacade.addSubject(subjectVo).getId();
+        createdSubjectId = subjectsFacade.createSubject(subjectVo).getId();
 
         subjectVoFull = subjectsFacade.getSubject(createdSubjectId);
 
@@ -258,7 +257,7 @@ public class SubjectsFacadeIT {
             subjectVo.setName(null);
             subjectVo.setCode(5343451);
             subjectVo.setDescription(null);
-            subjectsFacade.addSubject(subjectVo);
+            subjectsFacade.createSubject(subjectVo);
             fail();
         } catch (MultipleMessagesException ex) {
             assertTrue(ex.getMessages().size() == 1);
@@ -270,7 +269,7 @@ public class SubjectsFacadeIT {
             subjectVo.setName("Materia convenio con los Andes");
             subjectVo.setCode(5343251);
             subjectVo.setDescription(null);
-            subjectsFacade.addSubject(subjectVo);
+            subjectsFacade.createSubject(subjectVo);
             fail();
         } catch (Exception ex) {
             assertEquals(ex.getCause().getClass(), DataBaseException.class);
@@ -284,7 +283,7 @@ public class SubjectsFacadeIT {
             subjectVo.setName(tooLongName);
             subjectVo.setCode(0);
             subjectVo.setDescription(tooLongDescription);
-            subjectsFacade.addSubject(subjectVo);
+            subjectsFacade.createSubject(subjectVo);
 
             fail();
 
@@ -301,7 +300,7 @@ public class SubjectsFacadeIT {
             subjectVo.setName("");
             subjectVo.setCode(0);
             subjectVo.setDescription(injectedCodeInDescription + "Hola");
-            subjectsFacade.addSubject(subjectVo);
+            subjectsFacade.createSubject(subjectVo);
             fail();
         } catch (MultipleMessagesException ex) {
             assertTrue(ex.getMessages().size() == 1);
@@ -317,7 +316,7 @@ public class SubjectsFacadeIT {
             subjectVo.setName(injectedCodeInName);
             subjectVo.setCode(-1);
             subjectVo.setDescription(tooLongDescription);
-            subjectsFacade.addSubject(subjectVo);
+            subjectsFacade.createSubject(subjectVo);
             fail();
         } catch (MultipleMessagesException ex) {
             assertTrue(ex.getMessages().size() == 2);
@@ -336,7 +335,7 @@ public class SubjectsFacadeIT {
             subjectVo.setName("Algoritmos");
             subjectVo.setCode(2019855);
             subjectVo.setDescription(null);
-            subjectsFacade.addSubject(subjectVo);
+            subjectsFacade.createSubject(subjectVo);
             fail();
         } catch (DuplicityException ex) {
             assertEquals(1, 1);
@@ -515,7 +514,7 @@ public class SubjectsFacadeIT {
         Long[] subjects = {2023859L, 2029461L, 2029372L};
 
         for (Long i : subjects) {
-            subjectsFacade.removeSubject(i);
+            subjectsFacade.deleteSubject(i);
             assertNull(subjectsFacade.getSubject(i).getVo());
         }
 
@@ -527,7 +526,7 @@ public class SubjectsFacadeIT {
         Long[] subjects = {2016722L, 9283792L, 7409261L, 7583632L};
         for (Long subjectId : subjects) {
             try {
-                subjectsFacade.removeSubject(subjectId);
+                subjectsFacade.deleteSubject(subjectId);
                 fail();
             } catch (DataBaseException ex) {
                 assertEquals("entity.notFound", ex.getMessage());

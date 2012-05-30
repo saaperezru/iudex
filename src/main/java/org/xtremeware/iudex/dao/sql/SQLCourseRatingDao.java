@@ -10,10 +10,10 @@ import org.xtremeware.iudex.helper.DataBaseException;
  *
  * @author josebermeo
  */
-public class SQLCourseRatingDao extends SQLCrudDao<CourseRatingEntity> implements CourseRatingDao {
+public class SqlCourseRatingDao extends SqlCrudDao<CourseRatingEntity> implements CourseRatingDao {
 
-    public SQLCourseRatingDao(Remove remove) {
-        super(remove);
+    public SqlCourseRatingDao(Delete delete) {
+        super(delete);
     }
 
     /**

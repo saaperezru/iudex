@@ -8,7 +8,7 @@ import org.xtremeware.iudex.entity.ProfessorRatingEntity;
  *
  * @author juan
  */
-public class SQLProfessorRatingDao extends SQLBinaryRatingDao<ProfessorRatingEntity> {
+public class SqlProfessorRatingDao extends SqlBinaryRatingDao<ProfessorRatingEntity> {
 
     @Override
     protected Class getEntityClass() {

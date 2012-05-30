@@ -12,10 +12,10 @@ import org.xtremeware.iudex.helper.DataBaseException;
  *
  * @author juan
  */
-public class SQLProfessorDao extends SQLCrudDao<ProfessorEntity> implements ProfessorDao {
+public class SqlProfessorDao extends SqlCrudDao<ProfessorEntity> implements ProfessorDao {
 
-    public SQLProfessorDao(Remove remove) {
-        super(remove);
+    public SqlProfessorDao(Delete delete) {
+        super(delete);
     }
 
     /**

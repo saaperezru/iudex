@@ -9,10 +9,10 @@ import org.xtremeware.iudex.helper.DataBaseException;
  *
  * @author josebermeo
  */
-public class SQLConfirmationKeyDao extends SQLCrudDao<ConfirmationKeyEntity> implements ConfirmationKeyDao {
+public class SqlConfirmationKeyDao extends SqlCrudDao<ConfirmationKeyEntity> implements ConfirmationKeyDao {
 
-    public SQLConfirmationKeyDao( Remove remove) {
-        super(remove);
+    public SqlConfirmationKeyDao( Delete delete) {
+        super(delete);
     }
 
     /**

@@ -24,8 +24,8 @@ public class SubjectsService extends CrudService<SubjectVo, SubjectEntity> {
      * @param daoFactory
      */
     public SubjectsService(AbstractDaoBuilder daoFactory,
-            Create create, Read read, Update update, Remove remove) {
-        super(daoFactory, create, read, update, remove);
+            Create create, Read read, Update update, Delete delete) {
+        super(daoFactory, create, read, update, delete);
         MAX_SUBJECT_NAME_LENGTH = Integer.parseInt(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAX_SUBJECT_NAME_LENGTH));
         MAX_SUBJECT_DESCRIPTION_LENGTH = Integer.parseInt(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAX_SUBJECT_DESCRIPTION_LENGTH));
     }
@@ -109,15 +109,16 @@ public class SubjectsService extends CrudService<SubjectVo, SubjectEntity> {
 	/**
 	 * Returns a list of SubjectVo according with the search query
 	 *
-	 * @param em EntityManager
+	 * @param entityManager EntityManager
 	 * @param query String with the search parameter
 	 * @return A list of SubjectVo
 	 */
-	public List<SubjectVo> search(EntityManager em, String query)
+	public List<SubjectVo> search(EntityManager entityManager, String query)
 			throws ExternalServiceConnectionException, DataBaseException {
-		query = SecurityHelper.sanitizeHTML(query);
+		
 		List<SubjectEntity> subjectEntitys = getDaoFactory().getSubjectDao().
-				getByName(em, query.toUpperCase());
+				getByName(entityManager, 
+                                SecurityHelper.sanitizeHTML(query).toUpperCase());
 		if (subjectEntitys.isEmpty()) {
 			return null;
 		}

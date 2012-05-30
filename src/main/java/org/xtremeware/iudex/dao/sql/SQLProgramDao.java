@@ -10,10 +10,10 @@ import org.xtremeware.iudex.helper.DataBaseException;
  *
  * @author josebermeo
  */
-public class SQLProgramDao extends SQLCrudDao<ProgramEntity> implements ProgramDao {
+public class SqlProgramDao extends SqlCrudDao<ProgramEntity> implements ProgramDao {
 
-    public SQLProgramDao(Remove remove) {
-        super(remove);
+    public SqlProgramDao(Delete Delete) {
+        super(Delete);
     }
 
     /**

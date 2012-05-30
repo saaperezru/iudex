@@ -44,15 +44,15 @@ public class SecurityHelper {
 			System.out.println("[DEBUG] An exception occured while sanitizing");
 			throw  new IllegalArgumentException("The input to sanitize cannot be null");
 		}
-		String result = null;
+
 		try {
 			CleanResults cr = getInstance().getAntiSamy().scan(input, getInstance().getPolicy());
-			result = cr.getCleanHTML();
+			input = cr.getCleanHTML();
 		} catch (Exception ex) {
 			Config.getInstance().getServiceFactory().getLogService().error(ex.getMessage(), ex);
 			throw new ExternalServiceConnectionException("There was a problem while sanitizing", ex);
 		}
-		return result;
+		return input;
 	}
 
 	public static String hashPassword(String password) {

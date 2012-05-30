@@ -114,7 +114,7 @@ public class EditUser {
             userVo.setActive(true);
 
             try {
-                usersFacade.editUser(userVo);
+                usersFacade.updateUser(userVo);
                 fc.addMessage(null, new FacesMessage(
                         "El usuario ha sido actualizado exitosamente"));
 

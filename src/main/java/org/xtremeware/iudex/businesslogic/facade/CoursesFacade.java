@@ -7,6 +7,7 @@ import javax.persistence.EntityTransaction;
 import org.xtremeware.iudex.businesslogic.DuplicityException;
 import org.xtremeware.iudex.businesslogic.helper.FacadesHelper;
 import org.xtremeware.iudex.businesslogic.service.ServiceBuilder;
+import org.xtremeware.iudex.helper.DataBaseException;
 import org.xtremeware.iudex.helper.MultipleMessagesException;
 import org.xtremeware.iudex.vo.*;
 
@@ -102,7 +103,7 @@ public class CoursesFacade extends AbstractFacade {
         return listOfFoundCourses;
     }
 
-    public CourseVo addCourse(long professorId, long subjectId, long periodId)
+    public CourseVo createCourse(long professorId, long subjectId, long periodId)
             throws MultipleMessagesException, DuplicityException {
         CourseVo courseVo = null;
         EntityManager entityManager = null;
@@ -132,17 +133,18 @@ public class CoursesFacade extends AbstractFacade {
         return courseVo;
     }
 
-    public void removeCourse(long courseId) {
+    public void deleteCourse(long courseId) throws DataBaseException {
         EntityManager entityManager = null;
         EntityTransaction transaction = null;
         try {
             entityManager = getEntityManagerFactory().createEntityManager();
             transaction = entityManager.getTransaction();
             transaction.begin();
-            getServiceFactory().getCoursesService().remove(entityManager, courseId);
+            getServiceFactory().getCoursesService().delete(entityManager, courseId);
             transaction.commit();
         } catch (Exception exception) {
             getServiceFactory().getLogService().error(exception.getMessage(), exception);
+            FacadesHelper.checkExceptionAndRollback(entityManager, transaction, exception, DataBaseException.class);
             FacadesHelper.rollbackTransaction(entityManager, transaction, exception);
         } finally {
             FacadesHelper.closeEntityManager(entityManager);
@@ -154,12 +156,12 @@ public class CoursesFacade extends AbstractFacade {
         CourseVoFull courseVoFull = null;
         try {
             entityManager = getEntityManagerFactory().createEntityManager();
-            CourseVo vo = getServiceFactory().getCoursesService().getById(entityManager, courseId);
+            CourseVo vo = getServiceFactory().getCoursesService().read(entityManager, courseId);
             if (vo == null) {
                 return null;
             }
-            SubjectVo subjectVo = getServiceFactory().getSubjectsService().getById(entityManager, vo.getSubjectId());
-            ProfessorVo professorVo = getServiceFactory().getProfessorsService().getById(entityManager, vo.getProfessorId());
+            SubjectVo subjectVo = getServiceFactory().getSubjectsService().read(entityManager, vo.getSubjectId());
+            ProfessorVo professorVo = getServiceFactory().getProfessorsService().read(entityManager, vo.getProfessorId());
 
             courseVoFull = new CourseVoFull(vo, subjectVo, professorVo);
 
@@ -230,12 +232,12 @@ public class CoursesFacade extends AbstractFacade {
             for (CourseVo courseVo : similarCourses) {
                 if (!professorsVos.containsKey(courseVo.getProfessorId())) {
                     ProfessorVo professorVo = getServiceFactory().
-                            getProfessorsService().getById(entityManager, courseVo.getProfessorId());
+                            getProfessorsService().read(entityManager, courseVo.getProfessorId());
                     professorsVos.put(professorVo.getId(), professorVo);
                 }
                 if (!subjectsVos.containsKey(courseVo.getSubjectId())) {
                     SubjectVo subjectVo = getServiceFactory().
-                            getSubjectsService().getById(entityManager, courseVo.getSubjectId());
+                            getSubjectsService().read(entityManager, courseVo.getSubjectId());
                     subjectsVos.put(subjectVo.getId(), subjectVo);
                 }
                 courseVoFulls.add(new CourseVoFull(courseVo, subjectsVos.get(courseVo.getSubjectId()), professorsVos.get(courseVo.getProfessorId())));
@@ -257,11 +259,11 @@ public class CoursesFacade extends AbstractFacade {
         try {
             entityManager = getEntityManagerFactory().createEntityManager();
             List<CourseVo> courseVos = getServiceFactory().getCoursesService().getBySubjectId(entityManager, subjectId);
-            SubjectVo subjectVo = getServiceFactory().getSubjectsService().getById(entityManager, subjectId);
+            SubjectVo subjectVo = getServiceFactory().getSubjectsService().read(entityManager, subjectId);
             for (CourseVo courseVo : courseVos) {
                 if (!professorsVo.containsKey(courseVo.getProfessorId())) {
                     ProfessorVo professorVo = getServiceFactory().
-                            getProfessorsService().getById(entityManager, courseVo.getProfessorId());
+                            getProfessorsService().read(entityManager, courseVo.getProfessorId());
                     professorsVo.put(professorVo.getId(), professorVo);
                 }
                 courseVoFulls.add(
@@ -291,10 +293,10 @@ public class CoursesFacade extends AbstractFacade {
         try {
             entityManager = getEntityManagerFactory().createEntityManager();
             List<CourseVo> courses = getServiceFactory().getCoursesService().getByProfessorId(entityManager, professorId);
-            ProfessorVo professorVo = getServiceFactory().getProfessorsService().getById(entityManager, professorId);
+            ProfessorVo professorVo = getServiceFactory().getProfessorsService().read(entityManager, professorId);
             for (CourseVo courseVo : courses) {
                 if (!subjectsVo.containsKey(courseVo.getSubjectId())) {
-                    SubjectVo subjectVo = getServiceFactory().getSubjectsService().getById(entityManager, courseVo.getSubjectId());
+                    SubjectVo subjectVo = getServiceFactory().getSubjectsService().read(entityManager, courseVo.getSubjectId());
                     subjectsVo.put(subjectVo.getId(), subjectVo);
                 }
                 coursesList.add(new CourseVoFull(courseVo, subjectsVo.get(courseVo.getSubjectId()), professorVo));

@@ -15,8 +15,7 @@ public class SubjectsFacade extends AbstractFacade {
         super(serviceFactory, emFactory);
     }
 
-    public Map<Long, String> getSubjectsAutocomplete(String subjectName)
-            throws Exception {
+    public Map<Long, String> getSubjectsAutocomplete(String subjectName) {
         EntityManager entityManager = null;
         Map<Long, String> subjectsIdAndName = new HashMap<Long, String>();
         try {
@@ -39,7 +38,7 @@ public class SubjectsFacade extends AbstractFacade {
         return subjectsIdAndName;
     }
 
-    public BinaryRatingVo getSubjectRatingByUserId(long subjectId, long userId) throws Exception {
+    public BinaryRatingVo getSubjectRatingByUserId(long subjectId, long userId) {
         EntityManager entityManager = null;
         BinaryRatingVo subjectRatingVo = null;
         try {
@@ -57,7 +56,7 @@ public class SubjectsFacade extends AbstractFacade {
         return subjectRatingVo;
     }
 
-    public RatingSummaryVo getSubjectsRatingSummary(long subjectId) throws Exception {
+    public RatingSummaryVo getSubjectsRatingSummary(long subjectId) {
 
         EntityManager entityManager = null;
         RatingSummaryVo ratingSummaryVo = null;
@@ -65,7 +64,7 @@ public class SubjectsFacade extends AbstractFacade {
             entityManager = getEntityManagerFactory().createEntityManager();
 
             SubjectVo subjectVo = getServiceFactory().
-                    getSubjectsService().getById(entityManager, subjectId);
+                    getSubjectsService().read(entityManager, subjectId);
 
             if (isNotNull(subjectVo)) {
                 ratingSummaryVo = getServiceFactory().
@@ -114,14 +113,16 @@ public class SubjectsFacade extends AbstractFacade {
         return ratingVo;
     }
 
-    public SubjectVo addSubject(SubjectVo subjectVo) throws MultipleMessagesException, DuplicityException {
+    public SubjectVo createSubject(SubjectVo subjectVo) 
+            throws MultipleMessagesException, DuplicityException {
         EntityManager entityManager = null;
         EntityTransaction transaction = null;
+        SubjectVo createdSubjectVo = null;
         try {
             entityManager = getEntityManagerFactory().createEntityManager();
             transaction = entityManager.getTransaction();
             transaction.begin();
-            subjectVo = getServiceFactory().getSubjectsService().create(entityManager, subjectVo);
+            createdSubjectVo = getServiceFactory().getSubjectsService().create(entityManager, subjectVo);
             transaction.commit();
         } catch (Exception exception) {
             getServiceFactory().getLogService().error(exception.getMessage(), exception);
@@ -131,17 +132,17 @@ public class SubjectsFacade extends AbstractFacade {
         } finally {
             FacadesHelper.closeEntityManager(entityManager);
         }
-        return subjectVo;
+        return createdSubjectVo;
     }
 
-    public void removeSubject(long sbjectId) throws Exception {
+    public void deleteSubject(long sbjectId) throws DataBaseException {
         EntityManager entityManager = null;
         EntityTransaction transaction = null;
         try {
             entityManager = getEntityManagerFactory().createEntityManager();
             transaction = entityManager.getTransaction();
             transaction.begin();
-            getServiceFactory().getSubjectsService().remove(entityManager, sbjectId);
+            getServiceFactory().getSubjectsService().delete(entityManager, sbjectId);
             transaction.commit();
         } catch (Exception exception) {
             getServiceFactory().getLogService().error(exception.getMessage(), exception);
@@ -152,16 +153,17 @@ public class SubjectsFacade extends AbstractFacade {
         }
     }
 
-    public SubjectVo updateSubject(SubjectVo subjectVo) throws MultipleMessagesException, DuplicityException {
+    public SubjectVo updateSubject(SubjectVo subjectVo) 
+            throws MultipleMessagesException, DuplicityException {
 
         EntityManager entityManager = null;
         EntityTransaction transaction = null;
-
+        SubjectVo createdSubjectVo = null;
         try {
             entityManager = getEntityManagerFactory().createEntityManager();
             transaction = entityManager.getTransaction();
             transaction.begin();
-            subjectVo = getServiceFactory().getSubjectsService().update(entityManager, subjectVo);
+            createdSubjectVo = getServiceFactory().getSubjectsService().update(entityManager, subjectVo);
             transaction.commit();
 
         } catch (Exception exception) {
@@ -173,15 +175,15 @@ public class SubjectsFacade extends AbstractFacade {
             FacadesHelper.closeEntityManager(entityManager);
         }
 
-        return subjectVo;
+        return createdSubjectVo;
     }
 
-    public SubjectVoFull getSubject(long subjectId) throws Exception {
+    public SubjectVoFull getSubject(long subjectId) {
         EntityManager entityManager = null;
         SubjectVoFull subjectVoFull = null;
         try {
             entityManager = getEntityManagerFactory().createEntityManager();
-            subjectVoFull = new SubjectVoFull(getServiceFactory().getSubjectsService().getById(entityManager, subjectId), getServiceFactory().getSubjectRatingsService().getSummary(entityManager, subjectId));
+            subjectVoFull = new SubjectVoFull(getServiceFactory().getSubjectsService().read(entityManager, subjectId), getServiceFactory().getSubjectRatingsService().getSummary(entityManager, subjectId));
 
         } catch (Exception exception) {
             getServiceFactory().getLogService().error(exception.getMessage(), exception);

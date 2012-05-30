@@ -12,10 +12,10 @@ import org.xtremeware.iudex.helper.DataBaseException;
  *
  * @author healarconr
  */
-public class SQLPeriodDao extends SQLCrudDao<PeriodEntity> implements PeriodDao {
+public class SqlPeriodDao extends SqlCrudDao<PeriodEntity> implements PeriodDao {
 
-    public SQLPeriodDao(Remove remove) {
-        super(remove);
+    public SqlPeriodDao(Delete delete) {
+        super(delete);
     }
 
     /**

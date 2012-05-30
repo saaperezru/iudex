@@ -13,8 +13,8 @@ public class ProgramsService extends CrudService<ProgramVo, ProgramEntity> {
     private final int MAX_PROGRAMNAME_LENGTH;
 
     public ProgramsService(AbstractDaoBuilder daoFactory,
-            Create create, Read read, Update update, Remove remove) {
-        super(daoFactory, create, read, update, remove);
+            Create create, Read read, Update update, Delete delete) {
+        super(daoFactory, create, read, update, delete);
         MAX_PROGRAMNAME_LENGTH = 50;
     }
 
@@ -87,11 +87,10 @@ public class ProgramsService extends CrudService<ProgramVo, ProgramEntity> {
     public List<ProgramVo> getByNameLike(EntityManager entityManager, String programName)
             throws ExternalServiceConnectionException, DataBaseException {
 
-        programName = SecurityHelper.sanitizeHTML(programName);
-
         ArrayList<ProgramVo> list = new ArrayList<ProgramVo>();
         List<ProgramEntity> programEntitys = getDaoFactory().getProgramDao().
-                getByNameLike(entityManager, programName);
+                getByNameLike(entityManager,
+                SecurityHelper.sanitizeHTML(programName));
         for (ProgramEntity entity : programEntitys) {
             list.add(entity.toVo());
         }

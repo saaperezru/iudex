@@ -24,7 +24,7 @@ public interface AbstractDaoBuilder {
 
     public FeedbackTypeDao getFeedbackTypeDao();
 	
-	public ForgottenPasswordKeyDaoInterface getForgottenPasswordKeyDao();
+	public ForgottenPasswordKeyDao getForgottenPasswordKeyDao();
 
     public PeriodDao getPeriodDao();
 

@@ -5,6 +5,7 @@ import javax.persistence.*;
 import org.xtremeware.iudex.businesslogic.*;
 import org.xtremeware.iudex.businesslogic.helper.FacadesHelper;
 import org.xtremeware.iudex.businesslogic.service.*;
+import org.xtremeware.iudex.helper.DataBaseException;
 import org.xtremeware.iudex.helper.MultipleMessagesException;
 import org.xtremeware.iudex.vo.*;
 
@@ -15,7 +16,7 @@ public class CommentsFacade extends AbstractFacade {
         super(serviceFactory, emFactory);
     }
 
-    public CommentVo addComment(CommentVo vo) throws
+    public CommentVo createComment(CommentVo vo) throws
             MultipleMessagesException, MaxCommentsLimitReachedException, DuplicityException {
         CommentVo createdVo = null;
         EntityManager entityManager = null;
@@ -40,17 +41,18 @@ public class CommentsFacade extends AbstractFacade {
 
     }
 
-    public void removeComment(long commentId) throws Exception {
+    public void deleteComment(long commentId) throws DataBaseException {
         EntityManager entityManager = null;
         EntityTransaction transaction = null;
         try {
             entityManager = getEntityManagerFactory().createEntityManager();
             transaction = entityManager.getTransaction();
             transaction.begin();
-            getServiceFactory().createCommentsService().remove(entityManager, commentId);
+            getServiceFactory().createCommentsService().delete(entityManager, commentId);
             transaction.commit();
         } catch (Exception exception) {
             getServiceFactory().getLogService().error(exception.getMessage(), exception);
+            FacadesHelper.checkExceptionAndRollback(entityManager, transaction, exception, DataBaseException.class);
             FacadesHelper.rollbackTransaction(entityManager, transaction, exception);
         } finally {
             FacadesHelper.closeEntityManager(entityManager);
@@ -106,7 +108,8 @@ public class CommentsFacade extends AbstractFacade {
         return rating;
     }
 
-    public BinaryRatingVo rateComment(long commentId, long userId, int value) throws MultipleMessagesException, DuplicityException {
+    public BinaryRatingVo rateComment(long commentId, long userId, int value) 
+            throws MultipleMessagesException, DuplicityException {
         
         EntityManager entityManager = null;
         EntityTransaction transaction = null;

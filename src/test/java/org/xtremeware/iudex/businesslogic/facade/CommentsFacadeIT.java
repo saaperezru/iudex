@@ -47,7 +47,7 @@ public class CommentsFacadeIT {
     }
 
     /**
-     * Test of addComment method, of class CommentsFacade.
+     * Test of createComment method, of class CommentsFacade.
      */
     @Test
     public void test_BL_5_1() throws
@@ -61,7 +61,7 @@ public class CommentsFacadeIT {
         commentVo.setUserId(2L);
         CommentsFacade commentsFacade = Config.getInstance().getFacadeFactory().
                 getCommentsFacade();
-        CommentVo result = commentsFacade.addComment(commentVo);
+        CommentVo result = commentsFacade.createComment(commentVo);
         assertNotNull(result);
         assertNotNull(result.getId());
         commentVo.setId(result.getId());
@@ -75,7 +75,7 @@ public class CommentsFacadeIT {
                 getCommentsFacade();
         CommentVo result = null;
         try {
-            result = commentsFacade.addComment(null);
+            result = commentsFacade.createComment(null);
         } catch (MultipleMessagesException ex) {
             assertEquals("comment.null", ex.getMessages().get(0));
         }
@@ -93,7 +93,7 @@ public class CommentsFacadeIT {
             "comment.userId.null",
             "comment.date.null"};
         try {
-            result = commentsFacade.addComment(commentVo);
+            result = commentsFacade.createComment(commentVo);
         } catch (MultipleMessagesException ex) {
             FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
         }
@@ -108,7 +108,7 @@ public class CommentsFacadeIT {
             "comment.userId.element.notFound",
             "comment.content.invalidSize"};
         try {
-            result = commentsFacade.addComment(commentVo);
+            result = commentsFacade.createComment(commentVo);
         } catch (MultipleMessagesException ex) {
             FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
         }
@@ -122,7 +122,7 @@ public class CommentsFacadeIT {
             "comment.userId.element.notFound",
             "comment.content.invalidSize"};
         try {
-            result = commentsFacade.addComment(commentVo);
+            result = commentsFacade.createComment(commentVo);
         } catch (MultipleMessagesException ex) {
             FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
         }
@@ -136,7 +136,7 @@ public class CommentsFacadeIT {
             "comment.userId.element.notFound",
             "comment.content.invalidSize"};
         try {
-            result = commentsFacade.addComment(commentVo);
+            result = commentsFacade.createComment(commentVo);
         } catch (MultipleMessagesException ex) {
             FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
         }
@@ -156,7 +156,7 @@ public class CommentsFacadeIT {
         commentVo.setUserId(1L);
         CommentsFacade commentsFacade = Config.getInstance().getFacadeFactory().
                 getCommentsFacade();
-        CommentVo result = commentsFacade.addComment(commentVo);
+        CommentVo result = commentsFacade.createComment(commentVo);
 
 
         commentVo.setAnonymous(false);
@@ -166,7 +166,7 @@ public class CommentsFacadeIT {
         commentVo.setRating(2F);
         commentVo.setUserId(1L);
         try {
-            result = commentsFacade.addComment(commentVo);
+            result = commentsFacade.createComment(commentVo);
         } catch (MaxCommentsLimitReachedException e) {
             assertEquals("Maximum comments per day reached", e.getMessage());
         }
@@ -413,7 +413,7 @@ public class CommentsFacadeIT {
         Long commmendId = 1L;
         CommentsFacade commentsFacade = Config.getInstance().getFacadeFactory().
                 getCommentsFacade();
-        commentsFacade.removeComment(commmendId);
+        commentsFacade.deleteComment(commmendId);
         Long singleResult = entityManager.createQuery(
                 "SELECT COUNT(c) FROM Comment c WHERE c.id = :commmendId",
                 Long.class).setParameter("commmendId", commmendId).
@@ -433,7 +433,7 @@ public class CommentsFacadeIT {
         CommentsFacade commentsFacade = Config.getInstance().getFacadeFactory().
                 getCommentsFacade();
         try {
-            commentsFacade.removeComment(commmendId);
+            commentsFacade.deleteComment(commmendId);
         } catch (Exception ex) {
             assertEquals(RuntimeException.class, ex.getClass());
             assertEquals("entity.notFound", ex.getCause().getMessage());
@@ -451,7 +451,7 @@ public class CommentsFacadeIT {
         }
         commmendId = Long.MIN_VALUE;
         try {
-            commentsFacade.removeComment(commmendId);
+            commentsFacade.deleteComment(commmendId);
         } catch (Exception ex) {
             assertEquals(RuntimeException.class, ex.getClass());
             assertEquals("entity.notFound", ex.getCause().getMessage());
@@ -470,7 +470,7 @@ public class CommentsFacadeIT {
 
         commmendId = Long.MAX_VALUE;
         try {
-            commentsFacade.removeComment(commmendId);
+            commentsFacade.deleteComment(commmendId);
         } catch (Exception ex) {
             assertEquals(RuntimeException.class, ex.getClass());
             assertEquals("entity.notFound", ex.getCause().getMessage());

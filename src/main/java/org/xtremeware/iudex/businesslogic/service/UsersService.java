@@ -4,12 +4,12 @@ import java.util.*;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Create;
 import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Read;
-import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Remove;
+import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Delete;
 import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Update;
 import org.xtremeware.iudex.dao.AbstractDaoBuilder;
 import org.xtremeware.iudex.dao.ConfirmationKeyDao;
 
-import org.xtremeware.iudex.dao.ForgottenPasswordKeyDaoInterface;
+import org.xtremeware.iudex.dao.ForgottenPasswordKeyDao;
 import org.xtremeware.iudex.entity.ConfirmationKeyEntity;
 import org.xtremeware.iudex.entity.ForgottenPasswordKeyEntity;
 import org.xtremeware.iudex.entity.ProgramEntity;
@@ -31,9 +31,9 @@ public class UsersService extends CrudService<UserVo, UserEntity> {
     private final int MIN_USER_PASSWORD_LENGTH;
 
     public UsersService(AbstractDaoBuilder daoFactory,
-            Create create, Read read, Update update, Remove remove) {
+            Create create, Read read, Update update, Delete delete) {
 
-        super(daoFactory, create, read, update, remove);
+        super(daoFactory, create, read, update, delete);
 
         MIN_USERNAME_LENGTH =
                 Integer.parseInt(ConfigurationVariablesHelper.getVariable(
@@ -107,7 +107,7 @@ public class UsersService extends CrudService<UserVo, UserEntity> {
                 if (programId == null) {
                     multipleMessagesException.addMessage(
                             "user.programsId.element.null");
-                } else if (getDaoFactory().getProgramDao().getById(entityManager, programId) == null) {
+                } else if (getDaoFactory().getProgramDao().read(entityManager, programId) == null) {
                     multipleMessagesException.addMessage(
                             "user.programsId.element.notFound");
                 }
@@ -153,7 +153,7 @@ public class UsersService extends CrudService<UserVo, UserEntity> {
         if (programsId != null) {
             List<ProgramEntity> arrayList = new ArrayList<ProgramEntity>();
             for (Long programId : programsId) {
-                arrayList.add(this.getDaoFactory().getProgramDao().getById(em,
+                arrayList.add(this.getDaoFactory().getProgramDao().read(em,
                         programId));
             }
             userEntity.setPrograms(arrayList);
@@ -191,12 +191,10 @@ public class UsersService extends CrudService<UserVo, UserEntity> {
             throw exceptions;
         }
 
-        userName = SecurityHelper.sanitizeHTML(userName);
-        password = SecurityHelper.sanitizeHTML(password);
-        password = SecurityHelper.hashPassword(password);
-
         UserEntity user = getDaoFactory().getUserDao().getByUsernameAndPassword(
-                entityManager, userName, password);
+                entityManager, 
+                SecurityHelper.sanitizeHTML(userName), 
+                SecurityHelper.hashPassword(SecurityHelper.sanitizeHTML(password)));
         if (user == null) {
             return null;
         } else {
@@ -211,17 +209,16 @@ public class UsersService extends CrudService<UserVo, UserEntity> {
     public UserVo activateAccount(EntityManager entityManager, String confirmationKey)
             throws ExternalServiceConnectionException, DataBaseException {
 
-        confirmationKey = SecurityHelper.sanitizeHTML(confirmationKey);
         ConfirmationKeyDao dao =
                 getDaoFactory().getConfirmationKeyDao();
         ConfirmationKeyEntity confirmationKeyEntity =
                 dao.getByConfirmationKey(entityManager,
-                confirmationKey);
+                SecurityHelper.sanitizeHTML(confirmationKey));
         if (confirmationKeyEntity != null) {
             UserEntity userEntity = confirmationKeyEntity.getUser();
             if (!userEntity.isActive()) {
                 userEntity.setActive(true);
-                dao.remove(entityManager, confirmationKeyEntity.getId());
+                dao.delete(entityManager, confirmationKeyEntity.getId());
                 return userEntity.toVo();
             }
         }
@@ -231,7 +228,7 @@ public class UsersService extends CrudService<UserVo, UserEntity> {
     public ConfirmationKeyVo getConfirmationKeyByUserId(EntityManager em,
             long id)
             throws DataBaseException {
-        return getDaoFactory().getUserDao().getById(em, id).getConfirmationKey().
+        return getDaoFactory().getUserDao().read(em, id).getConfirmationKey().
                 toVo();
     }
 
@@ -243,7 +240,7 @@ public class UsersService extends CrudService<UserVo, UserEntity> {
                 userName);
 
         if (user != null && user.isActive()) {
-            ForgottenPasswordKeyDaoInterface dao = getDaoFactory().
+            ForgottenPasswordKeyDao dao = getDaoFactory().
                     getForgottenPasswordKeyDao();
 
             ForgottenPasswordKeyEntity entity = dao.getByUserName(em, userName);
@@ -262,9 +259,9 @@ public class UsersService extends CrudService<UserVo, UserEntity> {
             entity.setKey(SecurityHelper.generateMailingKey());
 
             if (newKey) {
-                entity = dao.persist(em, entity);
+                dao.create(em, entity);
             } else {
-                entity = dao.merge(em, entity);
+                entity = dao.update(em, entity);
             }
 
             vo = entity.toVo();
@@ -286,7 +283,7 @@ public class UsersService extends CrudService<UserVo, UserEntity> {
     public void resetPassword(EntityManager em,
             String key, String password) throws DataBaseException,
             MultipleMessagesException {
-        ForgottenPasswordKeyDaoInterface dao = getDaoFactory().
+        ForgottenPasswordKeyDao dao = getDaoFactory().
                 getForgottenPasswordKeyDao();
         ForgottenPasswordKeyEntity forgottenPasswordKey = dao.getByKey(em, key);
 
@@ -300,7 +297,7 @@ public class UsersService extends CrudService<UserVo, UserEntity> {
 
         forgottenPasswordKey.getUser().setPassword(SecurityHelper.hashPassword(
                 password));
-        dao.remove(em, forgottenPasswordKey.getId());
+        dao.delete(em, forgottenPasswordKey.getId());
     }
 
     private void validatePassword(String password,

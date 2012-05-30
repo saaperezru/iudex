@@ -14,8 +14,8 @@ public class ProfessorsService extends CrudService<ProfessorVo, ProfessorEntity>
 	private final int MAX_PROFESSOR_DECRIPTION_LENGTH;
 
 	public ProfessorsService(AbstractDaoBuilder daoFactory,
-			Create create, Read read, Update update, Remove remove) {
-		super(daoFactory, create, read, update, remove);
+			Create create, Read read, Update update, Delete delete) {
+		super(daoFactory, create, read, update, delete);
 
 		MAX_PROFESSOR_NAME_LENGTH =
 				Integer.parseInt(ConfigurationVariablesHelper.getVariable(

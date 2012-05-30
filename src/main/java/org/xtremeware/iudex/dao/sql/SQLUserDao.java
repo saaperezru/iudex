@@ -11,10 +11,10 @@ import org.xtremeware.iudex.helper.DataBaseException;
  *
  * @author juan
  */
-public class SQLUserDao extends SQLCrudDao<UserEntity> implements UserDao {
+public class SqlUserDao extends SqlCrudDao<UserEntity> implements UserDao {
 
-    public SQLUserDao(Remove remove) {
-        super(remove);
+    public SqlUserDao(Delete delete) {
+        super(delete);
     }
 
     /**

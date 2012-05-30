@@ -9,6 +9,7 @@ import org.junit.*;
 import static org.junit.Assert.*;
 import org.xtremeware.iudex.entity.ProgramEntity;
 import org.xtremeware.iudex.helper.Config;
+import org.xtremeware.iudex.helper.DataBaseException;
 import org.xtremeware.iudex.helper.MultipleMessagesException;
 import org.xtremeware.iudex.vo.ProgramVo;
 
@@ -138,37 +139,37 @@ public class ProgramsFacadeIT {
         try {
             programsFacade.deleteProgram(id);
         } catch (Exception ex) {
-            assertEquals(RuntimeException.class, ex.getClass());
-            assertEquals("entity.notFound", ex.getCause().getMessage());
+            assertEquals(DataBaseException.class, ex.getClass());
+            assertEquals("entity.notFound", ex.getMessage());
         }
 
         id = 2541L;
         try {
             programsFacade.deleteProgram(id);
         } catch (Exception ex) {
-            assertEquals(RuntimeException.class, ex.getClass());
-            assertEquals("entity.notFound", ex.getCause().getMessage());
+            assertEquals(DataBaseException.class, ex.getClass());
+            assertEquals("entity.notFound", ex.getMessage());
         }
         id = Long.MAX_VALUE;
         try {
             programsFacade.deleteProgram(id);
         } catch (Exception ex) {
-            assertEquals(RuntimeException.class, ex.getClass());
-            assertEquals("entity.notFound", ex.getCause().getMessage());
+            assertEquals(DataBaseException.class, ex.getClass());
+            assertEquals("entity.notFound", ex.getMessage());
         }
         id = Long.MIN_VALUE;
         try {
             programsFacade.deleteProgram(id);
         } catch (Exception ex) {
-            assertEquals(RuntimeException.class, ex.getClass());
-            assertEquals("entity.notFound", ex.getCause().getMessage());
+            assertEquals(DataBaseException.class, ex.getClass());
+            assertEquals("entity.notFound", ex.getMessage());
         }
         id = 0L;
         try {
             programsFacade.deleteProgram(id);
         } catch (Exception ex) {
-            assertEquals(RuntimeException.class, ex.getClass());
-            assertEquals("entity.notFound", ex.getCause().getMessage());
+            assertEquals(DataBaseException.class, ex.getClass());
+            assertEquals("entity.notFound", ex.getMessage());
         }
     }
 

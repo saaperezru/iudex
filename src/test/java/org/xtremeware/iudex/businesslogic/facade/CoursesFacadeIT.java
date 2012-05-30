@@ -14,6 +14,7 @@ import org.xtremeware.iudex.entity.CourseEntity;
 import org.xtremeware.iudex.entity.ProfessorEntity;
 import org.xtremeware.iudex.entity.SubjectEntity;
 import org.xtremeware.iudex.helper.Config;
+import org.xtremeware.iudex.helper.DataBaseException;
 import org.xtremeware.iudex.helper.MultipleMessagesException;
 import org.xtremeware.iudex.vo.*;
 
@@ -342,8 +343,8 @@ public class CoursesFacadeIT {
             try {
                 facade.deleteCourse(i);
             } catch (Exception e) {
-                assertEquals(RuntimeException.class, e.getClass());
-                assertEquals("entity.notFound", e.getCause().getMessage());
+                assertEquals(DataBaseException.class, e.getClass());
+                assertEquals("entity.notFound", e.getMessage());
             }
         }
 

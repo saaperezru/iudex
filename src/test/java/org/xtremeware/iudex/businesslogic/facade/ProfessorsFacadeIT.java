@@ -600,24 +600,24 @@ public class ProfessorsFacadeIT {
         try {
             professorsFacade.deleteProfessor(id);
         } catch (Exception ex) {
-            assertEquals(RuntimeException.class, ex.getClass());
-            assertEquals("entity.notFound", ex.getCause().getMessage());
+            assertEquals(DataBaseException.class, ex.getClass());
+            assertEquals("entity.notFound", ex.getMessage());
         }
 
         id = Long.MIN_VALUE;
         try {
             professorsFacade.deleteProfessor(id);
         } catch (Exception ex) {
-            assertEquals(RuntimeException.class, ex.getClass());
-            assertEquals("entity.notFound", ex.getCause().getMessage());
+            assertEquals(DataBaseException.class, ex.getClass());
+            assertEquals("entity.notFound", ex.getMessage());
         }
 
         id = 0L;
         try {
             professorsFacade.deleteProfessor(id);
         } catch (Exception ex) {
-            assertEquals(RuntimeException.class, ex.getClass());
-            assertEquals("entity.notFound", ex.getCause().getMessage());
+            assertEquals(DataBaseException.class, ex.getClass());
+            assertEquals("entity.notFound", ex.getMessage());
         }
 
     }

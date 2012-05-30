@@ -96,19 +96,12 @@ public class CommentsService extends CrudService<CommentVo, CommentEntity> {
                     "comment.date.null");
         }
 
-        if (commentVo.isAnonymous()) {
-            if (commentVo.getUserId() != null) {
-                multipleMessageException.addMessage(
-                        "comment.userId.NotNull");
-            }
-        } else {
-            if (commentVo.getUserId() == null) {
-                multipleMessageException.addMessage(
-                        "comment.userId.null");
-            } else if (getDaoFactory().getUserDao().read(entityManager, commentVo.getUserId()) == null) {
-                multipleMessageException.addMessage(
-                        "comment.userId.element.notFound");
-            }
+        if (commentVo.getUserId() == null) {
+            multipleMessageException.addMessage(
+                    "comment.userId.null");
+        } else if (getDaoFactory().getUserDao().read(entityManager, commentVo.getUserId()) == null) {
+            multipleMessageException.addMessage(
+                    "comment.userId.element.notFound");
         }
 
 
@@ -148,7 +141,6 @@ public class CommentsService extends CrudService<CommentVo, CommentEntity> {
 
         entity.setCourse(getDaoFactory().getCourseDao().read(entityManager, commentVo.getCourseId()));
         entity.setUser(getDaoFactory().getUserDao().read(entityManager, commentVo.getUserId()));
-
         return entity;
     }
 

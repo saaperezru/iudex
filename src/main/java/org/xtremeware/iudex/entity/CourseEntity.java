@@ -21,7 +21,9 @@ import org.xtremeware.iudex.vo.CourseVo;
     query = "SELECT c FROM Course c WHERE c.subject.name LIKE :subjectName AND "
     + "(c.professor.firstName LIKE :professorName OR c.professor.lastName LIKE :professorName) AND c.period.id = :periodId")
 })
-@Table(name = "COURSE")
+@Table(name = "COURSE",
+uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"ID_PROFESSOR", "ID_SUBJECT", "ID_PERIOD"})})
 public class CourseEntity implements Serializable, Entity<CourseVo> {
 
     private static final long serialVersionUID = 1L;

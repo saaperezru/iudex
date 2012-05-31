@@ -44,7 +44,7 @@ public class ConfirmationKeyEntity implements Serializable, Entity<ConfirmationK
         if (object == null) {
             return false;
         }
-        if (!(object instanceof CourseEntity)) {
+        if (!(object instanceof ConfirmationKeyEntity)) {
             return false;
         }
         final ConfirmationKeyEntity other = (ConfirmationKeyEntity) object;

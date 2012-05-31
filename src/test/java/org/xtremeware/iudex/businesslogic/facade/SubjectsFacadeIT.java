@@ -494,7 +494,7 @@ public class SubjectsFacadeIT {
             assertTrue(ex.getMessages().contains("subject.description.tooLong"));
         }
 
-        /*try {
+        try {
             subjectVo.setId(2039372L);
             subjectVo.setName("Materia con nuevo nombre");
             subjectVo.setCode(2019772);
@@ -503,8 +503,7 @@ public class SubjectsFacadeIT {
             subjectsFacade.updateSubject(subjectVo);
             fail();
         } catch (DuplicityException ex) {
-            assertTrue(true);
-        }*/
+        }
 
     }
 

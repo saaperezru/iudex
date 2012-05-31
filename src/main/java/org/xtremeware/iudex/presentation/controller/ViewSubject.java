@@ -16,12 +16,12 @@ import org.xtremeware.iudex.presentation.vovw.SubjectVoVwFull;
 @RequestScoped
 public class ViewSubject {
 
-    public class courseInfo {
+    public class CourseInfo {
 
         private CourseVoVwFull course;
         private List<CommentVoVwFull> comments;
 
-        public courseInfo(CourseVoVwFull course, List<CommentVoVwFull> comments) {
+        public CourseInfo(CourseVoVwFull course, List<CommentVoVwFull> comments) {
             this.course = course;
             this.comments = comments;
         }
@@ -37,7 +37,7 @@ public class ViewSubject {
     @ManagedProperty(value = "#{param['id']}")
     private long id;
     private SubjectVoVwFull subject;
-    private List<courseInfo> courses;
+    private List<CourseInfo> courses;
 
     public long getId() {
         return id;
@@ -51,7 +51,7 @@ public class ViewSubject {
         return subject;
     }
 
-    public List<courseInfo> getCourses() {
+    public List<CourseInfo> getCourses() {
         return courses;
     }
 
@@ -62,7 +62,7 @@ public class ViewSubject {
 //                ((ConfigurableNavigationHandler) FacesContext.getCurrentInstance().getApplication().getNavigationHandler()).performNavigation("notfound");
 //            }
 //            for (CourseVoVwFull c : Config.getInstance().getFacadeFactory().getCoursesFacade().getBySubjectId(id)) {
-//                courses.add(new courseInfo(c, Config.getInstance().getFacadeFactory().getCommentsFacade().getCommentsByCourseId(c.getId())));
+//                courses.add(new CourseInfo(c, Config.getInstance().getFacadeFactory().getCommentsFacade().getCommentsByCourseId(c.getId())));
 //            }
 //        } catch (Exception ex) {
 //            //TODO : Deal with the exception

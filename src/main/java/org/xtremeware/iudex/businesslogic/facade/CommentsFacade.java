@@ -61,7 +61,7 @@ public class CommentsFacade extends AbstractFacade {
 
     public List<CommentVo> getCommentsByCourseId(long courseId) {
         EntityManager entityManager = null;
-        List<CommentVo> commentVos = new ArrayList<CommentVo>();
+        List<CommentVo> commentVos;
         try {
             entityManager = getEntityManagerFactory().createEntityManager();
             commentVos = getServiceFactory().createCommentsService().

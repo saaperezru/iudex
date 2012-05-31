@@ -67,7 +67,7 @@ public class PeriodsFacade extends AbstractFacade {
     }
 
     public List<PeriodVo> listPeriods() {
-        List<PeriodVo> periodVos = new ArrayList<PeriodVo>();
+        List<PeriodVo> periodVos;
         EntityManager entityManager = null;
         try {
             entityManager = getEntityManagerFactory().createEntityManager();

@@ -40,12 +40,14 @@ public class ConfirmationKeyEntity implements Serializable, Entity<ConfirmationK
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
+    public boolean equals(Object object) {
+        if (object == null) {
             return false;
         }
-
-        final ConfirmationKeyEntity other = (ConfirmationKeyEntity) obj;
+        if (!(object instanceof CourseEntity)) {
+            return false;
+        }
+        final ConfirmationKeyEntity other = (ConfirmationKeyEntity) object;
         if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
             return false;
         }

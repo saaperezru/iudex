@@ -23,7 +23,7 @@ import org.xtremeware.iudex.vo.SubjectVoFull;
  */
 public class SubjectsFacadeIT {
 
-    private EntityManager entityManager;
+    //private EntityManager entityManager;
     private SubjectsFacade subjectsFacade = Config.getInstance().getFacadeFactory().getSubjectsFacade();
 
     public SubjectsFacadeIT() {
@@ -36,7 +36,7 @@ public class SubjectsFacadeIT {
 
     @Before
     public void setUp() {
-        entityManager = FacadesTestHelper.createEntityManagerFactory().createEntityManager();
+        //entityManager = FacadesTestHelper.createEntityManagerFactory().createEntityManager();
     }
 
     //@Ignore

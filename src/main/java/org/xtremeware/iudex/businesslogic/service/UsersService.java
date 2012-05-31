@@ -2,22 +2,14 @@ package org.xtremeware.iudex.businesslogic.service;
 
 import java.util.*;
 import javax.persistence.EntityManager;
-import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Create;
-import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Read;
-import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Delete;
-import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Update;
+import org.xtremeware.iudex.businesslogic.service.crudinterfaces.*;
 import org.xtremeware.iudex.dao.AbstractDaoBuilder;
 import org.xtremeware.iudex.dao.ConfirmationKeyDao;
-
 import org.xtremeware.iudex.dao.ForgottenPasswordKeyDao;
-import org.xtremeware.iudex.entity.ConfirmationKeyEntity;
-import org.xtremeware.iudex.entity.ForgottenPasswordKeyEntity;
-import org.xtremeware.iudex.entity.ProgramEntity;
-import org.xtremeware.iudex.entity.UserEntity;
+import org.xtremeware.iudex.entity.*;
 import org.xtremeware.iudex.helper.*;
-import org.xtremeware.iudex.vo.ConfirmationKeyVo;
-import org.xtremeware.iudex.vo.ForgottenPasswordKeyVo;
-import org.xtremeware.iudex.vo.UserVo;
+import org.xtremeware.iudex.vo.*;
+
 
 /**
  *
@@ -51,8 +43,7 @@ public class UsersService extends CrudService<UserVo, UserEntity> {
 
     @Override
     public void validateVoForCreation(EntityManager entityManager, UserVo userVo)
-            throws MultipleMessagesException,
-            ExternalServiceConnectionException, DataBaseException {
+            throws MultipleMessagesException, DataBaseException {
 
         MultipleMessagesException multipleMessagesException =
                 new MultipleMessagesException();
@@ -124,8 +115,7 @@ public class UsersService extends CrudService<UserVo, UserEntity> {
 
     @Override
     public void validateVoForUpdate(EntityManager entityManager, UserVo userVo)
-            throws MultipleMessagesException,
-            ExternalServiceConnectionException, DataBaseException {
+            throws MultipleMessagesException,DataBaseException {
         validateVoForCreation(entityManager, userVo);
         MultipleMessagesException multipleMessagesException =
                 new MultipleMessagesException();
@@ -137,8 +127,7 @@ public class UsersService extends CrudService<UserVo, UserEntity> {
 
     @Override
     public UserEntity voToEntity(EntityManager em, UserVo userVo)
-            throws ExternalServiceConnectionException, MultipleMessagesException,
-            DataBaseException {
+            throws MultipleMessagesException, DataBaseException {
 
         UserEntity userEntity = new UserEntity();
         userEntity.setId(userVo.getId());
@@ -164,8 +153,7 @@ public class UsersService extends CrudService<UserVo, UserEntity> {
 
     public UserVo authenticate(EntityManager entityManager, String userName,
             String password)
-            throws InactiveUserException, ExternalServiceConnectionException,
-            DataBaseException, MultipleMessagesException {
+            throws InactiveUserException,DataBaseException, MultipleMessagesException {
 
         MultipleMessagesException exceptions = new MultipleMessagesException();
 
@@ -207,7 +195,7 @@ public class UsersService extends CrudService<UserVo, UserEntity> {
     }
 
     public UserVo activateAccount(EntityManager entityManager, String confirmationKey)
-            throws ExternalServiceConnectionException, DataBaseException {
+            throws DataBaseException {
 
         ConfirmationKeyDao dao =
                 getDaoFactory().getConfirmationKeyDao();

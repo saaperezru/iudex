@@ -3,7 +3,7 @@ package org.xtremeware.iudex.businesslogic.facade;
 import java.util.*;
 import javax.persistence.*;
 import org.xtremeware.iudex.businesslogic.DuplicityException;
-import org.xtremeware.iudex.businesslogic.helper.FacadesHelper;
+import org.xtremeware.iudex.businesslogic.helper.FacadesHelperImplementation;
 import org.xtremeware.iudex.businesslogic.service.ServiceBuilder;
 import org.xtremeware.iudex.helper.DataBaseException;
 import org.xtremeware.iudex.helper.MultipleMessagesException;
@@ -26,10 +26,10 @@ public class ProgramsFacade extends AbstractFacade {
             transaction.commit();
         } catch (Exception exception) {
             getServiceFactory().getLogService().error(exception.getMessage(), exception);
-            FacadesHelper.checkExceptionAndRollback(entityManager, transaction, exception, DataBaseException.class);
-            FacadesHelper.rollbackTransaction(entityManager, transaction, exception);
+            FacadesHelperImplementation.checkExceptionAndRollback(entityManager, transaction, exception, DataBaseException.class);
+            FacadesHelperImplementation.rollbackTransaction(entityManager, transaction, exception);
         } finally {
-            FacadesHelper.closeEntityManager(entityManager);
+            FacadesHelperImplementation.closeEntityManager(entityManager);
         }
     }
 
@@ -55,15 +55,13 @@ public class ProgramsFacade extends AbstractFacade {
             transaction.begin();
             programVo = getServiceFactory().getProgramsService().create(entityManager, programVo);
             transaction.commit();
-        } catch (MultipleMessagesException exception) {
-            throw exception;
         } catch (Exception exception) {
             getServiceFactory().getLogService().error(exception.getMessage(), exception);
-            FacadesHelper.checkException(exception, MultipleMessagesException.class);
-            FacadesHelper.checkDuplicityViolation(entityManager, transaction, exception);
-            FacadesHelper.rollbackTransaction(entityManager, transaction, exception);
+            FacadesHelperImplementation.checkException(exception, MultipleMessagesException.class);
+            FacadesHelperImplementation.checkDuplicityViolation(entityManager, transaction, exception);
+            FacadesHelperImplementation.rollbackTransaction(entityManager, transaction, exception);
         } finally {
-            FacadesHelper.closeEntityManager(entityManager);
+            FacadesHelperImplementation.closeEntityManager(entityManager);
         }
         return programVo;
     }
@@ -83,7 +81,7 @@ public class ProgramsFacade extends AbstractFacade {
                 getServiceFactory().getLogService().error(e.getMessage(), e);
                 throw new RuntimeException(e);
             } finally {
-                FacadesHelper.closeEntityManager(entityManager);
+                FacadesHelperImplementation.closeEntityManager(entityManager);
             }
         }
         return programVos;
@@ -99,7 +97,7 @@ public class ProgramsFacade extends AbstractFacade {
             getServiceFactory().getLogService().error(exception.getMessage(), exception);
             throw new RuntimeException(exception);
         } finally {
-            FacadesHelper.closeEntityManager(entityManager);
+            FacadesHelperImplementation.closeEntityManager(entityManager);
         }
         return programVos;
     }

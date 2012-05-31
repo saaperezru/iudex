@@ -4,8 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.businesslogic.DuplicityException;
-import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Read;
-import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Delete;
+import org.xtremeware.iudex.businesslogic.service.crudinterfaces.*;
 import org.xtremeware.iudex.dao.AbstractDaoBuilder;
 import org.xtremeware.iudex.dao.BinaryRatingDao;
 import org.xtremeware.iudex.entity.*;
@@ -50,14 +49,13 @@ public abstract class BinaryRatingService<F extends Entity<BinaryRatingVo>> {
     }
 
     public BinaryRatingVo create(EntityManager entityManager, BinaryRatingVo binaryRatingVo)
-            throws MultipleMessagesException, ExternalServiceConnectionException,
-            DataBaseException, DuplicityException {
+            throws MultipleMessagesException, DataBaseException, DuplicityException {
         validateVoForCreation(entityManager, binaryRatingVo);
         try {
             F ratingEntity = getDao().getByEvaluatedObjectIdAndUserId(entityManager,
                     binaryRatingVo.getEvaluatedObjectId(), binaryRatingVo.getUserId());
             if (ratingEntity == null) {
-                F entity = voToEntity(entityManager,binaryRatingVo);
+                F entity = voToEntity(entityManager, binaryRatingVo);
                 getDao().create(entityManager, entity);
                 return entity.toVo();
             } else {
@@ -117,11 +115,9 @@ public abstract class BinaryRatingService<F extends Entity<BinaryRatingVo>> {
 
     public abstract void validateVoForCreation(EntityManager entityManager,
             BinaryRatingVo binaryRatingVo)
-            throws MultipleMessagesException,
-            ExternalServiceConnectionException, DataBaseException;
+            throws MultipleMessagesException, DataBaseException;
 
     public abstract F voToEntity(EntityManager entityManager,
             BinaryRatingVo binaryRatingVo)
-            throws MultipleMessagesException,
-            ExternalServiceConnectionException, DataBaseException;
+            throws MultipleMessagesException, DataBaseException;
 }

@@ -12,15 +12,15 @@ import org.xtremeware.iudex.vo.RatingSummaryVo;
  */
 public interface BinaryRatingDao<E extends Entity> extends CrudDao<E> {
 
-    public List<E> getByEvaluatedObjectId(EntityManager entityManager,
+    List<E> getByEvaluatedObjectId(EntityManager entityManager,
             Long evaluatedObjectId) throws DataBaseException;
 
-    public E getByEvaluatedObjectIdAndUserId(EntityManager entityManager,
+    E getByEvaluatedObjectIdAndUserId(EntityManager entityManager,
             Long evaluatedObjectId, Long userId) throws DataBaseException;
 
-    public List<E> getByUserId(EntityManager entityManager, Long userId) 
-            throws DataBaseException;          
+    List<E> getByUserId(EntityManager entityManager, Long userId)
+            throws DataBaseException;
 
-    public RatingSummaryVo getSummary(EntityManager entityManager, Long evaluatedObjectId)
+    RatingSummaryVo getSummary(EntityManager entityManager, Long evaluatedObjectId)
             throws DataBaseException;
 }

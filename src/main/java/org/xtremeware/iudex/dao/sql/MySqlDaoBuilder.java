@@ -15,7 +15,7 @@ import org.xtremeware.iudex.entity.*;
  *
  * @author healarconr
  */
-public class MySqlDaoBuilder implements AbstractDaoBuilder {
+public final class MySqlDaoBuilder implements AbstractDaoBuilder {
 
     private CommentDao commentDao;
     private BinaryRatingDao<CommentRatingEntity> commentRatingDao;

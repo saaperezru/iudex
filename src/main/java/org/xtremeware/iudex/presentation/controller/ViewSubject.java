@@ -1,14 +1,9 @@
 package org.xtremeware.iudex.presentation.controller;
 
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.faces.application.ConfigurableNavigationHandler;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
-import javax.faces.context.FacesContext;
-import org.xtremeware.iudex.helper.Config;
 import org.xtremeware.iudex.presentation.vovw.CommentVoVwFull;
 import org.xtremeware.iudex.presentation.vovw.CourseVoVwFull;
 import org.xtremeware.iudex.presentation.vovw.SubjectVoVwFull;

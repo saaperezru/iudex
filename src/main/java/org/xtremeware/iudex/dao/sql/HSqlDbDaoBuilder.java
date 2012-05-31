@@ -15,7 +15,7 @@ import org.xtremeware.iudex.entity.*;
  *
  * @author healarconr
  */
-public class HSqlDbDaoBuilder implements AbstractDaoBuilder {
+public final class HSqlDbDaoBuilder implements AbstractDaoBuilder {
 
     private CommentDao commentDao;
     private BinaryRatingDao<CommentRatingEntity> commentRatingDao;

@@ -1,28 +1,13 @@
 package org.xtremeware.iudex.businesslogic.helper;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
-import org.hibernate.exception.ConstraintViolationException;
+import javax.persistence.*;
 import org.xtremeware.iudex.businesslogic.DuplicityException;
-import org.xtremeware.iudex.helper.Config;
 
 /**
  *
- * @author healarconr
+ * @author josebermeo
  */
-public class FacadesHelper {
-
-    private static <E extends Exception> void checkException(EntityManager entityManager,
-            EntityTransaction transaction, Exception exception, Class<E> exceptionClass,
-            boolean rollback) throws
-            E {
-        if (exceptionClass.isInstance(exception)) {
-            if (rollback) {
-                rollbackTransaction(entityManager, transaction);
-            }
-            throw exceptionClass.cast(exception);
-        }
-    }
+public interface FacadesHelper {
 
     /**
      * Checks if the exception is an instance of the exception class. If so,
@@ -33,29 +18,14 @@ public class FacadesHelper {
      * @param exception the exception to check
      * @param exceptionClass the exception class
      */
-    public static <E extends Exception> void checkExceptionAndRollback(
+    <E extends Exception> void checkExceptionAndRollback(
             EntityManager entityManager,
             EntityTransaction transaction, Exception exception, Class<E> exceptionClass) throws
-            E {
-        checkException(entityManager, transaction, exception, exceptionClass, true);
-    }
+            E;
 
-    public static void checkDuplicityViolation(
+    void checkDuplicityViolation(
             EntityManager entityManager,
-            EntityTransaction transaction, Throwable exception) throws DuplicityException {
-        if (exception != null) {
-            if (exception instanceof ConstraintViolationException) {
-                checkExceptionAndRollback(
-                        entityManager,
-                        transaction,
-                        new DuplicityException("entity.exists", exception.getCause()),
-                        DuplicityException.class);
-            }else{
-                checkDuplicityViolation(entityManager, transaction,  exception.getCause());
-            }
-        }
-
-    }
+            EntityTransaction transaction, Throwable exception) throws DuplicityException;
 
     /**
      * Checks if the exception is an instance of the exception class. If so,
@@ -64,22 +34,9 @@ public class FacadesHelper {
      * @param ex the exception to check
      * @param exceptionClass the exception class
      */
-    public static <E extends Exception> void checkException(Exception ex,
+    <E extends Exception> void checkException(Exception ex,
             Class<E> exceptionClass) throws
-            E {
-        checkException(null, null, ex, exceptionClass, false);
-    }
-
-    /**
-     * Silently rolls back a transaction and logs possible exceptions
-     *
-     * @param em the entity manager
-     * @param tx the transaction
-     */
-    private static void rollbackTransaction(EntityManager em,
-            EntityTransaction tx) {
-        rollbackTransaction(em, tx, null);
-    }
+            E;
 
     /**
      * Rolls back a transaction and throws a RuntimeException to wrap the
@@ -89,34 +46,14 @@ public class FacadesHelper {
      * @param tx the entity transaction
      * @param exception the exception to wrap
      */
-    public static void rollbackTransaction(EntityManager em,
+    void rollbackTransaction(EntityManager em,
             EntityTransaction tx,
-            Exception exception) {
-        try {
-            if (em != null && tx != null) {
-                tx.rollback();
-            }
-        } catch (Exception ex) {
-            Config.getInstance().getServiceFactory().getLogService().error(ex.getMessage(), ex);
-        }
-        if (exception != null) {
-            throw new RuntimeException(exception);
-        }
-    }
+            Exception exception);
 
     /**
      * Silently closes the entity manager and logs possible exceptions
      *
      * @param em
      */
-    public static void closeEntityManager(EntityManager em) {
-        try {
-            if (em != null) {
-                em.clear();
-                em.close();
-            }
-        } catch (Exception ex) {
-            Config.getInstance().getServiceFactory().getLogService().error(ex.getMessage(), ex);
-        }
-    }
+    void closeEntityManager(EntityManager em);
 }

@@ -35,12 +35,10 @@ public class AccountConfirmation {
     }
 
     private void checkConfirmation() {
-        if (key != null) {
-            if (Config.getInstance().getFacadeFactory().getUsersFacade().
-                    activateUser(key) != null) {
-                confirmed = true;
-                return;
-            }
+        if (key != null && Config.getInstance().getFacadeFactory().getUsersFacade().
+                activateUser(key) != null) {
+            confirmed = true;
+            return;
         }
         confirmed = false;
     }

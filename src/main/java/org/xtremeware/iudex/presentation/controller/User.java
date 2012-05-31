@@ -14,7 +14,7 @@ import org.xtremeware.iudex.helper.Role;
 public class User implements Serializable {
 
     // TODO: Make this option configurable
-    private static int LOGIN_ATTEMPTS_FOR_CAPTCHA = 3;
+    private static final int LOGIN_ATTEMPTS_FOR_CAPTCHA = 3;
     private Long id;
     private String firstName;
     private String lastName;

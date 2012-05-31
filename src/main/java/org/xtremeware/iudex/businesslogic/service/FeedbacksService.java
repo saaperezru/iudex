@@ -2,7 +2,6 @@ package org.xtremeware.iudex.businesslogic.service;
 
 import java.util.*;
 import javax.persistence.EntityManager;
-import org.xtremeware.iudex.businesslogic.InvalidVoException;
 import org.xtremeware.iudex.businesslogic.service.crudinterfaces.*;
 import org.xtremeware.iudex.dao.AbstractDaoBuilder;
 import org.xtremeware.iudex.entity.FeedbackEntity;
@@ -14,6 +13,8 @@ import org.xtremeware.iudex.vo.FeedbackVo;
  * @author josebermeo
  */
 public class FeedbacksService extends CrudService<FeedbackVo, FeedbackEntity> {
+    
+    private static final int MAX_FEEDBACK_LENGTH = 2000;
 
     /**
      * FeedbacksService constructor
@@ -37,8 +38,7 @@ public class FeedbacksService extends CrudService<FeedbackVo, FeedbackEntity> {
      */
     @Override
     public void validateVoForCreation(EntityManager entityManager, FeedbackVo feedbackVo)
-            throws ExternalServiceConnectionException, MultipleMessagesException,
-            DataBaseException {
+            throws MultipleMessagesException,DataBaseException {
 
         MultipleMessagesException multipleMessageException =
                 new MultipleMessagesException();
@@ -63,7 +63,7 @@ public class FeedbacksService extends CrudService<FeedbackVo, FeedbackEntity> {
                     "feedback.content.null");
         } else {
             feedbackVo.setContent(SecurityHelper.sanitizeHTML(feedbackVo.getContent()));
-            if (feedbackVo.getContent().length() > 2000) {
+            if (feedbackVo.getContent().length() > MAX_FEEDBACK_LENGTH) {
                 multipleMessageException.addMessage(
                         "feedback.content.tooLong");
             }
@@ -79,7 +79,7 @@ public class FeedbacksService extends CrudService<FeedbackVo, FeedbackEntity> {
 
     @Override
     public void validateVoForUpdate(EntityManager entityManager, FeedbackVo feedbackVo)
-            throws MultipleMessagesException, ExternalServiceConnectionException, DataBaseException {
+            throws MultipleMessagesException, DataBaseException {
 
         validateVoForCreation(entityManager, feedbackVo);
 
@@ -103,8 +103,7 @@ public class FeedbacksService extends CrudService<FeedbackVo, FeedbackEntity> {
      */
     @Override
     public FeedbackEntity voToEntity(EntityManager entityManager, FeedbackVo feedbackVo)
-            throws ExternalServiceConnectionException,
-            MultipleMessagesException, DataBaseException {
+            throws MultipleMessagesException, DataBaseException {
 
         FeedbackEntity feedbackEntity = new FeedbackEntity();
         feedbackEntity.setContent(feedbackVo.getContent());
@@ -125,7 +124,7 @@ public class FeedbacksService extends CrudService<FeedbackVo, FeedbackEntity> {
      * @return A list of FeedbackVo
      */
     public List<FeedbackVo> search(EntityManager entityManager, String query)
-            throws ExternalServiceConnectionException, DataBaseException {
+            throws DataBaseException {
         query = SecurityHelper.sanitizeHTML(query);
 
         List<FeedbackEntity> feedbackEntitys = getDaoFactory().getFeedbackDao().

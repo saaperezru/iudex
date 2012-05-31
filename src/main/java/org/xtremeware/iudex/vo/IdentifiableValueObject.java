@@ -6,7 +6,7 @@ package org.xtremeware.iudex.vo;
  */
 public abstract class IdentifiableValueObject<E> implements ValueObject {
 
-    protected E id;
+    private E id;
 
     public E getId() {
         return id;

@@ -6,7 +6,6 @@ import javax.persistence.EntityManager;
 import static org.junit.Assert.*;
 import org.junit.*;
 import org.xtremeware.iudex.businesslogic.DuplicityException;
-import org.xtremeware.iudex.businesslogic.InvalidVoException;
 import org.xtremeware.iudex.entity.Entity;
 import org.xtremeware.iudex.helper.Config;
 import org.xtremeware.iudex.helper.DataBaseException;
@@ -204,7 +203,7 @@ public class PeriodsFacadeIT {
     }
 
     @Test()
-    public void test_BL_21_3() throws InvalidVoException, Exception {
+    public void test_BL_21_3() throws Exception {
         PeriodsFacade periodsFacade = Config.getInstance().getFacadeFactory().
                 getPeriodsFacade();
         List<PeriodVo> periodVoList = periodsFacade.listPeriods();

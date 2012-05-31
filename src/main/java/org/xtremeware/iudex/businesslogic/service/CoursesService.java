@@ -17,7 +17,8 @@ public class CoursesService extends CrudService<CourseVo, CourseEntity> {
     }
 
     @Override
-    protected void validateVoForCreation(EntityManager entityManager, CourseVo course) throws MultipleMessagesException, ExternalServiceConnectionException, DataBaseException {
+    protected void validateVoForCreation(EntityManager entityManager, CourseVo course) 
+            throws MultipleMessagesException, DataBaseException {
         MultipleMessagesException multipleMessageException =
                 new MultipleMessagesException();
         if (course == null) {
@@ -65,7 +66,7 @@ public class CoursesService extends CrudService<CourseVo, CourseEntity> {
 
     @Override
     public void validateVoForUpdate(EntityManager entityManager, CourseVo courseVo)
-            throws MultipleMessagesException, ExternalServiceConnectionException, DataBaseException {
+            throws MultipleMessagesException, DataBaseException {
         validateVoForCreation(entityManager, courseVo);
         MultipleMessagesException multipleMessageException =
                 new MultipleMessagesException();
@@ -100,7 +101,7 @@ public class CoursesService extends CrudService<CourseVo, CourseEntity> {
 
     public List<CourseVo> getSimilarCourses(EntityManager entityManager,
             String professorName, String subjectName, Long preiodId)
-            throws ExternalServiceConnectionException, DataBaseException {
+            throws DataBaseException {
 
         List<CourseEntity> coursesByProfessorNameLikeAndSubjectNameLike =
                 getDaoFactory().getCourseDao().
@@ -118,7 +119,7 @@ public class CoursesService extends CrudService<CourseVo, CourseEntity> {
 
     @Override
     public CourseEntity voToEntity(EntityManager entityManager, CourseVo courseVo)
-            throws ExternalServiceConnectionException, MultipleMessagesException,
+            throws MultipleMessagesException,
             DataBaseException {
 
         CourseEntity course = new CourseEntity();

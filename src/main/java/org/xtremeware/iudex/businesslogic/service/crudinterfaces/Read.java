@@ -10,6 +10,6 @@ import org.xtremeware.iudex.helper.DataBaseException;
  */
 public interface Read<E extends Entity> {
 
-    public E getById(EntityManager em, long entityId)
+    E getById(EntityManager em, long entityId)
             throws DataBaseException;
 }

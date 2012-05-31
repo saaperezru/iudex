@@ -1,7 +1,6 @@
 package org.xtremeware.iudex.businesslogic.service;
 
 import javax.persistence.EntityManager;
-import org.xtremeware.iudex.businesslogic.InvalidVoException;
 import org.xtremeware.iudex.businesslogic.service.crudinterfaces.*;
 import org.xtremeware.iudex.dao.AbstractDaoBuilder;
 import org.xtremeware.iudex.entity.CommentRatingEntity;
@@ -33,8 +32,7 @@ public class CommentRatingsService extends BinaryRatingService<CommentRatingEnti
      */
     @Override
     public void validateVoForCreation(EntityManager entityManager, BinaryRatingVo binaryRatingVo)
-            throws MultipleMessagesException, ExternalServiceConnectionException,
-            DataBaseException {
+            throws MultipleMessagesException, DataBaseException {
 
         MultipleMessagesException multipleMessageException =
                 new MultipleMessagesException();
@@ -80,8 +78,7 @@ public class CommentRatingsService extends BinaryRatingService<CommentRatingEnti
      */
     @Override
     public CommentRatingEntity voToEntity(EntityManager entityManager, BinaryRatingVo binaryRatingVo)
-            throws MultipleMessagesException,
-            ExternalServiceConnectionException, DataBaseException {
+            throws MultipleMessagesException, DataBaseException {
 
         CommentRatingEntity commentRatingEntity = new CommentRatingEntity();
         commentRatingEntity.setId(binaryRatingVo.getId());

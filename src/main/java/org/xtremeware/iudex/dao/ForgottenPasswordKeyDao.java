@@ -19,7 +19,7 @@ public interface ForgottenPasswordKeyDao extends
      * @param key the key reference to search
      * @return the ForgottenPasswordKeyEntity with the given key
      */
-    public ForgottenPasswordKeyEntity getByKey(EntityManager em, String key)
+    ForgottenPasswordKeyEntity getByKey(EntityManager em, String key)
             throws DataBaseException;
 
     /**
@@ -29,6 +29,6 @@ public interface ForgottenPasswordKeyDao extends
      * @param userName the name of the user
      * @return the ForgottenPasswordKeyEntity
      */
-    public ForgottenPasswordKeyEntity getByUserName(EntityManager em,
+    ForgottenPasswordKeyEntity getByUserName(EntityManager em,
             String userName) throws DataBaseException;
 }

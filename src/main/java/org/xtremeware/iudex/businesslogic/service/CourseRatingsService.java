@@ -1,7 +1,6 @@
 package org.xtremeware.iudex.businesslogic.service;
 
 import javax.persistence.EntityManager;
-import org.xtremeware.iudex.businesslogic.InvalidVoException;
 import org.xtremeware.iudex.businesslogic.service.crudinterfaces.*;
 import org.xtremeware.iudex.dao.AbstractDaoBuilder;
 import org.xtremeware.iudex.entity.CourseRatingEntity;
@@ -13,6 +12,9 @@ import org.xtremeware.iudex.vo.CourseRatingVo;
  * @author josebermeo
  */
 public class CourseRatingsService extends CrudService<CourseRatingVo, CourseRatingEntity> {
+    
+    private static final float MAX_RATE = 5.0F;
+    private static final float MIN_RATE = 0.0F;
 
     /**
      * CourseRatingsService constructor
@@ -34,7 +36,8 @@ public class CourseRatingsService extends CrudService<CourseRatingVo, CourseRati
 	 * @throws InvalidVoException
 	 */
 	@Override
-	protected void validateVoForCreation(EntityManager entityManager, CourseRatingVo valueObject) throws MultipleMessagesException, ExternalServiceConnectionException, DataBaseException {
+	protected void validateVoForCreation(EntityManager entityManager, CourseRatingVo valueObject) 
+                throws MultipleMessagesException, DataBaseException {
 		MultipleMessagesException multipleMessageException =
 				new MultipleMessagesException();
 		if (valueObject == null) {
@@ -57,7 +60,7 @@ public class CourseRatingsService extends CrudService<CourseRatingVo, CourseRati
 			multipleMessageException.addMessage(
 					"courseRating.userId.notFound");
 		}
-		if (valueObject.getValue() < 0.0 || valueObject.getValue() > 5.0) {
+		if (valueObject.getValue() < MIN_RATE || valueObject.getValue() > MAX_RATE) {
 			multipleMessageException.addMessage(
 					"courseRating.value.invalidRange");
 		}
@@ -67,7 +70,7 @@ public class CourseRatingsService extends CrudService<CourseRatingVo, CourseRati
 	}
 	@Override
     public void validateVoForUpdate(EntityManager entityManager, CourseRatingVo courseRatingVo)
-            throws MultipleMessagesException, ExternalServiceConnectionException, DataBaseException {
+            throws MultipleMessagesException, DataBaseException {
 
         validateVoForCreation(entityManager, courseRatingVo);
 

@@ -192,6 +192,9 @@ public class CoursesFacadeIT {
         search = facade.search(query);
         assertNotNull(search);
         assertEquals(search.size(), 0);
+        search = facade.search(null);
+        assertNotNull(search);
+        assertEquals(search.size(), 0);
     }
 
     /**
@@ -278,6 +281,7 @@ public class CoursesFacadeIT {
             expected.setRatingCount(0L);
 
             CourseVo result = facade.createCourse(fabio.getVo().getId(), is2.getVo().getId(), 1L);
+            expected.setId(result.getId());
             assertEquals(expected, result);
             assertTrue("Invalid id for created course", result.getId() > 0);
 

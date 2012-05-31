@@ -10,33 +10,33 @@ import org.xtremeware.iudex.entity.SubjectRatingEntity;
  */
 public interface AbstractDaoBuilder {
 
-    public CommentDao getCommentDao();
+    CommentDao getCommentDao();
 
-    public BinaryRatingDao<CommentRatingEntity> getCommentRatingDao();
+    BinaryRatingDao<CommentRatingEntity> getCommentRatingDao();
 
-    public ConfirmationKeyDao getConfirmationKeyDao();
+    ConfirmationKeyDao getConfirmationKeyDao();
 
-    public CourseDao getCourseDao();
+    CourseDao getCourseDao();
 
-    public CourseRatingDao getCourseRatingDao();
+    CourseRatingDao getCourseRatingDao();
 
-    public FeedbackDao getFeedbackDao();
+    FeedbackDao getFeedbackDao();
 
-    public FeedbackTypeDao getFeedbackTypeDao();
-	
-	public ForgottenPasswordKeyDao getForgottenPasswordKeyDao();
+    FeedbackTypeDao getFeedbackTypeDao();
 
-    public PeriodDao getPeriodDao();
+    ForgottenPasswordKeyDao getForgottenPasswordKeyDao();
 
-    public ProfessorDao getProfessorDao();
+    PeriodDao getPeriodDao();
 
-    public BinaryRatingDao<ProfessorRatingEntity> getProfessorRatingDao();
+    ProfessorDao getProfessorDao();
 
-    public ProgramDao getProgramDao();
+    BinaryRatingDao<ProfessorRatingEntity> getProfessorRatingDao();
 
-    public SubjectDao getSubjectDao();
+    ProgramDao getProgramDao();
 
-    public BinaryRatingDao<SubjectRatingEntity> getSubjectRatingDao();
+    SubjectDao getSubjectDao();
 
-    public UserDao getUserDao();
+    BinaryRatingDao<SubjectRatingEntity> getSubjectRatingDao();
+
+    UserDao getUserDao();
 }

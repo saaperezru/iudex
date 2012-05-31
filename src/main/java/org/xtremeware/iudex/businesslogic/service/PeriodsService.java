@@ -2,7 +2,6 @@ package org.xtremeware.iudex.businesslogic.service;
 
 import java.util.*;
 import javax.persistence.EntityManager;
-import org.xtremeware.iudex.businesslogic.InvalidVoException;
 import org.xtremeware.iudex.businesslogic.service.crudinterfaces.*;
 import org.xtremeware.iudex.dao.AbstractDaoBuilder;
 import org.xtremeware.iudex.entity.PeriodEntity;
@@ -16,9 +15,9 @@ import org.xtremeware.iudex.vo.PeriodVo;
  */
 public class PeriodsService extends CrudService<PeriodVo, PeriodEntity> {
 
-    private final int MIN_YEAR = 1000;
-    private final int MIN_SEMESTER = 1;
-    private final int MAX_SEMESTER = 3;
+    private static final int MIN_YEAR = 1000;
+    private static final int MIN_SEMESTER = 1;
+    private static final int MAX_SEMESTER = 3;
 
     /**
      * Constructor
@@ -82,8 +81,7 @@ public class PeriodsService extends CrudService<PeriodVo, PeriodEntity> {
 
     @Override
     public void validateVoForUpdate(EntityManager entityManager, PeriodVo periodVo)
-            throws MultipleMessagesException, ExternalServiceConnectionException,
-            DataBaseException {
+            throws MultipleMessagesException, DataBaseException {
         
         validateVoForCreation(entityManager, periodVo);
         

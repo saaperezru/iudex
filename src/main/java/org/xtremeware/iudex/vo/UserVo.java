@@ -22,8 +22,8 @@ public class UserVo extends IdentifiableValueObject<Long> implements ValueObject
             return false;
         }
         final UserVo other = (UserVo) obj;
-        if (this.id != other.id 
-                && (this.id == null || !this.id.equals(other.id))) {
+        if (this.getId() != other.getId() 
+                && (this.getId() == null || !this.getId().equals(other.getId()))) {
             return false;
         }
         if ((this.firstName == null) ? (other.firstName != null)
@@ -59,7 +59,7 @@ public class UserVo extends IdentifiableValueObject<Long> implements ValueObject
     @Override
     public int hashCode() {
         int hash = 5;
-        hash = 59 * hash + (this.id != null ? this.id.hashCode() : 0);
+        hash = 59 * hash + (this.getId() != null ? this.getId().hashCode() : 0);
         hash = 59 * hash + (this.firstName != null ? this.firstName.hashCode() : 0);
         hash = 59 * hash + (this.lastName != null ? this.lastName.hashCode() : 0);
         hash = 59 * hash + (this.userName != null ? this.userName.hashCode() : 0);
@@ -72,7 +72,7 @@ public class UserVo extends IdentifiableValueObject<Long> implements ValueObject
 
     @Override
     public String toString() {
-        return "UserVo{" + "id=" + id + ", firstName=" + firstName
+        return "UserVo{" + "id=" + getId() + ", firstName=" + firstName
                 + ", lastName=" + lastName + ", userName=" + userName
                 + ", password=" + password + ", role=" + role + ", active="
                 + active + ", programsId=" + programsId + '}';

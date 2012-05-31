@@ -16,7 +16,7 @@ import org.xtremeware.iudex.helper.DataBaseException;
 public class CommentsCreate implements Create<CommentEntity> {
 
     private AbstractDaoBuilder daoFactory;
-    public final int MAX_COMMENTS_PER_DAY;
+    private final int MAX_COMMENTS_PER_DAY;
 
     public CommentsCreate(AbstractDaoBuilder daoFactory) {
         this.daoFactory = daoFactory;

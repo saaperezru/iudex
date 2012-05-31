@@ -10,6 +10,6 @@ import org.xtremeware.iudex.helper.DataBaseException;
  */
 public interface Delete<E extends Entity> {
 
-    public void delete(EntityManager entityManager, E entity)
+    void delete(EntityManager entityManager, E entity)
             throws DataBaseException;
 }

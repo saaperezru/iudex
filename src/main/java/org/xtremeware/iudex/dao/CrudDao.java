@@ -10,17 +10,15 @@ import org.xtremeware.iudex.helper.DataBaseException;
  */
 public interface CrudDao<E extends Entity> {
 
-    public void create(EntityManager entityManager, E entity)
-            throws DataBaseException;
-    
-    public E read(EntityManager entityManager, long entityId)
+    void create(EntityManager entityManager, E entity)
             throws DataBaseException;
 
-    public E update(EntityManager entityManager, E entity)
+    E read(EntityManager entityManager, long entityId)
             throws DataBaseException;
 
-    public void delete(EntityManager entityManager, long entityId)
+    E update(EntityManager entityManager, E entity)
             throws DataBaseException;
 
-    
+    void delete(EntityManager entityManager, long entityId)
+            throws DataBaseException;
 }

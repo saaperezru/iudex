@@ -140,7 +140,7 @@ public class PeriodsFacadeIT {
     public void test_BL_21_1() throws DataBaseException {
         PeriodsFacade periodsFacade = Config.getInstance().getFacadeFactory().
                 getPeriodsFacade();
-        Long id = 1L;
+        Long id = 7L;
         periodsFacade.deletePeriod(id);
         int result = entityManager.createQuery(
                 "SELECT COUNT(p) FROM Period p WHERE p.id = :id", Long.class).
@@ -188,7 +188,7 @@ public class PeriodsFacadeIT {
                     intValue();
             assertEquals(0, size);
         }
-        id = 1L;
+        id = 8L;
         try {
             periodsFacade.deletePeriod(id);
         } catch (Exception ex) {

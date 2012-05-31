@@ -245,8 +245,8 @@ INSERT INTO PERIOD_ VALUES ('3','2009','1');
 INSERT INTO PERIOD_ VALUES ('4','2009','2');
 INSERT INTO PERIOD_ VALUES ('5','2010','1');
 INSERT INTO PERIOD_ VALUES ('6','2010','2');
-INSERT INTO PERIOD_ VALUES ('7','2011','1');
-INSERT INTO PERIOD_ VALUES ('8','2011','2');
+INSERT INTO PERIOD_ VALUES ('7','2011','1'); -- BL_21_1. Deleted in this test. Don't use it
+INSERT INTO PERIOD_ VALUES ('8','2011','2'); -- BL_21_2. Deleted in this test. Don't use it.
 INSERT INTO PERIOD_ VALUES ('9','2012','1');
 
 -- INSERT INTO PROGRAM
@@ -348,8 +348,8 @@ INSERT into SUBJECT values ('2042911','TALLER CALIFICABLE','',2042911);
 
 -- INSERT INTO COURSES
 --MARIO COURSES
-INSERT into COURSE values ('1','1','2016702','1','4.3','4');
-INSERT into COURSE values ('2','1','2019772','1','4.2','4');
+INSERT into COURSE values ('1','1','2016702','1','4.3','4'); -- BL_19_1. Deleted in this test. Don't use it.
+INSERT into COURSE values ('2','1','2019772','1','4.2','4'); -- BL_19_1. Deleted in this test. Don't use it.
 INSERT into COURSE values ('3','1','2016025','1','3.1','4');
 --FABIO COURSES
 INSERT into COURSE values ('4','2','2019772','1','3.7','4');

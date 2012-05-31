@@ -11,57 +11,51 @@ import org.xtremeware.iudex.vo.CourseVo;
 public class CoursesService extends CrudService<CourseVo, CourseEntity> {
 
     public CoursesService(AbstractDaoBuilder daoFactory,
-            Create create, Read read, Update update, Remove remove) {
-        super(daoFactory, create, read, update, remove);
+            Create create, Read read, Update update, Delete delete) {
+        super(daoFactory, create, read, update, delete);
 
     }
 
     @Override
-    public void validateVoForCreation(EntityManager entityManager, CourseVo courseVo) throws
-            MultipleMessagesException, DataBaseException {
+    protected void validateVoForCreation(EntityManager entityManager, CourseVo course) throws MultipleMessagesException, ExternalServiceConnectionException, DataBaseException {
         MultipleMessagesException multipleMessageException =
                 new MultipleMessagesException();
-        if (courseVo == null) {
+        if (course == null) {
             multipleMessageException.addMessage("course.null");
             throw multipleMessageException;
         }
-        if (courseVo.getPeriodId() == null) {
+        if (course.getPeriodId() == null) {
             multipleMessageException.addMessage(
                     "course.periodId.null");
-        } else if (getDaoFactory().getPeriodDao().getById(entityManager,
-                courseVo.getPeriodId()) == null) {
+        } else if (getDaoFactory().getPeriodDao().read(entityManager,
+                course.getPeriodId()) == null) {
             multipleMessageException.addMessage(
-                    "course.periodId.elementNotFound");
+                    "course.periodId.notFound");
         }
-        if (courseVo.getProfessorId() == null) {
+        if (course.getProfessorId() == null) {
             multipleMessageException.addMessage(
                     "course.professorId.null");
-        } else if (getDaoFactory().getProfessorDao().getById(entityManager, courseVo.getProfessorId()) == null) {
+        } else if (getDaoFactory().getProfessorDao().read(entityManager, course.getProfessorId()) == null) {
             multipleMessageException.addMessage(
-                    "course.professorId.elementNotFound");
+                    "course.professorId.notFound");
         }
-        if (courseVo.getSubjectId() == null) {
+        if (course.getSubjectId() == null) {
             multipleMessageException.addMessage(
                     "course.subjectId.null");
-        } else if (getDaoFactory().getSubjectDao().getById(entityManager, courseVo.getSubjectId()) == null) {
-            multipleMessageException.addMessage(
-                    "course.subjectId.elementNotFound");
+        } else if (getDaoFactory().getSubjectDao().read(entityManager, course.getSubjectId()) == null) {
+            multipleMessageException.addMessage("course.subjectId.notFound");
         }
-        if (courseVo.getRatingCount() == null) {
+        if ((course.getRatingCount() == 0 && course.getRatingAverage() != 0)) {
             multipleMessageException.addMessage(
-                    "course.ratingCount.null");
-        } else if (courseVo.getRatingCount() < 0) {
-            multipleMessageException.addMessage(
-                    "Long ratingCount in the provided CourseVo must be greater than one");
+                    "course.rating.invalid");
         }
-        if (courseVo.getRatingAverage() == null) {
+        if (course.getRatingCount() < 0) {
             multipleMessageException.addMessage(
-                    "course.ratingAverage.null");
+                    "course.rating.invalidCount");
         }
-        if (courseVo.getRatingAverage() < 0) {
+        if (course.getRatingAverage() < 0) {
             multipleMessageException.addMessage(
-                    "Double ratingAverage in the provided "
-                    + "CourseVo must be greater than one");
+                    "course.rating.invalidAverage");
         }
 
         if (!multipleMessageException.getMessages().isEmpty()) {
@@ -104,15 +98,15 @@ public class CoursesService extends CrudService<CourseVo, CourseEntity> {
         return list;
     }
 
-    public List<CourseVo> getSimilarCourses(EntityManager em,
+    public List<CourseVo> getSimilarCourses(EntityManager entityManager,
             String professorName, String subjectName, Long preiodId)
             throws ExternalServiceConnectionException, DataBaseException {
 
-        professorName = SecurityHelper.sanitizeHTML(professorName);
-        subjectName = SecurityHelper.sanitizeHTML(subjectName);
-        List<CourseEntity> coursesByProfessorNameLikeAndSubjectNameLike = getDaoFactory().getCourseDao().
-                getCoursesByProfessorNameLikeAndSubjectNameLike(em,
-                professorName, subjectName, preiodId);
+        List<CourseEntity> coursesByProfessorNameLikeAndSubjectNameLike =
+                getDaoFactory().getCourseDao().
+                getCoursesByProfessorNameLikeAndSubjectNameLike(entityManager,
+                SecurityHelper.sanitizeHTML(professorName),
+                SecurityHelper.sanitizeHTML(subjectName), preiodId);
 
         List<CourseVo> list = new ArrayList<CourseVo>();
 
@@ -129,9 +123,9 @@ public class CoursesService extends CrudService<CourseVo, CourseEntity> {
 
         CourseEntity course = new CourseEntity();
         course.setId(courseVo.getId());
-        course.setPeriod(getDaoFactory().getPeriodDao().getById(entityManager, courseVo.getPeriodId()));
-        course.setProfessor(getDaoFactory().getProfessorDao().getById(entityManager, courseVo.getProfessorId()));
-        course.setSubject(getDaoFactory().getSubjectDao().getById(entityManager, courseVo.getSubjectId()));
+        course.setPeriod(getDaoFactory().getPeriodDao().read(entityManager, courseVo.getPeriodId()));
+        course.setProfessor(getDaoFactory().getProfessorDao().read(entityManager, courseVo.getProfessorId()));
+        course.setSubject(getDaoFactory().getSubjectDao().read(entityManager, courseVo.getSubjectId()));
         course.setRatingAverage(courseVo.getRatingAverage());
         course.setRatingCount(courseVo.getRatingCount());
         return course;

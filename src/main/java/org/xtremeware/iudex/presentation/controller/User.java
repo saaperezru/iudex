@@ -13,6 +13,8 @@ import org.xtremeware.iudex.helper.Role;
 @SessionScoped
 public class User implements Serializable {
 
+    // TODO: Make this option configurable
+    private static int LOGIN_ATTEMPTS_FOR_CAPTCHA = 3;
     private Long id;
     private String firstName;
     private String lastName;
@@ -20,6 +22,8 @@ public class User implements Serializable {
     private Long programId;
     private Role role;
     private boolean loggedIn;
+    private int failedLoginAttempts = 0;
+    private boolean requiresCaptcha = false;
 
     public Long getId() {
         return id;
@@ -77,6 +81,19 @@ public class User implements Serializable {
         this.userName = userName;
     }
 
+    public int getFailedLoginAttempts() {
+        return failedLoginAttempts;
+    }
+
+    public void setFailedLoginAttempts(int failedLoginAttempts) {
+        this.failedLoginAttempts = failedLoginAttempts;
+        requiresCaptcha = failedLoginAttempts >= LOGIN_ATTEMPTS_FOR_CAPTCHA - 1;
+    }
+
+    public boolean getRequiresCaptcha() {
+        return requiresCaptcha;
+    }
+
     public boolean checkPermissions(String roles) {
         String[] rolesArray = roles.split(",");
         for (String userRole : rolesArray) {
@@ -94,6 +111,8 @@ public class User implements Serializable {
         programId = null;
         role = null;
         loggedIn = false;
+        failedLoginAttempts = 0;
+        requiresCaptcha = false;
         return "home";
     }
 }

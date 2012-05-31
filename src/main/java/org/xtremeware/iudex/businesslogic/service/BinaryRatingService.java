@@ -5,7 +5,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.businesslogic.DuplicityException;
 import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Read;
-import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Remove;
+import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Delete;
 import org.xtremeware.iudex.dao.AbstractDaoBuilder;
 import org.xtremeware.iudex.dao.BinaryRatingDao;
 import org.xtremeware.iudex.entity.*;
@@ -19,17 +19,17 @@ import org.xtremeware.iudex.vo.*;
 public abstract class BinaryRatingService<F extends Entity<BinaryRatingVo>> {
 
     private AbstractDaoBuilder daoFactory;
-    private Read<F> readInterface;
-    private Remove removeInterface;
+    private Read<F> read;
+    private Delete delete;
     private BinaryRatingDao<F> dao;
 
     public BinaryRatingService(AbstractDaoBuilder daoFactory,
-            Read readInterface,
-            Remove removeInterface,
+            Read reas,
+            Delete delete,
             BinaryRatingDao<F> dao) {
         this.daoFactory = daoFactory;
-        this.readInterface = readInterface;
-        this.removeInterface = removeInterface;
+        this.read = reas;
+        this.delete = delete;
         this.dao = dao;
     }
 
@@ -38,11 +38,11 @@ public abstract class BinaryRatingService<F extends Entity<BinaryRatingVo>> {
     }
 
     private Read<F> getReadInterface() {
-        return readInterface;
+        return read;
     }
 
-    private Remove getRemoveInterface() {
-        return removeInterface;
+    private Delete getDelete() {
+        return delete;
     }
 
     protected BinaryRatingDao<F> getDao() {
@@ -57,8 +57,9 @@ public abstract class BinaryRatingService<F extends Entity<BinaryRatingVo>> {
             F ratingEntity = getDao().getByEvaluatedObjectIdAndUserId(entityManager,
                     binaryRatingVo.getEvaluatedObjectId(), binaryRatingVo.getUserId());
             if (ratingEntity == null) {
-                return getDao().persist(entityManager, voToEntity(entityManager,
-                        binaryRatingVo)).toVo();
+                F entity = voToEntity(entityManager,binaryRatingVo);
+                getDao().create(entityManager, entity);
+                return entity.toVo();
             } else {
                 ((BinaryRatingEntity) ratingEntity).setValue(binaryRatingVo.getValue());
                 return ratingEntity.toVo();
@@ -73,7 +74,7 @@ public abstract class BinaryRatingService<F extends Entity<BinaryRatingVo>> {
 
     }
 
-    public BinaryRatingVo getById(EntityManager em, long ratingId) throws DataBaseException {
+    public BinaryRatingVo read(EntityManager em, long ratingId) throws DataBaseException {
         F result = getReadInterface().getById(em, ratingId);
         if (result == null) {
             return null;
@@ -82,9 +83,9 @@ public abstract class BinaryRatingService<F extends Entity<BinaryRatingVo>> {
         }
     }
 
-    public void remove(EntityManager em, long ratingId)
+    public void delete(EntityManager em, long ratingId)
             throws DataBaseException {
-        getRemoveInterface().remove(em, ratingId);
+        getDelete().delete(em, ratingId);
     }
 
     public List<BinaryRatingVo> getByEvaluatedObjectId(EntityManager entityManager,

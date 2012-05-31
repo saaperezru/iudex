@@ -1,7 +1,16 @@
-.comments-container {
-        margin-top : 30px;
-/*	background-color: #F4F4F4;*/
+html {
+	height: 100%;
 }
+
+body {
+    padding-top: 60px;
+	height: 100%;
+}
+
+.comments-container{
+	height: 100%;
+}
+
 .search-box {
 	text-align: right;
 	margin-bottom: 40px;
@@ -44,6 +53,11 @@ div.big-media {
     background-repeat: no-repeat;
     background-position-x: center;
     height: 340px;
+}
+
+div#recaptcha_widget_div {
+	width: 318px;
+	display: inline-block;
 }
 
 div.share-icon {
@@ -322,4 +336,14 @@ div.professor-photo ul.actions li.downvote-prof a {
 }
 .vote{
 	float:right;
+}
+
+.fittext-rating{
+	display: block;
+	width: 100%;
+}
+
+.fittext-subject{
+	display: block;
+	width: 100%;
 }

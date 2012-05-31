@@ -6,10 +6,11 @@
                 xmlns:c="http://java.sun.com/jsp/jstl/core"
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:iudex="http://java.sun.com/jsf/composite/iudex"
-                xmlns="http://www.w3.org/1999/xhtml">
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:pou="http://primefaces.org/ui">
 
     <ui:define name="content">
-<div class="container">
+		<div class="container">
         <div class="row-fluid">
             <div class="span12 well">
                 <div class="big-media"></div>
@@ -54,28 +55,36 @@
                             <h:form id="loginForm" class="form-horizontal well">
                                 <fieldset>
                                     <legend>Iniciar sesión</legend>
-                                    <h:messages for="loginForm" class="alert alert-error"/>
-                                    <div class="control-group">
+                                    <ui:fragment rendered="#{not empty flash.loginMessage}">
+                                        <ul class="alert alert-error">
+                                            <li><h:outputText  value="#{flash.loginMessage}" /></li>
+                                        </ul>
+                                    </ui:fragment>
+                                    <div class="control-group #{viewHelper.addErrorClass('loginForm:userName')}">
                                         <label class="control-label span3" for="userName">Usuario</label>
                                         <div class="controls span9">
-                                            <h:inputText id="userName" value="#{login.userName}" required="true">
+                                            <h:inputText id="userName" value="#{login.userName}" required="true" maxlength="20">
                                                 <f:validateLength maximum="20" />
                                             </h:inputText>
                                             <iudex:inlineError key="loginForm:userName" />
                                         </div>
                                     </div>
-                                    <div class="control-group">
+                                    <div class="control-group #{viewHelper.addErrorClass('loginForm:password')}">
                                         <label class="control-label span3" for="password">Contraseña</label>
                                         <div class="controls span9">
-                                            <h:inputSecret id="password" value="#{login.password}" required="true">
+                                            <h:inputSecret id="password" value="#{login.password}" required="true" maxlength="18">
                                                 <f:validateLength minimum="8" maximum="18" /> 
                                             </h:inputSecret>
                                             <iudex:inlineError key="loginForm:password" />
                                         </div>
                                     </div>
+
                                     <center>
                                         <span>
                                             <h:commandButton action="#{login.logIn()}" value="Acceder" class="btn btn-success" />
+                                        </span>
+                                        <span>
+                                            <h:link outcome="forgottenPassword" value="Olvidé mi contraseña" class="btn" />
                                         </span>
                                     </center>
                                 </fieldset>
@@ -137,6 +146,16 @@
                                             <iudex:inlineError key="signUpForm:program" />
                                         </div>
                                     </div>
+                                    <p>
+                                        ¿No eres un robot, verdad? Entonces esto será fácil.
+                                    </p>
+                                    <div class="control-group #{viewHelper.addErrorClass('signUpForm:captcha')}">
+                                        <div class="controls span12">
+                                            <pou:captcha id="captcha" secure="true" />
+											<iudex:inlineError key="signUpForm:captcha" />
+                                        </div>
+                                    </div>
+
                                     <center>
                                         <span>
                                             <h:commandButton action="#{signUp.signUp}" value="Registrarme" class="btn btn-success"/>
@@ -149,7 +168,6 @@
                 </div>
             </c:if>
         </div>
-</div>
-
+		</div>
     </ui:define>
 </ui:composition>

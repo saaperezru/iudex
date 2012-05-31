@@ -5,6 +5,7 @@ import javax.persistence.*;
 import org.xtremeware.iudex.businesslogic.DuplicityException;
 import org.xtremeware.iudex.businesslogic.helper.FacadesHelper;
 import org.xtremeware.iudex.businesslogic.service.ServiceBuilder;
+import org.xtremeware.iudex.helper.DataBaseException;
 import org.xtremeware.iudex.helper.MultipleMessagesException;
 import org.xtremeware.iudex.vo.ProgramVo;
 
@@ -14,18 +15,19 @@ public class ProgramsFacade extends AbstractFacade {
         super(serviceFactory, emFactory);
     }
 
-    public void removeProgram(long programId) throws Exception {
+    public void deleteProgram(long programId) throws DataBaseException {
         EntityManager entityManager = null;
         EntityTransaction transaction = null;
         try {
             entityManager = getEntityManagerFactory().createEntityManager();
             transaction = entityManager.getTransaction();
             transaction.begin();
-            getServiceFactory().getProgramsService().remove(entityManager, programId);
+            getServiceFactory().getProgramsService().delete(entityManager, programId);
             transaction.commit();
-        } catch (Exception e) {
-            getServiceFactory().getLogService().error(e.getMessage(), e);
-            FacadesHelper.rollbackTransaction(entityManager, transaction, e);
+        } catch (Exception exception) {
+            getServiceFactory().getLogService().error(exception.getMessage(), exception);
+            FacadesHelper.checkExceptionAndRollback(entityManager, transaction, exception, DataBaseException.class);
+            FacadesHelper.rollbackTransaction(entityManager, transaction, exception);
         } finally {
             FacadesHelper.closeEntityManager(entityManager);
         }
@@ -39,8 +41,8 @@ public class ProgramsFacade extends AbstractFacade {
      * @return Returns null if there is a problem while persisting (logs all
      * errors) and throws an exception if data isn't valid.
      */
-    public ProgramVo addProgram(String programName, int code)
-            throws MultipleMessagesException, Exception {
+    public ProgramVo createProgram(String programName, int code)
+            throws MultipleMessagesException, DuplicityException {
         ProgramVo programVo = new ProgramVo();
         programVo.setName(programName);
         programVo.setCode(code);
@@ -58,7 +60,7 @@ public class ProgramsFacade extends AbstractFacade {
         } catch (Exception exception) {
             getServiceFactory().getLogService().error(exception.getMessage(), exception);
             FacadesHelper.checkException(exception, MultipleMessagesException.class);
-            FacadesHelper.checkExceptionAndRollback(entityManager, transaction, exception, DuplicityException.class);
+            FacadesHelper.checkDuplicityViolation(entityManager, transaction, exception);
             FacadesHelper.rollbackTransaction(entityManager, transaction, exception);
         } finally {
             FacadesHelper.closeEntityManager(entityManager);
@@ -66,7 +68,7 @@ public class ProgramsFacade extends AbstractFacade {
         return programVo;
     }
 
-    public List<ProgramVo> getProgramsAutocomplete(String programName) throws Exception {
+    public List<ProgramVo> getProgramsAutocomplete(String programName){
         EntityManager entityManager = null;
         List<ProgramVo> programVos = null;
         if (programName == null) {

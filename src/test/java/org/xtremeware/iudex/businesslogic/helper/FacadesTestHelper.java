@@ -37,6 +37,7 @@ public class FacadesTestHelper {
         for (String expectedMessage : expectedMessages) {
             assertTrue("not message "+expectedMessage, messages.contains(expectedMessage));
         }
+        assertTrue("Size not equals", messages.size() == expectedMessages.length);
     }
     
     public static String randomString(int length){

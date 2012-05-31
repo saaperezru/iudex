@@ -7,8 +7,11 @@ import org.xtremeware.iudex.vo.SubjectVo;
 
 @javax.persistence.Entity(name = "Subject")
 @NamedQueries({
-    @NamedQuery(name = "getSubjectsByNameLike", query = "SELECT s FROM Subject s WHERE UPPER(s.name) LIKE :name"),
-    @NamedQuery(name = "getSubjectsByProfessorId", query = "SELECT DISTINCT c.subject FROM Course c WHERE c.professor.id = :professorId")
+    @NamedQuery(name = "getSubjectsByNameLike", query =
+    "SELECT s FROM Subject s WHERE UPPER(s.name) LIKE :name"),
+    @NamedQuery(name = "getSubjectsByProfessorId",
+    query =
+    "SELECT DISTINCT c.subject FROM Course c WHERE c.professor.id = :professorId")
 })
 @Table(name = "SUBJECT")
 public class SubjectEntity implements Serializable, Entity<SubjectVo> {
@@ -30,8 +33,12 @@ public class SubjectEntity implements Serializable, Entity<SubjectVo> {
         SubjectVo vo = new SubjectVo();
         vo.setId(this.getId());
         vo.setName(SecurityHelper.sanitizeHTML(this.getName()));
-        vo.setDescription(SecurityHelper.sanitizeHTML(this.getDescription()));
-        vo.setCode(this.getCode());
+        if (getDescription() != null) {
+            vo.setDescription(SecurityHelper.sanitizeHTML(this.getDescription()));
+        } else {
+            vo.setDescription("");
+        }
+		vo.setCode(this.getCode());
         return vo;
     }
 
@@ -44,7 +51,8 @@ public class SubjectEntity implements Serializable, Entity<SubjectVo> {
             return false;
         }
         final SubjectEntity other = (SubjectEntity) obj;
-        if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
+        if (this.id != other.id &&
+                (this.id == null || !this.id.equals(other.id))) {
             return false;
         }
         if ((this.name == null) ? (other.name != null) : !this.name.equals(other.name)) {

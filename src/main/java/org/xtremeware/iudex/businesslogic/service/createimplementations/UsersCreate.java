@@ -10,6 +10,7 @@ import org.xtremeware.iudex.helper.SecurityHelper;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.businesslogic.DuplicityException;
 import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Create;
+import org.xtremeware.iudex.helper.ConfigurationVariablesHelper;
 
 /**
  *
@@ -33,17 +34,16 @@ public class UsersCreate implements Create<UserEntity> {
         ConfirmationKeyEntity confirmationKeyEntity = new ConfirmationKeyEntity();
         //Set expiration date for one day after creation
         Calendar expiration = new GregorianCalendar();
-        // TODO: The expiration period should be configurable
-        expiration.add(Calendar.DAY_OF_MONTH, 1);
+        expiration.add(Calendar.DAY_OF_MONTH, Integer.parseInt(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAILING_KEYS_EXPIRATION)));
         confirmationKeyEntity.setExpirationDate(expiration.getTime());
-        confirmationKeyEntity.setConfirmationKey(SecurityHelper.generateConfirmationKey());
+        confirmationKeyEntity.setConfirmationKey(SecurityHelper.generateMailingKey());
         //Associate confirmation key with user
         entity.setConfirmationKey(confirmationKeyEntity);
 
-        entity = getDaoFactory().getUserDao().persist(entityManager, entity);
+        getDaoFactory().getUserDao().create(entityManager, entity);
         confirmationKeyEntity.setUser(entity);
         //persist confirmation key
-        getDaoFactory().getConfirmationKeyDao().persist(entityManager, confirmationKeyEntity);
+        getDaoFactory().getConfirmationKeyDao().create(entityManager, confirmationKeyEntity);
         return entity;
     }
 

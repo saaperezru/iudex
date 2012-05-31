@@ -24,8 +24,8 @@ public class SubjectsService extends CrudService<SubjectVo, SubjectEntity> {
      * @param daoFactory
      */
     public SubjectsService(AbstractDaoBuilder daoFactory,
-            Create create, Read read, Update update, Remove remove) {
-        super(daoFactory, create, read, update, remove);
+            Create create, Read read, Update update, Delete delete) {
+        super(daoFactory, create, read, update, delete);
         MAX_SUBJECT_NAME_LENGTH = Integer.parseInt(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAX_SUBJECT_NAME_LENGTH));
         MAX_SUBJECT_DESCRIPTION_LENGTH = Integer.parseInt(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAX_SUBJECT_DESCRIPTION_LENGTH));
     }
@@ -103,52 +103,53 @@ public class SubjectsService extends CrudService<SubjectVo, SubjectEntity> {
         subjectEntity.setDescription(valueObject.getDescription());
         subjectEntity.setCode(valueObject.getCode());
 
-        return subjectEntity;
-    }
+		return subjectEntity;
+	}
 
-    /**
-     * Returns a list of SubjectVo according with the search query
-     *
-     * @param entityManager EntityManager
-     * @param query String with the search parameter
-     * @return A list of SubjectVo
-     */
-    public List<SubjectVo> search(EntityManager entityManager, String query)
-            throws ExternalServiceConnectionException, DataBaseException {
+	/**
+	 * Returns a list of SubjectVo according with the search query
+	 *
+	 * @param entityManager EntityManager
+	 * @param query String with the search parameter
+	 * @return A list of SubjectVo
+	 */
+	public List<SubjectVo> search(EntityManager entityManager, String query)
+			throws ExternalServiceConnectionException, DataBaseException {
+		
+		List<SubjectEntity> subjectEntitys = getDaoFactory().getSubjectDao().
+				getByName(entityManager, 
+                                SecurityHelper.sanitizeHTML(query).toUpperCase());
+		if (subjectEntitys.isEmpty()) {
+			return null;
+		}
+		ArrayList<SubjectVo> arrayList = new ArrayList<SubjectVo>();
+		for (SubjectEntity subjectEntity : subjectEntitys) {
+			arrayList.add(subjectEntity.toVo());
+		}
+		return arrayList;
+	}
 
-        query = SecurityHelper.sanitizeHTML(query);
-
-        List<SubjectEntity> subjectEntitys = getDaoFactory().getSubjectDao().
-                getByName(entityManager, query.toUpperCase());
-
-        ArrayList<SubjectVo> arrayList = new ArrayList<SubjectVo>();
-
-        for (SubjectEntity subjectEntity : subjectEntitys) {
-            arrayList.add(subjectEntity.toVo());
-        }
-
-        return arrayList;
-    }
-
-    /**
-     * Returns a list of SubjectVo according with the search name
-     *
-     * @param em EntityManager
-     * @param name String with the name of the SubjectVo
-     * @return A list if SubjectVo
-     */
-    public List<SubjectVo> getByNameLike(EntityManager em, String name)
-            throws ExternalServiceConnectionException, DataBaseException {
-        name = SecurityHelper.sanitizeHTML(name);
-        List<SubjectEntity> subjectEntitys = getDaoFactory().getSubjectDao().
-                getByName(em, name.toUpperCase());
-
-        ArrayList<SubjectVo> subjectVos = new ArrayList<SubjectVo>();
-        for (SubjectEntity subjectEntity : subjectEntitys) {
-            subjectVos.add(subjectEntity.toVo());
-        }
-        return subjectVos;
-    }
+	/**
+	 * Returns a list of SubjectVo according with the search name
+	 *
+	 * @param em EntityManager
+	 * @param name String with the name of the SubjectVo
+	 * @return A list if SubjectVo
+	 */
+	public List<SubjectVo> getByNameLike(EntityManager em, String name)
+			throws ExternalServiceConnectionException, DataBaseException {
+		name = SecurityHelper.sanitizeHTML(name);
+		List<SubjectEntity> subjectEntitys;
+		ArrayList<SubjectVo> arrayList = new ArrayList<SubjectVo>();
+		if (!name.isEmpty()) {
+			subjectEntitys = getDaoFactory().getSubjectDao().
+					getByName(em, name.toUpperCase());
+			for (SubjectEntity subjectEntity : subjectEntitys) {
+				arrayList.add(subjectEntity.toVo());
+			}
+		}
+		return arrayList;
+	}
 
     /**
      * Returns a list of SubjectVos that had been taught by the specified

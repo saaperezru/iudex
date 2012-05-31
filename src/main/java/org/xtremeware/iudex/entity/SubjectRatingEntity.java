@@ -14,7 +14,7 @@ import org.xtremeware.iudex.vo.BinaryRatingVo;
     + "WHERE result.subject.id = :evaluatedObjectId AND result.user.id = :userId"),
     @NamedQuery(name = "getSubjectRatingByIdUser",
     query = "SELECT result FROM SubjectRating result "
-    + "WHERE result.user.id = :user"),
+    + "WHERE result.user.id = :userId"),
     @NamedQuery(name = "countPositiveSubjectRating",
     query = "SELECT COUNT (result) FROM SubjectRating result "
     + "WHERE result.subject.id = :evaluatedObjectId AND result.value = 1"),

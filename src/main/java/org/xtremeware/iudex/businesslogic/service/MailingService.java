@@ -1,11 +1,20 @@
 package org.xtremeware.iudex.businesslogic.service;
 
+import freemarker.template.Configuration;
+import freemarker.template.DefaultObjectWrapper;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
+import java.io.File;
+import java.io.IOException;
+import java.io.StringWriter;
 import java.util.Date;
+import java.util.Map;
 import java.util.Properties;
 import javax.mail.*;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import org.xtremeware.iudex.helper.ConfigurationVariablesHelper;
 import org.xtremeware.iudex.helper.ExternalServiceConnectionException;
 import org.xtremeware.iudex.helper.ValidityHelper;
 import org.xtremeware.iudex.vo.MailingConfigVo;
@@ -14,6 +23,7 @@ public final class MailingService {
 
     private Properties props;
     private MailingConfigVo config;
+    private Configuration templates;
 
     public MailingService(MailingConfigVo config) {
         setConfig(config);
@@ -63,7 +73,8 @@ public final class MailingService {
         }
     }
 
-    public void sendMessage(String message, String subject, String receiver)
+    public void sendMessage(Map<String, String> data, String templateName,
+            String subject, String receiver)
             throws ExternalServiceConnectionException {
         try {
             Session session = Session.getInstance(props,
@@ -95,9 +106,48 @@ public final class MailingService {
                         "There was a problem while translating receiver email address",
                         ex);
             }
-            // Set the subject and content
+            // Set the subject
             msg.setSubject(subject);
-            msg.setContent(message, "text/html");
+
+            // Set the content
+            if (templates == null) {
+                templates = new Configuration();
+                try {
+                    templates.setDirectoryForTemplateLoading(new File(getClass().
+                            getResource(ConfigurationVariablesHelper.getVariable(
+                            ConfigurationVariablesHelper.MAILING_TEMPLATES_PATH)).
+                            getFile()));
+                } catch (IOException ex) {
+                    throw new IllegalArgumentException(
+                            "There was a problem while getting the email templates directory",
+                            ex);
+                }
+                templates.setObjectWrapper(new DefaultObjectWrapper());
+            }
+
+            Template template;
+            try {
+                template = templates.getTemplate(templateName);
+            } catch (IOException ex) {
+                throw new IllegalArgumentException(
+                        "There was a problem while getting the email template",
+                        ex);
+            }
+
+            StringWriter writer = new StringWriter();
+            try {
+                template.process(data, writer);
+            } catch (TemplateException ex) {
+                throw new IllegalArgumentException(
+                        "There was a problem while processing the template",
+                        ex);
+            } catch (IOException ex) {
+                throw new IllegalArgumentException(
+                        "There was a problem while processing the template",
+                        ex);
+            }
+
+            msg.setContent(writer.getBuffer().toString(), "text/html");
             msg.setSentDate(new Date());
             // Send the message
             msg.saveChanges();

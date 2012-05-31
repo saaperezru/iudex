@@ -26,9 +26,9 @@ public class PeriodsService extends CrudService<PeriodVo, PeriodEntity> {
      * @param daoFactory the daoFactory
      */
     public PeriodsService(AbstractDaoBuilder daoFactory,
-            Create create, Read read, Update update, Remove remove) {
+            Create create, Read read, Update update, Delete delete) {
         
-        super(daoFactory, create, read, update, remove);
+        super(daoFactory, create, read, update, delete);
     }
 
     /**

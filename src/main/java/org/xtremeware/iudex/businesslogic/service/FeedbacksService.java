@@ -1,23 +1,12 @@
 package org.xtremeware.iudex.businesslogic.service;
 
-import org.xtremeware.iudex.businesslogic.service.updateimplementations.SimpleUpdate;
-import org.xtremeware.iudex.businesslogic.service.removeimplementations.SimpleRemove;
-import org.xtremeware.iudex.businesslogic.service.readimplementations.SimpleRead;
-import org.xtremeware.iudex.businesslogic.service.createimplementations.SimpleCreate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.businesslogic.InvalidVoException;
-import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Create;
-import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Read;
-import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Remove;
-import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Update;
+import org.xtremeware.iudex.businesslogic.service.crudinterfaces.*;
 import org.xtremeware.iudex.dao.AbstractDaoBuilder;
 import org.xtremeware.iudex.entity.FeedbackEntity;
-import org.xtremeware.iudex.helper.DataBaseException;
-import org.xtremeware.iudex.helper.ExternalServiceConnectionException;
-import org.xtremeware.iudex.helper.MultipleMessagesException;
-import org.xtremeware.iudex.helper.SecurityHelper;
+import org.xtremeware.iudex.helper.*;
 import org.xtremeware.iudex.vo.FeedbackVo;
 
 /**
@@ -32,9 +21,9 @@ public class FeedbacksService extends CrudService<FeedbackVo, FeedbackEntity> {
      * @param daoFactory
      */
     public FeedbacksService(AbstractDaoBuilder daoFactory,
-            Create create, Read read, Update update, Remove remove) {
+            Create create, Read read, Update update, Delete delete) {
 
-        super(daoFactory, create, read, update, remove);
+        super(daoFactory, create, read, update, delete);
 
     }
 
@@ -61,7 +50,7 @@ public class FeedbacksService extends CrudService<FeedbackVo, FeedbackEntity> {
         if (feedbackVo.getFeedbackTypeId() == null) {
             multipleMessageException.addMessage(
                     "feedback.feedbackTypeId.null");
-        } else if (getDaoFactory().getFeedbackTypeDao().getById(entityManager, feedbackVo.getFeedbackTypeId()) == null) {
+        } else if (getDaoFactory().getFeedbackTypeDao().read(entityManager, feedbackVo.getFeedbackTypeId()) == null) {
             multipleMessageException.addMessage(
                     "feedback.feedbackTypeId.element.notFound");
         }
@@ -122,7 +111,7 @@ public class FeedbacksService extends CrudService<FeedbackVo, FeedbackEntity> {
         feedbackEntity.setDate(feedbackVo.getDate());
         feedbackEntity.setId(feedbackVo.getId());
 
-        feedbackEntity.setType(getDaoFactory().getFeedbackTypeDao().getById(entityManager,
+        feedbackEntity.setType(getDaoFactory().getFeedbackTypeDao().read(entityManager,
                 feedbackVo.getFeedbackTypeId()));
 
         return feedbackEntity;

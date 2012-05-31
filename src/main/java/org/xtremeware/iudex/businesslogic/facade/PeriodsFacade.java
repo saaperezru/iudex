@@ -14,14 +14,15 @@ public class PeriodsFacade extends AbstractFacade {
         super(serviceFactory, emFactory);
     }
 
-    public void removePeriod(long periodId) throws DataBaseException {
+    public void deletePeriod(long periodId) 
+            throws DataBaseException {
         EntityManager entityManager = null;
         EntityTransaction transaction = null;
         try {
             entityManager = getEntityManagerFactory().createEntityManager();
             transaction = entityManager.getTransaction();
             transaction.begin();
-            getServiceFactory().getPeriodsService().remove(entityManager, periodId);
+            getServiceFactory().getPeriodsService().delete(entityManager, periodId);
             transaction.commit();
         } catch (DataBaseException exception) {
             getServiceFactory().getLogService().error(exception.getMessage(), exception);
@@ -40,7 +41,7 @@ public class PeriodsFacade extends AbstractFacade {
      * @return Returns null if there is a problem while persisting (logs all
      * errors) and throws an exception if data isn't valid.
      */
-    public PeriodVo addPeriod(int year, int semester) 
+    public PeriodVo createPeriod(int year, int semester) 
             throws MultipleMessagesException, DataBaseException, DuplicityException {
        
         PeriodVo periodVo = new PeriodVo();
@@ -57,7 +58,7 @@ public class PeriodsFacade extends AbstractFacade {
         } catch (Exception exception) {
             getServiceFactory().getLogService().error(exception.getMessage(), exception);
             FacadesHelper.checkException(exception, MultipleMessagesException.class);
-            FacadesHelper.checkExceptionAndRollback(entityManager, transaction, exception, DuplicityException.class);
+            FacadesHelper.checkDuplicityViolation(entityManager, transaction, exception);
             FacadesHelper.rollbackTransaction(entityManager, transaction, exception);
         }finally {
             FacadesHelper.closeEntityManager(entityManager);
@@ -65,7 +66,7 @@ public class PeriodsFacade extends AbstractFacade {
         return periodVo;
     }
 
-    public List<PeriodVo> listPeriods() throws Exception {
+    public List<PeriodVo> listPeriods() {
         List<PeriodVo> periodVos = new ArrayList<PeriodVo>();
         EntityManager entityManager = null;
         try {

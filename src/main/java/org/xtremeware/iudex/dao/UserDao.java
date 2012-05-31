@@ -22,4 +22,14 @@ public interface UserDao extends CrudDao<UserEntity> {
      */
     public UserEntity getByUsernameAndPassword(EntityManager entityManager,
             String username, String password) throws DataBaseException;
+	 /**
+     * Returns a UserEntity associated with the given user name
+     *
+     * @param em the entity manager
+     * @param userName the user name
+     * @return the UserEntity
+     * @throws DataBaseException
+     */
+    public UserEntity getByUserName(EntityManager em, String userName) throws
+            DataBaseException;
 }

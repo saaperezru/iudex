@@ -8,12 +8,10 @@ import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.servlet.http.HttpServletRequest;
-import net.tanesha.recaptcha.ReCaptchaImpl;
-import net.tanesha.recaptcha.ReCaptchaResponse;
-import org.owasp.validator.html.*;
+import org.owasp.validator.html.AntiSamy;
+import org.owasp.validator.html.CleanResults;
+import org.owasp.validator.html.Policy;
+import org.owasp.validator.html.PolicyException;
 
 /**
  *
@@ -42,15 +40,19 @@ public class SecurityHelper {
 	}
 
 	public static String sanitizeHTML(String input) throws ExternalServiceConnectionException {
-		String result = null;
+		if (input == null){
+			System.out.println("[DEBUG] An exception occured while sanitizing");
+			throw  new IllegalArgumentException("The input to sanitize cannot be null");
+		}
+
 		try {
 			CleanResults cr = getInstance().getAntiSamy().scan(input, getInstance().getPolicy());
-			result = cr.getCleanHTML();
+			input = cr.getCleanHTML();
 		} catch (Exception ex) {
 			Config.getInstance().getServiceFactory().getLogService().error(ex.getMessage(), ex);
 			throw new ExternalServiceConnectionException("There was a problem while sanitizing", ex);
 		}
-		return result;
+		return input;
 	}
 
 	public static String hashPassword(String password) {
@@ -62,7 +64,7 @@ public class SecurityHelper {
 			byte[] mdbytes = md.digest();
 
 			//convert the byte to hex format method 1
-			StringBuffer sb = new StringBuffer();
+			StringBuilder sb = new StringBuilder();
 			for (int i = 0; i < mdbytes.length; i++) {
 				sb.append(Integer.toString((mdbytes[i] & 0xff) + 0x100, 16).substring(1));
 			}
@@ -74,24 +76,12 @@ public class SecurityHelper {
 		return hash;
 	}
 
-	public static boolean verifyCaptcha(HttpServletRequest request) throws ExternalServiceConnectionException {
-		String remoteAddr = request.getRemoteAddr();
-		ReCaptchaImpl reCaptcha = new ReCaptchaImpl();
-		reCaptcha.setPrivateKey(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.RECAPTCHA_PRIVATE_KEY));
-
-		String challenge = request.getParameter("recaptcha_challenge_field");
-		String uresponse = request.getParameter("recaptcha_response_field");
-		ReCaptchaResponse reCaptchaResponse = reCaptcha.checkAnswer(remoteAddr, challenge, uresponse);
-
-		return (reCaptchaResponse.isValid());
-	}
-
-	public static String generateConfirmationKey() throws ExternalServiceConnectionException{
+	public static String generateMailingKey() throws ExternalServiceConnectionException{
 		SecureRandom random;
 		try {
 			random = SecureRandom.getInstance("SHA1PRNG");
 		} catch (NoSuchAlgorithmException ex) {
-			throw new ExternalServiceConnectionException("There was a problem allocating the SecureRandom instance");
+			throw new ExternalServiceConnectionException("There was a problem allocating the SecureRandom instance", ex);
 		}
 		random.setSeed(random.generateSeed(20));
 		byte bytes[] = new byte[20];

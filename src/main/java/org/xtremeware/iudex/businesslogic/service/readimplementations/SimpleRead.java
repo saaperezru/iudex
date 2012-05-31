@@ -21,7 +21,7 @@ public class SimpleRead<E extends Entity> implements Read<E> {
     @Override
     public E getById(EntityManager em, long entityId)
             throws DataBaseException {
-        return getDao().getById(em, entityId);
+        return getDao().read(em, entityId);
     }
 
     public CrudDao<E> getDao() {

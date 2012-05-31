@@ -19,8 +19,8 @@ public class CommentRatingsService extends BinaryRatingService<CommentRatingEnti
      *
      * @param daoFactory
      */
-    public CommentRatingsService(AbstractDaoBuilder daoFactory, Read read, Remove remove) {
-        super(daoFactory,read,remove,daoFactory.getCommentRatingDao());
+    public CommentRatingsService(AbstractDaoBuilder daoFactory, Read read, Delete delete) {
+        super(daoFactory,read,delete,daoFactory.getCommentRatingDao());
     }
 
     /**
@@ -47,14 +47,14 @@ public class CommentRatingsService extends BinaryRatingService<CommentRatingEnti
         if (binaryRatingVo.getEvaluatedObjectId() == null) {
             multipleMessageException.addMessage(
                     "commentRating.commentId.null");
-        } else if (getDaoFactory().getCommentDao().getById(entityManager, binaryRatingVo.getEvaluatedObjectId()) == null) {
+        } else if (getDaoFactory().getCommentDao().read(entityManager, binaryRatingVo.getEvaluatedObjectId()) == null) {
             multipleMessageException.addMessage(
                     "commentRating.commentId.element.notFound");
         }
         if (binaryRatingVo.getUserId() == null) {
             multipleMessageException.addMessage(
                     "commentRating.userId.null");
-        } else if (getDaoFactory().getUserDao().getById(entityManager, binaryRatingVo.getUserId())
+        } else if (getDaoFactory().getUserDao().read(entityManager, binaryRatingVo.getUserId())
                 == null) {
             multipleMessageException.addMessage(
                     "commentRating.userId.element.notFound");
@@ -88,9 +88,9 @@ public class CommentRatingsService extends BinaryRatingService<CommentRatingEnti
         commentRatingEntity.setValue(binaryRatingVo.getValue());
 
         commentRatingEntity.setUser(this.getDaoFactory().getUserDao().
-                getById(entityManager,binaryRatingVo.getUserId()));
+                read(entityManager,binaryRatingVo.getUserId()));
         commentRatingEntity.setComment(this.getDaoFactory().getCommentDao().
-                getById(entityManager, binaryRatingVo.getEvaluatedObjectId()));
+                read(entityManager, binaryRatingVo.getEvaluatedObjectId()));
 
         return commentRatingEntity;
     }

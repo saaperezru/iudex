@@ -4,6 +4,7 @@ html {
 
 body {
 	height: 100%;
+	background : url('../resources/images/background _blue.png');
 }
 
 /*index.xhtml*/
@@ -17,10 +18,7 @@ img.logo{
 	height: 200px;
 	width: 100%;
 }
-.container-margin{
-	border: dashed 20px #ffffff;
-	background-color: white;
-}
+
 .navbar .brand{
 	color : #009444;
 }
@@ -45,7 +43,7 @@ img.logo{
 	color: #e46c0a;
 }
 body>.container{
-    padding-top: 60px;
+    padding-top: 40px;
 }
 body>.container-fluid{
     padding-top: 60px;
@@ -53,7 +51,20 @@ body>.container-fluid{
 .comments-container{
 	height: 100%;
 }
-
+#header-row{
+	height: 365px;
+}
+#header{
+	background: url('../resources/images/homebg.jpg') repeat-x;
+	background-position-y: 40px;
+	padding-top: 40px;
+}
+#fittext-header{
+	height: 80px;
+	text-align: center;
+	padding-top: 10px;
+}
+/*index.xhtml*/
 .search-box {
 	text-align: right;
 	margin-bottom: 40px;
@@ -389,5 +400,14 @@ div.professor-photo ul.actions li.downvote-prof a {
 }
 
 select {
-	width : 100%;
+	width : 90%;
+}
+
+h1,h2{
+	color:#009444;
+}
+
+#header-row>div>div.span6{
+	position : relative;
+	top : 10px;
 }

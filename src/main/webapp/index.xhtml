@@ -10,15 +10,14 @@
                 xmlns:pou="http://primefaces.org/ui">
 
     <ui:define name="content">
-		<div class="container container-margin">
+		<div  id="header">
+		<div class="container">
+			<div id="header-row">
+				
         <div class="row-fluid">
-            <div class="span6 row">
+            <div class="span6">
 				<div class="span12">
 					<img src="resources/images/logo.png" class="logo"/>
-				</div>
-				<div class="span12">
-					<br/>
-					<span id="fittext-header" class="fittext">UNA NUEVA FORMA DE  <span class="highlight">ESCOGER</span> Y <span class="highlight"> RECOMENDAR </span> MATERIAS Y PROFESORES </span>
 				</div>
             </div>
             <div class="span6">
@@ -142,9 +141,10 @@
 				</div>
 			</c:if>
             </div>
-        </div>
-			<br/>
-			<hr/>
+			<span id="fittext-header" class="fittext">UNA NUEVA FORMA DE  <span class="highlight">ESCOGER</span> Y <span class="highlight"> RECOMENDAR </span> MATERIAS Y PROFESORES </span>
+			
+				</div>
+			</div>
 				<br/>
 		<div class="row-fluid">
 				<form id="searchForm" method="get" action="#{request.contextPath}/search.xhtml" class="">
@@ -197,9 +197,10 @@
 		</div>
 	
 		</div>
+			</div>
 		<!--fitText code-->
 		<script type="text/javascript">
-			$("#fittext-header").fitText(1.4);
+			$("#fittext-header").fitText(2.3);
 		</script>
 		<!-- End of fitText code-->
     </ui:define>

@@ -5,6 +5,45 @@ html {
 body {
 	height: 100%;
 }
+
+/*index.xhtml*/
+img.autosize{
+	background-position: center top;
+    background-repeat: no-repeat;
+}
+img.logo{
+	background-position: center top;
+    background-repeat: no-repeat;
+	height: 200px;
+	width: 100%;
+}
+.container-margin{
+	border: dashed 20px #ffffff;
+	background-color: white;
+}
+.navbar .brand{
+	color : #009444;
+}
+#searchBar {
+	position: relative;
+	z-index: 1;
+	height: 120px;
+}
+#searchBar .searchBar_left {position:absolute; left:0; top: 0; height: 100px; width: 70px; background: url('../resources/images/search_cap.png') no-repeat top left;}
+#searchBar .searchBar_right {position:absolute; right:0; top: 0; height: 100px; width: 50px; background: url('../resources/images/search_cap.png') no-repeat top right;}
+#searchBar .searchBar_inner {position:absolute; left: 70px; right: 50px; top : 0; height: 100px; background: url('../resources/images/search_inner.png') repeat-x center center;}
+#searchBar input {position: absolute; top: 10px; left: 20px; font-family: "Lucida Grande", Verdana, Arial, sans-serif; width: 90%; height: 80px; line-height: 30px; overflow: hidden; background: none; border: none; font-weight: bold; color: #999; font-size: 25px; padding: 0px; z-index: 2;}
+#searchBar input[placeholder] {
+	color : #0074cc;
+}
+#searchBar input::-webkit-input-placeholder {color: #0074cc;}
+#searchBar input:-moz-placeholder {color: #0074cc;}
+#searchButton{ background: url('../resources/images/search_button.png') no-repeat top right; width: 44px; height: 40px; position:absolute; right:30px; top: 30px; border:none; z-index: 3;}
+#searchButton:hover {background-position: right center;}
+#searchButton:active {background-position: right bottom;}
+.highlight{
+	color: #e46c0a;
+}
 body>.container{
     padding-top: 60px;
 }
@@ -20,7 +59,8 @@ body>.container-fluid{
 	margin-bottom: 40px;
 }
 .search-box input[type=text] {
-	margin-left: 15px;
+	/*margin-left: 15px;*/
+	background-image: url('../resources/images/search.png');
 	width: 30%;
 	min-width: 300px;
 }
@@ -44,8 +84,8 @@ body>.container-fluid{
 	width: 80px;
 	background-color: green;
 	color: white;
-/*	-webkit-transform: rotate(-90deg); 
-	-moz-transform: rotate(-90deg);	*/
+	/*	-webkit-transform: rotate(-90deg); 
+		-moz-transform: rotate(-90deg);	*/
 }
 
 #feedback:hover{
@@ -145,139 +185,139 @@ a.thumb-down {
 }
 .comment {
 	position: relative;
-        border: solid 1px #AAA;
-        padding: 10px 10px;
-        border-radius: 4px;
-        margin-top: 20px;
-        margin-bottom: 20px;
+	border: solid 1px #AAA;
+	padding: 10px 10px;
+	border-radius: 4px;
+	margin-top: 20px;
+	margin-bottom: 20px;
 	display: inline-block
 }
 .vote , .comment-text, .comment-photo{
-        display: inline-block;
+	display: inline-block;
 }
 .comment-rating{
 	font-size: 20px;
 	margin-bottom: 10px;
 }
 .comment-photo{
-        float:left;
+	float:left;
 }
 .professor-photo{
 }
 .vote-professor{
 }
 .vote-professor span {
-        height:60px;
-        width:125px;
-        display:block;
+	height:60px;
+	width:125px;
+	display:block;
 }
 
 .professor-photo {
-        margin: 20px auto;
-        display: block;
-        width: 200px;
-        height: 120px;
-        position: relative;
-        text-decoration: none;
-        -webkit-transition: all .15s linear;
-        -moz-transition: all .15s linear;
-        -ms-transition: all .15s linear;
-        -o-transition: all .15s linear;
-        transition: all .15s linear;
-        color: #333; 
-        left: 0px;
-        top: 0px;
+	margin: 20px auto;
+	display: block;
+	width: 200px;
+	height: 120px;
+	position: relative;
+	text-decoration: none;
+	-webkit-transition: all .15s linear;
+	-moz-transition: all .15s linear;
+	-ms-transition: all .15s linear;
+	-o-transition: all .15s linear;
+	transition: all .15s linear;
+	color: #333; 
+	left: 0px;
+	top: 0px;
 }
 .professor-photo img {
-        width: 120px;
-        position: relative;
-        z-index: 30;
-        float: left;
+	width: 120px;
+	position: relative;
+	z-index: 30;
+	float: left;
 }
 div.professor-photo div {
-        display: block;
-        text-align: center;
-        -webkit-transition: all .25s linear;
-        -moz-transition: all .25s linear;
-        -ms-transition: all .25s linear;
-        -o-transition: all .25s linear;
-        transition: all .25s linear;
-        clear: left;
-        width: 120px;
+	display: block;
+	text-align: center;
+	-webkit-transition: all .25s linear;
+	-moz-transition: all .25s linear;
+	-ms-transition: all .25s linear;
+	-o-transition: all .25s linear;
+	transition: all .25s linear;
+	clear: left;
+	width: 120px;
 }
 div.professor-photo div h5 {
-        text-align: center;
+	text-align: center;
 }
 div.professor-photo span.vote-prof {
-        width: 116px;
-        height: 116px;
-        z-index: 1;
-        display: block;
-        -webkit-transition: all .25s linear;
-        -moz-transition: all .25s linear;
-        -ms-transition: all .25s linear;
-        -o-transition: all .25s linear;
-        transition: all .25s linear;
-        position: absolute;
-        top: 2px;
-        left: 2px;
-        margin-left: 16px;
+	width: 116px;
+	height: 116px;
+	z-index: 1;
+	display: block;
+	-webkit-transition: all .25s linear;
+	-moz-transition: all .25s linear;
+	-ms-transition: all .25s linear;
+	-o-transition: all .25s linear;
+	transition: all .25s linear;
+	position: absolute;
+	top: 2px;
+	left: 2px;
+	margin-left: 16px;
 }
 div.professor-photo span.vote-prof div {
-        /*TODO: add a background for vote*/
-        position: absolute;
-        top: 2px;
-        left: 2px;
-        display: block;
-        z-index: 10;
-        width: 112px;
-        height: 112px;
-        overflow: hidden;
+	/*TODO: add a background for vote*/
+	position: absolute;
+	top: 2px;
+	left: 2px;
+	display: block;
+	z-index: 10;
+	width: 112px;
+	height: 112px;
+	overflow: hidden;
 }
 div.professor-photo:hover span.vote-prof {
-        -webkit-transform: translateX(60px);
-        -moz-transform: translateX(60px);
-        -ms-transform: translateX(60px);
-        -o-transform: translateX(60px);
-        transform: translateX(60px);
+	-webkit-transform: translateX(60px);
+	-moz-transform: translateX(60px);
+	-ms-transform: translateX(60px);
+	-o-transform: translateX(60px);
+	transform: translateX(60px);
 }
 div.professor-photo ul.actions {
-        display: block;
-        position: absolute;
-        width: 60px;
-        border-radius: 3px;
-        left: 35px;
-        top: 0px;
-        height: 114px;
-        z-index: 20;
-        -webkit-transition: all .25s linear;
-        -moz-transition: all .25s linear;
-        -ms-transition: all .25s linear;
-        -o-transition: all .25s linear;
-        transition: all .25s linear;
+	display: block;
+	position: absolute;
+	width: 60px;
+	border-radius: 3px;
+	left: 35px;
+	top: 0px;
+	height: 114px;
+	z-index: 20;
+	-webkit-transition: all .25s linear;
+	-moz-transition: all .25s linear;
+	-ms-transition: all .25s linear;
+	-o-transition: all .25s linear;
+	transition: all .25s linear;
 }
 div.professor-photo:hover ul.actions {
-        -webkit-transform: translateX(60px);
-        -moz-transform: translateX(60px);
-        -ms-transform: translateX(60px);
-        -o-transform: translateX(60px);
-        transform: translateX(60px);
+	-webkit-transform: translateX(60px);
+	-moz-transform: translateX(60px);
+	-ms-transform: translateX(60px);
+	-o-transform: translateX(60px);
+	transform: translateX(60px);
 }
 
 div.professor-photo ul.actions li {
-        display: block;
-        position: absolute;
-        height: 20px;
-        width: 20px;
-        left: 10px;
-        top: 22px;
+	display: block;
+	position: absolute;
+	height: 20px;
+	width: 20px;
+	left: 10px;
+	top: 22px;
 }
 div.professor-photo ul.actions li.downvote-prof {
-        top: 48px;
+	top: 48px;
 }
 div.professor-photo ul.actions li a {
-        display: block;
-        width: 20px; height: 20px; }
+	display: block;
+	width: 20px; height: 20px; }
 div.professor-photo ul.actions li.upvote-prof a {
 }
 div.professor-photo ul.actions li.downvote-prof a {
@@ -342,12 +382,12 @@ div.professor-photo ul.actions li.downvote-prof a {
 	float:right;
 }
 
-.fittext-rating{
+.fittext{
 	display: block;
 	width: 100%;
+	line-height: 120%;
 }
 
-.fittext-subject{
-	display: block;
-	width: 100%;
+select {
+	width : 100%;
 }

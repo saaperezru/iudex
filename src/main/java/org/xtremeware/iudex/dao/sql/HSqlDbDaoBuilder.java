@@ -28,15 +28,9 @@ public class HSqlDbDaoBuilder implements AbstractDaoBuilder {
     private UserDao userDao;
     private static HSqlDbDaoBuilder instance;
 
-    private HSqlDbDaoBuilder() {
+    public HSqlDbDaoBuilder() {
     }
 
-    public static synchronized HSqlDbDaoBuilder getInstance() {
-        if (instance == null) {
-            instance = new HSqlDbDaoBuilder();
-        }
-        return instance;
-    }
 
     @Override
     public CommentDao getCommentDao() {

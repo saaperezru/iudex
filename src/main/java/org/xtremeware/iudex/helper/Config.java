@@ -1,13 +1,10 @@
 package org.xtremeware.iudex.helper;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import org.xtremeware.iudex.businesslogic.facade.FacadeFactory;
 import org.xtremeware.iudex.businesslogic.service.ServiceBuilder;
 import org.xtremeware.iudex.dao.AbstractDaoBuilder;
-import org.xtremeware.iudex.dao.sql.MySqlDaoBuilder;
 import org.xtremeware.iudex.vo.MailingConfigVo;
 
 /**
@@ -16,14 +13,6 @@ import org.xtremeware.iudex.vo.MailingConfigVo;
  */
 public class Config {
 
-    // TODO: Do not register the MySQL driver
-    static {
-        try {
-            Class.forName("com.mysql.jdbc.Driver").newInstance();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
     public final static String CONFIGURATION_VARIABLES_PATH =
             "/org/xtremeware/iudex/iudex.properties";
     private EntityManagerFactory persistenceUnit;
@@ -60,12 +49,18 @@ public class Config {
     public static synchronized Config getInstance() {
         while (instance == null) {
             try {
-                instance = new Config("org.xtremeware.iudex_local",
-                        MySqlDaoBuilder.getInstance());
+                instance = new Config(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.APP_PERSISTENCE_UNIT),
+                        (AbstractDaoBuilder)Class.forName(ConfigurationVariablesHelper.APP_DAO_BUILDER).newInstance());
             } catch (ExternalServiceConnectionException ex) {
                 System.out.println(
                         "[FATAL ERROR] Configuration Variables file could not be found, this is a ");
-            }
+            } catch (ClassNotFoundException exception){
+				//TODO : Inform the user about this
+			} catch (InstantiationException exception){
+				//TODO : Inform the user about this
+			}catch (IllegalAccessException exception){
+				//TODO : Inform the user about this
+			}
         }
         return instance;
     }

@@ -15,10 +15,17 @@
     <ui:define name="content">
 		<div class="container">
 			<div class="panel">
-				<form id="searchForm" method="get" action="#{request.contextPath}/search.xhtml" class="well">
-					Para buscar un curso ingresa el nombre del profesor o de la materia.<br/><br/>
-					<input type="text" name="query" value="#{search.query}" class="search-query span4"  label="Keyword" />
-					<button type="submit" class="btn btn-small"><i class="icon-search"/>Buscar</button>
+				<form id="searchForm" method="get" action="#{request.contextPath}/search.xhtml" class="">
+					<div id="searchBar">
+						<div class="searchBar_left"></div>
+						<div class="searchBar_inner"></div>
+						<div class="searchBar_right"></div>
+						<div class="searchBar_inner_left"></div>
+						<div class="searchBar_inner_inner"></div>
+						<div class="searchBar_inner_right"></div>
+						<input type="text" name="query" value="#{search.query}" class="search-query"  label="Keyword" placeholder = "BUSCA UN PROFESOR O UNA MATERIA"/>
+						<button id="searchButton" type="submit" />
+					</div>
 				</form>
 			</div>
 			<c:choose>

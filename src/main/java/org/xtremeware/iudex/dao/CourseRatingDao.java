@@ -20,7 +20,7 @@ public interface CourseRatingDao extends CrudDao<CourseRatingEntity> {
      * @return a list of CourseRating entities with a course identified by
      * courseId
      */
-    public List<CourseRatingEntity> getByCourseId(EntityManager entityManager, Long courseId)
+    List<CourseRatingEntity> getByCourseId(EntityManager entityManager, Long courseId)
             throws DataBaseException;
 
     /**
@@ -32,7 +32,7 @@ public interface CourseRatingDao extends CrudDao<CourseRatingEntity> {
      * @param userId id of the user
      * @return CourseRatingEntity with the indicated user and course
      */
-    public CourseRatingEntity getByCourseIdAndUserId(EntityManager entityManager,
+    CourseRatingEntity getByCourseIdAndUserId(EntityManager entityManager,
             Long courseId, Long userId)
             throws DataBaseException;
 
@@ -45,6 +45,6 @@ public interface CourseRatingDao extends CrudDao<CourseRatingEntity> {
      * @return a list of CourseRating entities with a course identified by
      * userId
      */
-    public List<CourseRatingEntity> getByUserId(EntityManager entityManager, Long userId)
+    List<CourseRatingEntity> getByUserId(EntityManager entityManager, Long userId)
             throws DataBaseException;
 }

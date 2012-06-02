@@ -18,7 +18,7 @@ public interface PeriodDao extends CrudDao<PeriodEntity> {
      * @param em the entity manager
      * @return a list with all the periods
      */
-    public List<PeriodEntity> getAll(EntityManager entityManager)
+    List<PeriodEntity> getAll(EntityManager entityManager)
             throws DataBaseException;
 
     /**
@@ -29,7 +29,7 @@ public interface PeriodDao extends CrudDao<PeriodEntity> {
      * @param year the year
      * @return a list of matched period entities
      */
-    public List<PeriodEntity> getByYear(EntityManager entityManager, int year)
+    List<PeriodEntity> getByYear(EntityManager entityManager, int year)
             throws DataBaseException;
 
     /**
@@ -40,6 +40,6 @@ public interface PeriodDao extends CrudDao<PeriodEntity> {
      * @param semester the semester
      * @return the matched period entity or null if there is no such entity
      */
-    public PeriodEntity getByYearAndSemester(EntityManager entityManager, int year,
+    PeriodEntity getByYearAndSemester(EntityManager entityManager, int year,
             int semester) throws DataBaseException;
 }

@@ -6,7 +6,6 @@ import org.xtremeware.iudex.businesslogic.service.readimplementations.*;
 import org.xtremeware.iudex.businesslogic.service.updateimplementations.*;
 import org.xtremeware.iudex.dao.AbstractDaoBuilder;
 import org.xtremeware.iudex.entity.*;
-import org.xtremeware.iudex.helper.ExternalServiceConnectionException;
 import org.xtremeware.iudex.vo.MailingConfigVo;
 
 /**
@@ -33,8 +32,7 @@ public class ServiceBuilder {
     private LogService logService;
     private AbstractDaoBuilder daoFactory;
 
-    public ServiceBuilder(AbstractDaoBuilder daoFactory, MailingConfigVo mailingConfig)
-            throws ExternalServiceConnectionException {
+    public ServiceBuilder(AbstractDaoBuilder daoFactory, MailingConfigVo mailingConfig) {
         this.daoFactory = daoFactory;
         this.mailingService = new MailingService(mailingConfig);
     }

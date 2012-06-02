@@ -6,7 +6,6 @@ import javax.persistence.EntityManager;
 import static org.junit.Assert.*;
 import org.junit.*;
 import org.xtremeware.iudex.businesslogic.DuplicityException;
-import org.xtremeware.iudex.businesslogic.InvalidVoException;
 import org.xtremeware.iudex.entity.Entity;
 import org.xtremeware.iudex.helper.Config;
 import org.xtremeware.iudex.helper.DataBaseException;
@@ -140,7 +139,7 @@ public class PeriodsFacadeIT {
     public void test_BL_21_1() throws DataBaseException {
         PeriodsFacade periodsFacade = Config.getInstance().getFacadeFactory().
                 getPeriodsFacade();
-        Long id = 1L;
+        Long id = 7L;
         periodsFacade.deletePeriod(id);
         int result = entityManager.createQuery(
                 "SELECT COUNT(p) FROM Period p WHERE p.id = :id", Long.class).
@@ -188,7 +187,7 @@ public class PeriodsFacadeIT {
                     intValue();
             assertEquals(0, size);
         }
-        id = 1L;
+        id = 8L;
         try {
             periodsFacade.deletePeriod(id);
         } catch (Exception ex) {
@@ -204,7 +203,7 @@ public class PeriodsFacadeIT {
     }
 
     @Test()
-    public void test_BL_21_3() throws InvalidVoException, Exception {
+    public void test_BL_21_3() throws Exception {
         PeriodsFacade periodsFacade = Config.getInstance().getFacadeFactory().
                 getPeriodsFacade();
         List<PeriodVo> periodVoList = periodsFacade.listPeriods();

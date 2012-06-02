@@ -14,7 +14,7 @@ public class PeriodVo extends IdentifiableValueObject<Long> implements ValueObje
             return false;
         }
         final PeriodVo other = (PeriodVo) obj;
-        if (this.id != other.id) {
+        if (this.getId() != other.getId()) {
             return false;
         }
         if (this.year != other.year) {
@@ -29,7 +29,7 @@ public class PeriodVo extends IdentifiableValueObject<Long> implements ValueObje
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 67 * hash + (int) (this.id ^ (this.id >>> 32));
+        hash = 67 * hash + (int) (this.getId() ^ (this.getId() >>> 32));
         hash = 67 * hash + this.year;
         hash = 67 * hash + this.semester;
         return hash;
@@ -37,7 +37,7 @@ public class PeriodVo extends IdentifiableValueObject<Long> implements ValueObje
 
     @Override
     public String toString() {
-        return "PeriodVo{" + "id=" + id + ", year=" + year + ", semester=" + semester + '}';
+        return "PeriodVo{" + "id=" + getId() + ", year=" + year + ", semester=" + semester + '}';
     }
 
     public int getSemester() {

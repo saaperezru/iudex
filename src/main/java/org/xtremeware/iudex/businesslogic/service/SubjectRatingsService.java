@@ -5,7 +5,6 @@ import org.xtremeware.iudex.businesslogic.service.crudinterfaces.*;
 import org.xtremeware.iudex.dao.AbstractDaoBuilder;
 import org.xtremeware.iudex.entity.SubjectRatingEntity;
 import org.xtremeware.iudex.helper.DataBaseException;
-import org.xtremeware.iudex.helper.ExternalServiceConnectionException;
 import org.xtremeware.iudex.helper.MultipleMessagesException;
 import org.xtremeware.iudex.vo.BinaryRatingVo;
 
@@ -18,8 +17,7 @@ public class SubjectRatingsService extends BinaryRatingService<SubjectRatingEnti
     @Override
     public void validateVoForCreation(EntityManager entityManager,
             BinaryRatingVo binaryRatingVo)
-            throws MultipleMessagesException,
-            ExternalServiceConnectionException, DataBaseException {
+            throws MultipleMessagesException, DataBaseException {
 
         MultipleMessagesException multipleMessageException = new MultipleMessagesException();
         if (binaryRatingVo == null) {
@@ -46,8 +44,8 @@ public class SubjectRatingsService extends BinaryRatingService<SubjectRatingEnti
 
     @Override
     public SubjectRatingEntity voToEntity(EntityManager entityManager,
-            BinaryRatingVo binaryRatingVo) throws MultipleMessagesException,
-            ExternalServiceConnectionException, DataBaseException {
+            BinaryRatingVo binaryRatingVo) 
+            throws MultipleMessagesException, DataBaseException {
 
         SubjectRatingEntity entity = new SubjectRatingEntity();
         entity.setId(binaryRatingVo.getId());

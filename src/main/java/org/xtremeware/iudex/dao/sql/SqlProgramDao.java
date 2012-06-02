@@ -12,8 +12,8 @@ import org.xtremeware.iudex.helper.DataBaseException;
  */
 public class SqlProgramDao extends SqlCrudDao<ProgramEntity> implements ProgramDao {
 
-    public SqlProgramDao(Delete Delete) {
-        super(Delete);
+    public SqlProgramDao(Delete delete) {
+        super(delete);
     }
 
     /**

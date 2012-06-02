@@ -17,13 +17,13 @@ import org.owasp.validator.html.PolicyException;
  *
  * @author saaperezru
  */
-public class SecurityHelper {
+public final class SecurityHelper {
 
 	private Policy policy;
 	private AntiSamy antiSamy;
 	private static SecurityHelper instance;
 
-	private SecurityHelper(String policyFile) throws ExternalServiceConnectionException {
+	private SecurityHelper(String policyFile) {
 		try {
 			policy = Policy.getInstance(getClass().getResourceAsStream(policyFile));
 			antiSamy = new AntiSamy(policy);
@@ -32,16 +32,15 @@ public class SecurityHelper {
 		}
 	}
 
-	private static SecurityHelper getInstance() throws ExternalServiceConnectionException {
+	private static SecurityHelper getInstance() {
 		while (instance == null) {
 			instance = new SecurityHelper(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.ANTISAMY_POLICY_FILE));
 		}
 		return instance;
 	}
 
-	public static String sanitizeHTML(String input) throws ExternalServiceConnectionException {
+	public static String sanitizeHTML(String input) {
 		if (input == null){
-			System.out.println("[DEBUG] An exception occured while sanitizing");
 			throw  new IllegalArgumentException("The input to sanitize cannot be null");
 		}
 
@@ -76,7 +75,7 @@ public class SecurityHelper {
 		return hash;
 	}
 
-	public static String generateMailingKey() throws ExternalServiceConnectionException{
+	public static String generateMailingKey(){
 		SecureRandom random;
 		try {
 			random = SecureRandom.getInstance("SHA1PRNG");

@@ -1,6 +1,5 @@
 package org.xtremeware.iudex.presentation.controller;
 
-import java.io.IOException;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;

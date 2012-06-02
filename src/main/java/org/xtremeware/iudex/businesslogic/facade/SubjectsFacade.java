@@ -3,9 +3,8 @@ package org.xtremeware.iudex.businesslogic.facade;
 import java.util.*;
 import javax.persistence.*;
 import org.xtremeware.iudex.businesslogic.DuplicityException;
-import org.xtremeware.iudex.businesslogic.helper.FacadesHelper;
+import org.xtremeware.iudex.businesslogic.helper.FacadesHelperImplementation;
 import org.xtremeware.iudex.businesslogic.service.ServiceBuilder;
-import org.xtremeware.iudex.businesslogic.service.SubjectRatingsService;
 import org.xtremeware.iudex.helper.*;
 import org.xtremeware.iudex.vo.*;
 
@@ -30,10 +29,10 @@ public class SubjectsFacade extends AbstractFacade {
             }
         } catch (Exception exception) {
             getServiceFactory().getLogService().error(exception.getMessage(), exception);
-            FacadesHelper.checkException(exception, ExternalServiceConnectionException.class);
+            FacadesHelperImplementation.checkException(exception, ExternalServiceConnectionException.class);
             throw new RuntimeException(exception);
         } finally {
-            FacadesHelper.closeEntityManager(entityManager);
+            FacadesHelperImplementation.closeEntityManager(entityManager);
         }
         return subjectsIdAndName;
     }
@@ -51,7 +50,7 @@ public class SubjectsFacade extends AbstractFacade {
             getServiceFactory().getLogService().error(exception.getMessage(), exception);
             throw new RuntimeException(exception);
         } finally {
-            FacadesHelper.closeEntityManager(entityManager);
+            FacadesHelperImplementation.closeEntityManager(entityManager);
         }
         return subjectRatingVo;
     }
@@ -75,7 +74,7 @@ public class SubjectsFacade extends AbstractFacade {
             getServiceFactory().getLogService().error(exception.getMessage(), exception);
             throw new RuntimeException(exception);
         } finally {
-            FacadesHelper.closeEntityManager(entityManager);
+            FacadesHelperImplementation.closeEntityManager(entityManager);
         }
         return ratingSummaryVo;
     }
@@ -95,20 +94,17 @@ public class SubjectsFacade extends AbstractFacade {
             transaction = entityManager.getTransaction();
             transaction.begin();
             
-            SubjectRatingsService subjectRatingsService1 = getServiceFactory().
-                                                                   getSubjectRatingsService();
-            
             ratingVo = getServiceFactory().
                     getSubjectRatingsService().create(entityManager, binaryRatingVo);
             
             transaction.commit();
         } catch (Exception exception) {
             getServiceFactory().getLogService().error(exception.getMessage(), exception);
-            FacadesHelper.checkException(exception, MultipleMessagesException.class);
-            FacadesHelper.checkDuplicityViolation(entityManager, transaction, exception);
-            FacadesHelper.rollbackTransaction(entityManager, transaction, exception);
+            FacadesHelperImplementation.checkException(exception, MultipleMessagesException.class);
+            FacadesHelperImplementation.checkDuplicityViolation(entityManager, transaction, exception);
+            FacadesHelperImplementation.rollbackTransaction(entityManager, transaction, exception);
         } finally {
-            FacadesHelper.closeEntityManager(entityManager);
+            FacadesHelperImplementation.closeEntityManager(entityManager);
         }
         return ratingVo;
     }
@@ -126,11 +122,11 @@ public class SubjectsFacade extends AbstractFacade {
             transaction.commit();
         } catch (Exception exception) {
             getServiceFactory().getLogService().error(exception.getMessage(), exception);
-            FacadesHelper.checkException(exception, MultipleMessagesException.class);
-            FacadesHelper.checkDuplicityViolation(entityManager, transaction, exception);
-            FacadesHelper.rollbackTransaction(entityManager, transaction, exception);
+            FacadesHelperImplementation.checkException(exception, MultipleMessagesException.class);
+            FacadesHelperImplementation.checkDuplicityViolation(entityManager, transaction, exception);
+            FacadesHelperImplementation.rollbackTransaction(entityManager, transaction, exception);
         } finally {
-            FacadesHelper.closeEntityManager(entityManager);
+            FacadesHelperImplementation.closeEntityManager(entityManager);
         }
         return createdSubjectVo;
     }
@@ -146,10 +142,10 @@ public class SubjectsFacade extends AbstractFacade {
             transaction.commit();
         } catch (Exception exception) {
             getServiceFactory().getLogService().error(exception.getMessage(), exception);
-            FacadesHelper.checkExceptionAndRollback(entityManager, transaction, exception, DataBaseException.class);
-            FacadesHelper.rollbackTransaction(entityManager, transaction, exception);
+            FacadesHelperImplementation.checkExceptionAndRollback(entityManager, transaction, exception, DataBaseException.class);
+            FacadesHelperImplementation.rollbackTransaction(entityManager, transaction, exception);
         } finally {
-            FacadesHelper.closeEntityManager(entityManager);
+            FacadesHelperImplementation.closeEntityManager(entityManager);
         }
     }
 
@@ -168,11 +164,11 @@ public class SubjectsFacade extends AbstractFacade {
 
         } catch (Exception exception) {
             getServiceFactory().getLogService().error(exception.getMessage(), exception);
-            FacadesHelper.checkException(exception, MultipleMessagesException.class);
-            FacadesHelper.checkDuplicityViolation(entityManager, transaction, exception);
-            FacadesHelper.rollbackTransaction(entityManager, transaction, exception);
+            FacadesHelperImplementation.checkException(exception, MultipleMessagesException.class);
+            FacadesHelperImplementation.checkDuplicityViolation(entityManager, transaction, exception);
+            FacadesHelperImplementation.rollbackTransaction(entityManager, transaction, exception);
         } finally {
-            FacadesHelper.closeEntityManager(entityManager);
+            FacadesHelperImplementation.closeEntityManager(entityManager);
         }
 
         return createdSubjectVo;
@@ -189,7 +185,7 @@ public class SubjectsFacade extends AbstractFacade {
             getServiceFactory().getLogService().error(exception.getMessage(), exception);
             throw new RuntimeException(exception);
         } finally {
-            FacadesHelper.closeEntityManager(entityManager);
+            FacadesHelperImplementation.closeEntityManager(entityManager);
         }
         return subjectVoFull;
     }

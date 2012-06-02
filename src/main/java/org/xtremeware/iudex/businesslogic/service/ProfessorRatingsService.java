@@ -6,7 +6,6 @@ import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Delete;
 import org.xtremeware.iudex.dao.AbstractDaoBuilder;
 import org.xtremeware.iudex.entity.ProfessorRatingEntity;
 import org.xtremeware.iudex.helper.DataBaseException;
-import org.xtremeware.iudex.helper.ExternalServiceConnectionException;
 import org.xtremeware.iudex.helper.MultipleMessagesException;
 import org.xtremeware.iudex.vo.BinaryRatingVo;
 
@@ -18,8 +17,7 @@ public class ProfessorRatingsService extends BinaryRatingService< ProfessorRatin
 
     @Override
     public void validateVoForCreation(EntityManager entityManager, BinaryRatingVo binaryRatingVo)
-            throws MultipleMessagesException,
-            ExternalServiceConnectionException, DataBaseException {
+            throws MultipleMessagesException, DataBaseException {
 
         MultipleMessagesException multipleMessageException =
                 new MultipleMessagesException();
@@ -55,8 +53,7 @@ public class ProfessorRatingsService extends BinaryRatingService< ProfessorRatin
 
     @Override
     public ProfessorRatingEntity voToEntity(EntityManager entityManager, BinaryRatingVo binaryRatingVo)
-            throws MultipleMessagesException,
-            ExternalServiceConnectionException, DataBaseException {
+            throws MultipleMessagesException, DataBaseException {
 
         ProfessorRatingEntity entity = new ProfessorRatingEntity();
         entity.setId(binaryRatingVo.getId());

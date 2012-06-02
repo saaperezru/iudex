@@ -18,6 +18,6 @@ public interface ConfirmationKeyDao extends CrudDao<ConfirmationKeyEntity> {
      * @param confirmationKey key reference for the search
      * @return the ConfirmationKey entity wit the given key
      */
-    public ConfirmationKeyEntity getByConfirmationKey(EntityManager entityManager,
+    ConfirmationKeyEntity getByConfirmationKey(EntityManager entityManager,
             String confirmationKey) throws DataBaseException;
 }

@@ -607,7 +607,7 @@ public class UsersFacadeIT {
         CommentVo commentVo = new CommentVo();
         commentVo.setAnonymous(false);
         commentVo.setContent("MUY MAL CURSO");
-        commentVo.setCourseId(1L);
+        commentVo.setCourseId(3L);
         commentVo.setDate(new Date());
         commentVo.setRating(1F);
         commentVo.setUserId(6L);

@@ -14,7 +14,7 @@ import org.xtremeware.iudex.helper.Role;
 public class User implements Serializable {
 
     // TODO: Make this option configurable
-    private static int LOGIN_ATTEMPTS_FOR_CAPTCHA = 3;
+    private static final int LOGIN_ATTEMPTS_FOR_CAPTCHA = 3;
     private Long id;
     private String firstName;
     private String lastName;
@@ -24,6 +24,8 @@ public class User implements Serializable {
     private boolean loggedIn;
     private int failedLoginAttempts = 0;
     private boolean requiresCaptcha = false;
+	//TODO : Get default user image from a centralized site
+	private static String imageUrl = "../resources/images/anonymous.jpg";
 
     public Long getId() {
         return id;
@@ -103,6 +105,16 @@ public class User implements Serializable {
         }
         return false;
     }
+
+	public String getImageUrl() {
+		return imageUrl;
+	}
+
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
+	}
+
+
 
     public String logOut() {
         firstName = null;

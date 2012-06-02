@@ -408,7 +408,7 @@ public class CommentsFacadeIT {
 
     @Test
     public void test_BL_25_1() throws Exception {
-        Long commmendId = 1L;
+        Long commmendId = 5L;
         CommentsFacade commentsFacade = Config.getInstance().getFacadeFactory().
                 getCommentsFacade();
         commentsFacade.deleteComment(commmendId);
@@ -427,7 +427,7 @@ public class CommentsFacadeIT {
 
     @Test
     public void test_BL_25_2() throws Exception {
-        Long commmendId = 1L;
+        Long commmendId = 5L;
         CommentsFacade commentsFacade = Config.getInstance().getFacadeFactory().
                 getCommentsFacade();
         try {

@@ -18,8 +18,8 @@ public class ForgottenPasswordKeyVo extends IdentifiableValueObject<Long>
             return false;
         }
         final ForgottenPasswordKeyVo other = (ForgottenPasswordKeyVo) obj;
-        if (this.id != other.id &&
-                (this.id == null || !this.id.equals(other.id))) {
+        if (this.getId() != other.getId() &&
+                (this.getId() == null || !this.getId().equals(other.getId()))) {
             return false;
         }
         if (this.expirationDate != other.expirationDate && (this.expirationDate ==
@@ -40,7 +40,7 @@ public class ForgottenPasswordKeyVo extends IdentifiableValueObject<Long>
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 97 * hash + (this.id != null ? this.id.hashCode() : 0);
+        hash = 97 * hash + (this.getId() != null ? this.getId().hashCode() : 0);
         hash = 97 * hash + (this.expirationDate != null ? this.expirationDate.
                 hashCode() : 0);
         hash = 97 * hash + (this.key != null ? this.key.hashCode() : 0);

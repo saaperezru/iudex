@@ -3,7 +3,7 @@ package org.xtremeware.iudex.businesslogic.facade;
 import java.util.*;
 import javax.persistence.*;
 import org.xtremeware.iudex.businesslogic.DuplicityException;
-import org.xtremeware.iudex.businesslogic.helper.FacadesHelper;
+import org.xtremeware.iudex.businesslogic.helper.FacadesHelperImplementation;
 import org.xtremeware.iudex.businesslogic.service.ServiceBuilder;
 import org.xtremeware.iudex.helper.*;
 import org.xtremeware.iudex.vo.PeriodVo;
@@ -26,9 +26,9 @@ public class PeriodsFacade extends AbstractFacade {
             transaction.commit();
         } catch (DataBaseException exception) {
             getServiceFactory().getLogService().error(exception.getMessage(), exception);
-            FacadesHelper.rollbackTransaction(entityManager, transaction, exception);
+            FacadesHelperImplementation.rollbackTransaction(entityManager, transaction, exception);
         } finally {
-            FacadesHelper.closeEntityManager(entityManager);
+            FacadesHelperImplementation.closeEntityManager(entityManager);
         }
     }
 
@@ -57,17 +57,17 @@ public class PeriodsFacade extends AbstractFacade {
             transaction.commit();
         } catch (Exception exception) {
             getServiceFactory().getLogService().error(exception.getMessage(), exception);
-            FacadesHelper.checkException(exception, MultipleMessagesException.class);
-            FacadesHelper.checkDuplicityViolation(entityManager, transaction, exception);
-            FacadesHelper.rollbackTransaction(entityManager, transaction, exception);
+            FacadesHelperImplementation.checkException(exception, MultipleMessagesException.class);
+            FacadesHelperImplementation.checkDuplicityViolation(entityManager, transaction, exception);
+            FacadesHelperImplementation.rollbackTransaction(entityManager, transaction, exception);
         }finally {
-            FacadesHelper.closeEntityManager(entityManager);
+            FacadesHelperImplementation.closeEntityManager(entityManager);
         }
         return periodVo;
     }
 
     public List<PeriodVo> listPeriods() {
-        List<PeriodVo> periodVos = new ArrayList<PeriodVo>();
+        List<PeriodVo> periodVos;
         EntityManager entityManager = null;
         try {
             entityManager = getEntityManagerFactory().createEntityManager();
@@ -77,7 +77,7 @@ public class PeriodsFacade extends AbstractFacade {
             getServiceFactory().getLogService().error(enException.getMessage(), enException);
             throw new RuntimeException(enException);
         } finally {
-            FacadesHelper.closeEntityManager(entityManager);
+            FacadesHelperImplementation.closeEntityManager(entityManager);
         }
         return periodVos;
 

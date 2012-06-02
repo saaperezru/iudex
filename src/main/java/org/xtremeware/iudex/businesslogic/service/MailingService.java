@@ -74,8 +74,7 @@ public final class MailingService {
     }
 
     public void sendMessage(Map<String, String> data, String templateName,
-            String subject, String receiver)
-            throws ExternalServiceConnectionException {
+            String subject, String receiver) {
         try {
             Session session = Session.getInstance(props,
                     new javax.mail.Authenticator() {

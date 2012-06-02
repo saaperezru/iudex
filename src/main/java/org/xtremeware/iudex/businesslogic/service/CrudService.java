@@ -50,7 +50,6 @@ public abstract class CrudService<E extends ValueObject, F extends Entity<E>> {
     }
 
     public E create(EntityManager entityManager, E valueObject) throws
-            DataBaseException,
             DuplicityException,
             MultipleMessagesException,
             DataBaseException,
@@ -78,8 +77,7 @@ public abstract class CrudService<E extends ValueObject, F extends Entity<E>> {
     }
 
     public E update(EntityManager entityManager, E valueObject)
-            throws ExternalServiceConnectionException,
-            MultipleMessagesException,
+            throws MultipleMessagesException,
             DataBaseException,
             DuplicityException {
         validateVoForUpdate(entityManager, valueObject);
@@ -95,14 +93,11 @@ public abstract class CrudService<E extends ValueObject, F extends Entity<E>> {
     }
 
     protected abstract void validateVoForCreation(EntityManager entityManager, E valueObject)
-            throws MultipleMessagesException,
-            ExternalServiceConnectionException, DataBaseException;
+            throws MultipleMessagesException, DataBaseException;
 
     protected abstract void validateVoForUpdate(EntityManager entityManager, E valueObject)
-            throws MultipleMessagesException,
-            ExternalServiceConnectionException, DataBaseException;
+            throws MultipleMessagesException, DataBaseException;
 
     protected abstract F voToEntity(EntityManager entityManager, E valueObject)
-            throws MultipleMessagesException,
-            ExternalServiceConnectionException, DataBaseException;
+            throws MultipleMessagesException, DataBaseException;
 }

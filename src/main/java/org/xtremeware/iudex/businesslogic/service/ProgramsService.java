@@ -10,17 +10,16 @@ import org.xtremeware.iudex.vo.ProgramVo;
 
 public class ProgramsService extends CrudService<ProgramVo, ProgramEntity> {
 
-    private final int MAX_PROGRAMNAME_LENGTH;
+    private static final int MAX_PROGRAM_NAME_LENGTH = 50;
 
     public ProgramsService(AbstractDaoBuilder daoFactory,
             Create create, Read read, Update update, Delete delete) {
         super(daoFactory, create, read, update, delete);
-        MAX_PROGRAMNAME_LENGTH = 50;
     }
 
     @Override
     public void validateVoForCreation(EntityManager entityManager, ProgramVo programVo)
-            throws ExternalServiceConnectionException, MultipleMessagesException {
+            throws  MultipleMessagesException {
 
         MultipleMessagesException multipleMessageException = new MultipleMessagesException();
 
@@ -33,7 +32,7 @@ public class ProgramsService extends CrudService<ProgramVo, ProgramEntity> {
                     "program.name.null");
         } else {
             programVo.setName(SecurityHelper.sanitizeHTML(programVo.getName()));
-            if (programVo.getName().length() > MAX_PROGRAMNAME_LENGTH) {
+            if (programVo.getName().length() > MAX_PROGRAM_NAME_LENGTH) {
                 multipleMessageException.addMessage(
                         "program.name.tooLong");
             }
@@ -53,7 +52,7 @@ public class ProgramsService extends CrudService<ProgramVo, ProgramEntity> {
 
     @Override
     public void validateVoForUpdate(EntityManager entityManager, ProgramVo programVo)
-            throws MultipleMessagesException, ExternalServiceConnectionException, DataBaseException {
+            throws MultipleMessagesException, DataBaseException {
 
         validateVoForCreation(entityManager, programVo);
 
@@ -66,7 +65,7 @@ public class ProgramsService extends CrudService<ProgramVo, ProgramEntity> {
 
     @Override
     public ProgramEntity voToEntity(EntityManager em, ProgramVo vo)
-            throws ExternalServiceConnectionException, MultipleMessagesException {
+            throws MultipleMessagesException {
 
         ProgramEntity entity = new ProgramEntity();
         entity.setId(vo.getId());
@@ -85,7 +84,7 @@ public class ProgramsService extends CrudService<ProgramVo, ProgramEntity> {
      * <code>ProgramVo></code> objects that contain the given name
      */
     public List<ProgramVo> getByNameLike(EntityManager entityManager, String programName)
-            throws ExternalServiceConnectionException, DataBaseException {
+            throws DataBaseException {
 
         ArrayList<ProgramVo> list = new ArrayList<ProgramVo>();
         List<ProgramEntity> programEntitys = getDaoFactory().getProgramDao().
@@ -98,7 +97,7 @@ public class ProgramsService extends CrudService<ProgramVo, ProgramEntity> {
     }
 
     public List<ProgramVo> getAll(EntityManager em)
-            throws ExternalServiceConnectionException, DataBaseException {
+            throws DataBaseException {
         ArrayList<ProgramVo> list = new ArrayList<ProgramVo>();
         List<ProgramEntity> programEntitys = getDaoFactory().getProgramDao().getAll(em);
         for (ProgramEntity entity : programEntitys) {

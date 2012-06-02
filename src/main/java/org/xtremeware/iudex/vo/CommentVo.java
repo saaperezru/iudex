@@ -20,7 +20,7 @@ public class CommentVo extends IdentifiableValueObject<Long> implements ValueObj
             return false;
         }
         final CommentVo other = (CommentVo) obj;
-        if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
+        if (this.getId() != other.getId() && (this.getId() == null || !this.getId().equals(other.getId()))) {
             return false;
         }
         if ((this.content == null) ? (other.content != null) : !this.content.equals(other.content)) {
@@ -47,7 +47,7 @@ public class CommentVo extends IdentifiableValueObject<Long> implements ValueObj
     @Override
     public int hashCode() {
         int hash = 5;
-        hash = 97 * hash + (this.id != null ? this.id.hashCode() : 0);
+        hash = 97 * hash + (this.getId() != null ? this.getId().hashCode() : 0);
         hash = 97 * hash + (this.content != null ? this.content.hashCode() : 0);
         hash = 97 * hash + (this.date != null ? this.date.hashCode() : 0);
         hash = 97 * hash + (this.userId != null ? this.userId.hashCode() : 0);
@@ -59,7 +59,7 @@ public class CommentVo extends IdentifiableValueObject<Long> implements ValueObj
 
     @Override
     public String toString() {
-        return "CommentVo{" + "id=" + id + ", content=" + content 
+        return "CommentVo{" + "id=" + getId() + ", content=" + content 
                 + ", date=" + date + ", user=" + userId + ", course=" 
                 + courseId + ", anonymous=" + anonymous + ", rating=" + rating + '}';
     }

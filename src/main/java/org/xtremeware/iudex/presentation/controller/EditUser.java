@@ -12,7 +12,6 @@ import org.xtremeware.iudex.businesslogic.facade.UsersFacade;
 import org.xtremeware.iudex.businesslogic.service.InactiveUserException;
 import org.xtremeware.iudex.helper.Config;
 import org.xtremeware.iudex.helper.MultipleMessagesException;
-import org.xtremeware.iudex.helper.Role;
 import org.xtremeware.iudex.vo.UserVo;
 
 /**

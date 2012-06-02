@@ -79,7 +79,7 @@ public class SignUp {
         this.user = user;
     }
 
-    public String signUp() throws IOException, Exception {
+    public String signUp() throws IOException {
 
         FacesContext fc = FacesContext.getCurrentInstance();
         if (user.isLoggedIn()) {

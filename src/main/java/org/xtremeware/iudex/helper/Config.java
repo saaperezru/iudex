@@ -1,7 +1,5 @@
 package org.xtremeware.iudex.helper;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import org.xtremeware.iudex.businesslogic.facade.FacadeFactory;
@@ -14,7 +12,7 @@ import org.xtremeware.iudex.vo.MailingConfigVo;
  *
  * @author saaperezru
  */
-public class Config {
+public final class Config {
 
     // TODO: Do not register the MySQL driver
     static {
@@ -24,7 +22,7 @@ public class Config {
             ex.printStackTrace();
         }
     }
-    public final static String CONFIGURATION_VARIABLES_PATH =
+    public static final String CONFIGURATION_VARIABLES_PATH =
             "/org/xtremeware/iudex/iudex.properties";
     private EntityManagerFactory persistenceUnit;
     private AbstractDaoBuilder daoFactory;
@@ -32,8 +30,7 @@ public class Config {
     private ServiceBuilder serviceFactory;
     private FacadeFactory facadeFactory;
 
-    private Config(String persistenceUnit, AbstractDaoBuilder daoFactory) throws
-            ExternalServiceConnectionException {
+    private Config(String persistenceUnit, AbstractDaoBuilder daoFactory) {
         try {
 
             this.persistenceUnit = Persistence.createEntityManagerFactory(
@@ -49,8 +46,7 @@ public class Config {
                 ConfigurationVariablesHelper.MAILING_SMTP_PASSWORD));
         mailingConf.setSmtpServer(ConfigurationVariablesHelper.getVariable(
                 ConfigurationVariablesHelper.MAILING_SMTP_SERVER));
-        mailingConf.setSmtpServerPort(Integer.parseInt(ConfigurationVariablesHelper.
-                getVariable(ConfigurationVariablesHelper.MAILING_SMTP_PORT)));
+        mailingConf.setSmtpServerPort(Integer.parseInt(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAILING_SMTP_PORT)));
         mailingConf.setSmtpUser(ConfigurationVariablesHelper.getVariable(
                 ConfigurationVariablesHelper.MAILING_SMTP_USER));
         this.serviceFactory = new ServiceBuilder(daoFactory, mailingConf);

@@ -15,8 +15,8 @@ import org.xtremeware.iudex.vo.SubjectVo;
  */
 public class SubjectsService extends CrudService<SubjectVo, SubjectEntity> {
 
-    public final int MAX_SUBJECT_NAME_LENGTH;
-    public final int MAX_SUBJECT_DESCRIPTION_LENGTH;
+    private final int MAX_SUBJECT_NAME_LENGTH;
+    private final int MAX_SUBJECT_DESCRIPTION_LENGTH;
 
     /**
      * SubjectsService constructor
@@ -40,7 +40,7 @@ public class SubjectsService extends CrudService<SubjectVo, SubjectEntity> {
      */
     @Override
     public void validateVoForCreation(EntityManager entityManager, SubjectVo subjectVo)
-            throws ExternalServiceConnectionException, MultipleMessagesException {
+            throws MultipleMessagesException {
         MultipleMessagesException multipleMessageException = new MultipleMessagesException();
         if (subjectVo == null) {
             multipleMessageException.addMessage("subject.null");
@@ -56,10 +56,10 @@ public class SubjectsService extends CrudService<SubjectVo, SubjectEntity> {
             multipleMessageException.addMessage("subject.description.tooLong");
         }
 
-        if (subjectVo.getCode() < 0){
+        if (subjectVo.getCode() < 0) {
             multipleMessageException.addMessage("subject.code.negativeValue");
         }
-        
+
         if (subjectVo.getName() == null || subjectVo.getName().equals("")) {
             multipleMessageException.addMessage("subject.name.null");
         } else {
@@ -75,8 +75,9 @@ public class SubjectsService extends CrudService<SubjectVo, SubjectEntity> {
     }
 
     @Override
-    public void validateVoForUpdate(EntityManager entityManager, SubjectVo valueObject) throws MultipleMessagesException, ExternalServiceConnectionException, DataBaseException {
-        
+    public void validateVoForUpdate(EntityManager entityManager, SubjectVo valueObject) 
+            throws MultipleMessagesException, DataBaseException {
+
         validateVoForCreation(entityManager, valueObject);
         MultipleMessagesException multipleMessageException = new MultipleMessagesException();
         if (valueObject.getId() == null) {
@@ -95,7 +96,7 @@ public class SubjectsService extends CrudService<SubjectVo, SubjectEntity> {
      */
     @Override
     public SubjectEntity voToEntity(EntityManager entityManager, SubjectVo valueObject)
-            throws ExternalServiceConnectionException, MultipleMessagesException {
+            throws MultipleMessagesException {
 
         SubjectEntity subjectEntity = new SubjectEntity();
         subjectEntity.setId(valueObject.getId());
@@ -103,53 +104,53 @@ public class SubjectsService extends CrudService<SubjectVo, SubjectEntity> {
         subjectEntity.setDescription(valueObject.getDescription());
         subjectEntity.setCode(valueObject.getCode());
 
-		return subjectEntity;
-	}
+        return subjectEntity;
+    }
 
-	/**
-	 * Returns a list of SubjectVo according with the search query
-	 *
-	 * @param entityManager EntityManager
-	 * @param query String with the search parameter
-	 * @return A list of SubjectVo
-	 */
-	public List<SubjectVo> search(EntityManager entityManager, String query)
-			throws ExternalServiceConnectionException, DataBaseException {
-		
-		List<SubjectEntity> subjectEntitys = getDaoFactory().getSubjectDao().
-				getByName(entityManager, 
-                                SecurityHelper.sanitizeHTML(query).toUpperCase());
-		if (subjectEntitys.isEmpty()) {
-			return null;
-		}
-		ArrayList<SubjectVo> arrayList = new ArrayList<SubjectVo>();
-		for (SubjectEntity subjectEntity : subjectEntitys) {
-			arrayList.add(subjectEntity.toVo());
-		}
-		return arrayList;
-	}
+    /**
+     * Returns a list of SubjectVo according with the search query
+     *
+     * @param entityManager EntityManager
+     * @param query String with the search parameter
+     * @return A list of SubjectVo
+     */
+    public List<SubjectVo> search(EntityManager entityManager, String query)
+            throws DataBaseException {
 
-	/**
-	 * Returns a list of SubjectVo according with the search name
-	 *
-	 * @param em EntityManager
-	 * @param name String with the name of the SubjectVo
-	 * @return A list if SubjectVo
-	 */
-	public List<SubjectVo> getByNameLike(EntityManager em, String name)
-			throws ExternalServiceConnectionException, DataBaseException {
-		name = SecurityHelper.sanitizeHTML(name);
-		List<SubjectEntity> subjectEntitys;
-		ArrayList<SubjectVo> arrayList = new ArrayList<SubjectVo>();
-		if (!name.isEmpty()) {
-			subjectEntitys = getDaoFactory().getSubjectDao().
-					getByName(em, name.toUpperCase());
-			for (SubjectEntity subjectEntity : subjectEntitys) {
-				arrayList.add(subjectEntity.toVo());
-			}
-		}
-		return arrayList;
-	}
+        List<SubjectEntity> subjectEntitys = getDaoFactory().getSubjectDao().
+                getByName(entityManager,
+                SecurityHelper.sanitizeHTML(query).toUpperCase());
+        if (subjectEntitys.isEmpty()) {
+            return null;
+        }
+        ArrayList<SubjectVo> arrayList = new ArrayList<SubjectVo>();
+        for (SubjectEntity subjectEntity : subjectEntitys) {
+            arrayList.add(subjectEntity.toVo());
+        }
+        return arrayList;
+    }
+
+    /**
+     * Returns a list of SubjectVo according with the search name
+     *
+     * @param em EntityManager
+     * @param name String with the name of the SubjectVo
+     * @return A list if SubjectVo
+     */
+    public List<SubjectVo> getByNameLike(EntityManager em, String name)
+            throws DataBaseException {
+        name = SecurityHelper.sanitizeHTML(name);
+        List<SubjectEntity> subjectEntitys;
+        ArrayList<SubjectVo> arrayList = new ArrayList<SubjectVo>();
+        if (!name.isEmpty()) {
+            subjectEntitys = getDaoFactory().getSubjectDao().
+                    getByName(em, name.toUpperCase());
+            for (SubjectEntity subjectEntity : subjectEntitys) {
+                arrayList.add(subjectEntity.toVo());
+            }
+        }
+        return arrayList;
+    }
 
     /**
      * Returns a list of SubjectVos that had been taught by the specified

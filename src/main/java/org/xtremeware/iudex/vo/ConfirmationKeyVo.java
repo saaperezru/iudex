@@ -17,7 +17,7 @@ public class ConfirmationKeyVo extends IdentifiableValueObject<Long> implements 
             return false;
         }
         final ConfirmationKeyVo other = (ConfirmationKeyVo) obj;
-        if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
+        if (this.getId() != other.getId() && (this.getId() == null || !this.getId().equals(other.getId()))) {
             return false;
         }
         if (this.expirationDate != other.expirationDate && (this.expirationDate == null || !this.expirationDate.equals(other.expirationDate))) {
@@ -35,7 +35,7 @@ public class ConfirmationKeyVo extends IdentifiableValueObject<Long> implements 
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 97 * hash + (this.id != null ? this.id.hashCode() : 0);
+        hash = 97 * hash + (this.getId() != null ? this.getId().hashCode() : 0);
         hash = 97 * hash + (this.expirationDate != null ? this.expirationDate.hashCode() : 0);
         hash = 97 * hash + (this.confirmationKey != null ? this.confirmationKey.hashCode() : 0);
         hash = 97 * hash + (this.userId != null ? this.userId.hashCode() : 0);
@@ -44,7 +44,7 @@ public class ConfirmationKeyVo extends IdentifiableValueObject<Long> implements 
 
     @Override
     public String toString() {
-        return "ConfirmationKeyVo{" + "id=" + id + ", expirationDate="
+        return "ConfirmationKeyVo{" + "id=" + getId() + ", expirationDate="
                 + expirationDate + ", confirmationKey="
                 + confirmationKey + ", userId=" + userId + '}';
     }

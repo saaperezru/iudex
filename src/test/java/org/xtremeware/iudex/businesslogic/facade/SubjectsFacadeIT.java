@@ -22,7 +22,6 @@ import org.xtremeware.iudex.vo.SubjectVoFull;
  */
 public class SubjectsFacadeIT {
 
-    //private EntityManager entityManager;
     private SubjectsFacade subjectsFacade = Config.getInstance().getFacadeFactory().getSubjectsFacade();
 
     public SubjectsFacadeIT() {
@@ -35,7 +34,6 @@ public class SubjectsFacadeIT {
 
     @Before
     public void setUp() {
-        //entityManager = FacadesTestHelper.createEntityManagerFactory().createEntityManager();
     }
 
     //@Ignore
@@ -497,7 +495,6 @@ public class SubjectsFacadeIT {
             subjectVo.setName("Materia con nuevo nombre");
             subjectVo.setCode(2019772);
             subjectVo.setDescription("No se tuvo mucha imaginación con el nombre de esta materia.");
-            // TODO: Resolve problem with rollback
             subjectsFacade.updateSubject(subjectVo);
             fail();
         } catch (DuplicityException ex) {

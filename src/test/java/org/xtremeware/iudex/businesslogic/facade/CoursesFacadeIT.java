@@ -331,7 +331,7 @@ public class CoursesFacadeIT {
     @Test
     public void test_BL_19_1() throws Exception {
         CoursesFacade facade = Config.getInstance().getFacadeFactory().getCoursesFacade();
-        long listTodelete[] = {1L, 2L};
+        long listTodelete[] = {3L, 4L};
         for (long i : listTodelete) {
             facade.deleteCourse(i);
             assertNull(facade.getCourse(i));

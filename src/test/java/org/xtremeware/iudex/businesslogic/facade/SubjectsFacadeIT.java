@@ -1,7 +1,6 @@
 package org.xtremeware.iudex.businesslogic.facade;
 
 import java.util.Map;
-import javax.persistence.EntityManager;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.BeforeClass;

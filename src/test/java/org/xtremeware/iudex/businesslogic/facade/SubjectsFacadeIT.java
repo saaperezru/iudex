@@ -6,14 +6,14 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.xtremeware.iudex.businesslogic.DuplicityException;
+import org.xtremeware.iudex.businesslogic.helper.FacadesTestHelper;
 import org.xtremeware.iudex.helper.Config;
 import org.xtremeware.iudex.helper.ConfigurationVariablesHelper;
 import org.xtremeware.iudex.helper.DataBaseException;
 import org.xtremeware.iudex.helper.MultipleMessagesException;
+import org.xtremeware.iudex.vo.BinaryRatingVo;
 import org.xtremeware.iudex.vo.RatingSummaryVo;
 import org.xtremeware.iudex.vo.SubjectVo;
-import org.xtremeware.iudex.businesslogic.helper.FacadesTestHelper;
-import org.xtremeware.iudex.vo.BinaryRatingVo;
 import org.xtremeware.iudex.vo.SubjectVoFull;
 
 /**
@@ -293,8 +293,8 @@ public class SubjectsFacadeIT {
         try {
             String injectedCodeInDescription = "<script type=" + '"' + "text/javascript" + '"' + ">document.getElementById(" + '"' + "demo" + '"' + ").innerHTML=Date();</script>";
 
-            subjectVo.setId(0L);
-            subjectVo.setName("");
+            subjectVo.setId(null);
+            subjectVo.setName(injectedCodeInDescription);
             subjectVo.setCode(0);
             subjectVo.setDescription(injectedCodeInDescription + "Hola");
             subjectsFacade.createSubject(subjectVo);
@@ -335,7 +335,6 @@ public class SubjectsFacadeIT {
             subjectsFacade.createSubject(subjectVo);
             fail();
         } catch (DuplicityException ex) {
-            assertEquals(1, 1);
         }
     }
 

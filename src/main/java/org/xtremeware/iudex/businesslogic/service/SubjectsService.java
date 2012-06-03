@@ -3,10 +3,16 @@ package org.xtremeware.iudex.businesslogic.service;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
-import org.xtremeware.iudex.businesslogic.service.crudinterfaces.*;
+import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Create;
+import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Delete;
+import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Read;
+import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Update;
 import org.xtremeware.iudex.dao.AbstractDaoBuilder;
 import org.xtremeware.iudex.entity.SubjectEntity;
-import org.xtremeware.iudex.helper.*;
+import org.xtremeware.iudex.helper.ConfigurationVariablesHelper;
+import org.xtremeware.iudex.helper.DataBaseException;
+import org.xtremeware.iudex.helper.MultipleMessagesException;
+import org.xtremeware.iudex.helper.SecurityHelper;
 import org.xtremeware.iudex.vo.SubjectVo;
 
 /**
@@ -64,6 +70,9 @@ public class SubjectsService extends CrudService<SubjectVo, SubjectEntity> {
             multipleMessageException.addMessage("subject.name.null");
         } else {
             subjectVo.setName(SecurityHelper.sanitizeHTML(subjectVo.getName()));
+            if(subjectVo.getName().equals("")){
+                multipleMessageException.addMessage("subject.name.null");
+            }
             if (subjectVo.getName().length() > MAX_SUBJECT_NAME_LENGTH) {
                 multipleMessageException.addMessage("subject.name.tooLong");
             }

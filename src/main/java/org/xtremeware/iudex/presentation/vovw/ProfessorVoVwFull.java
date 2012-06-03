@@ -56,4 +56,8 @@ public class ProfessorVoVwFull implements ValueObject{
 	public String getWebsite() {
 		return vo.getWebsite();
 	}
+
+	public String getFullName(){
+		return vo.getFirstName() + " " +vo.getLastName();
+	}
 }

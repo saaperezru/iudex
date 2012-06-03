@@ -13,314 +13,266 @@ import org.xtremeware.iudex.vo.*;
 
 public class CoursesFacade extends AbstractFacade {
 
-    public CoursesFacade(ServiceBuilder serviceFactory, EntityManagerFactory emFactory) {
-        super(serviceFactory, emFactory);
-    }
+	public CoursesFacade(ServiceBuilder serviceFactory, EntityManagerFactory emFactory) {
+		super(serviceFactory, emFactory);
+	}
 
-    /**
-     * Searches for courses by professor and subject name that contain the
-     * string specified in the query parameter. If the query is empty or full of
-     * spaces, the results will be empty. (Because of the overhead of bringing
-     * ALL the information from database and translating it to the proper
-     * format).
-     *
-     * @param query String to be searched among the professors and subjects
-     * names.
-     * @return A list of CourseVoVwFull with the information of the found
-     * courses.
-     */
-    public List<CourseVoFull> search(String query) {
-        EntityManager entityManager = null;
+	/**
+	 * Searches for courses by professor and subject name that contain the
+	 * string specified in the query parameter. If the query is empty or full of
+	 * spaces, the results will be empty. (Because of the overhead of bringing
+	 * ALL the information from database and translating it to the proper
+	 * format).
+	 *
+	 * @param query String to be searched among the professors and subjects
+	 * names.
+	 * @return A list of CourseVoVwFull with the information of the found
+	 * courses.
+	 */
+	public List<Long> search(String query) {
+		EntityManager entityManager = null;
 
-        List<CourseVoFull> listOfFoundCourses = new ArrayList<CourseVoFull>();
-
-        if (query != null && !query.isEmpty()) {
-
-
-            Set<Long> coursesIds = new HashSet<Long>();
-            HashMap<Long, ProfessorVo> professorsVo = new HashMap<Long, ProfessorVo>();
-            HashMap<Long, SubjectVo> subjectsVo = new HashMap<Long, SubjectVo>();
-            try {
-                entityManager = getEntityManagerFactory().createEntityManager();
-
-                List<ProfessorVo> professors = getServiceFactory().getProfessorsService().getByNameLike(entityManager, query);
-                getProfessorsAndSubjectsByProfessorSearch(entityManager, professorsVo, subjectsVo, professors);
+		Set<Long> coursesIds = new HashSet<Long>();
+		if (query != null && !query.isEmpty()) {
 
 
-                List<SubjectVo> subjects = getServiceFactory().getSubjectsService().getByNameLike(entityManager, query);
-                getProfessorsAndSubjectsBySubjectSearch(entityManager, professorsVo, subjectsVo, subjects);
+			try {
+				entityManager = getEntityManagerFactory().createEntityManager();
 
+				List<ProfessorVo> professors = getServiceFactory().getProfessorsService().getByNameLike(entityManager, query);
 
-                for (ProfessorVo professorVo : professors) {
-                    for (CourseVo courseVo : getServiceFactory().getCoursesService().getByProfessorId(entityManager, professorVo.getId())) {
-                        //If this course is still not in the set of results, add it.
-                        if (!coursesIds.contains(courseVo.getId())) {
-                            coursesIds.add(courseVo.getId());
-                            listOfFoundCourses.add(new CourseVoFull(courseVo, subjectsVo.get(courseVo.getSubjectId()), professorsVo.get(courseVo.getProfessorId())));
-                        }
-                    }
-                }
-                for (SubjectVo subjectVo : subjects) {
-                    for (CourseVo courseVo : getServiceFactory().getCoursesService().getBySubjectId(entityManager, subjectVo.getId())) {
-                        //If this course is still not in the set of results, add it.
-                        if (!coursesIds.contains(courseVo.getId())) {
-                            listOfFoundCourses.add(new CourseVoFull(courseVo, subjectsVo.get(courseVo.getSubjectId()), professorsVo.get(courseVo.getProfessorId())));
-                        }
-                    }
+				List<SubjectVo> subjects = getServiceFactory().getSubjectsService().getByNameLike(entityManager, query);
 
-                }
+				for (ProfessorVo professorVo : professors) {
+					for (CourseVo courseVo : getServiceFactory().getCoursesService().getByProfessorId(entityManager, professorVo.getId())) {
+						//If this course is still not in the set of results, add it.
+						if (!coursesIds.contains(courseVo.getId())) {
+							coursesIds.add(courseVo.getId());
+						}
+					}
+				}
+				for (SubjectVo subjectVo : subjects) {
+					for (CourseVo courseVo : getServiceFactory().getCoursesService().getBySubjectId(entityManager, subjectVo.getId())) {
+						//If this course is still not in the set of results, add it.
+						if (!coursesIds.contains(courseVo.getId())) {
+							coursesIds.add(courseVo.getId());
+						}
+					}
 
-            } catch (Exception e) {
-                getServiceFactory().getLogService().error(e.getMessage(), e);
-                throw new RuntimeException(e);
-            } finally {
-                FacadesHelperImplementation.closeEntityManager(entityManager);
-            }
-        }
-        return listOfFoundCourses;
-    }
+				}
 
-    private void getProfessorsAndSubjectsByProfessorSearch(EntityManager entityManager,
-            Map<Long, ProfessorVo> professorsVo,
-            Map<Long, SubjectVo> subjectsVo,
-            List<ProfessorVo> professors) throws DataBaseException {
+			} catch (Exception e) {
+				getServiceFactory().getLogService().error(e.getMessage(), e);
+				throw new RuntimeException(e);
+			} finally {
+				FacadesHelperImplementation.closeEntityManager(entityManager);
+			}
+		}
+		return Arrays.asList(coursesIds.toArray(new Long[]{}));
+	}
 
-        for (ProfessorVo professorVo : professors) {
-            if (!professorsVo.containsKey(professorVo.getId())) {
-                professorsVo.put(professorVo.getId(), professorVo);
+	public CourseVo createCourse(long professorId, long subjectId, long periodId)
+			throws MultipleMessagesException, DuplicityException {
+		CourseVo courseVo = null;
+		EntityManager entityManager = null;
+		EntityTransaction transaction = null;
+		try {
+			courseVo = new CourseVo();
+			courseVo.setPeriodId(periodId);
+			courseVo.setProfessorId(professorId);
+			courseVo.setSubjectId(subjectId);
+			courseVo.setRatingCount(0L);
+			courseVo.setRatingAverage(0.0);
+			entityManager = getEntityManagerFactory().createEntityManager();
+			transaction = entityManager.getTransaction();
+			transaction.begin();
+			courseVo = getServiceFactory().getCoursesService().create(entityManager, courseVo);
+			transaction.commit();
+		} catch (Exception exception) {
+			getServiceFactory().getLogService().error(exception.getMessage(), exception);
+			FacadesHelperImplementation.checkException(exception, MultipleMessagesException.class);
+			FacadesHelperImplementation.checkDuplicityViolation(entityManager, transaction, exception);
+			FacadesHelperImplementation.rollbackTransaction(entityManager, transaction, exception);
+		} finally {
+			FacadesHelperImplementation.closeEntityManager(entityManager);
+		}
+		return courseVo;
+	}
 
-                List<SubjectVo> professorsSubjects = getServiceFactory().getSubjectsService().getByProfessorId(entityManager, professorVo.getId());
-                for (SubjectVo subjectVo : professorsSubjects) {
-                    if (!subjectsVo.containsKey(subjectVo.getId())) {
-                        subjectsVo.put(subjectVo.getId(), subjectVo);
-                    }
-                }
-            }
-        }
-    }
+	public void deleteCourse(long courseId) throws DataBaseException {
+		EntityManager entityManager = null;
+		EntityTransaction transaction = null;
+		try {
+			entityManager = getEntityManagerFactory().createEntityManager();
+			transaction = entityManager.getTransaction();
+			transaction.begin();
+			getServiceFactory().getCoursesService().delete(entityManager, courseId);
+			transaction.commit();
+		} catch (Exception exception) {
+			getServiceFactory().getLogService().error(exception.getMessage(), exception);
+			FacadesHelperImplementation.checkExceptionAndRollback(entityManager, transaction, exception, DataBaseException.class);
+			FacadesHelperImplementation.rollbackTransaction(entityManager, transaction, exception);
+		} finally {
+			FacadesHelperImplementation.closeEntityManager(entityManager);
+		}
+	}
 
-    private void getProfessorsAndSubjectsBySubjectSearch(EntityManager entityManager,
-            Map<Long, ProfessorVo> professorsVo,
-            Map<Long, SubjectVo> subjectsVo,
-            List<SubjectVo> subjects) throws DataBaseException {
+	public CourseVoFull getCourse(long courseId) {
+		EntityManager entityManager = null;
+		CourseVoFull courseVoFull = null;
+		try {
+			entityManager = getEntityManagerFactory().createEntityManager();
+			CourseVo vo = getServiceFactory().getCoursesService().read(entityManager, courseId);
+			if (vo == null) {
+				return null;
+			}
+			SubjectVo subjectVo = getServiceFactory().getSubjectsService().read(entityManager, vo.getSubjectId());
+			ProfessorVo professorVo = getServiceFactory().getProfessorsService().read(entityManager, vo.getProfessorId());
 
-        for (SubjectVo subjectVo : subjects) {
-            if (!subjectsVo.containsKey(subjectVo.getId())) {
-                subjectsVo.put(subjectVo.getId(), subjectVo);
+			courseVoFull = new CourseVoFull(vo, subjectVo, professorVo);
 
-                List<ProfessorVo> subjectsProfessors = getServiceFactory().getProfessorsService().getBySubjectId(entityManager, subjectVo.getId());
-                for (ProfessorVo professorVo : subjectsProfessors) {
-                    if (!professorsVo.containsKey(professorVo.getId())) {
-                        professorsVo.put(professorVo.getId(), professorVo);
-                    }
+		} catch (Exception e) {
+			getServiceFactory().getLogService().error(e.getMessage(), e);
+			throw new RuntimeException(e);
+		} finally {
+			FacadesHelperImplementation.closeEntityManager(entityManager);
+		}
+		return courseVoFull;
+	}
 
-                }
-            }
-        }
-    }
+	public CourseRatingVo rateCourse(long courseId, long userId, float value)
+			throws MultipleMessagesException, DuplicityException {
+		EntityManager entityManager = null;
+		EntityTransaction transaction = null;
+		CourseRatingVo rating = null;
+		try {
+			CourseRatingVo vo = new CourseRatingVo();
+			vo.setCourseId(courseId);
+			vo.setUserId(userId);
+			vo.setValue(value);
 
-    public CourseVo createCourse(long professorId, long subjectId, long periodId)
-            throws MultipleMessagesException, DuplicityException {
-        CourseVo courseVo = null;
-        EntityManager entityManager = null;
-        EntityTransaction transaction = null;
-        try {
-            courseVo = new CourseVo();
-            courseVo.setPeriodId(periodId);
-            courseVo.setProfessorId(professorId);
-            courseVo.setSubjectId(subjectId);
-            courseVo.setRatingCount(0L);
-            courseVo.setRatingAverage(0.0);
-            entityManager = getEntityManagerFactory().createEntityManager();
-            transaction = entityManager.getTransaction();
-            transaction.begin();
-            courseVo = getServiceFactory().getCoursesService().create(entityManager, courseVo);
-            transaction.commit();
-        } catch (Exception exception) {
-            getServiceFactory().getLogService().error(exception.getMessage(), exception);
-            FacadesHelperImplementation.checkException(exception, MultipleMessagesException.class);
-            FacadesHelperImplementation.checkDuplicityViolation(entityManager, transaction, exception);
-            FacadesHelperImplementation.rollbackTransaction(entityManager, transaction, exception);
-        } finally {
-            FacadesHelperImplementation.closeEntityManager(entityManager);
-        }
-        return courseVo;
-    }
+			entityManager = getEntityManagerFactory().createEntityManager();
+			transaction = entityManager.getTransaction();
+			transaction.begin();
 
-    public void deleteCourse(long courseId) throws DataBaseException {
-        EntityManager entityManager = null;
-        EntityTransaction transaction = null;
-        try {
-            entityManager = getEntityManagerFactory().createEntityManager();
-            transaction = entityManager.getTransaction();
-            transaction.begin();
-            getServiceFactory().getCoursesService().delete(entityManager, courseId);
-            transaction.commit();
-        } catch (Exception exception) {
-            getServiceFactory().getLogService().error(exception.getMessage(), exception);
-            FacadesHelperImplementation.checkExceptionAndRollback(entityManager, transaction, exception, DataBaseException.class);
-            FacadesHelperImplementation.rollbackTransaction(entityManager, transaction, exception);
-        } finally {
-            FacadesHelperImplementation.closeEntityManager(entityManager);
-        }
-    }
+			rating = getServiceFactory().getCourseRatingsService().create(entityManager, vo);
 
-    public CourseVoFull getCourse(long courseId) {
-        EntityManager entityManager = null;
-        CourseVoFull courseVoFull = null;
-        try {
-            entityManager = getEntityManagerFactory().createEntityManager();
-            CourseVo vo = getServiceFactory().getCoursesService().read(entityManager, courseId);
-            if (vo == null) {
-                return null;
-            }
-            SubjectVo subjectVo = getServiceFactory().getSubjectsService().read(entityManager, vo.getSubjectId());
-            ProfessorVo professorVo = getServiceFactory().getProfessorsService().read(entityManager, vo.getProfessorId());
+			transaction.commit();
+		} catch (Exception exception) {
+			getServiceFactory().getLogService().error(exception.getMessage(), exception);
+			FacadesHelperImplementation.checkException(exception, MultipleMessagesException.class);
+			FacadesHelperImplementation.checkDuplicityViolation(entityManager, transaction, exception);
+			FacadesHelperImplementation.rollbackTransaction(entityManager, transaction, exception);
+		} finally {
+			FacadesHelperImplementation.closeEntityManager(entityManager);
+		}
+		return rating;
+	}
 
-            courseVoFull = new CourseVoFull(vo, subjectVo, professorVo);
+	public CourseRatingVo getCourseRatingByUserId(long courseId, long userId) {
+		EntityManager entityManager = null;
+		CourseRatingVo courseRatingVo = null;
+		try {
+			entityManager = getEntityManagerFactory().createEntityManager();
+			courseRatingVo = getServiceFactory().getCourseRatingsService().getByCourseIdAndUserId(entityManager, courseId, userId);
+		} catch (Exception exception) {
+			getServiceFactory().getLogService().error(exception.getMessage(), exception);
+			throw new RuntimeException(exception);
+		} finally {
+			FacadesHelperImplementation.closeEntityManager(entityManager);
+		}
+		return courseRatingVo;
+	}
 
-        } catch (Exception e) {
-            getServiceFactory().getLogService().error(e.getMessage(), e);
-            throw new RuntimeException(e);
-        } finally {
-            FacadesHelperImplementation.closeEntityManager(entityManager);
-        }
-        return courseVoFull;
-    }
+	public List<CourseVoFull> getSimilarCourses(String professorName, String subjectName, Long periodId) {
+		EntityManager entityManager = null;
+		List<CourseVoFull> courseVoFulls = new ArrayList<CourseVoFull>();
 
-    public CourseRatingVo rateCourse(long courseId, long userId, float value)
-            throws MultipleMessagesException, DuplicityException {
-        EntityManager entityManager = null;
-        EntityTransaction transaction = null;
-        CourseRatingVo rating = null;
-        try {
-            CourseRatingVo vo = new CourseRatingVo();
-            vo.setCourseId(courseId);
-            vo.setUserId(userId);
-            vo.setValue(value);
+		HashMap<Long, ProfessorVo> professorsVos = new HashMap<Long, ProfessorVo>();
+		HashMap<Long, SubjectVo> subjectsVos = new HashMap<Long, SubjectVo>();
 
-            entityManager = getEntityManagerFactory().createEntityManager();
-            transaction = entityManager.getTransaction();
-            transaction.begin();
+		try {
+			entityManager = getEntityManagerFactory().createEntityManager();
+			List<CourseVo> similarCourses = getServiceFactory().
+					getCoursesService().getSimilarCourses(entityManager, professorName, subjectName, periodId);
+			for (CourseVo courseVo : similarCourses) {
+				if (!professorsVos.containsKey(courseVo.getProfessorId())) {
+					ProfessorVo professorVo = getServiceFactory().
+							getProfessorsService().read(entityManager, courseVo.getProfessorId());
+					professorsVos.put(professorVo.getId(), professorVo);
+				}
+				if (!subjectsVos.containsKey(courseVo.getSubjectId())) {
+					SubjectVo subjectVo = getServiceFactory().
+							getSubjectsService().read(entityManager, courseVo.getSubjectId());
+					subjectsVos.put(subjectVo.getId(), subjectVo);
+				}
+				courseVoFulls.add(new CourseVoFull(courseVo, subjectsVos.get(courseVo.getSubjectId()), professorsVos.get(courseVo.getProfessorId())));
+			}
 
-            rating = getServiceFactory().getCourseRatingsService().create(entityManager, vo);
+		} catch (Exception exception) {
+			getServiceFactory().getLogService().error(exception.getMessage(), exception);
+			throw new RuntimeException(exception);
+		} finally {
+			FacadesHelperImplementation.closeEntityManager(entityManager);
+		}
+		return courseVoFulls;
+	}
 
-            transaction.commit();
-        } catch (Exception exception) {
-            getServiceFactory().getLogService().error(exception.getMessage(), exception);
-            FacadesHelperImplementation.checkException(exception, MultipleMessagesException.class);
-            FacadesHelperImplementation.checkDuplicityViolation(entityManager, transaction, exception);
-            FacadesHelperImplementation.rollbackTransaction(entityManager, transaction, exception);
-        } finally {
-            FacadesHelperImplementation.closeEntityManager(entityManager);
-        }
-        return rating;
-    }
+	public List<CourseVoFull> getBySubjectId(long subjectId) {
+		EntityManager entityManager = null;
+		List<CourseVoFull> courseVoFulls = new ArrayList<CourseVoFull>();
+		HashMap<Long, ProfessorVo> professorsVo = new HashMap<Long, ProfessorVo>();
+		try {
+			entityManager = getEntityManagerFactory().createEntityManager();
+			List<CourseVo> courseVos = getServiceFactory().getCoursesService().getBySubjectId(entityManager, subjectId);
+			SubjectVo subjectVo = getServiceFactory().getSubjectsService().read(entityManager, subjectId);
+			for (CourseVo courseVo : courseVos) {
+				if (!professorsVo.containsKey(courseVo.getProfessorId())) {
+					ProfessorVo professorVo = getServiceFactory().
+							getProfessorsService().read(entityManager, courseVo.getProfessorId());
+					professorsVo.put(professorVo.getId(), professorVo);
+				}
+				courseVoFulls.add(
+						new CourseVoFull(
+						courseVo, subjectVo, professorsVo.get(courseVo.getProfessorId())));
+			}
+		} catch (Exception exception) {
+			getServiceFactory().getLogService().error(exception.getMessage(), exception);
+			throw new RuntimeException(exception);
+		} finally {
+			FacadesHelperImplementation.closeEntityManager(entityManager);
+		}
+		return courseVoFulls;
+	}
 
-    public CourseRatingVo getCourseRatingByUserId(long courseId, long userId) {
-        EntityManager entityManager = null;
-        CourseRatingVo courseRatingVo = null;
-        try {
-            entityManager = getEntityManagerFactory().createEntityManager();
-            courseRatingVo = getServiceFactory().getCourseRatingsService().getByCourseIdAndUserId(entityManager, courseId, userId);
-        } catch (Exception exception) {
-            getServiceFactory().getLogService().error(exception.getMessage(), exception);
-            throw new RuntimeException(exception);
-        } finally {
-            FacadesHelperImplementation.closeEntityManager(entityManager);
-        }
-        return courseRatingVo;
-    }
+	/**
+	 *
+	 * @param professorId
+	 * @return If there is no professor associated with the provided id an empty
+	 * list will be returned
+	 */
+	public List<CourseVoFull> getByProfessorId(long professorId) {
+		EntityManager entityManager = null;
+		List<CourseVoFull> coursesList = new ArrayList<CourseVoFull>();
+		HashMap<Long, SubjectVo> subjectsVo = new HashMap<Long, SubjectVo>();
 
-    public List<CourseVoFull> getSimilarCourses(String professorName, String subjectName, Long periodId) {
-        EntityManager entityManager = null;
-        List<CourseVoFull> courseVoFulls = new ArrayList<CourseVoFull>();
-
-        HashMap<Long, ProfessorVo> professorsVos = new HashMap<Long, ProfessorVo>();
-        HashMap<Long, SubjectVo> subjectsVos = new HashMap<Long, SubjectVo>();
-
-        try {
-            entityManager = getEntityManagerFactory().createEntityManager();
-            List<CourseVo> similarCourses = getServiceFactory().
-                    getCoursesService().getSimilarCourses(entityManager, professorName, subjectName, periodId);
-            for (CourseVo courseVo : similarCourses) {
-                if (!professorsVos.containsKey(courseVo.getProfessorId())) {
-                    ProfessorVo professorVo = getServiceFactory().
-                            getProfessorsService().read(entityManager, courseVo.getProfessorId());
-                    professorsVos.put(professorVo.getId(), professorVo);
-                }
-                if (!subjectsVos.containsKey(courseVo.getSubjectId())) {
-                    SubjectVo subjectVo = getServiceFactory().
-                            getSubjectsService().read(entityManager, courseVo.getSubjectId());
-                    subjectsVos.put(subjectVo.getId(), subjectVo);
-                }
-                courseVoFulls.add(new CourseVoFull(courseVo, subjectsVos.get(courseVo.getSubjectId()), professorsVos.get(courseVo.getProfessorId())));
-            }
-
-        } catch (Exception exception) {
-            getServiceFactory().getLogService().error(exception.getMessage(), exception);
-            throw new RuntimeException(exception);
-        } finally {
-            FacadesHelperImplementation.closeEntityManager(entityManager);
-        }
-        return courseVoFulls;
-    }
-
-    public List<CourseVoFull> getBySubjectId(long subjectId) {
-        EntityManager entityManager = null;
-        List<CourseVoFull> courseVoFulls = new ArrayList<CourseVoFull>();
-        HashMap<Long, ProfessorVo> professorsVo = new HashMap<Long, ProfessorVo>();
-        try {
-            entityManager = getEntityManagerFactory().createEntityManager();
-            List<CourseVo> courseVos = getServiceFactory().getCoursesService().getBySubjectId(entityManager, subjectId);
-            SubjectVo subjectVo = getServiceFactory().getSubjectsService().read(entityManager, subjectId);
-            for (CourseVo courseVo : courseVos) {
-                if (!professorsVo.containsKey(courseVo.getProfessorId())) {
-                    ProfessorVo professorVo = getServiceFactory().
-                            getProfessorsService().read(entityManager, courseVo.getProfessorId());
-                    professorsVo.put(professorVo.getId(), professorVo);
-                }
-                courseVoFulls.add(
-                        new CourseVoFull(
-                        courseVo, subjectVo, professorsVo.get(courseVo.getProfessorId())));
-            }
-        } catch (Exception exception) {
-            getServiceFactory().getLogService().error(exception.getMessage(), exception);
-            throw new RuntimeException(exception);
-        } finally {
-            FacadesHelperImplementation.closeEntityManager(entityManager);
-        }
-        return courseVoFulls;
-    }
-
-    /**
-     *
-     * @param professorId
-     * @return If there is no professor associated with the provided id an empty
-     * list will be returned
-     */
-    public List<CourseVoFull> getByProfessorId(long professorId) {
-        EntityManager entityManager = null;
-        List<CourseVoFull> coursesList = new ArrayList<CourseVoFull>();
-        HashMap<Long, SubjectVo> subjectsVo = new HashMap<Long, SubjectVo>();
-
-        try {
-            entityManager = getEntityManagerFactory().createEntityManager();
-            List<CourseVo> courses = getServiceFactory().getCoursesService().getByProfessorId(entityManager, professorId);
-            ProfessorVo professorVo = getServiceFactory().getProfessorsService().read(entityManager, professorId);
-            for (CourseVo courseVo : courses) {
-                if (!subjectsVo.containsKey(courseVo.getSubjectId())) {
-                    SubjectVo subjectVo = getServiceFactory().getSubjectsService().read(entityManager, courseVo.getSubjectId());
-                    subjectsVo.put(subjectVo.getId(), subjectVo);
-                }
-                coursesList.add(new CourseVoFull(courseVo, subjectsVo.get(courseVo.getSubjectId()), professorVo));
-            }
-        } catch (Exception exception) {
-            getServiceFactory().getLogService().error(exception.getMessage(), exception);
-            throw new RuntimeException(exception);
-        } finally {
-            FacadesHelperImplementation.closeEntityManager(entityManager);
-        }
-        return coursesList;
-    }
+		try {
+			entityManager = getEntityManagerFactory().createEntityManager();
+			List<CourseVo> courses = getServiceFactory().getCoursesService().getByProfessorId(entityManager, professorId);
+			ProfessorVo professorVo = getServiceFactory().getProfessorsService().read(entityManager, professorId);
+			for (CourseVo courseVo : courses) {
+				if (!subjectsVo.containsKey(courseVo.getSubjectId())) {
+					SubjectVo subjectVo = getServiceFactory().getSubjectsService().read(entityManager, courseVo.getSubjectId());
+					subjectsVo.put(subjectVo.getId(), subjectVo);
+				}
+				coursesList.add(new CourseVoFull(courseVo, subjectsVo.get(courseVo.getSubjectId()), professorVo));
+			}
+		} catch (Exception exception) {
+			getServiceFactory().getLogService().error(exception.getMessage(), exception);
+			throw new RuntimeException(exception);
+		} finally {
+			FacadesHelperImplementation.closeEntityManager(entityManager);
+		}
+		return coursesList;
+	}
 }

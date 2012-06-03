@@ -29,7 +29,7 @@ public final class MySqlDaoBuilder implements AbstractDaoBuilder {
 
     public MySqlDaoBuilder() {
         try {
-            Class.forName("com.mySql.jdbc.Driver").newInstance();
+            Class.forName("com.mysql.jdbc.Driver").newInstance();
         } catch (Exception ex) {
             ex.printStackTrace();
         }

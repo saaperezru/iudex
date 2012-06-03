@@ -8,10 +8,10 @@ public class CourseVoVwFull implements ValueObject{
 
 	private CourseVo vo;
 	private SubjectVoVwSmall subjectVo;
-	private ProfessorVoVwSmall professorVo;
+	private ProfessorVoVwFull professorVo;
 
 
-	public CourseVoVwFull(CourseVo vo, SubjectVoVwSmall subjectVo, ProfessorVoVwSmall professorVo) {
+	public CourseVoVwFull(CourseVo vo, SubjectVoVwSmall subjectVo, ProfessorVoVwFull professorVo) {
 		this.vo = vo;
 		this.subjectVo = subjectVo;
 		this.professorVo = professorVo;
@@ -58,7 +58,7 @@ public class CourseVoVwFull implements ValueObject{
 		return vo.getId();
 	}
 
-	public ProfessorVoVwSmall getProfessor() {
+	public ProfessorVoVwFull getProfessor() {
 		return professorVo;
 	}
 

@@ -9,6 +9,7 @@
                 xmlns:iudex="http://java.sun.com/jsf/composite/iudex">
 
     <f:metadata>
+		<f:event type="preRenderView" listener="#{search.preRenderView()}" />
         <f:viewParam name="query" value="#{search.query}"/>
     </f:metadata>
 
@@ -28,20 +29,16 @@
 					</div>
 				</form>
 			</div>
-			<c:choose>
 				<!--When the query is not null or empty-->
-				<c:when test="#{!search.isQueryEmpty()}">
+				<ui:fragment rendered="#{!search.isQueryEmpty()}">
 					<div class="panel">
 						<h2>Reporte de resultados</h2>
 						La consulta arrojo #{search.courses.size()} resultados para "#{search.query}".
 						<hr size="5" noshade="noshade" />
-						<c:choose>
 							<!--When no data found-->
-							<c:when test="#{search.isCoursesEmpty()}">
-								No se encontraron resultados para "#{search.query}".
-							</c:when>
+							<h:outputText rendered="#{search.isCoursesEmpty()}" value="No se encontraron resultados para  #{search.query} ."/>
 							<!--When The query gets results Print them-->
-							<c:otherwise>
+							<ui:fragment rendered="#{!search.isCoursesEmpty()}">
 								<table class="table">
 									<tr>
 										<th>Profesor</th>
@@ -58,11 +55,9 @@
 										</tr>
 									</ui:repeat>
 								</table>
-							</c:otherwise>
-						</c:choose>
+							</ui:fragment>
 					</div>
-				</c:when>
-			</c:choose>
+				</ui:fragment>
 		</div>
     </ui:define>
 

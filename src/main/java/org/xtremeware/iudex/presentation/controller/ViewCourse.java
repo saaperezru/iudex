@@ -17,6 +17,10 @@ import org.primefaces.event.RateEvent;
 import org.xtremeware.iudex.businesslogic.facade.FacadeFactory;
 import org.xtremeware.iudex.helper.Config;
 import org.xtremeware.iudex.helper.MultipleMessagesException;
+import org.xtremeware.iudex.presentation.vovw.CourseVoVwFull;
+import org.xtremeware.iudex.presentation.vovw.ProfessorVoVwFull;
+import org.xtremeware.iudex.presentation.vovw.SubjectVoVwSmall;
+import org.xtremeware.iudex.presentation.vovw.builder.CourseVoVwBuilder;
 import org.xtremeware.iudex.vo.*;
 
 /**
@@ -32,7 +36,7 @@ public class ViewCourse implements Serializable {
     public ViewCourse() {
         id = Long.valueOf(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id"));
     }
-    private CourseVoFull course;
+    private CourseVoVwFull course;
     private List<CommentVo> comments;
     private ProfessorVoFull professor;
     private SubjectVoFull subject;
@@ -53,28 +57,20 @@ public class ViewCourse implements Serializable {
         this.comments = comments;
     }
 
-    public CourseVoFull getCourse() {
+    public CourseVoVwFull getCourse() {
         return course;
     }
 
-    public void setCourse(CourseVoFull course) {
+    public void setCourse(CourseVoVwFull course) {
         this.course = course;
     }
 
-    public ProfessorVoFull getProfessor() {
-        return professor;
+    public ProfessorVoVwFull getProfessor() {
+        return course.getProfessor();
     }
 
-    public void setProfessor(ProfessorVoFull professor) {
-        this.professor = professor;
-    }
-
-    public SubjectVoFull getSubject() {
-        return subject;
-    }
-
-    public void setSubject(SubjectVoFull subject) {
-        this.subject = subject;
+    public SubjectVoVwSmall getSubject() {
+        return course.getSubject();
     }
 
     public User getUser() {
@@ -135,12 +131,10 @@ public class ViewCourse implements Serializable {
         if (id != null) {
             FacadeFactory facadesFactory = Config.getInstance().getFacadeFactory();
             try {
-                course = facadesFactory.getCoursesFacade().getCourse(id);
+               	course = CourseVoVwBuilder.getInstance().getCourseVoVwFull(id);
                 if (course == null) {
                     ((ConfigurableNavigationHandler) FacesContext.getCurrentInstance().getApplication().getNavigationHandler()).performNavigation("notfound");
                 }
-                professor = facadesFactory.getProfessorsFacade().getProfessor(course.getSubjectVo().getId());
-                subject = facadesFactory.getSubjectsFacade().getSubject(course.getProfessorVo().getId());
                 comments = facadesFactory.getCommentsFacade().getCommentsByCourseId(id);
             } catch (Exception ex) {
                 Config.getInstance().getServiceFactory().getLogService().error(ex.getMessage(), ex);

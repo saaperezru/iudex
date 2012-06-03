@@ -8,6 +8,8 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import org.xtremeware.iudex.businesslogic.facade.CoursesFacade;
 import org.xtremeware.iudex.helper.Config;
+import org.xtremeware.iudex.presentation.vovw.CourseVoVwFull;
+import org.xtremeware.iudex.presentation.vovw.builder.CourseVoVwBuilder;
 import org.xtremeware.iudex.vo.CourseVoFull;
 
 /**
@@ -19,17 +21,11 @@ import org.xtremeware.iudex.vo.CourseVoFull;
 public class Search {
 
 	private String query ;
-	private List<CourseVoFull> courses;
+	private List<CourseVoVwFull> courses;
 
 	;
 
-    public List<CourseVoFull> getCourses() {
-		CoursesFacade coursesFacade = Config.getInstance().getFacadeFactory().getCoursesFacade();
-		try {
-			this.courses = coursesFacade.search(this.getQuery());
-		} catch (Exception ex) {
-			FacesContext.getCurrentInstance().addMessage("searchForm", new FacesMessage(ex.getMessage()));
-		}
+    public List<CourseVoVwFull> getCourses() {
 		return courses;
 	}
 
@@ -40,7 +36,7 @@ public class Search {
 		return query;
 	}
 
-	public void setCourses(List<CourseVoFull> courses) {
+	public void setCourses(List<CourseVoVwFull> courses) {
 		this.courses = courses;
 	}
 
@@ -61,5 +57,14 @@ public class Search {
 //        Map<String, String> params = fc.getExternalContext().getRequestParameterMap();
 //        this.query = params.get("searchForm:query");
 		return "success";
+	}
+
+	public void preRenderView(){
+		CoursesFacade coursesFacade = Config.getInstance().getFacadeFactory().getCoursesFacade();
+		try {
+			this.courses = CourseVoVwBuilder.getInstance().getSearchResults(query);
+		} catch (Exception ex) {
+			FacesContext.getCurrentInstance().addMessage("searchForm", new FacesMessage(ex.getMessage()));
+		}
 	}
 }

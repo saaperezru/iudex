@@ -25,9 +25,9 @@ public class ProfessorEntity implements Serializable, Entity<ProfessorVo> {
 	private String firstName;
 	@Column(name = "LAST_NAMES", length = 50, nullable = false)
 	private String lastName;
-	@Column(name = "URL_IMAGE", length = 255, unique = true)
-	private String website;
 	@Column(name = "URL_WEB", length = 255, unique = true)
+	private String website;
+	@Column(name = "URL_IMAGE", length = 255, unique = true)
 	private String imageUrl;
 	@Column(name = "DESCRIPTION", length = 2000)
 	private String description;

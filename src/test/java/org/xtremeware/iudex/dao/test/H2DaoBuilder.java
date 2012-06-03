@@ -1,6 +1,21 @@
-package org.xtremeware.iudex.dao.sql;
+package org.xtremeware.iudex.dao.test;
 
 import org.xtremeware.iudex.dao.*;
+import org.xtremeware.iudex.dao.sql.ForgottenPasswordKeyDao;
+import org.xtremeware.iudex.dao.sql.SQLCommentDao;
+import org.xtremeware.iudex.dao.sql.SQLCommentRatingDao;
+import org.xtremeware.iudex.dao.sql.SQLConfirmationKeyDao;
+import org.xtremeware.iudex.dao.sql.SQLCourseDao;
+import org.xtremeware.iudex.dao.sql.SQLCourseRatingDao;
+import org.xtremeware.iudex.dao.sql.SQLFeedbackDao;
+import org.xtremeware.iudex.dao.sql.SQLFeedbackTypeDao;
+import org.xtremeware.iudex.dao.sql.SQLPeriodDao;
+import org.xtremeware.iudex.dao.sql.SQLProfessorDao;
+import org.xtremeware.iudex.dao.sql.SQLProfessorRatingDao;
+import org.xtremeware.iudex.dao.sql.SQLProgramDao;
+import org.xtremeware.iudex.dao.sql.SQLSubjectDao;
+import org.xtremeware.iudex.dao.sql.SQLSubjectRatingDao;
+import org.xtremeware.iudex.dao.sql.SQLUserDao;
 import org.xtremeware.iudex.dao.sql.removeimplementations.*;
 import org.xtremeware.iudex.entity.*;
 
@@ -9,7 +24,7 @@ import org.xtremeware.iudex.entity.*;
  *
  * @author healarconr
  */
-public class HSqlDbDaoBuilder implements AbstractDaoBuilder {
+public class H2DaoBuilder implements AbstractDaoBuilder {
 
     private CommentDao commentDao;
     private BinaryRatingDao<CommentRatingEntity> commentRatingDao;
@@ -26,9 +41,9 @@ public class HSqlDbDaoBuilder implements AbstractDaoBuilder {
     private SubjectDao subjectDao;
     private BinaryRatingDao<SubjectRatingEntity> subjectRatingDao;
     private UserDao userDao;
-    private static HSqlDbDaoBuilder instance;
+    private static H2DaoBuilder instance;
 
-    public HSqlDbDaoBuilder() {
+    public H2DaoBuilder() {
     }
 
 

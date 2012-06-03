@@ -43,7 +43,7 @@ public final class ConfigurationVariablesHelper {
 	public static final String ANTISAMY_POLICY_FILE = "security.antiSamyPolicyFile";
 	public static final String EXCEPTIONS_BUNDLE_BASE_NAME = "exceptions.bundleBaseName";
 
-	private ConfigurationVariablesHelper(String configurationFilePath) throws ExternalServiceConnectionException {
+	private ConfigurationVariablesHelper(String configurationFilePath)  {
 		try {
 			config = new PropertiesConfiguration(getClass().getResource(configurationFilePath));
 		} catch (Exception ex) {
@@ -52,19 +52,19 @@ public final class ConfigurationVariablesHelper {
 
 	}
 
-	private static ConfigurationVariablesHelper getInstance() throws ExternalServiceConnectionException {
+	private static ConfigurationVariablesHelper getInstance()  {
 		if (instance == null) {
 			instance = new ConfigurationVariablesHelper(Config.CONFIGURATION_VARIABLES_PATH);
 		}
 		return instance;
 	}
 
-	public static String getVariable(String variableName) throws ExternalServiceConnectionException {
+	public static String getVariable(String variableName)  {
 		return getInstance().getConfig().getString(variableName);
 
 	}
 
-	public static void setVariable(String variableName, String value) throws ExternalServiceConnectionException {
+	public static void setVariable(String variableName, String value)  {
 		getInstance().getConfig().setProperty(variableName, value);
 	}
 

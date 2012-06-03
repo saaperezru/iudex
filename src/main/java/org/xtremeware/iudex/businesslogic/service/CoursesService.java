@@ -9,6 +9,10 @@ import org.xtremeware.iudex.helper.*;
 import org.xtremeware.iudex.vo.CourseVo;
 
 public class CoursesService extends CrudService<CourseVo, CourseEntity> {
+    
+    private static final double MIN_AVERAGE = 0.0;
+    private static final double MAX_AVERAGE = 5.0;
+    private static final long MIN_COUNT = 0L;
 
     public CoursesService(AbstractDaoBuilder daoFactory,
             Create create, Read read, Update update, Delete delete) {
@@ -17,10 +21,29 @@ public class CoursesService extends CrudService<CourseVo, CourseEntity> {
     }
 
     @Override
-    protected void validateVoForCreation(EntityManager entityManager, CourseVo course) 
+    protected void validateVoForCreation(EntityManager entityManager, CourseVo courseVo)
             throws MultipleMessagesException, DataBaseException {
         MultipleMessagesException multipleMessageException =
                 new MultipleMessagesException();
+        validateCourseVoExceptRating(entityManager, courseVo, multipleMessageException);
+        
+        if (courseVo.getRatingCount() != MIN_COUNT) {
+            multipleMessageException.addMessage(
+                    "course.rating.invalidCount");
+        }
+        if (courseVo.getRatingAverage() != MIN_AVERAGE) {
+            multipleMessageException.addMessage(
+                    "course.rating.invalidAverage");
+        }
+        if (!multipleMessageException.getMessages().isEmpty()) {
+            throw multipleMessageException;
+        }
+    }
+
+    private void validateCourseVoExceptRating(EntityManager entityManager,
+            CourseVo course,
+            MultipleMessagesException multipleMessageException)
+            throws MultipleMessagesException, DataBaseException {
         if (course == null) {
             multipleMessageException.addMessage("course.null");
             throw multipleMessageException;
@@ -46,32 +69,32 @@ public class CoursesService extends CrudService<CourseVo, CourseEntity> {
         } else if (getDaoFactory().getSubjectDao().read(entityManager, course.getSubjectId()) == null) {
             multipleMessageException.addMessage("course.subjectId.notFound");
         }
-        if ((course.getRatingCount() == 0 && course.getRatingAverage() != 0)) {
-            multipleMessageException.addMessage(
-                    "course.rating.invalid");
-        }
-        if (course.getRatingCount() < 0) {
-            multipleMessageException.addMessage(
-                    "course.rating.invalidCount");
-        }
-        if (course.getRatingAverage() < 0) {
-            multipleMessageException.addMessage(
-                    "course.rating.invalidAverage");
-        }
-
-        if (!multipleMessageException.getMessages().isEmpty()) {
-            throw multipleMessageException;
-        }
     }
 
     @Override
     public void validateVoForUpdate(EntityManager entityManager, CourseVo courseVo)
             throws MultipleMessagesException, DataBaseException {
-        validateVoForCreation(entityManager, courseVo);
         MultipleMessagesException multipleMessageException =
                 new MultipleMessagesException();
+        validateCourseVoExceptRating(entityManager, courseVo, multipleMessageException);
+        if (courseVo.getRatingCount() < MIN_COUNT) {
+            multipleMessageException.addMessage(
+                    "course.rating.invalidCount");
+        }
+        if (courseVo.getRatingAverage() < MIN_AVERAGE || courseVo.getRatingAverage() > MAX_AVERAGE) {
+            multipleMessageException.addMessage(
+                    "course.rating.invalidAverage");
+        }
+        
+        if (courseVo.getRatingCount() == MIN_COUNT
+                && courseVo.getRatingAverage() != MIN_AVERAGE) {
+            multipleMessageException.addMessage(
+                    "course.rating.invalid");
+        }
         if (courseVo.getId() == null) {
             multipleMessageException.addMessage("course.id.null");
+        }
+        if (!multipleMessageException.getMessages().isEmpty()) {
             throw multipleMessageException;
         }
     }

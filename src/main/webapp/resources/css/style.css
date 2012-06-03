@@ -1,139 +1,42 @@
-html {
-	height: 100%;
-}
-
 body {
-	height: 100%;
-	background : url('../resources/images/background _blue.png');
-}
-
-/*index.xhtml*/
-img.autosize{
-	background-position: center top;
-    background-repeat: no-repeat;
-}
-img.logo{
-	background-position: center top;
-    background-repeat: no-repeat;
-	height: 200px;
-	width: 100%;
-}
-
-.navbar .brand{
-	color : #009444;
-}
-#searchBar {
-	position: relative;
-	z-index: 1;
-	height: 120px;
-}
-#searchBar .searchBar_left {position:absolute; left:0; top: 0; height: 100px; width: 70px; background: url('../resources/images/search_cap.png') no-repeat top left;}
-#searchBar .searchBar_right {position:absolute; right:0; top: 0; height: 100px; width: 50px; background: url('../resources/images/search_cap.png') no-repeat top right;}
-#searchBar .searchBar_inner {position:absolute; left: 70px; right: 50px; top : 0; height: 100px; background: url('../resources/images/search_inner.png') repeat-x center center;}
-#searchBar input {position: absolute; top: 10px; left: 20px; font-family: "Lucida Grande", Verdana, Arial, sans-serif; width: 90%; height: 80px; line-height: 30px; overflow: hidden; background: none; border: none; font-weight: bold; color: #999; font-size: 25px; padding: 0px; z-index: 2;}
-#searchBar input[placeholder] {
-	color : #0074cc;
-}
-#searchBar input::-webkit-input-placeholder {color: #0074cc;}
-#searchBar input:-moz-placeholder {color: #0074cc;}
-#searchButton{ background: url('../resources/images/search_button.png') no-repeat top right; width: 44px; height: 40px; position:absolute; right:30px; top: 30px; border:none; z-index: 3;}
-#searchButton:hover {background-position: right center;}
-#searchButton:active {background-position: right bottom;}
-.highlight{
-	color: #e46c0a;
-}
-body>.container{
-    padding-top: 40px;
-}
-body>.container-fluid{
-    padding-top: 60px;
-}
-.comments-container{
-	height: 100%;
-}
-#header-row{
-	height: 365px;
-}
-#header{
-	background: url('../resources/images/homebg.jpg') repeat-x;
-	background-position-y: 40px;
-	padding-top: 40px;
-}
-#fittext-header{
-	height: 80px;
-	text-align: center;
-	padding-top: 10px;
-}
-/*index.xhtml*/
-.search-box {
-	text-align: right;
-	margin-bottom: 40px;
-}
-.search-box input[type=text] {
-	/*margin-left: 15px;*/
-	background-image: url('../resources/images/search.png');
-	width: 30%;
-	min-width: 300px;
-}
-
-.fixed-navbar{
-	position: fixed;
-	top : 50px;
-	height: 86%;
-	bottom : 55px;
-	/*left: -10%;*/
-}
-
-#feedback {
-	display: block;
-	text-align: center;
-	vertical-align: central;
-	position : fixed;
-	bottom: 0px;
-	right: 0px;
-	height: 5px;
-	width: 80px;
-	background-color: green;
-	color: white;
-	/*	-webkit-transform: rotate(-90deg); 
-		-moz-transform: rotate(-90deg);	*/
-}
-
-#feedback:hover{
-	height: 60px;
-}
-
-div.big-media {
-    background-image: url(../resources/images/big-media.png);
-    background-repeat: no-repeat;
-    background-position-x: center;
-    height: 340px;
+    padding-top: 80px;
+    background-image: url(../resources/images/fabric-plaid.png);
 }
 
 div#recaptcha_widget_div {
-	width: 318px;
-	display: inline-block;
+    width: 318px;
+    display: inline-block;
 }
 
 div.share-icon {
     background-image: url(../resources/images/share.png);
     background-position: center top;
     background-repeat: no-repeat;
-    height: 128px;
+    background-size: 96px 96px;
+    height: 96px;
 }
 
 div.comment-icon {
     background-image: url(../resources/images/comment.png);
     background-position: center top;
     background-repeat: no-repeat;
-    height: 128px;
+    background-size: 96px 96px;
+    height: 96px;
 }
 
 div.rate-icon {
     background-image: url(../resources/images/rate.png);
     background-position: center top;
     background-repeat: no-repeat;
-    height: 128px;
+    background-size: 96px 96px;
+    height: 96px;
+}
+
+div.header-medium {
+    /*background-image: url(../resources/images/header-medium.png);*/
+    background-position: center center;
+    background-repeat: no-repeat;
+    height: 255px;
 }
 
 ul.alert {
@@ -151,232 +54,219 @@ pre.stack-trace {
 }
 
 .panel {
-	background-color: #ffffff;
-	border-radius: 7px;
-	background-image: url(../resources/images/panel-bg.gif);
-	background-repeat: repeat-x;
-	background-position: bottom;
-	padding: 30px;
-	border: solid 1px #cccccc;
+    background-color: #ffffff;
+    border-radius: 7px;
+    background-image: url(../resources/images/panel-bg.gif);
+    background-repeat: repeat-x;
+    background-position: bottom;
+    padding: 30px;
+    border: solid 1px #cccccc;
 }
-/*
-label:not(.no-dots):after, dt:after {
-	content: ":";
-}
-
-dt {
-	font-weight: bold;
-}
-
-dd {
-	padding-left: 20px;
-}
-*/
 
 .subject, .professor {
-	margin-bottom: 10px;
+    margin-bottom: 10px;
 }
 
 .subject h1, .professor h1 {
-	padding-left: 10px;
+    padding-left: 10px;
 }
 
 a.thumb-up {
-	width: 20px;
-	height: 20px;
-	background-image: url(../resources/images/thumb-up.png);
-	display: inline-block;
+    width: 20px;
+    height: 20px;
+    background-image: url(../resources/images/thumb-up.png);
+    display: inline-block;
 }
 
 a.thumb-down {
-	width: 20px;
-	height: 20px;
-	background-image: url(../resources/images/thumb-down.png);
-	display: inline-block;
+    width: 20px;
+    height: 20px;
+    background-image: url(../resources/images/thumb-down.png);
+    display: inline-block;
 }
 .comment {
-	position: relative;
-	border: solid 1px #AAA;
-	padding: 10px 10px;
-	border-radius: 4px;
-	margin-top: 20px;
-	margin-bottom: 20px;
-	display: inline-block
+    position: relative;
+    border: solid 1px #AAA;
+    padding: 10px 10px;
+    border-radius: 4px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    display: inline-block
 }
 .vote , .comment-text, .comment-photo{
-	display: inline-block;
+    display: inline-block;
 }
 .comment-rating{
-	font-size: 20px;
-	margin-bottom: 10px;
+    font-size: 20px;
+    margin-bottom: 10px;
 }
 .comment-photo{
-	float:left;
+    float:left;
 }
 .professor-photo{
 }
 .vote-professor{
 }
 .vote-professor span {
-	height:60px;
-	width:125px;
-	display:block;
+    height:60px;
+    width:125px;
+    display:block;
 }
 
 .professor-photo {
-	margin: 20px auto;
-	display: block;
-	width: 200px;
-	height: 120px;
-	position: relative;
-	text-decoration: none;
-	-webkit-transition: all .15s linear;
-	-moz-transition: all .15s linear;
-	-ms-transition: all .15s linear;
-	-o-transition: all .15s linear;
-	transition: all .15s linear;
-	color: #333; 
-	left: 0px;
-	top: 0px;
+    margin: 20px auto;
+    display: block;
+    width: 200px;
+    height: 120px;
+    position: relative;
+    text-decoration: none;
+    -webkit-transition: all .15s linear;
+    -moz-transition: all .15s linear;
+    -ms-transition: all .15s linear;
+    -o-transition: all .15s linear;
+    transition: all .15s linear;
+    color: #333; 
+    left: 0px;
+    top: 0px;
 }
 .professor-photo img {
-	width: 120px;
-	position: relative;
-	z-index: 30;
-	float: left;
+    width: 120px;
+    position: relative;
+    z-index: 30;
+    float: left;
 }
 div.professor-photo div {
-	display: block;
-	text-align: center;
-	-webkit-transition: all .25s linear;
-	-moz-transition: all .25s linear;
-	-ms-transition: all .25s linear;
-	-o-transition: all .25s linear;
-	transition: all .25s linear;
-	clear: left;
-	width: 120px;
+    display: block;
+    text-align: center;
+    -webkit-transition: all .25s linear;
+    -moz-transition: all .25s linear;
+    -ms-transition: all .25s linear;
+    -o-transition: all .25s linear;
+    transition: all .25s linear;
+    clear: left;
+    width: 120px;
 }
 div.professor-photo div h5 {
-	text-align: center;
+    text-align: center;
 }
 div.professor-photo span.vote-prof {
-	width: 116px;
-	height: 116px;
-	z-index: 1;
-	display: block;
-	-webkit-transition: all .25s linear;
-	-moz-transition: all .25s linear;
-	-ms-transition: all .25s linear;
-	-o-transition: all .25s linear;
-	transition: all .25s linear;
-	position: absolute;
-	top: 2px;
-	left: 2px;
-	margin-left: 16px;
+    width: 116px;
+    height: 116px;
+    z-index: 1;
+    display: block;
+    -webkit-transition: all .25s linear;
+    -moz-transition: all .25s linear;
+    -ms-transition: all .25s linear;
+    -o-transition: all .25s linear;
+    transition: all .25s linear;
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    margin-left: 16px;
 }
 div.professor-photo span.vote-prof div {
-	/*TODO: add a background for vote*/
-	position: absolute;
-	top: 2px;
-	left: 2px;
-	display: block;
-	z-index: 10;
-	width: 112px;
-	height: 112px;
-	overflow: hidden;
+    /*TODO: add a background for vote*/
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    display: block;
+    z-index: 10;
+    width: 112px;
+    height: 112px;
+    overflow: hidden;
 }
 div.professor-photo:hover span.vote-prof {
-	-webkit-transform: translateX(60px);
-	-moz-transform: translateX(60px);
-	-ms-transform: translateX(60px);
-	-o-transform: translateX(60px);
-	transform: translateX(60px);
+    -webkit-transform: translateX(60px);
+    -moz-transform: translateX(60px);
+    -ms-transform: translateX(60px);
+    -o-transform: translateX(60px);
+    transform: translateX(60px);
 }
 div.professor-photo ul.actions {
-	display: block;
-	position: absolute;
-	width: 60px;
-	border-radius: 3px;
-	left: 35px;
-	top: 0px;
-	height: 114px;
-	z-index: 20;
-	-webkit-transition: all .25s linear;
-	-moz-transition: all .25s linear;
-	-ms-transition: all .25s linear;
-	-o-transition: all .25s linear;
-	transition: all .25s linear;
+    display: block;
+    position: absolute;
+    width: 60px;
+    border-radius: 3px;
+    left: 35px;
+    top: 0px;
+    height: 114px;
+    z-index: 20;
+    -webkit-transition: all .25s linear;
+    -moz-transition: all .25s linear;
+    -ms-transition: all .25s linear;
+    -o-transition: all .25s linear;
+    transition: all .25s linear;
 }
 div.professor-photo:hover ul.actions {
-	-webkit-transform: translateX(60px);
-	-moz-transform: translateX(60px);
-	-ms-transform: translateX(60px);
-	-o-transform: translateX(60px);
-	transform: translateX(60px);
+    -webkit-transform: translateX(60px);
+    -moz-transform: translateX(60px);
+    -ms-transform: translateX(60px);
+    -o-transform: translateX(60px);
+    transform: translateX(60px);
 }
 
 div.professor-photo ul.actions li {
-	display: block;
-	position: absolute;
-	height: 20px;
-	width: 20px;
-	left: 10px;
-	top: 22px;
+    display: block;
+    position: absolute;
+    height: 20px;
+    width: 20px;
+    left: 10px;
+    top: 22px;
 }
 div.professor-photo ul.actions li.downvote-prof {
-	top: 48px;
+    top: 48px;
 }
 div.professor-photo ul.actions li a {
-	display: block;
-	width: 20px; height: 20px; }
+    display: block;
+    width: 20px; height: 20px; }
 div.professor-photo ul.actions li.upvote-prof a {
 }
 div.professor-photo ul.actions li.downvote-prof a {
 }
 .upvote{
-	background-image: url(../resources/images/arrow-up.png);
-	display: inline-block;
-	top : 0px;
-	right : 3px;
-	position: absolute;
-	width: 64px;
-	height: 64px;
+    background-image: url(../resources/images/arrow-up.png);
+    display: inline-block;
+    top : 0px;
+    right : 3px;
+    position: absolute;
+    width: 64px;
+    height: 64px;
 }
 .downvote{
-	background-image: url(../resources/images/arrow-down.png);
-	display: inline-block;
-	position: absolute;
-	bottom: 0px;
-	right : 3px;
-	width: 64px;
-	height: 64px;
+    background-image: url(../resources/images/arrow-down.png);
+    display: inline-block;
+    position: absolute;
+    bottom: 0px;
+    right : 3px;
+    width: 64px;
+    height: 64px;
 }
 .vote-count{
-	position: absolute;
-	top: 50%;
-	right : 3px;
-	font-size: 20px;
-	text-align: center;
-	width: 64px;
+    position: absolute;
+    top: 50%;
+    right : 3px;
+    font-size: 20px;
+    text-align: center;
+    width: 64px;
 }
 .comment-container > p{
-	padding-left: 130px;
-	padding-right: 64px;
-	font-size: 20px;
+    padding-left: 130px;
+    padding-right: 64px;
+    font-size: 20px;
 }
 .cuadro-promedio{
-	/*round corners*/
-	-moz-border-radius: 10px;
-	-webkit-border-radius: 10px;
-	border-radius: 10px; /* future proofing */
-	-khtml-border-radius: 10px; /* for old Konqueror browsers */
-	/* end round corners*/
-	background-color: white;
-	padding-top: 1%;
+    /*round corners*/
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px; /* future proofing */
+    -khtml-border-radius: 10px; /* for old Konqueror browsers */
+    /* end round corners*/
+    background-color: white;
+    padding-top: 1%;
 }
 .comment-photo > img{
-	height : 110px;
-	width:100px;
+    height : 110px;
+    width:100px;
 }
 
 .vote-wrapper{
@@ -390,24 +280,10 @@ div.professor-photo ul.actions li.downvote-prof a {
     background-color: #000;
 }
 .vote{
-	float:right;
+    float:right;
 }
 
-.fittext{
-	display: block;
-	width: 100%;
-	line-height: 120%;
-}
-
-select {
-	width : 90%;
-}
-
-h1,h2{
-	color:#009444;
-}
-
-#header-row>div>div.span6{
-	position : relative;
-	top : 10px;
+iframe{
+    width:100%;
+    height: 400px;
 }

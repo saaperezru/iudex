@@ -1,11 +1,11 @@
 /* 
  * This Script will Create the Tables in the DataBase.
  * Created With DBDesigner4
- * Versión 3.0
+ * VersiÃ³n 3.0
  * Added Code column to Tables Subject and Program (19/05/2012)
  * Added the Table FORGOTTEN_PASSWORD_KEY
  *
- * Versión 2.0
+ * VersiÃ³n 2.0
  ** Modified  the relation between USER_ and CONFIRMATION_KEY
  ** Added AUTOINCREMENT to Rating Tables
 */
@@ -19,7 +19,7 @@ CREATE TABLE PROGRAM (
 
 CREATE TABLE PROFESSOR (
   ID_PROFESSOR INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
-  FISRT_NAMES VARCHAR(50) NOT NULL,
+  FIRST_NAMES VARCHAR(50) NOT NULL,
   LAST_NAMES VARCHAR(50) NOT NULL,
   E_MAIL VARCHAR(50) NULL,
   DESCRIPTION VARCHAR(2000) NULL,
@@ -95,7 +95,7 @@ CREATE TABLE FORGOTTEN_PASSWORD_KEY (
   INDEX FORGOTTEN_PASSWORD_KEY_FKIndex1(ID_USER_),
   FOREIGN KEY(ID_USER_)
     REFERENCES USER_(ID_USER_)
-      ON DELETE NO CASCADE
+      ON DELETE NO ACTION
       ON UPDATE NO ACTION
 );
 

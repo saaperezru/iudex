@@ -1,26 +1,12 @@
 package org.xtremeware.iudex.dao.test;
 
 import org.xtremeware.iudex.dao.*;
-import org.xtremeware.iudex.dao.sql.ForgottenPasswordKeyDao;
-import org.xtremeware.iudex.dao.sql.SQLCommentDao;
-import org.xtremeware.iudex.dao.sql.SQLCommentRatingDao;
-import org.xtremeware.iudex.dao.sql.SQLConfirmationKeyDao;
-import org.xtremeware.iudex.dao.sql.SQLCourseDao;
-import org.xtremeware.iudex.dao.sql.SQLCourseRatingDao;
-import org.xtremeware.iudex.dao.sql.SQLFeedbackDao;
-import org.xtremeware.iudex.dao.sql.SQLFeedbackTypeDao;
-import org.xtremeware.iudex.dao.sql.SQLPeriodDao;
-import org.xtremeware.iudex.dao.sql.SQLProfessorDao;
-import org.xtremeware.iudex.dao.sql.SQLProfessorRatingDao;
-import org.xtremeware.iudex.dao.sql.SQLProgramDao;
-import org.xtremeware.iudex.dao.sql.SQLSubjectDao;
-import org.xtremeware.iudex.dao.sql.SQLSubjectRatingDao;
-import org.xtremeware.iudex.dao.sql.SQLUserDao;
-import org.xtremeware.iudex.dao.sql.removeimplementations.*;
+import org.xtremeware.iudex.dao.sql.*;
+import org.xtremeware.iudex.dao.sql.deleteimplementations.*;
 import org.xtremeware.iudex.entity.*;
 
 /**
- * DAO factory for an HSQLDB persistence unit
+ * DAO factory for an HSqlDB persistence unit
  *
  * @author healarconr
  */
@@ -33,7 +19,7 @@ public class H2DaoBuilder implements AbstractDaoBuilder {
     private CourseRatingDao courseRatingDao;
     private FeedbackDao feedbackDao;
     private FeedbackTypeDao feedbackTypeDao;
-	private ForgottenPasswordKeyDaoInterface forgottenPasswordKeyDao;
+    private ForgottenPasswordKeyDao forgottenPasswordKeyDao;
     private PeriodDao periodDao;
     private ProfessorDao professorDao;
     private BinaryRatingDao<ProfessorRatingEntity> professorRatingDao;
@@ -46,13 +32,12 @@ public class H2DaoBuilder implements AbstractDaoBuilder {
     public H2DaoBuilder() {
     }
 
-
     @Override
     public CommentDao getCommentDao() {
         if (commentDao == null) {
-            commentDao = new SQLCommentDao(
-                    new CommentsRemoveBehavior(
-                    this, new SimpleRemoveBehavior<CommentEntity>()));
+            commentDao = new SqlCommentDao(
+                    new CommentsDeleteBehavior(
+                    this, new SimpleDeleteBehavior<CommentEntity>()));
         }
         return commentDao;
     }
@@ -60,7 +45,7 @@ public class H2DaoBuilder implements AbstractDaoBuilder {
     @Override
     public BinaryRatingDao<CommentRatingEntity> getCommentRatingDao() {
         if (commentRatingDao == null) {
-            commentRatingDao = new SQLCommentRatingDao();
+            commentRatingDao = new SqlCommentRatingDao();
         }
         return commentRatingDao;
     }
@@ -68,8 +53,8 @@ public class H2DaoBuilder implements AbstractDaoBuilder {
     @Override
     public ConfirmationKeyDao getConfirmationKeyDao() {
         if (confirmationKeyDao == null) {
-            confirmationKeyDao = new SQLConfirmationKeyDao(
-                    new SimpleRemoveBehavior<ConfirmationKeyEntity>());
+            confirmationKeyDao = new SqlConfirmationKeyDao(
+                    new SimpleDeleteBehavior<ConfirmationKeyEntity>());
         }
         return confirmationKeyDao;
     }
@@ -77,9 +62,9 @@ public class H2DaoBuilder implements AbstractDaoBuilder {
     @Override
     public CourseDao getCourseDao() {
         if (courseDao == null) {
-            courseDao = new SQLCourseDao(
-                    new CoursesRemoveBehavior(
-                    this, new SimpleRemoveBehavior<CourseEntity>()));
+            courseDao = new SqlCourseDao(
+                    new CoursesDeleteBehavior(
+                    this, new SimpleDeleteBehavior<CourseEntity>()));
         }
         return courseDao;
     }
@@ -87,8 +72,8 @@ public class H2DaoBuilder implements AbstractDaoBuilder {
     @Override
     public CourseRatingDao getCourseRatingDao() {
         if (courseRatingDao == null) {
-            courseRatingDao = new SQLCourseRatingDao(
-                    new SimpleRemoveBehavior<CourseRatingEntity>());
+            courseRatingDao = new SqlCourseRatingDao(
+                    new SimpleDeleteBehavior<CourseRatingEntity>());
         }
         return courseRatingDao;
     }
@@ -96,8 +81,8 @@ public class H2DaoBuilder implements AbstractDaoBuilder {
     @Override
     public FeedbackDao getFeedbackDao() {
         if (feedbackDao == null) {
-            feedbackDao = new SQLFeedbackDao(
-                    new SimpleRemoveBehavior<FeedbackEntity>());
+            feedbackDao = new SqlFeedbackDao(
+                    new SimpleDeleteBehavior<FeedbackEntity>());
         }
         return feedbackDao;
     }
@@ -105,27 +90,26 @@ public class H2DaoBuilder implements AbstractDaoBuilder {
     @Override
     public FeedbackTypeDao getFeedbackTypeDao() {
         if (feedbackTypeDao == null) {
-            feedbackTypeDao = new SQLFeedbackTypeDao(
-                    new SimpleRemoveBehavior<FeedbackTypeEntity>());
+            feedbackTypeDao = new SqlFeedbackTypeDao(
+                    new SimpleDeleteBehavior<FeedbackTypeEntity>());
         }
         return feedbackTypeDao;
     }
-	
-	@Override
-    public ForgottenPasswordKeyDaoInterface getForgottenPasswordKeyDao() {
+
+    @Override
+    public ForgottenPasswordKeyDao getForgottenPasswordKeyDao() {
         if (forgottenPasswordKeyDao == null) {
-            forgottenPasswordKeyDao = new ForgottenPasswordKeyDao(new SimpleRemoveBehavior<ForgottenPasswordKeyEntity>());
+            forgottenPasswordKeyDao = new SqlForgottenPasswordKeyDao(new SimpleDeleteBehavior<ForgottenPasswordKeyEntity>());
         }
         return forgottenPasswordKeyDao;
     }
 
-
     @Override
     public PeriodDao getPeriodDao() {
         if (periodDao == null) {
-            periodDao = new SQLPeriodDao(
-                    new PeriodRemoveBehavior(
-                    this, new SimpleRemoveBehavior<PeriodEntity>()));
+            periodDao = new SqlPeriodDao(
+                    new PeriodDeleteBehavior(
+                    this, new SimpleDeleteBehavior<PeriodEntity>()));
         }
         return periodDao;
     }
@@ -133,9 +117,9 @@ public class H2DaoBuilder implements AbstractDaoBuilder {
     @Override
     public ProfessorDao getProfessorDao() {
         if (professorDao == null) {
-            professorDao = new SQLProfessorDao(
-                    new ProfessorsRemoveBehavior(
-                    this, new SimpleRemoveBehavior<ProfessorEntity>()));
+            professorDao = new SqlProfessorDao(
+                    new ProfessorsDeleteBehavior(
+                    this, new SimpleDeleteBehavior<ProfessorEntity>()));
         }
         return professorDao;
     }
@@ -143,7 +127,7 @@ public class H2DaoBuilder implements AbstractDaoBuilder {
     @Override
     public BinaryRatingDao<ProfessorRatingEntity> getProfessorRatingDao() {
         if (professorRatingDao == null) {
-            professorRatingDao = new SQLProfessorRatingDao();
+            professorRatingDao = new SqlProfessorRatingDao();
         }
         return professorRatingDao;
     }
@@ -151,8 +135,8 @@ public class H2DaoBuilder implements AbstractDaoBuilder {
     @Override
     public ProgramDao getProgramDao() {
         if (programDao == null) {
-            programDao = new SQLProgramDao(
-                    new SimpleRemoveBehavior<ProgramEntity>());
+            programDao = new SqlProgramDao(
+                    new SimpleDeleteBehavior<ProgramEntity>());
         }
         return programDao;
     }
@@ -160,9 +144,9 @@ public class H2DaoBuilder implements AbstractDaoBuilder {
     @Override
     public SubjectDao getSubjectDao() {
         if (subjectDao == null) {
-            subjectDao = new SQLSubjectDao(
-                    new SubjectsRemoveBehavior(
-                    this, new SimpleRemoveBehavior<SubjectEntity>()));
+            subjectDao = new SqlSubjectDao(
+                    new SubjectsDeleteBehavior(
+                    this, new SimpleDeleteBehavior<SubjectEntity>()));
         }
         return subjectDao;
     }
@@ -170,7 +154,7 @@ public class H2DaoBuilder implements AbstractDaoBuilder {
     @Override
     public BinaryRatingDao<SubjectRatingEntity> getSubjectRatingDao() {
         if (subjectRatingDao == null) {
-            subjectRatingDao = new SQLSubjectRatingDao();
+            subjectRatingDao = new SqlSubjectRatingDao();
         }
         return subjectRatingDao;
     }
@@ -178,9 +162,9 @@ public class H2DaoBuilder implements AbstractDaoBuilder {
     @Override
     public UserDao getUserDao() {
         if (userDao == null) {
-            userDao = new SQLUserDao(
-                    new UsersRemoveBehavior(
-                    this, new SimpleRemoveBehavior<UserEntity>()));
+            userDao = new SqlUserDao(
+                    new UsersDeleteBehavior(
+                    this, new SimpleDeleteBehavior<UserEntity>()));
         }
         return userDao;
     }

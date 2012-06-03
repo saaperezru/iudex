@@ -1,15 +1,15 @@
 package org.xtremeware.iudex.dao.sql;
 
 import org.xtremeware.iudex.dao.*;
-import org.xtremeware.iudex.dao.sql.removeimplementations.*;
+import org.xtremeware.iudex.dao.sql.deleteimplementations.*;
 import org.xtremeware.iudex.entity.*;
 
 /**
- * DAO factory for a MySQL persistence unit
+ * DAO factory for a MySql persistence unit
  *
  * @author healarconr
  */
-public class MySqlDaoBuilder implements AbstractDaoBuilder {
+public final class MySqlDaoBuilder implements AbstractDaoBuilder {
 
     private CommentDao commentDao;
     private BinaryRatingDao<CommentRatingEntity> commentRatingDao;
@@ -18,7 +18,7 @@ public class MySqlDaoBuilder implements AbstractDaoBuilder {
     private CourseRatingDao courseRatingDao;
     private FeedbackDao feedbackDao;
     private FeedbackTypeDao feedbackTypeDao;
-	private ForgottenPasswordKeyDaoInterface forgottenPasswordKeyDao;
+    private ForgottenPasswordKeyDao forgottenPasswordKeyDao;
     private PeriodDao periodDao;
     private ProfessorDao professorDao;
     private BinaryRatingDao<ProfessorRatingEntity> professorRatingDao;
@@ -26,24 +26,21 @@ public class MySqlDaoBuilder implements AbstractDaoBuilder {
     private SubjectDao subjectDao;
     private BinaryRatingDao<SubjectRatingEntity> subjectRatingDao;
     private UserDao userDao;
-    private static MySqlDaoBuilder instance;
 
-    private MySqlDaoBuilder() {
-    }
-
-    public static synchronized MySqlDaoBuilder getInstance() {
-        if (instance == null) {
-            instance = new MySqlDaoBuilder();
+    public MySqlDaoBuilder() {
+        try {
+            Class.forName("com.mySql.jdbc.Driver").newInstance();
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
-        return instance;
     }
 
     @Override
     public CommentDao getCommentDao() {
         if (commentDao == null) {
-            commentDao = new SQLCommentDao(
-                    new CommentsRemoveBehavior(
-                    this, new SimpleRemoveBehavior<CommentEntity>()));
+            commentDao = new SqlCommentDao(
+                    new CommentsDeleteBehavior(
+                    this, new SimpleDeleteBehavior<CommentEntity>()));
         }
         return commentDao;
     }
@@ -51,7 +48,7 @@ public class MySqlDaoBuilder implements AbstractDaoBuilder {
     @Override
     public BinaryRatingDao<CommentRatingEntity> getCommentRatingDao() {
         if (commentRatingDao == null) {
-            commentRatingDao = new SQLCommentRatingDao();
+            commentRatingDao = new SqlCommentRatingDao();
         }
         return commentRatingDao;
     }
@@ -59,8 +56,8 @@ public class MySqlDaoBuilder implements AbstractDaoBuilder {
     @Override
     public ConfirmationKeyDao getConfirmationKeyDao() {
         if (confirmationKeyDao == null) {
-            confirmationKeyDao = new SQLConfirmationKeyDao(
-                    new SimpleRemoveBehavior<ConfirmationKeyEntity>());
+            confirmationKeyDao = new SqlConfirmationKeyDao(
+                    new SimpleDeleteBehavior<ConfirmationKeyEntity>());
         }
         return confirmationKeyDao;
     }
@@ -68,9 +65,9 @@ public class MySqlDaoBuilder implements AbstractDaoBuilder {
     @Override
     public CourseDao getCourseDao() {
         if (courseDao == null) {
-            courseDao = new SQLCourseDao(
-                    new CoursesRemoveBehavior(
-                    this, new SimpleRemoveBehavior<CourseEntity>()));
+            courseDao = new SqlCourseDao(
+                    new CoursesDeleteBehavior(
+                    this, new SimpleDeleteBehavior<CourseEntity>()));
         }
         return courseDao;
     }
@@ -78,8 +75,8 @@ public class MySqlDaoBuilder implements AbstractDaoBuilder {
     @Override
     public CourseRatingDao getCourseRatingDao() {
         if (courseRatingDao == null) {
-            courseRatingDao = new SQLCourseRatingDao(
-                    new SimpleRemoveBehavior<CourseRatingEntity>());
+            courseRatingDao = new SqlCourseRatingDao(
+                    new SimpleDeleteBehavior<CourseRatingEntity>());
         }
         return courseRatingDao;
     }
@@ -87,8 +84,8 @@ public class MySqlDaoBuilder implements AbstractDaoBuilder {
     @Override
     public FeedbackDao getFeedbackDao() {
         if (feedbackDao == null) {
-            feedbackDao = new SQLFeedbackDao(
-                    new SimpleRemoveBehavior<FeedbackEntity>());
+            feedbackDao = new SqlFeedbackDao(
+                    new SimpleDeleteBehavior<FeedbackEntity>());
         }
         return feedbackDao;
     }
@@ -96,16 +93,16 @@ public class MySqlDaoBuilder implements AbstractDaoBuilder {
     @Override
     public FeedbackTypeDao getFeedbackTypeDao() {
         if (feedbackTypeDao == null) {
-            feedbackTypeDao = new SQLFeedbackTypeDao(
-                    new SimpleRemoveBehavior<FeedbackTypeEntity>());
+            feedbackTypeDao = new SqlFeedbackTypeDao(
+                    new SimpleDeleteBehavior<FeedbackTypeEntity>());
         }
         return feedbackTypeDao;
     }
-	
-	 @Override
-    public ForgottenPasswordKeyDaoInterface getForgottenPasswordKeyDao() {
+
+    @Override
+    public ForgottenPasswordKeyDao getForgottenPasswordKeyDao() {
         if (forgottenPasswordKeyDao == null) {
-            forgottenPasswordKeyDao = new ForgottenPasswordKeyDao(new SimpleRemoveBehavior<ForgottenPasswordKeyEntity>());
+            forgottenPasswordKeyDao = new SqlForgottenPasswordKeyDao(new SimpleDeleteBehavior<ForgottenPasswordKeyEntity>());
         }
         return forgottenPasswordKeyDao;
     }
@@ -113,9 +110,9 @@ public class MySqlDaoBuilder implements AbstractDaoBuilder {
     @Override
     public PeriodDao getPeriodDao() {
         if (periodDao == null) {
-            periodDao = new SQLPeriodDao(
-                    new PeriodRemoveBehavior(
-                    this, new SimpleRemoveBehavior<PeriodEntity>()));
+            periodDao = new SqlPeriodDao(
+                    new PeriodDeleteBehavior(
+                    this, new SimpleDeleteBehavior<PeriodEntity>()));
         }
         return periodDao;
     }
@@ -123,9 +120,9 @@ public class MySqlDaoBuilder implements AbstractDaoBuilder {
     @Override
     public ProfessorDao getProfessorDao() {
         if (professorDao == null) {
-            professorDao = new SQLProfessorDao(
-                    new ProfessorsRemoveBehavior(
-                    this, new SimpleRemoveBehavior<ProfessorEntity>()));
+            professorDao = new SqlProfessorDao(
+                    new ProfessorsDeleteBehavior(
+                    this, new SimpleDeleteBehavior<ProfessorEntity>()));
         }
         return professorDao;
     }
@@ -133,7 +130,7 @@ public class MySqlDaoBuilder implements AbstractDaoBuilder {
     @Override
     public BinaryRatingDao<ProfessorRatingEntity> getProfessorRatingDao() {
         if (professorRatingDao == null) {
-            professorRatingDao = new SQLProfessorRatingDao();
+            professorRatingDao = new SqlProfessorRatingDao();
         }
         return professorRatingDao;
     }
@@ -141,8 +138,8 @@ public class MySqlDaoBuilder implements AbstractDaoBuilder {
     @Override
     public ProgramDao getProgramDao() {
         if (programDao == null) {
-            programDao = new SQLProgramDao(
-                    new SimpleRemoveBehavior<ProgramEntity>());
+            programDao = new SqlProgramDao(
+                    new SimpleDeleteBehavior<ProgramEntity>());
         }
         return programDao;
     }
@@ -150,9 +147,9 @@ public class MySqlDaoBuilder implements AbstractDaoBuilder {
     @Override
     public SubjectDao getSubjectDao() {
         if (subjectDao == null) {
-            subjectDao = new SQLSubjectDao(
-                    new SubjectsRemoveBehavior(
-                    this, new SimpleRemoveBehavior<SubjectEntity>()));
+            subjectDao = new SqlSubjectDao(
+                    new SubjectsDeleteBehavior(
+                    this, new SimpleDeleteBehavior<SubjectEntity>()));
         }
         return subjectDao;
     }
@@ -160,7 +157,7 @@ public class MySqlDaoBuilder implements AbstractDaoBuilder {
     @Override
     public BinaryRatingDao<SubjectRatingEntity> getSubjectRatingDao() {
         if (subjectRatingDao == null) {
-            subjectRatingDao = new SQLSubjectRatingDao();
+            subjectRatingDao = new SqlSubjectRatingDao();
         }
         return subjectRatingDao;
     }
@@ -168,9 +165,9 @@ public class MySqlDaoBuilder implements AbstractDaoBuilder {
     @Override
     public UserDao getUserDao() {
         if (userDao == null) {
-            userDao = new SQLUserDao(
-                    new UsersRemoveBehavior(
-                    this, new SimpleRemoveBehavior<UserEntity>()));
+            userDao = new SqlUserDao(
+                    new UsersDeleteBehavior(
+                    this, new SimpleDeleteBehavior<UserEntity>()));
         }
         return userDao;
     }

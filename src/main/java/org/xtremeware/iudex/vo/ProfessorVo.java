@@ -18,7 +18,7 @@ public class ProfessorVo extends IdentifiableValueObject<Long> implements ValueO
             return false;
         }
         final ProfessorVo other = (ProfessorVo) obj;
-        if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
+        if (this.getId() != other.getId() && (this.getId() == null || !this.getId().equals(other.getId()))) {
             return false;
         }
         if ((this.firstName == null) ? (other.firstName != null) : !this.firstName.equals(other.firstName)) {
@@ -45,7 +45,7 @@ public class ProfessorVo extends IdentifiableValueObject<Long> implements ValueO
     @Override
     public int hashCode() {
         int hash = 5;
-        hash = 19 * hash + (this.id != null ? this.id.hashCode() : 0);
+        hash = 19 * hash + (this.getId() != null ? this.getId().hashCode() : 0);
         hash = 19 * hash + (this.firstName != null ? this.firstName.hashCode() : 0);
         hash = 19 * hash + (this.lastName != null ? this.lastName.hashCode() : 0);
         hash = 19 * hash + (this.website != null ? this.website.hashCode() : 0);
@@ -57,7 +57,7 @@ public class ProfessorVo extends IdentifiableValueObject<Long> implements ValueO
 
     @Override
     public String toString() {
-        return "ProfessorVo{" + "id=" + id + ", firstName=" + firstName
+        return "ProfessorVo{" + "id=" + getId() + ", firstName=" + firstName
                 + ", lastName=" + lastName + ", website=" + website
                 + ", imageUrl=" + imageUrl + ", description=" + description
                 + ", email=" + email + '}';

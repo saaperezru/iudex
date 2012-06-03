@@ -15,7 +15,7 @@ public class CourseRatingVo extends IdentifiableValueObject<Long> implements Val
             return false;
         }
         final CourseRatingVo other = (CourseRatingVo) obj;
-        if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
+        if (this.getId() != other.getId() && (this.getId() == null || !this.getId().equals(other.getId()))) {
             return false;
         }
         if (this.courseId != other.courseId && (this.courseId == null || !this.courseId.equals(other.courseId))) {
@@ -33,7 +33,7 @@ public class CourseRatingVo extends IdentifiableValueObject<Long> implements Val
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 59 * hash + (this.id != null ? this.id.hashCode() : 0);
+        hash = 59 * hash + (this.getId() != null ? this.getId().hashCode() : 0);
         hash = 59 * hash + (this.courseId != null ? this.courseId.hashCode() : 0);
         hash = 59 * hash + (this.userId != null ? this.userId.hashCode() : 0);
         hash = 59 * hash + Float.floatToIntBits(this.value);
@@ -42,7 +42,7 @@ public class CourseRatingVo extends IdentifiableValueObject<Long> implements Val
 
     @Override
     public String toString() {
-        return "CourseRatingVo{" + "id=" + id + ", courseId=" + courseId + ", userId=" + userId + ", value=" + value + '}';
+        return "CourseRatingVo{" + "id=" + getId() + ", courseId=" + courseId + ", userId=" + userId + ", value=" + value + '}';
     }
 
     public Long getCourseId() {
@@ -51,14 +51,6 @@ public class CourseRatingVo extends IdentifiableValueObject<Long> implements Val
 
     public void setCourseId(Long courseId) {
         this.courseId = courseId;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public Long getUserId() {

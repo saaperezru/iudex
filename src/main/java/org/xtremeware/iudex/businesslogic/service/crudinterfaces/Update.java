@@ -10,6 +10,6 @@ import org.xtremeware.iudex.helper.DataBaseException;
  */
 public interface Update<E extends Entity> {
 
-    public E update(EntityManager entityManager, E entity)
+    E update(EntityManager entityManager, E entity)
             throws DataBaseException;
 }

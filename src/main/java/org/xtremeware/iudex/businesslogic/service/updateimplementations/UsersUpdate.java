@@ -21,12 +21,12 @@ public class UsersUpdate implements Update<UserEntity> {
 
     @Override
     public UserEntity update(EntityManager em, UserEntity entity) throws DataBaseException {
-        UserEntity existingUser = getDao().getById(em, entity.getId());
+        UserEntity existingUser = getDao().read(em, entity.getId());
         if (existingUser != null) {
             entity.setUserName(existingUser.getUserName());
             entity.setRole(existingUser.getRole());
             entity.setPassword(SecurityHelper.hashPassword(entity.getPassword()));
-            return getDao().merge(em, entity);
+            return getDao().update(em, entity);
         } else {
             return null;
         }

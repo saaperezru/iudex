@@ -20,8 +20,8 @@ public class SimpleUpdate<E extends Entity> implements Update<E> {
 
     @Override
     public E update(EntityManager entityManager, E entity) throws DataBaseException {
-        if (getDao().getById(entityManager, entity.getId()) != null) {
-            return dao.merge(entityManager, entity);
+        if (getDao().read(entityManager, entity.getId()) != null) {
+            return dao.update(entityManager, entity);
         } else {
             return null;
         }

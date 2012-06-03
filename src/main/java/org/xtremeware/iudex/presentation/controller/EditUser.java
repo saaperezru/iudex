@@ -7,11 +7,11 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
+import org.xtremeware.iudex.businesslogic.DuplicityException;
 import org.xtremeware.iudex.businesslogic.facade.UsersFacade;
 import org.xtremeware.iudex.businesslogic.service.InactiveUserException;
 import org.xtremeware.iudex.helper.Config;
 import org.xtremeware.iudex.helper.MultipleMessagesException;
-import org.xtremeware.iudex.helper.Role;
 import org.xtremeware.iudex.vo.UserVo;
 
 /**
@@ -78,7 +78,7 @@ public class EditUser {
         this.user = user;
     }
 
-    public void editUser() {
+    public void editUser() throws DuplicityException {
         FacesContext fc = FacesContext.getCurrentInstance();
         UsersFacade usersFacade = Config.getInstance().getFacadeFactory().
                 getUsersFacade();
@@ -113,7 +113,7 @@ public class EditUser {
             userVo.setActive(true);
 
             try {
-                usersFacade.editUser(userVo);
+                usersFacade.updateUser(userVo);
                 fc.addMessage(null, new FacesMessage(
                         "El usuario ha sido actualizado exitosamente"));
 

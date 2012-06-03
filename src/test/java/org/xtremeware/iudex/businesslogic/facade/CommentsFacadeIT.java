@@ -13,7 +13,6 @@ import org.xtremeware.iudex.helper.DataBaseException;
 import org.xtremeware.iudex.helper.MultipleMessagesException;
 import org.xtremeware.iudex.vo.BinaryRatingVo;
 import org.xtremeware.iudex.vo.CommentVo;
-import org.xtremeware.iudex.vo.CommentVoFull;
 import org.xtremeware.iudex.vo.RatingSummaryVo;
 
 /**
@@ -48,13 +47,13 @@ public class CommentsFacadeIT {
     }
 
     /**
-     * Test of addComment method, of class CommentsFacade.
+     * Test of createComment method, of class CommentsFacade.
      */
     @Test
     public void test_BL_5_1() throws
             MultipleMessagesException, MaxCommentsLimitReachedException, DuplicityException {
         CommentVo commentVo = new CommentVo();
-        commentVo.setAnonymous(true);
+        commentVo.setAnonymous(false);
         commentVo.setContent("bueno");
         commentVo.setCourseId(4L);
         commentVo.setDate(new Date(100L));
@@ -62,7 +61,7 @@ public class CommentsFacadeIT {
         commentVo.setUserId(2L);
         CommentsFacade commentsFacade = Config.getInstance().getFacadeFactory().
                 getCommentsFacade();
-        CommentVo result = commentsFacade.addComment(commentVo);
+        CommentVo result = commentsFacade.createComment(commentVo);
         assertNotNull(result);
         assertNotNull(result.getId());
         commentVo.setId(result.getId());
@@ -76,7 +75,7 @@ public class CommentsFacadeIT {
                 getCommentsFacade();
         CommentVo result = null;
         try {
-            result = commentsFacade.addComment(null);
+            result = commentsFacade.createComment(null);
         } catch (MultipleMessagesException ex) {
             assertEquals("comment.null", ex.getMessages().get(0));
         }
@@ -94,10 +93,11 @@ public class CommentsFacadeIT {
             "comment.userId.null",
             "comment.date.null"};
         try {
-            result = commentsFacade.addComment(commentVo);
+            result = commentsFacade.createComment(commentVo);
         } catch (MultipleMessagesException ex) {
             FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
         }
+        commentVo.setAnonymous(false);
         commentVo.setCourseId(10L);
         commentVo.setDate(new Date());
         commentVo.setRating(Float.MAX_VALUE);
@@ -109,7 +109,7 @@ public class CommentsFacadeIT {
             "comment.userId.element.notFound",
             "comment.content.invalidSize"};
         try {
-            result = commentsFacade.addComment(commentVo);
+            result = commentsFacade.createComment(commentVo);
         } catch (MultipleMessagesException ex) {
             FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
         }
@@ -123,7 +123,7 @@ public class CommentsFacadeIT {
             "comment.userId.element.notFound",
             "comment.content.invalidSize"};
         try {
-            result = commentsFacade.addComment(commentVo);
+            result = commentsFacade.createComment(commentVo);
         } catch (MultipleMessagesException ex) {
             FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
         }
@@ -137,7 +137,7 @@ public class CommentsFacadeIT {
             "comment.userId.element.notFound",
             "comment.content.invalidSize"};
         try {
-            result = commentsFacade.addComment(commentVo);
+            result = commentsFacade.createComment(commentVo);
         } catch (MultipleMessagesException ex) {
             FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
         }
@@ -157,7 +157,7 @@ public class CommentsFacadeIT {
         commentVo.setUserId(1L);
         CommentsFacade commentsFacade = Config.getInstance().getFacadeFactory().
                 getCommentsFacade();
-        CommentVo result = commentsFacade.addComment(commentVo);
+        CommentVo result = commentsFacade.createComment(commentVo);
 
 
         commentVo.setAnonymous(false);
@@ -167,7 +167,7 @@ public class CommentsFacadeIT {
         commentVo.setRating(2F);
         commentVo.setUserId(1L);
         try {
-            result = commentsFacade.addComment(commentVo);
+            result = commentsFacade.createComment(commentVo);
         } catch (MaxCommentsLimitReachedException e) {
             assertEquals("Maximum comments per day reached", e.getMessage());
         }
@@ -319,26 +319,23 @@ public class CommentsFacadeIT {
         CommentsFacade commentsFacade = Config.getInstance().getFacadeFactory().
                 getCommentsFacade();
         Long id = 1L;
-        List<CommentVoFull> commentsByCourseId = commentsFacade.getCommentsByCourseId(id);
+        List<CommentVo> commentsByCourseId = commentsFacade.getCommentsByCourseId(id);
         int size = entityManager.createQuery(
                 "SELECT COUNT(c) FROM Comment c WHERE c.course.id = :id",
                 Long.class).
                 setParameter("id", id).getSingleResult().intValue();
-        assertEquals(3, size);
-        for (CommentVoFull cvvf : commentsByCourseId) {
+        assertEquals(4, size);
+        for (CommentVo commentVo : commentsByCourseId) {
             CommentVo result = entityManager.createQuery(
                     "SELECT c FROM Comment c WHERE c.id = :id",
                     CommentEntity.class).
-                    setParameter("id", cvvf.getId()).getSingleResult().toVo();
-            if (cvvf.isAnonymous()) {
-                assertNull(cvvf.getUser());
-            } else {
-                assertNotNull(cvvf.getUser());
-                assertEquals(result.getUserId(), cvvf.getUser().getId());
-            }
-            assertEquals(result.getContent(), cvvf.getContent());
-            assertEquals(result.getId(), cvvf.getId());
-            assertEquals(result.getRating(), cvvf.getCourseRating());
+                    setParameter("id", commentVo.getId()).getSingleResult().toVo();
+
+            assertNotNull(commentVo.getUserId());
+            assertEquals(result.getUserId(), commentVo.getUserId());
+
+            assertEquals(result.getContent(), commentVo.getContent());
+            assertEquals(result.getId(), commentVo.getId());
         }
 
     }
@@ -348,8 +345,7 @@ public class CommentsFacadeIT {
         CommentsFacade commentsFacade = Config.getInstance().getFacadeFactory().
                 getCommentsFacade();
         Long id = 0L;
-        List<CommentVoFull> commentsByCourseId = commentsFacade.
-                getCommentsByCourseId(id);
+        List<CommentVo> commentsByCourseId = commentsFacade.getCommentsByCourseId(id);
         assertEquals(0, commentsByCourseId.size());
 
         id = Long.MAX_VALUE;
@@ -412,10 +408,10 @@ public class CommentsFacadeIT {
 
     @Test
     public void test_BL_25_1() throws Exception {
-        Long commmendId = 1L;
+        Long commmendId = 5L;
         CommentsFacade commentsFacade = Config.getInstance().getFacadeFactory().
                 getCommentsFacade();
-        commentsFacade.removeComment(commmendId);
+        commentsFacade.deleteComment(commmendId);
         Long singleResult = entityManager.createQuery(
                 "SELECT COUNT(c) FROM Comment c WHERE c.id = :commmendId",
                 Long.class).setParameter("commmendId", commmendId).
@@ -431,14 +427,14 @@ public class CommentsFacadeIT {
 
     @Test
     public void test_BL_25_2() throws Exception {
-        Long commmendId = 1L;
+        Long commmendId = 5L;
         CommentsFacade commentsFacade = Config.getInstance().getFacadeFactory().
                 getCommentsFacade();
         try {
-            commentsFacade.removeComment(commmendId);
+            commentsFacade.deleteComment(commmendId);
         } catch (Exception ex) {
-            assertEquals(RuntimeException.class, ex.getClass());
-            assertEquals("entity.notFound", ex.getCause().getMessage());
+            assertEquals(DataBaseException.class, ex.getClass());
+            assertEquals("entity.notFound", ex.getMessage());
             Long singleResult = entityManager.createQuery(
                     "SELECT COUNT(c) FROM Comment c WHERE c.id = :commmendId",
                     Long.class).setParameter("commmendId", commmendId).
@@ -453,10 +449,10 @@ public class CommentsFacadeIT {
         }
         commmendId = Long.MIN_VALUE;
         try {
-            commentsFacade.removeComment(commmendId);
+            commentsFacade.deleteComment(commmendId);
         } catch (Exception ex) {
-            assertEquals(RuntimeException.class, ex.getClass());
-            assertEquals("entity.notFound", ex.getCause().getMessage());
+            assertEquals(DataBaseException.class, ex.getClass());
+            assertEquals("entity.notFound", ex.getMessage());
             Long singleResult = entityManager.createQuery(
                     "SELECT COUNT(c) FROM Comment c WHERE c.id = :commmendId",
                     Long.class).setParameter("commmendId", commmendId).
@@ -472,10 +468,10 @@ public class CommentsFacadeIT {
 
         commmendId = Long.MAX_VALUE;
         try {
-            commentsFacade.removeComment(commmendId);
+            commentsFacade.deleteComment(commmendId);
         } catch (Exception ex) {
-            assertEquals(RuntimeException.class, ex.getClass());
-            assertEquals("entity.notFound", ex.getCause().getMessage());
+            assertEquals(DataBaseException.class, ex.getClass());
+            assertEquals("entity.notFound", ex.getMessage());
             Long singleResult = entityManager.createQuery(
                     "SELECT COUNT(c) FROM Comment c WHERE c.id = :commmendId",
                     Long.class).setParameter("commmendId", commmendId).

@@ -11,61 +11,62 @@ import org.xtremeware.iudex.vo.CourseVo;
 public class CoursesService extends CrudService<CourseVo, CourseEntity> {
 
     public CoursesService(AbstractDaoBuilder daoFactory,
-            Create create, Read read, Update update, Remove remove) {
-        super(daoFactory, create, read, update, remove);
+            Create create, Read read, Update update, Delete delete) {
+        super(daoFactory, create, read, update, delete);
 
     }
 
-	@Override
-	protected void validateVoForCreation(EntityManager entityManager, CourseVo course) throws MultipleMessagesException, ExternalServiceConnectionException, DataBaseException {
-		MultipleMessagesException multipleMessageException =
-				new MultipleMessagesException();
-		if (course == null) {
-			multipleMessageException.addMessage("course.null");
-			throw multipleMessageException;
-		}
-		if (course.getPeriodId() == null) {
-			multipleMessageException.addMessage(
-					"course.periodId.null");
-		} else if (getDaoFactory().getPeriodDao().getById(entityManager,
-				course.getPeriodId()) == null) {
-			multipleMessageException.addMessage(
-					"course.periodId.notFound");
-		}
-		if (course.getProfessorId() == null) {
-			multipleMessageException.addMessage(
-					"course.professorId.null");
-		} else if (getDaoFactory().getProfessorDao().getById(entityManager, course.getProfessorId()) == null) {
-			multipleMessageException.addMessage(
-					"course.professorId.notFound");
-		}
-		if (course.getSubjectId() == null) {
-			multipleMessageException.addMessage(
-					"course.subjectId.null");
-		} else if (getDaoFactory().getSubjectDao().getById(entityManager, course.getSubjectId()) == null) {
-			multipleMessageException.addMessage("course.subjectId.notFound");
-		}
-		if ((course.getRatingCount() == 0 && course.getRatingAverage() != 0)) {
-			multipleMessageException.addMessage(
-					"course.rating.invalid");
-		}
-		if (course.getRatingCount() < 0) {
-			multipleMessageException.addMessage(
-					"course.rating.invalidCount");
-		}
-		if (course.getRatingAverage() < 0) {
-			multipleMessageException.addMessage(
-					"course.rating.invalidAverage");
-		}
+    @Override
+    protected void validateVoForCreation(EntityManager entityManager, CourseVo course) 
+            throws MultipleMessagesException, DataBaseException {
+        MultipleMessagesException multipleMessageException =
+                new MultipleMessagesException();
+        if (course == null) {
+            multipleMessageException.addMessage("course.null");
+            throw multipleMessageException;
+        }
+        if (course.getPeriodId() == null) {
+            multipleMessageException.addMessage(
+                    "course.periodId.null");
+        } else if (getDaoFactory().getPeriodDao().read(entityManager,
+                course.getPeriodId()) == null) {
+            multipleMessageException.addMessage(
+                    "course.periodId.notFound");
+        }
+        if (course.getProfessorId() == null) {
+            multipleMessageException.addMessage(
+                    "course.professorId.null");
+        } else if (getDaoFactory().getProfessorDao().read(entityManager, course.getProfessorId()) == null) {
+            multipleMessageException.addMessage(
+                    "course.professorId.notFound");
+        }
+        if (course.getSubjectId() == null) {
+            multipleMessageException.addMessage(
+                    "course.subjectId.null");
+        } else if (getDaoFactory().getSubjectDao().read(entityManager, course.getSubjectId()) == null) {
+            multipleMessageException.addMessage("course.subjectId.notFound");
+        }
+        if ((course.getRatingCount() == 0 && course.getRatingAverage() != 0)) {
+            multipleMessageException.addMessage(
+                    "course.rating.invalid");
+        }
+        if (course.getRatingCount() < 0) {
+            multipleMessageException.addMessage(
+                    "course.rating.invalidCount");
+        }
+        if (course.getRatingAverage() < 0) {
+            multipleMessageException.addMessage(
+                    "course.rating.invalidAverage");
+        }
 
-		if (!multipleMessageException.getMessages().isEmpty()) {
-			throw multipleMessageException;
-		}
-	}
+        if (!multipleMessageException.getMessages().isEmpty()) {
+            throw multipleMessageException;
+        }
+    }
 
     @Override
     public void validateVoForUpdate(EntityManager entityManager, CourseVo courseVo)
-            throws MultipleMessagesException, ExternalServiceConnectionException, DataBaseException {
+            throws MultipleMessagesException, DataBaseException {
         validateVoForCreation(entityManager, courseVo);
         MultipleMessagesException multipleMessageException =
                 new MultipleMessagesException();
@@ -98,15 +99,15 @@ public class CoursesService extends CrudService<CourseVo, CourseEntity> {
         return list;
     }
 
-    public List<CourseVo> getSimilarCourses(EntityManager em,
+    public List<CourseVo> getSimilarCourses(EntityManager entityManager,
             String professorName, String subjectName, Long preiodId)
-            throws ExternalServiceConnectionException, DataBaseException {
+            throws DataBaseException {
 
-        professorName = SecurityHelper.sanitizeHTML(professorName);
-        subjectName = SecurityHelper.sanitizeHTML(subjectName);
-        List<CourseEntity> coursesByProfessorNameLikeAndSubjectNameLike = getDaoFactory().getCourseDao().
-                getCoursesByProfessorNameLikeAndSubjectNameLike(em,
-                professorName, subjectName, preiodId);
+        List<CourseEntity> coursesByProfessorNameLikeAndSubjectNameLike =
+                getDaoFactory().getCourseDao().
+                getCoursesByProfessorNameLikeAndSubjectNameLike(entityManager,
+                SecurityHelper.sanitizeHTML(professorName),
+                SecurityHelper.sanitizeHTML(subjectName), preiodId);
 
         List<CourseVo> list = new ArrayList<CourseVo>();
 
@@ -118,18 +119,16 @@ public class CoursesService extends CrudService<CourseVo, CourseEntity> {
 
     @Override
     public CourseEntity voToEntity(EntityManager entityManager, CourseVo courseVo)
-            throws ExternalServiceConnectionException, MultipleMessagesException,
+            throws MultipleMessagesException,
             DataBaseException {
 
         CourseEntity course = new CourseEntity();
         course.setId(courseVo.getId());
-        course.setPeriod(getDaoFactory().getPeriodDao().getById(entityManager, courseVo.getPeriodId()));
-        course.setProfessor(getDaoFactory().getProfessorDao().getById(entityManager, courseVo.getProfessorId()));
-        course.setSubject(getDaoFactory().getSubjectDao().getById(entityManager, courseVo.getSubjectId()));
+        course.setPeriod(getDaoFactory().getPeriodDao().read(entityManager, courseVo.getPeriodId()));
+        course.setProfessor(getDaoFactory().getProfessorDao().read(entityManager, courseVo.getProfessorId()));
+        course.setSubject(getDaoFactory().getSubjectDao().read(entityManager, courseVo.getSubjectId()));
         course.setRatingAverage(courseVo.getRatingAverage());
         course.setRatingCount(courseVo.getRatingCount());
         return course;
     }
-
-	
 }

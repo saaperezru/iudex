@@ -40,10 +40,10 @@ public class UsersCreate implements Create<UserEntity> {
         //Associate confirmation key with user
         entity.setConfirmationKey(confirmationKeyEntity);
 
-        entity = getDaoFactory().getUserDao().persist(entityManager, entity);
+        getDaoFactory().getUserDao().create(entityManager, entity);
         confirmationKeyEntity.setUser(entity);
         //persist confirmation key
-        getDaoFactory().getConfirmationKeyDao().persist(entityManager, confirmationKeyEntity);
+        getDaoFactory().getConfirmationKeyDao().create(entityManager, confirmationKeyEntity);
         return entity;
     }
 

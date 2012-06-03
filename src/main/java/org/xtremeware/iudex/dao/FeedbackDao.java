@@ -16,17 +16,18 @@ public interface FeedbackDao extends CrudDao<FeedbackEntity> {
      * Returns a list of Feedback with a type corresponding to the specified
      * feedbackTypeId
      *
-     * @param entityManager EntityManager with which the entities will be searched
+     * @param entityManager EntityManager with which the entities will be
+     * searched
      * @param feedbackTypeId Feedback type identifier to look for in feedback
      * entities.
      * @return The list of found feedbacks.
      */
-    public List<FeedbackEntity> getByTypeId(EntityManager entityManager, long feedbackTypeId)
+    List<FeedbackEntity> getByTypeId(EntityManager entityManager, long feedbackTypeId)
             throws DataBaseException;
 
-    public List<FeedbackEntity> getByContentLike(EntityManager entityManager, String query)
+    List<FeedbackEntity> getByContentLike(EntityManager entityManager, String query)
             throws DataBaseException;
 
-    public List<FeedbackEntity> getAll(EntityManager entityManager)
+    List<FeedbackEntity> getAll(EntityManager entityManager)
             throws DataBaseException;
 }

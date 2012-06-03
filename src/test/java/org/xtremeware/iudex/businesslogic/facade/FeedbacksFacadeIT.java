@@ -44,7 +44,7 @@ public class FeedbacksFacadeIT {
         FeedbacksFacade ff = Config.getInstance().getFacadeFactory().
                 getFeedbacksFacade();
         String feedback = FacadesTestHelper.randomString(50);
-        FeedbackVo fv = ff.addFeedback(1L, feedback, Calendar.getInstance().getTime());
+        FeedbackVo fv = ff.createFeedback(1L, feedback, Calendar.getInstance().getTime());
         assertNotNull(fv);
         assertNotNull(fv.getId());
         assertTrue(fv.getFeedbackTypeId() == 1L);
@@ -63,7 +63,7 @@ public class FeedbacksFacadeIT {
             "feedback.content.null",
             "feedback.feedbackTypeId.element.notFound"};
         try {
-            fv = ff.addFeedback(0L, null, null);
+            fv = ff.createFeedback(0L, null, null);
         } catch (MultipleMessagesException ex) {
             FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
         }
@@ -72,7 +72,7 @@ public class FeedbacksFacadeIT {
             "feedback.content.tooShort",
             "feedback.feedbackTypeId.element.notFound"};
         try {
-            fv = ff.addFeedback(Long.MAX_VALUE, "", null);
+            fv = ff.createFeedback(Long.MAX_VALUE, "", null);
         } catch (MultipleMessagesException ex) {
             FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
         }
@@ -81,7 +81,7 @@ public class FeedbacksFacadeIT {
             "feedback.content.tooLong",
             "feedback.feedbackTypeId.element.notFound"};
         try {
-            fv = ff.addFeedback(Long.MIN_VALUE, FacadesTestHelper.randomString(2001), null);
+            fv = ff.createFeedback(Long.MIN_VALUE, FacadesTestHelper.randomString(2001), null);
         } catch (MultipleMessagesException ex) {
             FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
         }

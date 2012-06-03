@@ -6,7 +6,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import org.xtremeware.iudex.businesslogic.DuplicityException;
-import org.xtremeware.iudex.businesslogic.helper.FacadesHelper;
+import org.xtremeware.iudex.businesslogic.helper.FacadesHelperImplementation;
 import org.xtremeware.iudex.businesslogic.service.ServiceBuilder;
 import org.xtremeware.iudex.helper.MultipleMessagesException;
 import org.xtremeware.iudex.vo.*;
@@ -17,7 +17,7 @@ public class FeedbacksFacade extends AbstractFacade {
         super(serviceFactory, emFactory);
     }
 
-    public List<FeedbackTypeVo> getFeedbackTypes() throws Exception {
+    public List<FeedbackTypeVo> getFeedbackTypes(){
         List<FeedbackTypeVo> feedbackTypeVos = null;
         EntityManager entityManager = null;
         try {
@@ -28,7 +28,7 @@ public class FeedbacksFacade extends AbstractFacade {
             getServiceFactory().getLogService().error(exception.getMessage(), exception);
             throw new RuntimeException(exception);
         } finally {
-            FacadesHelper.closeEntityManager(entityManager);
+            FacadesHelperImplementation.closeEntityManager(entityManager);
         }
         return feedbackTypeVos;
     }
@@ -44,7 +44,7 @@ public class FeedbacksFacade extends AbstractFacade {
             getServiceFactory().getLogService().error(exception.getMessage(), exception);
             throw new RuntimeException(exception);
         } finally {
-            FacadesHelper.closeEntityManager(entityManager);
+            FacadesHelperImplementation.closeEntityManager(entityManager);
         }
         return feedbackVos;
     }
@@ -59,14 +59,15 @@ public class FeedbacksFacade extends AbstractFacade {
             getServiceFactory().getLogService().error(e.getMessage(), e);
             throw new RuntimeException(e);
         } finally {
-            FacadesHelper.closeEntityManager(em);
+            FacadesHelperImplementation.closeEntityManager(em);
         }
         return list;
     }
 
  
 
-    public FeedbackVo addFeedback(long feedbackType, String feedbackcontent, Date date) throws MultipleMessagesException, Exception {
+    public FeedbackVo createFeedback(long feedbackType, String feedbackcontent, Date date) 
+            throws MultipleMessagesException, DuplicityException {
         
         FeedbackVo feedbackVo = new FeedbackVo();
         feedbackVo.setContent(feedbackcontent);
@@ -82,11 +83,11 @@ public class FeedbacksFacade extends AbstractFacade {
             transaction.commit();
         } catch (Exception exception) {
             getServiceFactory().getLogService().error(exception.getMessage(), exception);
-            FacadesHelper.checkException(exception, MultipleMessagesException.class);
-            FacadesHelper.checkExceptionAndRollback(entityManager, transaction, exception, DuplicityException.class);
-            FacadesHelper.rollbackTransaction(entityManager, transaction, exception);
+            FacadesHelperImplementation.checkException(exception, MultipleMessagesException.class);
+            FacadesHelperImplementation.checkDuplicityViolation(entityManager, transaction, exception);
+            FacadesHelperImplementation.rollbackTransaction(entityManager, transaction, exception);
         } finally {
-            FacadesHelper.closeEntityManager(entityManager);
+            FacadesHelperImplementation.closeEntityManager(entityManager);
         }
         return feedbackVo;
     }

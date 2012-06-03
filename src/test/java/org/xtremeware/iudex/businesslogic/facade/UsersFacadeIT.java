@@ -1,21 +1,16 @@
 package org.xtremeware.iudex.businesslogic.facade;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
+import java.util.*;
+import javax.persistence.*;
 import static org.junit.Assert.*;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.xtremeware.iudex.businesslogic.DuplicityException;
 import org.xtremeware.iudex.businesslogic.helper.FacadesTestHelper;
-import org.xtremeware.iudex.businesslogic.service.InactiveUserException;
-import org.xtremeware.iudex.businesslogic.service.MailingService;
+import org.xtremeware.iudex.businesslogic.service.*;
 import org.xtremeware.iudex.entity.UserEntity;
 import org.xtremeware.iudex.helper.*;
-import org.xtremeware.iudex.vo.MailingConfigVo;
-import org.xtremeware.iudex.vo.UserVo;
+import org.xtremeware.iudex.vo.*;
 
 /**
  *
@@ -74,7 +69,7 @@ public class UsersFacadeIT {
         expectedUser.setActive(false);
         UsersFacade usersFacade = Config.getInstance().getFacadeFactory().
                 getUsersFacade();
-        user = usersFacade.addUser(user);
+        user = usersFacade.createUser(user);
         assertNotNull(user.getId());
         assertTrue(user.getId() > 0);
         // The id is OK, transfer it to expectedUser to ease the assertion
@@ -127,7 +122,7 @@ public class UsersFacadeIT {
         user.setActive(true);
         UsersFacade usersFacade = Config.getInstance().getFacadeFactory().
                 getUsersFacade();
-        usersFacade.addUser(user);
+        usersFacade.createUser(user);
     }
 
     /**
@@ -142,7 +137,7 @@ public class UsersFacadeIT {
         UsersFacade usersFacade = Config.getInstance().getFacadeFactory().
                 getUsersFacade();
         try {
-            usersFacade.addUser(null);
+            usersFacade.createUser(null);
         } catch (MultipleMessagesException ex) {
             FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
         }
@@ -167,7 +162,7 @@ public class UsersFacadeIT {
         };
 
         try {
-            usersFacade.addUser(user);
+            usersFacade.createUser(user);
         } catch (MultipleMessagesException ex) {
             FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
         }
@@ -189,16 +184,15 @@ public class UsersFacadeIT {
         };
 
         try {
-            usersFacade.addUser(user);
+            usersFacade.createUser(user);
         } catch (MultipleMessagesException ex) {
             FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
         }
 
         user.setFirstName(FacadesTestHelper.randomString(10));
         user.setLastName(FacadesTestHelper.randomString(10));
-        user.setUserName(FacadesTestHelper.randomString(MAX_USERNAME_LENGTH + 1));
-        user.setPassword(FacadesTestHelper.randomString(MAX_USER_PASSWORD_LENGTH +
-                1));
+        user.setUserName(FacadesTestHelper.randomString(MAX_USERNAME_LENGTH + 10));
+        user.setPassword(FacadesTestHelper.randomString(MAX_USER_PASSWORD_LENGTH +10));
         List<Long> programsId = user.getProgramsId();
         programsId.add(null);
 
@@ -209,7 +203,7 @@ public class UsersFacadeIT {
         };
 
         try {
-            usersFacade.addUser(user);
+            usersFacade.createUser(user);
         } catch (MultipleMessagesException ex) {
             FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
         }
@@ -224,7 +218,7 @@ public class UsersFacadeIT {
         };
 
         try {
-            usersFacade.addUser(user);
+            usersFacade.createUser(user);
         } catch (MultipleMessagesException ex) {
             FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
         }
@@ -330,7 +324,7 @@ public class UsersFacadeIT {
         RuntimeException exception = null;
         boolean externalServiceConnectionException = false;
         try {
-            usersFacade.addUser(user);
+            usersFacade.createUser(user);
         } catch (RuntimeException ex) {
             exception = ex;
             if (ex.getCause() instanceof ExternalServiceConnectionException) {
@@ -464,7 +458,7 @@ public class UsersFacadeIT {
         
         UsersFacade usersFacade = Config.getInstance().getFacadeFactory().
                 getUsersFacade();
-        user = usersFacade.editUser(user);
+        user = usersFacade.updateUser(user);
         assertEquals(expectedUser, user);
 
         EntityManager em = emf.createEntityManager();
@@ -504,7 +498,7 @@ public class UsersFacadeIT {
         user.setProgramsId(Arrays.asList(new Long[]{2537L, 2556L}));
         user.setRole(Role.STUDENT);
         user.setUserName("healarconr");
-        user = Config.getInstance().getFacadeFactory().getUsersFacade().editUser(
+        user = Config.getInstance().getFacadeFactory().getUsersFacade().updateUser(
                 user);
         assertNull(user);
     }
@@ -521,7 +515,7 @@ public class UsersFacadeIT {
         UsersFacade usersFacade = Config.getInstance().getFacadeFactory().
                 getUsersFacade();
         try {
-            usersFacade.editUser(null);
+            usersFacade.updateUser(null);
         } catch (MultipleMessagesException ex) {
             FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
         }
@@ -546,7 +540,7 @@ public class UsersFacadeIT {
         };
 
         try {
-            usersFacade.editUser(user);
+            usersFacade.updateUser(user);
         } catch (MultipleMessagesException ex) {
             FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
         }
@@ -568,15 +562,15 @@ public class UsersFacadeIT {
         };
 
         try {
-            usersFacade.editUser(user);
+            usersFacade.updateUser(user);
         } catch (MultipleMessagesException ex) {
             FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
         }
 
         user.setFirstName(FacadesTestHelper.randomString(10));
         user.setLastName(FacadesTestHelper.randomString(10));
-        user.setUserName(FacadesTestHelper.randomString(MAX_USERNAME_LENGTH + 1));
-        user.setPassword(FacadesTestHelper.randomString(MAX_USER_PASSWORD_LENGTH +1));
+        user.setUserName(FacadesTestHelper.randomString(MAX_USERNAME_LENGTH + 10));
+        user.setPassword(FacadesTestHelper.randomString(MAX_USER_PASSWORD_LENGTH +10));
         List<Long> programsId = user.getProgramsId();
         programsId.add(null);
 
@@ -587,7 +581,7 @@ public class UsersFacadeIT {
         };
 
         try {
-            usersFacade.editUser(user);
+            usersFacade.updateUser(user);
         } catch (MultipleMessagesException ex) {
             FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
         }
@@ -602,9 +596,25 @@ public class UsersFacadeIT {
         };
 
         try {
-            usersFacade.editUser(user);
+            usersFacade.updateUser(user);
         } catch (MultipleMessagesException ex) {
             FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
         }
+    }
+    
+    @Test
+    public void testDoubleRaitingCommentDeleted() throws MultipleMessagesException, Exception {
+        CommentVo commentVo = new CommentVo();
+        commentVo.setAnonymous(false);
+        commentVo.setContent("MUY MAL CURSO");
+        commentVo.setCourseId(3L);
+        commentVo.setDate(new Date());
+        commentVo.setRating(1F);
+        commentVo.setUserId(6L);
+        CommentVo addComment = Config.getInstance().getFacadeFactory().getCommentsFacade().createComment(commentVo);
+        
+        Config.getInstance().getFacadeFactory().getCommentsFacade().rateComment(addComment.getId(), 6L, 1);
+        
+        Config.getInstance().getFacadeFactory().getUsersFacade().deleteUser(6L);
     }
 }

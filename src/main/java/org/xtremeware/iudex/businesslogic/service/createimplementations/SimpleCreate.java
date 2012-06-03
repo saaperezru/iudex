@@ -22,7 +22,8 @@ public class SimpleCreate<E extends Entity> implements Create<E>{
     @Override
     public E create(EntityManager entityManager, E entity)
             throws DataBaseException, DuplicityException {
-        return getCrudDao().persist(entityManager, entity);
+        getCrudDao().create(entityManager, entity);
+        return entity;
     }
 
     private CrudDao<E> getCrudDao(){

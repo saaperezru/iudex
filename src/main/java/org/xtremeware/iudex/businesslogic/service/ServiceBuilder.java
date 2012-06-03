@@ -1,12 +1,11 @@
 package org.xtremeware.iudex.businesslogic.service;
 
+import org.xtremeware.iudex.businesslogic.service.deleteimplementations.SimpleDelete;
 import org.xtremeware.iudex.businesslogic.service.createimplementations.*;
 import org.xtremeware.iudex.businesslogic.service.readimplementations.*;
-import org.xtremeware.iudex.businesslogic.service.removeimplementations.*;
 import org.xtremeware.iudex.businesslogic.service.updateimplementations.*;
 import org.xtremeware.iudex.dao.AbstractDaoBuilder;
 import org.xtremeware.iudex.entity.*;
-import org.xtremeware.iudex.helper.ExternalServiceConnectionException;
 import org.xtremeware.iudex.vo.MailingConfigVo;
 
 /**
@@ -33,8 +32,7 @@ public class ServiceBuilder {
     private LogService logService;
     private AbstractDaoBuilder daoFactory;
 
-    public ServiceBuilder(AbstractDaoBuilder daoFactory, MailingConfigVo mailingConfig)
-            throws ExternalServiceConnectionException {
+    public ServiceBuilder(AbstractDaoBuilder daoFactory, MailingConfigVo mailingConfig) {
         this.daoFactory = daoFactory;
         this.mailingService = new MailingService(mailingConfig);
     }
@@ -47,7 +45,7 @@ public class ServiceBuilder {
         if (commentRatingService == null) {
             commentRatingService = new CommentRatingsService(getDaoFactory(),
                     new SimpleRead<CommentRatingEntity>(daoFactory.getCommentRatingDao()),
-                    new SimpleRemove<CommentRatingEntity>(daoFactory.getCommentRatingDao()));
+                    new SimpleDelete<CommentRatingEntity>(daoFactory.getCommentRatingDao()));
         }
         return commentRatingService;
     }
@@ -58,7 +56,7 @@ public class ServiceBuilder {
                     new CommentsCreate(getDaoFactory()),
                     new SimpleRead<CommentEntity>(getDaoFactory().getCommentDao()),
                     new SimpleUpdate<CommentEntity>(getDaoFactory().getCommentDao()),
-                    new SimpleRemove<CommentEntity>(getDaoFactory().getCommentDao()));
+                    new SimpleDelete<CommentEntity>(getDaoFactory().getCommentDao()));
         }
         
         return commentsService;
@@ -67,21 +65,21 @@ public class ServiceBuilder {
     public CourseRatingsService getCourseRatingsService() {
         if (courseRatingsService == null) {
             courseRatingsService = new CourseRatingsService(getDaoFactory(),
-                    new SimpleCreate<CourseRatingEntity>(getDaoFactory().getCourseRatingDao()),
+                    new CourseRate(getDaoFactory()),
                     new SimpleRead<CourseRatingEntity>(getDaoFactory().getCourseRatingDao()),
                     new SimpleUpdate<CourseRatingEntity>(getDaoFactory().getCourseRatingDao()),
-                    new SimpleRemove<CourseRatingEntity>(getDaoFactory().getCourseRatingDao()));
+                    new SimpleDelete<CourseRatingEntity>(getDaoFactory().getCourseRatingDao()));
         }
         return courseRatingsService;
     }
 
-    public CoursesService createCoursesService() {
+    public CoursesService getCoursesService() {
         if (coursesService == null) {
             coursesService = new CoursesService(getDaoFactory(),
                     new SimpleCreate<CourseEntity>(getDaoFactory().getCourseDao()),
                     new SimpleRead<CourseEntity>(getDaoFactory().getCourseDao()),
                     new SimpleUpdate<CourseEntity>(getDaoFactory().getCourseDao()),
-                    new SimpleRemove<CourseEntity>(getDaoFactory().getCourseDao()));
+                    new SimpleDelete<CourseEntity>(getDaoFactory().getCourseDao()));
         }
         return coursesService;
     }
@@ -92,7 +90,7 @@ public class ServiceBuilder {
                     new SimpleCreate<FeedbackTypeEntity>(getDaoFactory().getFeedbackTypeDao()),
                     new SimpleRead<FeedbackTypeEntity>(getDaoFactory().getFeedbackTypeDao()),
                     new SimpleUpdate<FeedbackTypeEntity>(getDaoFactory().getFeedbackTypeDao()),
-                    new SimpleRemove<FeedbackTypeEntity>(getDaoFactory().getFeedbackTypeDao()));
+                    new SimpleDelete<FeedbackTypeEntity>(getDaoFactory().getFeedbackTypeDao()));
         }
         return feedbackTypesService;
     }
@@ -103,7 +101,7 @@ public class ServiceBuilder {
                     new SimpleCreate<FeedbackEntity>(getDaoFactory().getFeedbackDao()),
                     new SimpleRead<FeedbackEntity>(getDaoFactory().getFeedbackDao()),
                     new SimpleUpdate<FeedbackEntity>(getDaoFactory().getFeedbackDao()),
-                    new SimpleRemove<FeedbackEntity>(getDaoFactory().getFeedbackDao()));
+                    new SimpleDelete<FeedbackEntity>(getDaoFactory().getFeedbackDao()));
         }
         return feedbacksService;
     }
@@ -118,7 +116,7 @@ public class ServiceBuilder {
                     new SimpleCreate<PeriodEntity>(getDaoFactory().getPeriodDao()),
                     new SimpleRead<PeriodEntity>(getDaoFactory().getPeriodDao()),
                     new SimpleUpdate<PeriodEntity>(getDaoFactory().getPeriodDao()),
-                    new SimpleRemove<PeriodEntity>(getDaoFactory().getPeriodDao()));
+                    new SimpleDelete<PeriodEntity>(getDaoFactory().getPeriodDao()));
         }
         return periodsService;
     }
@@ -127,7 +125,7 @@ public class ServiceBuilder {
         if (professorRatingsService == null) {
             professorRatingsService = new ProfessorRatingsService(getDaoFactory(),
                     new SimpleRead<ProfessorRatingEntity>(getDaoFactory().getProfessorRatingDao()),
-                    new SimpleRemove<ProfessorRatingEntity>(getDaoFactory().getProfessorRatingDao()));
+                    new SimpleDelete<ProfessorRatingEntity>(getDaoFactory().getProfessorRatingDao()));
         }
         return professorRatingsService;
     }
@@ -138,7 +136,7 @@ public class ServiceBuilder {
                     new SimpleCreate<ProfessorEntity>(getDaoFactory().getProfessorDao()),
                     new SimpleRead<ProfessorEntity>(getDaoFactory().getProfessorDao()),
                     new SimpleUpdate<ProfessorEntity>(getDaoFactory().getProfessorDao()),
-                    new SimpleRemove<ProfessorEntity>(getDaoFactory().getProfessorDao()));
+                    new SimpleDelete<ProfessorEntity>(getDaoFactory().getProfessorDao()));
         }
         return professorsService;
     }
@@ -149,7 +147,7 @@ public class ServiceBuilder {
                     new SimpleCreate<ProgramEntity>(getDaoFactory().getProgramDao()),
                     new SimpleRead<ProgramEntity>(getDaoFactory().getProgramDao()),
                     new SimpleUpdate<ProgramEntity>(getDaoFactory().getProgramDao()),
-                    new SimpleRemove<ProgramEntity>(getDaoFactory().getProgramDao()));
+                    new SimpleDelete<ProgramEntity>(getDaoFactory().getProgramDao()));
         }
         return programsService;
     }
@@ -158,7 +156,7 @@ public class ServiceBuilder {
         if (subjectRatingsService == null) {
             subjectRatingsService = new SubjectRatingsService(getDaoFactory(),
                     new SimpleRead<SubjectRatingEntity>(getDaoFactory().getSubjectRatingDao()),
-                    new SimpleRemove<SubjectRatingEntity>(getDaoFactory().getSubjectRatingDao()));
+                    new SimpleDelete<SubjectRatingEntity>(getDaoFactory().getSubjectRatingDao()));
         }
         return subjectRatingsService;
     }
@@ -169,7 +167,7 @@ public class ServiceBuilder {
                     new SimpleCreate<SubjectEntity>(getDaoFactory().getSubjectDao()),
                     new SimpleRead<SubjectEntity>(getDaoFactory().getSubjectDao()),
                     new SimpleUpdate<SubjectEntity>(getDaoFactory().getSubjectDao()),
-                    new SimpleRemove<SubjectEntity>(getDaoFactory().getSubjectDao()));
+                    new SimpleDelete<SubjectEntity>(getDaoFactory().getSubjectDao()));
         }
         return subjectsService;
     }
@@ -180,7 +178,7 @@ public class ServiceBuilder {
                     new UsersCreate(getDaoFactory()),
                     new SimpleRead<UserEntity>(getDaoFactory().getUserDao()),
                     new UsersUpdate(getDaoFactory().getUserDao()),
-                    new SimpleRemove<UserEntity>(getDaoFactory().getUserDao()));
+                    new SimpleDelete<UserEntity>(getDaoFactory().getUserDao()));
         }
         return usersService;
     }

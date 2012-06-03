@@ -6,7 +6,7 @@ package org.xtremeware.iudex.entity;
  */
 public interface BinaryRatingEntity {
 
-    public int getValue();
+    int getValue();
 
-    public void setValue(int value);
+    void setValue(int value);
 }

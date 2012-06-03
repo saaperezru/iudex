@@ -2,8 +2,6 @@ package org.xtremeware.iudex.presentation.controller;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
@@ -42,7 +40,7 @@ public class CreateFeedback implements Serializable {
 	public void submit() {
 		try {
 			Config.getInstance().getFacadeFactory().getFeedbacksFacade().
-					addFeedback(feedbackTypeId, content, new Date());
+					createFeedback(feedbackTypeId, content, new Date());
 			feedbackTypeId = null;
 			content = null;
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(

@@ -17,7 +17,7 @@ public class FeedbackVo extends IdentifiableValueObject<Long> implements ValueOb
             return false;
         }
         final FeedbackVo other = (FeedbackVo) obj;
-        if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
+        if (this.getId() != other.getId() && (this.getId() == null || !this.getId().equals(other.getId()))) {
             return false;
         }
         if (this.feedbackTypeId != other.feedbackTypeId && (this.feedbackTypeId == null || !this.feedbackTypeId.equals(other.feedbackTypeId))) {
@@ -35,7 +35,7 @@ public class FeedbackVo extends IdentifiableValueObject<Long> implements ValueOb
     @Override
     public int hashCode() {
         int hash = 3;
-        hash = 41 * hash + (this.id != null ? this.id.hashCode() : 0);
+        hash = 41 * hash + (this.getId() != null ? this.getId().hashCode() : 0);
         hash = 41 * hash + (this.feedbackTypeId != null ? this.feedbackTypeId.hashCode() : 0);
         hash = 41 * hash + (this.content != null ? this.content.hashCode() : 0);
         hash = 41 * hash + (this.date != null ? this.date.hashCode() : 0);
@@ -44,7 +44,7 @@ public class FeedbackVo extends IdentifiableValueObject<Long> implements ValueOb
 
     @Override
     public String toString() {
-        return "FeedbackVo{" + "id=" + id + ", feedbackTypeid=" + feedbackTypeId + ", content=" + content + ", date=" + date + '}';
+        return "FeedbackVo{" + "id=" + getId() + ", feedbackTypeid=" + feedbackTypeId + ", content=" + content + ", date=" + date + '}';
     }
 
     public String getContent() {

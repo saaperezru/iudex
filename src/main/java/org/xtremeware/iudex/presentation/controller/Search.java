@@ -8,7 +8,6 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import org.xtremeware.iudex.businesslogic.facade.CoursesFacade;
 import org.xtremeware.iudex.helper.Config;
-import org.xtremeware.iudex.presentation.vovw.CourseVoVwFull;
 import org.xtremeware.iudex.vo.CourseVoFull;
 
 /**

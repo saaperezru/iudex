@@ -13,7 +13,7 @@ public class FeedbackTypeVo extends IdentifiableValueObject<Long> implements Val
             return false;
         }
         final FeedbackTypeVo other = (FeedbackTypeVo) obj;
-        if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
+        if (this.getId() != other.getId() && (this.getId() == null || !this.getId().equals(other.getId()))) {
             return false;
         }
         if ((this.name == null) ? (other.name != null) : !this.name.equals(other.name)) {
@@ -25,14 +25,14 @@ public class FeedbackTypeVo extends IdentifiableValueObject<Long> implements Val
     @Override
     public int hashCode() {
         int hash = 3;
-        hash = 89 * hash + (this.id != null ? this.id.hashCode() : 0);
+        hash = 89 * hash + (this.getId() != null ? this.getId().hashCode() : 0);
         hash = 89 * hash + (this.name != null ? this.name.hashCode() : 0);
         return hash;
     }
 
     @Override
     public String toString() {
-        return "FeedbackTypeVo{" + "id=" + id + ", name=" + name + '}';
+        return "FeedbackTypeVo{" + "id=" + getId() + ", name=" + name + '}';
     }
 
     public String getName() {

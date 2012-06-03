@@ -19,7 +19,16 @@ public class BinaryRatingVo extends IdentifiableValueObject<Long> implements Val
             return false;
         }
         final BinaryRatingVo other = (BinaryRatingVo) obj;
-        if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
+        if (this.getId() != other.getId() && (this.getId() == null || !this.getId().equals(other.getId()))) {
+            return false;
+        }
+        if (this.evaluatedObjectId != other.evaluatedObjectId && (this.evaluatedObjectId == null || !this.evaluatedObjectId.equals(other.evaluatedObjectId))) {
+            return false;
+        }
+        if (this.userId != other.userId && (this.userId == null || !this.userId.equals(other.userId))) {
+            return false;
+        }
+        if (this.value != other.value) {
             return false;
         }
         return true;
@@ -28,13 +37,16 @@ public class BinaryRatingVo extends IdentifiableValueObject<Long> implements Val
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 59 * hash + (this.id != null ? this.id.hashCode() : 0);
+        hash = 29 * hash + (this.getId() != null ? this.getId().hashCode() : 0);
+        hash = 29 * hash + (this.evaluatedObjectId != null ? this.evaluatedObjectId.hashCode() : 0);
+        hash = 29 * hash + (this.userId != null ? this.userId.hashCode() : 0);
+        hash = 29 * hash + this.value;
         return hash;
     }
 
     @Override
     public String toString() {
-        return "SubjectRatingVo{" + "id=" + id + ", subject=" + evaluatedObjectId + ", user=" + userId + ", value=" + value + '}';
+        return "SubjectRatingVo{" + "id=" + getId() + ", subject=" + evaluatedObjectId + ", user=" + userId + ", value=" + value + '}';
     }
 
     public Long getEvaluatedObjectId() {

@@ -15,13 +15,13 @@ import org.apache.log4j.Logger;
 @SuppressWarnings("CallToThreadDumpStack")
 public class LogService {
 
-    private final static Logger logger = Logger.getLogger("org.xtremeware.iudex");
+    private static final Logger LOGGER = Logger.getLogger("org.xtremeware.iudex");
 
     static {
         try {
             // TODO: Use the configuration helper to obtain the log configuration
-            logger.setLevel(Level.ALL);
-            logger.addAppender(new DailyRollingFileAppender(
+            LOGGER.setLevel(Level.ALL);
+            LOGGER.addAppender(new DailyRollingFileAppender(
                     new EnhancedPatternLayout("[%d] - " + EnhancedPatternLayout.TTCC_CONVERSION_PATTERN),
                     "log/iudex.log", "'.'yyyy-MM-dd"));
         } catch (IOException ex) {
@@ -35,7 +35,7 @@ public class LogService {
      * @param message the message to log
      */
     public void debug(Object message) {
-        logger.debug(message);
+        LOGGER.debug(message);
     }
 
     /**
@@ -45,7 +45,7 @@ public class LogService {
      * @param t the throwable to log
      */
     public void debug(Object message, Throwable t) {
-        logger.debug(message, t);
+        LOGGER.debug(message, t);
     }
 
     /**
@@ -54,7 +54,7 @@ public class LogService {
      * @param message the message to log
      */
     public void error(Object message) {
-        logger.error(message);
+        LOGGER.error(message);
     }
 
     /**
@@ -64,7 +64,7 @@ public class LogService {
      * @param t the throwable to log
      */
     public void error(Object message, Throwable t) {
-        logger.error(message, t);
+        LOGGER.error(message, t);
     }
 
     /**
@@ -73,7 +73,7 @@ public class LogService {
      * @param message the message to log
      */
     public void fatal(Object message) {
-        logger.fatal(message);
+        LOGGER.fatal(message);
     }
 
     /**
@@ -83,7 +83,7 @@ public class LogService {
      * @param t the throwable to log
      */
     public void fatal(Object message, Throwable t) {
-        logger.fatal(message, t);
+        LOGGER.fatal(message, t);
     }
 
     /**
@@ -92,7 +92,7 @@ public class LogService {
      * @param message the message to log
      */
     public void info(Object message) {
-        logger.info(message);
+        LOGGER.info(message);
     }
 
     /**
@@ -102,7 +102,7 @@ public class LogService {
      * @param t the throwable to log
      */
     public void info(Object message, Throwable t) {
-        logger.info(message, t);
+        LOGGER.info(message, t);
     }
 
     /**
@@ -111,7 +111,7 @@ public class LogService {
      * @param message the message to log
      */
     public void warn(Object message) {
-        logger.warn(message);
+        LOGGER.warn(message);
     }
 
     /**
@@ -121,6 +121,6 @@ public class LogService {
      * @param t the throwable to log
      */
     public void warn(Object message, Throwable t) {
-        logger.warn(message, t);
+        LOGGER.warn(message, t);
     }
 }

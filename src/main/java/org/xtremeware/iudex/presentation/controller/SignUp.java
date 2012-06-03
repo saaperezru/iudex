@@ -79,7 +79,7 @@ public class SignUp {
         this.user = user;
     }
 
-    public String signUp() throws IOException, Exception {
+    public String signUp() throws IOException {
 
         FacesContext fc = FacesContext.getCurrentInstance();
         if (user.isLoggedIn()) {
@@ -100,7 +100,7 @@ public class SignUp {
         userVo.setProgramsId(programsList);
         userVo.setRole(Role.STUDENT);
         try {
-            usersFacade.addUser(userVo);
+            usersFacade.createUser(userVo);
             return "success";
         } catch(DuplicityException ex){
             ViewHelper.addExceptionFacesMessage("signUpForm", ex);

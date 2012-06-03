@@ -2,7 +2,6 @@ package org.xtremeware.iudex.businesslogic.service;
 
 import java.util.*;
 import javax.persistence.EntityManager;
-import org.xtremeware.iudex.businesslogic.InvalidVoException;
 import org.xtremeware.iudex.businesslogic.service.crudinterfaces.*;
 import org.xtremeware.iudex.dao.AbstractDaoBuilder;
 import org.xtremeware.iudex.entity.FeedbackTypeEntity;
@@ -21,9 +20,9 @@ public class FeedbackTypesService extends CrudService<FeedbackTypeVo, FeedbackTy
      * @param daoFactory
      */
     public FeedbackTypesService(AbstractDaoBuilder daoFactory,
-            Create create, Read read, Update update, Remove remove) {
+            Create create, Read read, Update update, Delete delete) {
 
-        super(daoFactory, create, read, update, remove);
+        super(daoFactory, create, read, update, delete);
         
     }
 
@@ -37,8 +36,7 @@ public class FeedbackTypesService extends CrudService<FeedbackTypeVo, FeedbackTy
      */
     @Override
     public void validateVoForCreation(EntityManager entityManager, FeedbackTypeVo feedbackTypeVo)
-            throws ExternalServiceConnectionException,
-            MultipleMessagesException {
+            throws MultipleMessagesException {
         
         MultipleMessagesException multipleMessageException =
                 new MultipleMessagesException();
@@ -57,7 +55,7 @@ public class FeedbackTypesService extends CrudService<FeedbackTypeVo, FeedbackTy
     
     @Override
     public void validateVoForUpdate(EntityManager entityManager, FeedbackTypeVo feedbackTypeVo) 
-            throws MultipleMessagesException, ExternalServiceConnectionException, DataBaseException {
+            throws MultipleMessagesException, DataBaseException {
         
         validateVoForCreation(entityManager, feedbackTypeVo);
         
@@ -81,7 +79,7 @@ public class FeedbackTypesService extends CrudService<FeedbackTypeVo, FeedbackTy
      */
     @Override
     public FeedbackTypeEntity voToEntity(EntityManager em, FeedbackTypeVo vo)
-            throws ExternalServiceConnectionException, MultipleMessagesException {
+            throws MultipleMessagesException {
 
         FeedbackTypeEntity feedbackTypeEntity = new FeedbackTypeEntity();
         feedbackTypeEntity.setId(vo.getId());

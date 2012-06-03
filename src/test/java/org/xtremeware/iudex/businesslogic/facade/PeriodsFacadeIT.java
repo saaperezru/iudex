@@ -6,7 +6,6 @@ import javax.persistence.EntityManager;
 import static org.junit.Assert.*;
 import org.junit.*;
 import org.xtremeware.iudex.businesslogic.DuplicityException;
-import org.xtremeware.iudex.businesslogic.InvalidVoException;
 import org.xtremeware.iudex.entity.Entity;
 import org.xtremeware.iudex.helper.Config;
 import org.xtremeware.iudex.helper.DataBaseException;
@@ -51,14 +50,14 @@ public class PeriodsFacadeIT {
         int semester = 3;
         PeriodsFacade periodsFacade = Config.getInstance().getFacadeFactory().
                 getPeriodsFacade();
-        PeriodVo periodVo = periodsFacade.addPeriod(year, semester);
+        PeriodVo periodVo = periodsFacade.createPeriod(year, semester);
         assertNotNull(periodVo);
         assertEquals(semester, periodVo.getSemester());
         assertEquals(year, periodVo.getYear());
         assertNotNull(periodVo.getId());
         year = 2013;
         semester = 2;
-        periodVo = periodsFacade.addPeriod(year, semester);
+        periodVo = periodsFacade.createPeriod(year, semester);
         assertNotNull(periodVo);
         assertEquals(semester, periodVo.getSemester());
         assertEquals(year, periodVo.getYear());
@@ -73,14 +72,14 @@ public class PeriodsFacadeIT {
         String[] expectedMessages = new String[]{
             "period.semester.invalidSemester"};
         try {
-            PeriodVo periodVo = periodsFacade.addPeriod(2012, 4);
+            PeriodVo periodVo = periodsFacade.createPeriod(2012, 4);
         } catch (MultipleMessagesException ex) {
             FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
         }
         expectedMessages = new String[]{
             "period.year.invalidYear"};
         try {
-            PeriodVo periodVo = periodsFacade.addPeriod(-1, 3);
+            PeriodVo periodVo = periodsFacade.createPeriod(-1, 3);
         } catch (MultipleMessagesException ex) {
             FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
         }
@@ -88,14 +87,14 @@ public class PeriodsFacadeIT {
             "period.year.invalidYear",
             "period.semester.invalidSemester"};
         try {
-            PeriodVo periodVo = periodsFacade.addPeriod(-1, 0);
+            PeriodVo periodVo = periodsFacade.createPeriod(-1, 0);
         } catch (MultipleMessagesException ex) {
             FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
         }
         expectedMessages = new String[]{
             "period.semester.invalidSemester"};
         try {
-            PeriodVo periodVo = periodsFacade.addPeriod(Integer.MAX_VALUE,
+            PeriodVo periodVo = periodsFacade.createPeriod(Integer.MAX_VALUE,
                     Integer.MAX_VALUE);
         } catch (MultipleMessagesException ex) {
             FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
@@ -104,7 +103,7 @@ public class PeriodsFacadeIT {
             "period.year.invalidYear",
             "period.semester.invalidSemester"};
         try {
-            PeriodVo periodVo = periodsFacade.addPeriod(Integer.MIN_VALUE,
+            PeriodVo periodVo = periodsFacade.createPeriod(Integer.MIN_VALUE,
                     Integer.MIN_VALUE);
         } catch (MultipleMessagesException ex) {
             FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
@@ -117,19 +116,19 @@ public class PeriodsFacadeIT {
                 getPeriodsFacade();
         PeriodVo periodVo = null;
         try {
-            periodVo = periodsFacade.addPeriod(2008, 1);
+            periodVo = periodsFacade.createPeriod(2008, 1);
         } catch (Exception ex) {
             assertEquals(null, periodVo);
             assertEquals(DuplicityException.class, ex.getClass());
         }
         try {
-            periodVo = periodsFacade.addPeriod(2008, 2);
+            periodVo = periodsFacade.createPeriod(2008, 2);
         } catch (Exception ex) {
             assertEquals(null, periodVo);
             assertEquals(DuplicityException.class, ex.getClass());
         }
         try {
-            periodsFacade.addPeriod(2009, 1);
+            periodsFacade.createPeriod(2009, 1);
         } catch (Exception ex) {
             assertEquals(null, periodVo);
             assertEquals(DuplicityException.class, ex.getClass());
@@ -140,8 +139,8 @@ public class PeriodsFacadeIT {
     public void test_BL_21_1() throws DataBaseException {
         PeriodsFacade periodsFacade = Config.getInstance().getFacadeFactory().
                 getPeriodsFacade();
-        Long id = 1L;
-        periodsFacade.removePeriod(id);
+        Long id = 7L;
+        periodsFacade.deletePeriod(id);
         int result = entityManager.createQuery(
                 "SELECT COUNT(p) FROM Period p WHERE p.id = :id", Long.class).
                 setParameter("id", id).getSingleResult().intValue();
@@ -154,7 +153,7 @@ public class PeriodsFacadeIT {
                 getPeriodsFacade();
         Long id = 0L;
         try {
-            periodsFacade.removePeriod(id);
+            periodsFacade.deletePeriod(id);
         } catch (Exception ex) {
             assertEquals(RuntimeException.class, ex.getClass());
             assertEquals("entity.notFound", ex.getCause().getMessage());
@@ -166,7 +165,7 @@ public class PeriodsFacadeIT {
         }
         id = Long.MAX_VALUE;
         try {
-            periodsFacade.removePeriod(id);
+            periodsFacade.deletePeriod(id);
         } catch (Exception ex) {
             assertEquals(RuntimeException.class, ex.getClass());
             assertEquals("entity.notFound", ex.getCause().getMessage());
@@ -178,7 +177,7 @@ public class PeriodsFacadeIT {
         }
         id = Long.MIN_VALUE;
         try {
-            periodsFacade.removePeriod(id);
+            periodsFacade.deletePeriod(id);
         } catch (Exception ex) {
             assertEquals(RuntimeException.class, ex.getClass());
             assertEquals("entity.notFound", ex.getCause().getMessage());
@@ -188,9 +187,9 @@ public class PeriodsFacadeIT {
                     intValue();
             assertEquals(0, size);
         }
-        id = 1L;
+        id = 8L;
         try {
-            periodsFacade.removePeriod(id);
+            periodsFacade.deletePeriod(id);
         } catch (Exception ex) {
             assertEquals(RuntimeException.class, ex.getClass());
             assertEquals("entity.notFound", ex.getCause().getMessage());
@@ -204,7 +203,7 @@ public class PeriodsFacadeIT {
     }
 
     @Test()
-    public void test_BL_21_3() throws InvalidVoException, Exception {
+    public void test_BL_21_3() throws Exception {
         PeriodsFacade periodsFacade = Config.getInstance().getFacadeFactory().
                 getPeriodsFacade();
         List<PeriodVo> periodVoList = periodsFacade.listPeriods();

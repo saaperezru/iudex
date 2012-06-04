@@ -26,11 +26,11 @@ public class SqlSubjectDao extends SqlCrudDao<SubjectEntity> implements SubjectD
      * @return a list of matched subject entities
      */
     @Override
-    public List<SubjectEntity> getByName(EntityManager entityManager, String name)
+    public List<Long> getByName(EntityManager entityManager, String name)
             throws DataBaseException {
         checkEntityManager(entityManager);
         try {
-            return entityManager.createNamedQuery("getSubjectsByNameLike", SubjectEntity.class).
+            return entityManager.createNamedQuery("getSubjectsByNameLike", Long.class).
                     setParameter("name", "%" + name + "%").getResultList();
         } catch (Exception e) {
             throw new DataBaseException(e.getMessage(), e.getCause());

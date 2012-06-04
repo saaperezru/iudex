@@ -21,6 +21,18 @@ public class ProfessorVoVwFull implements ValueObject{
 		return "ProfessorVoVwFill{" + vo.toString() + "ratingSummary=" + ratingSummary + '}';
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		final ProfessorVoVwFull other = (ProfessorVoVwFull) obj;
+		if (this.vo.getId() != other.getId() ) {
+			return false;
+		}
+		return true;
+	}
+
 	public RatingSummaryVo getRatingSummary() {
 		return ratingSummary;
 	}

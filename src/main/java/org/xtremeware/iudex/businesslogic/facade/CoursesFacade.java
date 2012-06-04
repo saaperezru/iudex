@@ -39,24 +39,18 @@ public class CoursesFacade extends AbstractFacade {
 			try {
 				entityManager = getEntityManagerFactory().createEntityManager();
 
-				List<ProfessorVo> professors = getServiceFactory().getProfessorsService().getByNameLike(entityManager, query);
+				List<Long> professors = getServiceFactory().getProfessorsService().getByNameLike(entityManager, query);
 
-				List<SubjectVo> subjects = getServiceFactory().getSubjectsService().getByNameLike(entityManager, query);
+				List<Long> subjects = getServiceFactory().getSubjectsService().getByNameLike(entityManager, query);
 
-				for (ProfessorVo professorVo : professors) {
-					for (CourseVo courseVo : getServiceFactory().getCoursesService().getByProfessorId(entityManager, professorVo.getId())) {
-						//If this course is still not in the set of results, add it.
-						if (!coursesIds.contains(courseVo.getId())) {
-							coursesIds.add(courseVo.getId());
-						}
+				for (Long professorVoId : professors) {
+					for (CourseVo courseVo : getServiceFactory().getCoursesService().getByProfessorId(entityManager, professorVoId)) {
+						coursesIds.add(courseVo.getId());
 					}
 				}
-				for (SubjectVo subjectVo : subjects) {
-					for (CourseVo courseVo : getServiceFactory().getCoursesService().getBySubjectId(entityManager, subjectVo.getId())) {
-						//If this course is still not in the set of results, add it.
-						if (!coursesIds.contains(courseVo.getId())) {
-							coursesIds.add(courseVo.getId());
-						}
+				for (Long subjectVoId : subjects) {
+					for (CourseVo courseVo : getServiceFactory().getCoursesService().getBySubjectId(entityManager, subjectVoId)) {
+						coursesIds.add(courseVo.getId());
 					}
 
 				}

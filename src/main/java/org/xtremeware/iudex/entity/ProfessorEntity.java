@@ -9,7 +9,7 @@ import org.xtremeware.iudex.vo.ProfessorVo;
 @NamedQueries({
 	@NamedQuery(name = "getProfessorByNameLike",
 	query =
-	"SELECT p FROM Professor p WHERE UPPER(p.firstName) LIKE :name OR UPPER(p.lastName) LIKE :name")
+	"SELECT p.id FROM Professor p WHERE UPPER(p.firstName) LIKE :name OR UPPER(p.lastName) LIKE :name")
 })
 @Table(name = "PROFESSOR",
 uniqueConstraints = {

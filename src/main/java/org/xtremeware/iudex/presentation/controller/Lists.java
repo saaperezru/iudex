@@ -25,9 +25,8 @@ public class Lists {
 	public List<SelectItem> getPrograms() {
 		if (programs == null) {
 			programs = new ArrayList<SelectItem>();
-			ProgramsFacade programsFacade = Config.getInstance().
-					getFacadeFactory().getProgramsFacade();
-			List<ProgramVo> programsList = programsFacade.listPrograms();
+			List<ProgramVo> programsList = Config.getInstance().
+					getFacadeFactory().getProgramsFacade().listPrograms();
 			if (programsList != null) {
 				for (ProgramVo program : programsList) {
 					programs.add(new SelectItem(program.getId(),

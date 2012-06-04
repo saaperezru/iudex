@@ -21,8 +21,9 @@ public class ProfessorsFacade extends AbstractFacade {
         if (isNotNull(programName)) {
             try {
                 entityManager = getEntityManagerFactory().createEntityManager();
-                List<ProfessorVo> professorVos = getServiceFactory().getProfessorsService().getByNameLike(entityManager, programName);
-                for (ProfessorVo professorVo : professorVos) {
+                List<Long> professorVos = getServiceFactory().getProfessorsService().getByNameLike(entityManager, programName);
+                for (Long professorVoId : professorVos) {
+					ProfessorVo professorVo = getServiceFactory().getProfessorsService().read(entityManager, professorVoId);
                     professorsIdAndNames.put(
                             professorVo.getId(),
                             professorVo.getFirstName() + " " + professorVo.getLastName());

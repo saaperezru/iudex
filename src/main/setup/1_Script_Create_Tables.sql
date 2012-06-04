@@ -1,11 +1,11 @@
 /* 
  * This Script will Create the Tables in the DataBase.
  * Created With DBDesigner4
- * Versión 3.0
+ * Versiï¿½n 3.0
  * Added Code column to Tables Subject and Program (19/05/2012)
  * Added the Table FORGOTTEN_PASSWORD_KEY
  *
- * Versión 2.0
+ * Versiï¿½n 2.0
  ** Modified  the relation between USER_ and CONFIRMATION_KEY
  ** Added AUTOINCREMENT to Rating Tables
 */

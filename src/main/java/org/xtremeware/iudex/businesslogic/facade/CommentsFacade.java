@@ -25,8 +25,7 @@ public class CommentsFacade extends AbstractFacade {
             entityManager = getEntityManagerFactory().createEntityManager();
             transaction = entityManager.getTransaction();
             transaction.begin();
-            createdVo = getServiceFactory().createCommentsService().create(entityManager,
-                    vo);
+            createdVo = getServiceFactory().getCommentsService().create(entityManager,vo);
             transaction.commit();
         } catch (Exception exception) {
             getServiceFactory().getLogService().error(exception.getMessage(), exception);
@@ -48,7 +47,7 @@ public class CommentsFacade extends AbstractFacade {
             entityManager = getEntityManagerFactory().createEntityManager();
             transaction = entityManager.getTransaction();
             transaction.begin();
-            getServiceFactory().createCommentsService().delete(entityManager, commentId);
+            getServiceFactory().getCommentsService().delete(entityManager, commentId);
             transaction.commit();
         } catch (Exception exception) {
             getServiceFactory().getLogService().error(exception.getMessage(), exception);
@@ -64,7 +63,7 @@ public class CommentsFacade extends AbstractFacade {
         List<CommentVo> commentVos;
         try {
             entityManager = getEntityManagerFactory().createEntityManager();
-            commentVos = getServiceFactory().createCommentsService().
+            commentVos = getServiceFactory().getCommentsService().
                     getByCourseId(entityManager, courseId);       
         } catch (Exception exception) {
             getServiceFactory().getLogService().error(exception.getMessage(), exception);

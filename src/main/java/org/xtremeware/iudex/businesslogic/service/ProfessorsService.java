@@ -25,17 +25,10 @@ public class ProfessorsService extends CrudService<ProfessorVo, ProfessorEntity>
                 ConfigurationVariablesHelper.MAX_PROFESSOR_DECRIPTION_LENGTH));
     }
 
-    public List<ProfessorVo> getByNameLike(EntityManager entityManager, String professorName)
+    public List<Long> getByNameLike(EntityManager entityManager, String professorName)
             throws DataBaseException {
-        professorName = SecurityHelper.sanitizeHTML(professorName);
-        ArrayList<ProfessorVo> list = new ArrayList<ProfessorVo>();
-        if (!professorName.isEmpty()) {
-            for (ProfessorEntity professor : getDaoFactory().getProfessorDao().
-                    getByNameLike(entityManager, professorName.toUpperCase())) {
-                list.add(professor.toVo());
-            }
-        }
-        return list;
+        professorName = SecurityHelper.sanitizeHTML(professorName); 
+        return getDaoFactory().getProfessorDao().getByNameLike(entityManager, professorName.toUpperCase() );
     }
 
     public List<ProfessorVo> getBySubjectId(EntityManager entityManager, long subjectId)

@@ -40,8 +40,13 @@ public final class Config {
         mailingConf.setSmtpServerPort(Integer.parseInt(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAILING_SMTP_PORT)));
         mailingConf.setSmtpUser(ConfigurationVariablesHelper.getVariable(
                 ConfigurationVariablesHelper.MAILING_SMTP_USER));
-        this.serviceFactory = new ServiceBuilder(daoFactory, mailingConf);
-        facadeFactory = new FacadeFactory(serviceFactory, this.persistenceUnit);
+		
+		try {
+            this.serviceFactory = new ServiceBuilder(daoFactory, mailingConf, this.persistenceUnit.createEntityManager());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+		facadeFactory = new FacadeFactory(serviceFactory, this.persistenceUnit);
     }
 
     public static synchronized Config getInstance() {

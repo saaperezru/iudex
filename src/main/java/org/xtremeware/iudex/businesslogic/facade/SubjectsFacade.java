@@ -20,10 +20,11 @@ public class SubjectsFacade extends AbstractFacade {
         try {
             if (isNotNull(subjectName)) {
                 entityManager = getEntityManagerFactory().createEntityManager();
-                List<SubjectVo> subjectVos = getServiceFactory().
+                List<Long> subjectVos = getServiceFactory().
                         getSubjectsService().
                         getByNameLike(entityManager, subjectName);
-                for (SubjectVo subjectVo : subjectVos) {
+                for (Long subjectVoId : subjectVos) {
+					SubjectVo subjectVo = getServiceFactory().getSubjectsService().read(entityManager, subjectVoId);
                     subjectsIdAndName.put(subjectVo.getId(), subjectVo.getName());
                 }
             }

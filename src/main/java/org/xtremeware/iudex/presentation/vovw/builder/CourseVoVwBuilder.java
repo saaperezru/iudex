@@ -17,6 +17,8 @@ public class CourseVoVwBuilder {
 	
 	private static CourseVoVwBuilder instance;
 	private FacadeFactory facadeFactory;
+	private static HashMap<Long, ProfessorVoVwFull> professorsVo  = new HashMap<Long, ProfessorVoVwFull>(18000);
+	private static HashMap<Long, SubjectVoVwSmall> subjectsVo = new HashMap<Long, SubjectVoVwSmall>(18000);
 	
 	public CourseVoVwBuilder(FacadeFactory facadeFactory) {
 		this.facadeFactory = facadeFactory;
@@ -48,9 +50,8 @@ public class CourseVoVwBuilder {
 		List<Long> search = coursesFacade.search(query);
 		Date afterSearch = new Date();
 		Config.getInstance().getServiceFactory().getLogService().info("Searching for "+ query +" took : " + String.valueOf(afterSearch.getTime()-beforeSearch.getTime()));
+		Date beforeConversion = new Date();
 		ArrayList<CourseVoVwFull> results = new ArrayList<CourseVoVwFull>(search.size());
-		HashMap<Long, ProfessorVoVwFull> professorsVo = new HashMap<Long, ProfessorVoVwFull>();
-		HashMap<Long, SubjectVoVwSmall> subjectsVo = new HashMap<Long, SubjectVoVwSmall>();
 		
 		ProfessorVoVwFull professor;
 		SubjectVoVwSmall subject;
@@ -63,8 +64,7 @@ public class CourseVoVwBuilder {
 				professor = professorsVo.get(professorId);
 			} else {
 				//The instance of this professor doesn't exists, create it
-				ProfessorVoFull professorFull = facadeFactory.getProfessorsFacade().getProfessor(professorId);
-				professor = new ProfessorVoVwFull(professorFull.getVo(), professorFull.getRatingSummary());
+				professor = new ProfessorVoVwFull(course.getProfessorVo(), null);
 				professorsVo.put(professorId, professor);
 			}
 			//Loof for the VoVw instances of the subject of this course 
@@ -72,13 +72,14 @@ public class CourseVoVwBuilder {
 				subject = subjectsVo.get(subjectId);
 			} else {
 				//The instance of this subject doesn't exists, create it
-				SubjectVoFull subjectFull = facadeFactory.getSubjectsFacade().getSubject(subjectId);
-				subject = new SubjectVoVwSmall(subjectId, subjectFull.getVo().getName(), subjectFull.getVo().getCode(), subjectFull.getRatingSummary());
+				subject = new SubjectVoVwSmall(subjectId, course.getSubjectVo().getName(), course.getSubjectVo().getCode(), null);
 				subjectsVo.put(subjectId, subject);
 			}
 			//Now that you have the correct instances create the specific course VoVw
 			results.add(new CourseVoVwFull(course.getVo(), subject, professor));
 		}
+		Date afterConversion = new Date();
+		Config.getInstance().getServiceFactory().getLogService().info("Converting search results for "+ query +" took : " + String.valueOf(afterConversion.getTime()-beforeConversion.getTime()));
 
 		return results;
 		

@@ -20,7 +20,7 @@ public interface ProfessorDao extends CrudDao<ProfessorEntity> {
      * @return List of professors whose first-name or last-name are equal to the
      * specified
      */
-    List<ProfessorEntity> getByNameLike(EntityManager entityManager, String professorName)
+    List<Long> getByNameLike(EntityManager entityManager, String professorName)
             throws DataBaseException;
 
     /**

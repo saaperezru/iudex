@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
+import org.xtremeware.iudex.businesslogic.facade.CommentsFacade;
 import org.xtremeware.iudex.helper.Config;
 import org.xtremeware.iudex.helper.DataBaseException;
 import org.xtremeware.iudex.presentation.vovw.CommentVoVwFull;
@@ -59,13 +60,14 @@ public class Rating {
      * @throws DataBaseException
      */
     private int rateComment(CommentVoVwFull comment, int value) {
+		CommentsFacade commentsFacade = Config.getInstance().getFacadeFactory().getCommentsFacade();
         Long commentId = comment.getId();
         int returnValue = 0;
-        if (user != null) {
+        if (user != null && user.isLoggedIn()) {
             Long userId = user.getId();
             int finalValue = 0; // Value to be stored in the comment
             try {
-                BinaryRatingVo commentRatingByUserId = Config.getInstance().getFacadeFactory().getCommentsFacade().getCommentRatingByUserId(commentId, userId);
+                BinaryRatingVo commentRatingByUserId = commentsFacade.getCommentRatingByUserId(commentId, userId);
                 if (commentRatingByUserId != null) {
                     int actualValue = commentRatingByUserId.getValue();
                     if (actualValue == value) {

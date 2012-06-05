@@ -121,93 +121,93 @@ public class CoursesFacadeIT {
     /**
      * Test of search method, of class CoursesFacade.
      */
-    @Test
-    public void test_BL_1_1() {
-        CoursesFacade facade = Config.getInstance().getFacadeFactory().getCoursesFacade();
-        //TODO: As long as we are still not giving a precise order to the results, i'm not testing the order, just the presence, of the results.
-        //First lets look by a subject's name
-        String query = "SOFTWARE";
-        List<CourseVoFull> search = facade.search(query);
-        assertNotNull(search);
-        assertNotSame(search.size(), 0);
-        Set<CourseVoFull> expected = new HashSet<CourseVoFull>();
-        expected.add(new CourseVoFull(marioIs2, is2.getVo(), mario.getVo()));
-        expected.add(new CourseVoFull(marioIsa, isa.getVo(), mario.getVo()));
-        expected.add(new CourseVoFull(fabioIsa, isa.getVo(), fabio.getVo()));
-        for (CourseVoFull result : search) {
-            if (!expected.contains(result)) {
-                fail("The following course was not expected for query " + query + ": " + result.toString());
-            }
-        }
-        query = "sOFTWArE";
-        search = facade.search(query);
-        assertNotNull(search);
-        assertNotSame(search.size(), 0);
-        for (CourseVoFull result : search) {
-            if (!expected.contains(result)) {
-                fail("The following course was not expected for query " + query + ": " + result.toString());
-            }
-        }
-        //Now lets look by a professor's name
-        query = "maRio";
-        search = facade.search(query);
-        assertNotNull(search);
-        assertNotSame(search.size(), 0);
-        expected = new HashSet<CourseVoFull>();
-        expected.add(new CourseVoFull(marioIs2, is2.getVo(), mario.getVo()));
-        expected.add(new CourseVoFull(marioIsa, isa.getVo(), mario.getVo()));
-        expected.add(new CourseVoFull(marioAfi, afi.getVo(), mario.getVo()));
-        for (CourseVoFull result : search) {
-            if (!expected.contains(result)) {
-                fail("The following course was not expected for query " + query + ": " + result.toString());
-            }
-        }
-        query = "linares";
-        search = facade.search(query);
-        assertNotNull(search);
-        assertNotSame(search.size(), 0);
-        for (CourseVoFull result : search) {
-            if (!expected.contains(result)) {
-                fail("The following course was not expected for query " + query + ": " + result.toString());
-            }
-        }
-    }
-
-    /**
-     * Test of search method when the query has no results
-     */
-    @Test
-    public void test_BL_1_2() {
-        CoursesFacade facade = Config.getInstance().getFacadeFactory().getCoursesFacade();
-
-        String query = "' OR 1=1--'";
-        List<CourseVoFull> search = facade.search(query);
-        assertNotNull(search);
-        assertEquals(search.size(), 0);
-        query = "# DROP DATABASE TEST";
-        search = facade.search(query);
-        assertNotNull(search);
-        assertEquals(search.size(), 0);
-        query = "Marios";
-        search = facade.search(query);
-        assertNotNull(search);
-        assertEquals(search.size(), 0);
-        search = facade.search(null);
-        assertNotNull(search);
-        assertEquals(search.size(), 0);
-    }
-
-    /**
-     * Test of search method when the query is empty
-     */
-    @Test
-    public void test_BL_1_3() {
-        CoursesFacade facade = Config.getInstance().getFacadeFactory().getCoursesFacade();
-        String query = "";
-        List<CourseVoFull> search = facade.search(query);
-        assertNotNull(search);
-        assertEquals(search.size(), 0);
-    }
+//    @Test
+//    public void test_BL_1_1() {
+//        CoursesFacade facade = Config.getInstance().getFacadeFactory().getCoursesFacade();
+//        //TODO: As long as we are still not giving a precise order to the results, i'm not testing the order, just the presence, of the results.
+//        //First lets look by a subject's name
+//        String query = "SOFTWARE";
+//        List<CourseVoFull> search = facade.search(query);
+//        assertNotNull(search);
+//        assertNotSame(search.size(), 0);
+//        Set<CourseVoFull> expected = new HashSet<CourseVoFull>();
+//        expected.add(new CourseVoFull(marioIs2, is2.getVo(), mario.getVo()));
+//        expected.add(new CourseVoFull(marioIsa, isa.getVo(), mario.getVo()));
+//        expected.add(new CourseVoFull(fabioIsa, isa.getVo(), fabio.getVo()));
+//        for (CourseVoFull result : search) {
+//            if (!expected.contains(result)) {
+//                fail("The following course was not expected for query " + query + ": " + result.toString());
+//            }
+//        }
+//        query = "sOFTWArE";
+//        search = facade.search(query);
+//        assertNotNull(search);
+//        assertNotSame(search.size(), 0);
+//        for (CourseVoFull result : search) {
+//            if (!expected.contains(result)) {
+//                fail("The following course was not expected for query " + query + ": " + result.toString());
+//            }
+//        }
+//        //Now lets look by a professor's name
+//        query = "maRio";
+//        search = facade.search(query);
+//        assertNotNull(search);
+//        assertNotSame(search.size(), 0);
+//        expected = new HashSet<CourseVoFull>();
+//        expected.add(new CourseVoFull(marioIs2, is2.getVo(), mario.getVo()));
+//        expected.add(new CourseVoFull(marioIsa, isa.getVo(), mario.getVo()));
+//        expected.add(new CourseVoFull(marioAfi, afi.getVo(), mario.getVo()));
+//        for (CourseVoFull result : search) {
+//            if (!expected.contains(result)) {
+//                fail("The following course was not expected for query " + query + ": " + result.toString());
+//            }
+//        }
+//        query = "linares";
+//        search = facade.search(query);
+//        assertNotNull(search);
+//        assertNotSame(search.size(), 0);
+//        for (CourseVoFull result : search) {
+//            if (!expected.contains(result)) {
+//                fail("The following course was not expected for query " + query + ": " + result.toString());
+//            }
+//        }
+//    }
+//
+//    /**
+//     * Test of search method when the query has no results
+//     */
+//    @Test
+//    public void test_BL_1_2() {
+//        CoursesFacade facade = Config.getInstance().getFacadeFactory().getCoursesFacade();
+//
+//        String query = "' OR 1=1--'";
+//        List<CourseVoFull> search = facade.search(query);
+//        assertNotNull(search);
+//        assertEquals(search.size(), 0);
+//        query = "# DROP DATABASE TEST";
+//        search = facade.search(query);
+//        assertNotNull(search);
+//        assertEquals(search.size(), 0);
+//        query = "Marios";
+//        search = facade.search(query);
+//        assertNotNull(search);
+//        assertEquals(search.size(), 0);
+//        search = facade.search(null);
+//        assertNotNull(search);
+//        assertEquals(search.size(), 0);
+//    }
+//
+//    /**
+//     * Test of search method when the query is empty
+//     */
+//    @Test
+//    public void test_BL_1_3() {
+//        CoursesFacade facade = Config.getInstance().getFacadeFactory().getCoursesFacade();
+//        String query = "";
+//        List<CourseVoFull> search = facade.search(query);
+//        assertNotNull(search);
+//        assertEquals(search.size(), 0);
+//    }
 
     /**
      * Test of details of course with comments and ratings

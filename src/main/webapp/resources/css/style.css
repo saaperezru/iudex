@@ -102,6 +102,8 @@ a.thumb-down {
 }
 .comment-photo{
     float:left;
+	text-align: center;
+	width:110px;
 }
 .professor-photo{
 }
@@ -266,7 +268,7 @@ div.professor-photo ul.actions li.downvote-prof a {
 }
 .comment-photo > img{
     height : 110px;
-    width:100px;
+    width:110px;
 }
 
 .vote-wrapper{
@@ -287,3 +289,45 @@ iframe{
     width:100%;
     height: 400px;
 }
+
+
+/* Begin viewCourses CSS */
+
+.fixed-navbar{
+	position: fixed;
+	top : 70px;
+	height: 86%;
+	bottom : 55px;
+	margin-left: 0;
+	/*left: -10%;*/
+}
+
+html {
+	height: 100%;
+}
+
+body{
+	height: 100%;
+}
+
+.comments-container{
+	height: 100%;
+}
+#fittext-rating-info{
+	text-align: center;
+}
+#fittext-rating{
+	text-align: center;
+}
+#fittext-rating-title{
+	text-align: center;
+}
+.fittext{
+	display: block;
+	width: 100%;
+	line-height: 120%;
+}
+.comment{
+	background-color: white;
+}
+/* End viewCourses CSS */

@@ -25,8 +25,8 @@
                             </ul>
                         </ui:fragment>
                         <div class="control-group #{viewHelper.addErrorClass('loginForm:userName')}">
-                            <label class="control-label span3" for="userName">Usuario</label>
-                            <div class="controls span9">
+                            <label class="control-label" for="userName">Usuario</label>
+                            <div class="controls">
                                 <h:inputText id="userName" value="#{login.userName}" required="true" maxlength="20">
                                     <f:validateLength maximum="20" />
                                 </h:inputText>
@@ -34,8 +34,8 @@
                             </div>
                         </div>
                         <div class="control-group #{viewHelper.addErrorClass('loginForm:password')}">
-                            <label class="control-label span3" for="password">Contraseña</label>
-                            <div class="controls span9">
+                            <label class="control-label" for="password">Contraseña</label>
+                            <div class="controls">
                                 <h:inputSecret id="password" value="#{login.password}" required="true" maxlength="18">
                                     <f:validateLength minimum="8" maximum="18" /> 
                                 </h:inputSecret>

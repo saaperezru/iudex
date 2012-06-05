@@ -71,7 +71,7 @@
 .modal-footer {
   padding: 14px 15px 15px;
   margin-bottom: 0;
-  text-align: right; // right align buttons
+  text-align: center; // center align buttons
   background-color: #f5f5f5;
   border-top: 1px solid #ddd;
   .border-radius(0 0 6px 6px);
@@ -87,4 +87,18 @@
   .btn-group .btn + .btn {
     margin-left: -1px;
   }
+}
+
+.modal-iframe {
+  width: 100%;
+  height: 487px;
+  border-style: none;
+  overflow: hidden;
+  .border-radius(0 0 6px 6px);
+}
+
+.modal-form .modal-footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
 }

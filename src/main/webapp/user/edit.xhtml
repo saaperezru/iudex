@@ -15,15 +15,15 @@
 
     <ui:define name="content">
         <div class="row-fluid">
-            <div class="span12">
+            <div class="span5" style="float:none;margin: 0px auto; ">
                 <h:form id="editForm" class="form-horizontal well">
                     <fieldset>
                         <legend>Editar cuenta</legend>
                         <h:messages globalOnly="true" class="alert alert-info" />
 
                         <div class="control-group #{viewHelper.addErrorClass('editForm:name')}" for="name">
-                            <label for="name" class="control-label span3">Nombres</label>
-                            <div class="controls span9">
+                            <label for="name" class="control-label ">Nombres</label>
+                            <div class="controls ">
                                 <h:inputText id="name" value="#{editUser.firstName}" required="true" maxlength="50" styleClass="input-xlarge">
                                     <f:validateLength maximum="50" />
                                 </h:inputText>
@@ -31,8 +31,8 @@
                             </div>
                         </div>
                         <div class="control-group #{viewHelper.addErrorClass('editForm:lastName')}" for="name">
-                            <label for="lastName" class="control-label span3">Apellidos</label>
-                            <div class="controls span9">
+                            <label for="lastName" class="control-label ">Apellidos</label>
+                            <div class="controls ">
                                 <h:inputText id="lastName" value="#{editUser.lastName}" required="true" maxlength="50" styleClass="input-xlarge">
                                     <f:validateLength maximum="50" />
                                 </h:inputText>
@@ -41,8 +41,8 @@
                         </div>
 
                         <div class="control-group #{viewHelper.addErrorClass('editForm:program')}">
-                            <label class="control-label span3" for="program">Carrera</label>
-                            <div class="controls span9">
+                            <label class="control-label " for="program">Carrera</label>
+                            <div class="controls">
                                 <h:selectOneMenu id="program" value="#{editUser.programId}" required="true" styleClass="input-xlarge">
                                     <f:selectItems value="#{lists.programs}" />
                                     <f:validateLongRange minimum="1" />
@@ -52,8 +52,8 @@
                         </div>
 
                         <div class="control-group #{viewHelper.addErrorClass('editForm:password')}">
-                            <label class="control-label span3" for="password">Nueva contraseña</label>
-                            <div class="controls span9">
+                            <label class="control-label " for="password">Nueva contraseña</label>
+                            <div class="controls ">
                                 <h:inputSecret id="password" value="#{editUser.password}" maxlength="18" styleClass="input-xlarge" validatorMessage="La contraseña debe tener de 8 a 18 caracteres">
                                     <f:validateRegex pattern=".{0}|.{8,18}"  /> 
                                 </h:inputSecret>
@@ -62,8 +62,8 @@
                         </div>
                         
                         <div class="control-group #{viewHelper.addErrorClass('editForm:passwordConfirmation')}">
-                            <label class="control-label span3" for="password">Confirmar nueva contraseña</label>
-                            <div class="controls span9">
+                            <label class="control-label " for="password">Confirmar nueva contraseña</label>
+                            <div class="controls ">
                                 <h:inputSecret id="passwordConfirmation" value="" maxlength="18" styleClass="input-xlarge" validatorMessage="La confirmación de la contraseña no coincide">
                                     <maocv:validateCompareTo forId="password" operator="eq" />
                                 </h:inputSecret>
@@ -72,8 +72,8 @@
                         </div>
 
                         <div class="control-group #{viewHelper.addErrorClass('editForm:password')}">
-                            <label class="control-label span3" for="password">Contraseña actual</label>
-                            <div class="controls span9">
+                            <label class="control-label " for="password">Contraseña actual</label>
+                            <div class="controls ">
                                 <h:inputSecret id="actualPassword" value="#{editUser.actualPassword}" required="true" maxlength="18" styleClass="input-xlarge">
                                     <f:validateLength minimum="8" maximum="18" /> 
                                 </h:inputSecret>
@@ -82,12 +82,10 @@
                         </div>
 
 
-                        <div class="control-group">
-                            <div class="control-label span3"></div>
-                            <div class="controls span9">
+                            <div class="controls " style="margin-left:0; text-align: center;">
                                 <h:commandButton action="#{editUser.editUser()}" value="Guardar" class="btn btn-success" />
                             </div>
-                        </div>
+
                     </fieldset>
                 </h:form>
             </div>

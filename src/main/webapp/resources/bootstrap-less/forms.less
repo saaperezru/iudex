@@ -514,7 +514,7 @@ select:focus:required:invalid {
 
 .form-search .search-query{
   font-family: @headingsFontFamily; 
-  width: 95%; 
+  width: 85%; 
   height: 60px;
   line-height: 30px;
   overflow: hidden;
@@ -525,6 +525,7 @@ select:focus:required:invalid {
   padding: 0px;
   z-index: 2;
   padding-left: 15px;
+  padding-right: 80px;
   .placeholder(@searchFormPlaceholderColor);
 } 
 
@@ -624,6 +625,7 @@ legend + .control-group {
   }
   // Move over buttons in .form-actions to align with .controls
   .form-actions {
-    padding-left: 160px;
+    //padding-left: 160px;
+    text-align: center;
   }
 }

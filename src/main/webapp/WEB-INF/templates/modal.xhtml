@@ -15,6 +15,8 @@
         <link rel="stylesheet/less" href="#{request.contextPath}/resources/bootstrap-less/bootstrap.less" />
         <link href='http://fonts.googleapis.com/css?family=Yanone+Kaffeesatz:700' rel='stylesheet' type='text/css' />
         <link href='http://fonts.googleapis.com/css?family=Dosis' rel='stylesheet' type='text/css' />
+        <h:outputStylesheet library="css" name="common.css" />
+        <h:outputStylesheet library="css" name="modal.css" />
         <h:outputStylesheet library="bootstrap-less" name="bootstrap.less" />
         <h:outputScript library="primefaces" name="jquery/jquery.js" />
         <h:outputScript library="jquery" name="jquery.fittext.js" />
@@ -30,6 +32,7 @@
         <ui:insert name="content">
 
         </ui:insert>
+        
         <script>
             jQuery(document).ready(function() {
                 jQuery(".inline-error").tooltip();

@@ -1,0 +1,7 @@
+.input-feedback {
+    height: 130px;
+    width: 480px;
+    min-width: 480px;
+    max-width: 480px;
+    display: inline-block;
+}

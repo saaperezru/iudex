@@ -1,0 +1,53 @@
+body {
+    padding-top: 80px;
+    background-image: url(../resources/images/fabric-plaid.png);
+}
+
+.form-login {
+    height: 260px;
+}
+
+div.share-icon {
+    background-image: url(../resources/images/share.png);
+    background-position: center top;
+    background-repeat: no-repeat;
+    background-size: 96px 96px;
+    height: 96px;
+}
+
+div.comment-icon {
+    background-image: url(../resources/images/comment.png);
+    background-position: center top;
+    background-repeat: no-repeat;
+    background-size: 96px 96px;
+    height: 96px;
+}
+
+div.rate-icon {
+    background-image: url(../resources/images/rate.png);
+    background-position: center top;
+    background-repeat: no-repeat;
+    background-size: 96px 96px;
+    height: 96px;
+}
+
+.btn-feedback {
+    position: fixed;
+    right: 15px;
+    bottom: 0;
+}
+
+.btn-feedback > .btn {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    line-height: 32px;
+    font-size: 15px;
+}
+
+.btn-feedback > .btn > img {
+    opacity: 0.8;
+}
+
+.btn-feedback > .btn:hover > img {
+    opacity: 1;
+}

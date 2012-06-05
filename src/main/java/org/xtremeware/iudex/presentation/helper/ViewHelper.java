@@ -48,6 +48,18 @@ public class ViewHelper {
         Iterator<FacesMessage> it = fc.getMessages(clientId);
         return it.hasNext();
     }
+    
+    public boolean hasErrorsRecursive(String clientId) {
+        Iterator<String> it = FacesContext.getCurrentInstance().getClientIdsWithMessages();
+        String id;
+        while(it.hasNext()) {
+            id = it.next();
+            if(id.startsWith(clientId)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     public String getMessage(String clientId) {
         FacesContext fc = FacesContext.getCurrentInstance();

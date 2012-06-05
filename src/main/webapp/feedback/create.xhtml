@@ -9,59 +9,52 @@
                 xmlns:pou="http://primefaces.org/ui">
 
     <ui:define name="content">
-        <div class="container">
-            <div class="row-fluid">
+        <h:outputStylesheet library="css" name="feedback.css" />
+        <h:outputStylesheet library="css" name="captcha.css" />
+        <h:form id="feedbackForm" class="form-inline modal-form">
+            <div class="modal-body">
+                <h:messages globalOnly="true" class="alert alert-info" />
 
-                <h:form id="feedbackForm" class="form-horizontal well">
+                <div class="control-group #{viewHelper.addErrorClass('feedbackForm:type')}">
+                    <label class="control-label ">Tipo</label>
+                    <div class="controls ">
+                        <h:selectOneMenu id="type" value="#{createFeedback.feedbackTypeId}" required="true">
 
-                    <h:messages globalOnly="true" class="alert alert-info" />
-
-                    <div class="control-group #{viewHelper.addErrorClass('feedbackForm:type')}">
-                        <label class="control-label ">Tipo</label>
-                        <div class="controls ">
-                            <h:selectOneMenu id="type" value="#{createFeedback.feedbackTypeId}" required="true">
-                                <f:selectItem itemLabel="" />
-                                <f:selectItems value="#{lists.feedbackTypes}" />
-                                <f:validateLongRange minimum="1" />
-                            </h:selectOneMenu>
-                            <iudex:inlineError key="feedbackForm:type" />
-                        </div>
+                            <f:selectItems value="#{lists.feedbackTypes}" />
+                            <f:validateLongRange minimum="1" />
+                        </h:selectOneMenu>
+                        <iudex:inlineError key="feedbackForm:type" />
                     </div>
+                </div>
 
-                    <div class="control-group #{viewHelper.addErrorClass('feedbackForm:content')}">
-                        <div class="control-label "></div>
-                        <div class="controls ">
-                            <h:inputTextarea id="content" value="#{createFeedback.content}" required="true" class="span10" style="height: 150px; display: inline-block;"  onkeyup="jQuery('#char-counter').text(jQuery(this).val().length);">
-                                <f:validateLength maximum="2000" />
-                            </h:inputTextarea>
-                            <iudex:inlineError key="feedbackForm:content" />
-                            <div class="span10" style="margin: 0; text-align: right;"><strong id="char-counter"></strong> de máximo 2000 caracteres</div>
-                        </div>
+                <div class="control-group #{viewHelper.addErrorClass('feedbackForm:content')}">
+                    <div class="control-label "></div>
+                    <div class="controls ">
+                        <h:inputTextarea id="content" value="#{createFeedback.content}" class="input-feedback" required="true" onkeyup="jQuery('#char-counter').text(jQuery(this).val().length);">
+                            <f:validateLength maximum="2000" />
+                        </h:inputTextarea>
+                        <iudex:inlineError key="feedbackForm:content" />
+                        <div><strong id="char-counter"></strong> de máximo 2000 caracteres</div>
                     </div>
+                </div>
 
-                    <div class="control-group #{viewHelper.addErrorClass('feedbackForm:captcha')}">
-                        <div class="control-label "></div>
-                        <div class="controls ">
-                            <p>
-                                ¿No eres un robot, verdad? Entonces esto será fácil.
-                            </p>
-                            <pou:captcha id="captcha" secure="true" />
-                            <iudex:inlineError key="feedbackForm:captcha" />
-                        </div>
+                <div class="control-group control-group-captcha #{viewHelper.addErrorClass('feedbackForm:captcha')}">
+                    <div class="controls ">
+                        <p>
+                            ¿No eres un robot, verdad? Entonces esto será fácil.
+                        </p>
+                        <pou:captcha id="captcha" secure="true" />
+                        <iudex:inlineError key="feedbackForm:captcha" />
                     </div>
-
-                    <div class="control-group">
-                        <div class="control-label "></div>
-                        <div class="controls ">
-                            <h:commandButton action="#{createFeedback.submit()}" value="Comentar" class="btn btn-success    " />
-                        </div>
-                    </div>
-                </h:form>
+                </div>
             </div>
-            <script type="text/javascript">
-                jQuery(document).ready(function() { jQuery("#char-counter").text(jQuery("#feedbackForm\\:content").val().length); } );
-            </script>
-        </div>
+            <div class="modal-footer">
+                <h:commandButton action="#{createFeedback.submit()}" value="Comentar" class="btn btn-success" />
+            </div>
+        </h:form>
+        <script type="text/javascript">
+            jQuery(document).ready(function() { jQuery("#char-counter").text(jQuery("#feedbackForm\\:content").val().length); } );
+        </script>
     </ui:define>
 
 </ui:composition>

@@ -117,6 +117,7 @@
   margin-bottom: 0;
   .search-query {
     padding: 4px 9px;
+    padding-right: 35px;
     margin-bottom: 0;
     #font > .sans-serif(13px, normal, 1);
     color: @white;
@@ -132,13 +133,22 @@
     &:focus,
     &.focused {
       padding: 5px 10px;
-      color: @grayDark;
-      text-shadow: 0 1px 0 @white;
+      padding-right: 35px;
+      color: @white;
+      //text-shadow: 0 1px 0 @white;
       background-color: @navbarSearchBackgroundFocus;
       border: 0;
       .box-shadow(0 0 3px rgba(0,0,0,.15));
       outline: 0;
     }
+  }
+
+  .btn {
+    background: none;
+    border-style: none;
+    .box-shadow(none);
+    position: relative;
+    right: -260px;
   }
 }
 

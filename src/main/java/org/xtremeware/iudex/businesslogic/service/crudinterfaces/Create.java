@@ -13,5 +13,7 @@ import org.xtremeware.iudex.helper.DataBaseException;
 public interface Create<E extends Entity> {
 
     E create(EntityManager entityManager, E entity)
-            throws DataBaseException, DuplicityException, MaxCommentsLimitReachedException;
+            throws DataBaseException, 
+            DuplicityException, 
+            MaxCommentsLimitReachedException;
 }

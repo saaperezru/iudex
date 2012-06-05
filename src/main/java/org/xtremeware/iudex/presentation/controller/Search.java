@@ -10,7 +10,6 @@ import org.xtremeware.iudex.businesslogic.facade.CoursesFacade;
 import org.xtremeware.iudex.helper.Config;
 import org.xtremeware.iudex.presentation.vovw.CourseVoVwFull;
 import org.xtremeware.iudex.presentation.vovw.builder.CourseVoVwBuilder;
-import org.xtremeware.iudex.vo.CourseVoFull;
 
 /**
  *

@@ -3,7 +3,7 @@ package org.xtremeware.iudex.businesslogic.facade;
 import java.util.*;
 import javax.persistence.*;
 import org.xtremeware.iudex.businesslogic.DuplicityException;
-import org.xtremeware.iudex.businesslogic.helper.FacadesHelperImplementation;
+import org.xtremeware.iudex.businesslogic.helper.FacadesHelper;
 import org.xtremeware.iudex.businesslogic.service.*;
 import org.xtremeware.iudex.helper.*;
 import org.xtremeware.iudex.vo.*;
@@ -35,9 +35,9 @@ public class UsersFacade extends AbstractFacade {
             transaction.commit();
         } catch (Exception exception) {
             getServiceFactory().getLogService().error(exception.getMessage(), exception);
-            FacadesHelperImplementation.rollbackTransaction(entityManager, transaction, exception);
+            FacadesHelper.rollbackTransaction(entityManager, transaction, exception);
         } finally {
-            FacadesHelperImplementation.closeEntityManager(entityManager);
+            FacadesHelper.closeEntityManager(entityManager);
         }
         return userVo;
     }
@@ -79,12 +79,12 @@ public class UsersFacade extends AbstractFacade {
             transaction.commit();
         } catch (Exception exception) {
             getServiceFactory().getLogService().error(exception.getMessage(), exception);
-            FacadesHelperImplementation.checkDuplicityViolation(entityManager, transaction, exception);
-            FacadesHelperImplementation.checkExceptionAndRollback(entityManager, transaction, exception,
+            FacadesHelper.checkDuplicityViolation(entityManager, transaction, exception);
+            FacadesHelper.checkExceptionAndRollback(entityManager, transaction, exception,
                     MultipleMessagesException.class);
-            FacadesHelperImplementation.rollbackTransaction(entityManager, transaction, exception);
+            FacadesHelper.rollbackTransaction(entityManager, transaction, exception);
         } finally {
-            FacadesHelperImplementation.closeEntityManager(entityManager);
+            FacadesHelper.closeEntityManager(entityManager);
         }
         return newUser;
     }
@@ -108,11 +108,11 @@ public class UsersFacade extends AbstractFacade {
                     username, password);
         } catch (Exception exception) {
             getServiceFactory().getLogService().error(exception.getMessage(), exception);
-            FacadesHelperImplementation.checkException(exception, InactiveUserException.class);
-            FacadesHelperImplementation.checkException(exception, MultipleMessagesException.class);
+            FacadesHelper.checkException(exception, InactiveUserException.class);
+            FacadesHelper.checkException(exception, MultipleMessagesException.class);
             throw new RuntimeException(exception);
         } finally {
-            FacadesHelperImplementation.closeEntityManager(entityManager);
+            FacadesHelper.closeEntityManager(entityManager);
         }
         return userVo;
     }
@@ -137,12 +137,12 @@ public class UsersFacade extends AbstractFacade {
             transaction.commit();
         } catch (Exception exception) {
             getServiceFactory().getLogService().error(exception.getMessage(), exception);
-            FacadesHelperImplementation.checkDuplicityViolation(entityManager, transaction, exception);
-            FacadesHelperImplementation.checkExceptionAndRollback(entityManager, transaction, exception,
+            FacadesHelper.checkDuplicityViolation(entityManager, transaction, exception);
+            FacadesHelper.checkExceptionAndRollback(entityManager, transaction, exception,
                     MultipleMessagesException.class);
-            FacadesHelperImplementation.rollbackTransaction(entityManager, transaction, exception);
+            FacadesHelper.rollbackTransaction(entityManager, transaction, exception);
         } finally {
-            FacadesHelperImplementation.closeEntityManager(entityManager);
+            FacadesHelper.closeEntityManager(entityManager);
         }
         return updatedUserVo;
     }
@@ -178,9 +178,9 @@ public class UsersFacade extends AbstractFacade {
             tx.commit();
         } catch (Exception ex) {
             getServiceFactory().getLogService().error(ex.getMessage(), ex);
-            FacadesHelperImplementation.rollbackTransaction(em, tx, ex);
+            FacadesHelper.rollbackTransaction(em, tx, ex);
         } finally {
-            FacadesHelperImplementation.closeEntityManager(em);
+            FacadesHelper.closeEntityManager(em);
         }
     }
 
@@ -196,7 +196,7 @@ public class UsersFacade extends AbstractFacade {
             getServiceFactory().getLogService().error(ex.getMessage(), ex);
             throw new RuntimeException(ex);
         } finally {
-            FacadesHelperImplementation.closeEntityManager(em);
+            FacadesHelper.closeEntityManager(em);
         }
         return vo;
     }
@@ -216,11 +216,11 @@ public class UsersFacade extends AbstractFacade {
             transaction.commit();
         } catch (Exception exception) {
             getServiceFactory().getLogService().error(exception.getMessage(), exception);
-            FacadesHelperImplementation.checkExceptionAndRollback(entityManager, transaction, exception,
+            FacadesHelper.checkExceptionAndRollback(entityManager, transaction, exception,
                     MultipleMessagesException.class);
-            FacadesHelperImplementation.rollbackTransaction(entityManager, transaction, exception);
+            FacadesHelper.rollbackTransaction(entityManager, transaction, exception);
         } finally {
-            FacadesHelperImplementation.closeEntityManager(entityManager);
+            FacadesHelper.closeEntityManager(entityManager);
         }
     }
     
@@ -235,10 +235,10 @@ public class UsersFacade extends AbstractFacade {
             transaction.commit();
         } catch (Exception exception) {
             getServiceFactory().getLogService().error(exception.getMessage(), exception);
-            FacadesHelperImplementation.checkExceptionAndRollback(entityManager, transaction, exception, DataBaseException.class);
-            FacadesHelperImplementation.rollbackTransaction(entityManager, transaction, exception);
+            FacadesHelper.checkExceptionAndRollback(entityManager, transaction, exception, DataBaseException.class);
+            FacadesHelper.rollbackTransaction(entityManager, transaction, exception);
         } finally {
-            FacadesHelperImplementation.closeEntityManager(entityManager);
+            FacadesHelper.closeEntityManager(entityManager);
         }
     }
 }

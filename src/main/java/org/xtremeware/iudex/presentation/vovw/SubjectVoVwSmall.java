@@ -22,6 +22,9 @@ public class SubjectVoVwSmall implements ValueObject{
         if (obj == null) {
             return false;
         }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
         final SubjectVoVwSmall other = (SubjectVoVwSmall) obj;
         if (this.id != other.id) {
             return false;

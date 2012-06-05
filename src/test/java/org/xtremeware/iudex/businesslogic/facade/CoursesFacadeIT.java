@@ -1,5 +1,3 @@
-/*
- */
 package org.xtremeware.iudex.businesslogic.facade;
 
 import java.util.HashSet;

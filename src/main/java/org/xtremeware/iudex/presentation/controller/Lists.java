@@ -6,7 +6,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.model.SelectItem;
 import org.xtremeware.iudex.businesslogic.facade.FeedbacksFacade;
-import org.xtremeware.iudex.businesslogic.facade.ProgramsFacade;
 import org.xtremeware.iudex.helper.Config;
 import org.xtremeware.iudex.vo.FeedbackTypeVo;
 import org.xtremeware.iudex.vo.ProgramVo;

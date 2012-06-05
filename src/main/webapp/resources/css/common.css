@@ -238,3 +238,18 @@ div.professor-photo ul.actions li.downvote-prof a {
 .vote{
     float:right;
 }
+
+.terms p {
+    text-indent: 25px;
+    margin-bottom: 25px;
+}
+
+.footer {
+    margin-bottom: 25px;
+}
+
+.footer a {
+    color: #555;
+    font-size: 10pt;
+    margin-left: 15px;
+}

@@ -9,62 +9,69 @@
                 xmlns:pou="http://primefaces.org/ui">
 
     <ui:define name="content">
-        <div class="row-fluid">
-            <div class="span5" style="margin: 0px auto; float: none;">
-                <ui:fragment rendered="#{flash.redirect}">
-                    <div class="alert alert-info">
-                        Has realizado muchos intentos fallidos de inicio de sesión, por ello debemos pedirte algo de información adicional.
-                    </div>
-                </ui:fragment>
-                <h:form id="loginForm" class="form-horizontal well">
-                    <fieldset>
-                        <legend>Iniciar sesión</legend>
-                        <ui:fragment rendered="#{not empty flash.loginMessage}">
-                            <ul class="alert alert-error">
-                                <li><h:outputText  value="#{flash.loginMessage}" /></li>
-                            </ul>
-                        </ui:fragment>
-                        <div class="control-group #{viewHelper.addErrorClass('loginForm:userName')}">
-                            <label class="control-label" for="userName">Usuario</label>
-                            <div class="controls">
-                                <h:inputText id="userName" value="#{login.userName}" required="true" maxlength="20">
-                                    <f:validateLength maximum="20" />
-                                </h:inputText>
-                                <iudex:inlineError key="loginForm:userName" />
-                            </div>
-                        </div>
-                        <div class="control-group #{viewHelper.addErrorClass('loginForm:password')}">
-                            <label class="control-label" for="password">Contraseña</label>
-                            <div class="controls">
-                                <h:inputSecret id="password" value="#{login.password}" required="true" maxlength="18">
-                                    <f:validateLength minimum="8" maximum="18" /> 
-                                </h:inputSecret>
-                                <iudex:inlineError key="loginForm:password" />
-                            </div>
-                        </div>
-
-                        <ui:fragment rendered="#{user.requiresCaptcha}">
-                            <p>
-                                ¿No eres un robot, verdad? Entonces esto será fácil.
-                            </p>
-                            <div class="control-group #{viewHelper.addErrorClass('loginForm:captcha')}">
-                                <div class="controls span12">
-                                    <iudex:inlineError key="loginForm:captcha" cssClass="float-right" />
-                                    <pou:captcha id="captcha" secure="true" />
+        <h:outputStylesheet library="css" name="captcha.css" />
+        <div class="container">
+            <div class="row">
+                <div class="span6 offset3">
+                    <div class="well">
+                        <h:form id="loginForm" class="form-horizontal">
+                            <legend>Iniciar sesión</legend>
+                            <ui:fragment rendered="#{not empty flash.loginMessage}">
+                                <ul class="alert alert-error">
+                                    <li><h:outputText  value="#{flash.loginMessage}" /></li>
+                                </ul>
+                            </ui:fragment>
+                            <div class="control-group #{viewHelper.addErrorClass('loginForm:userName')}">
+                                <label class="control-label" for="userName">Usuario</label>
+                                <div class="controls">
+                                    <h:inputText id="userName" value="#{login.userName}" required="true" maxlength="20">
+                                        <f:validateLength maximum="20" />
+                                    </h:inputText>
+                                    <iudex:inlineError key="loginForm:userName" />
                                 </div>
                             </div>
-                        </ui:fragment>
+                            <div class="control-group #{viewHelper.addErrorClass('loginForm:password')}">
+                                <label class="control-label" for="password">Contraseña</label>
+                                <div class="controls">
+                                    <h:inputSecret id="password" value="#{login.password}" required="true" maxlength="18">
+                                        <f:validateLength minimum="8" maximum="18" /> 
+                                    </h:inputSecret>
+                                    <iudex:inlineError key="loginForm:password" />
+                                    <br/>
+                                    <a id="forgottenPasswordLink" data-toggle="modal" data-target="#forgottenPasswordModal" href="#{request.contextPath}/forgottenPassword.xhtml">Olvidé mi contraseña</a>
+                                    <script type="text/javascript">
+                                        jQuery(document).ready(function(){
+                                            jQuery('#forgottenPasswordLink').click(function(){
+                                                jQuery('#forgottenPasswordFrame').attr('src', jQuery(this).attr('href'));
+                                            });
+                                        });
+                                    </script>
+                                </div>
+                            </div>
 
-                        <center>
-                            <span>
+                            <ui:fragment rendered="#{user.requiresCaptcha}">
+                                <div class="control-group control-group-captcha #{viewHelper.addErrorClass('loginForm:captcha')}">
+                                    <p>
+                                        ¿No eres un robot, verdad? Entonces esto será fácil.
+                                    </p>
+                                    <pou:captcha id="captcha" secure="true" />
+                                    <iudex:inlineError key="loginForm:captcha"/>
+                                </div>
+                            </ui:fragment>
+
+                            <div class="form-actions">
                                 <h:commandButton action="#{login.logIn()}" value="Acceder" class="btn btn-success" />
-                            </span>
-                            <span>
-                                <h:link outcome="forgottenPassword" value="Olvidé mi contraseña" class="btn" />
-                            </span>
-                        </center>
-                    </fieldset>
-                </h:form>
+                            </div>
+                        </h:form>
+                        <div id="forgottenPasswordModal" class="modal hide fade">
+                            <div class="modal-header">
+                                <button class="close" data-dismiss="modal">×</button>
+                                <h2>Olvidé mi contraseña</h2>
+                            </div>
+                            <iframe name="forgottenPasswordFrame" id="forgottenPasswordFrame" class="modal-iframe" style="height: 200px;"/>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </ui:define>

@@ -32,6 +32,10 @@ body {
     width: 260px;
 }
 
+.form-login .input-username {
+    width: 120px;
+}
+
 div.share-icon {
     background-image: url(../resources/images/share.png);
     background-position: center top;

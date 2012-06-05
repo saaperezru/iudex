@@ -12,7 +12,7 @@
 
     <!-- IMPLEMENTATION -->
     <cc:implementation>
-        <ui:fragment rendered="#{viewHelper.hasErrors(cc.attrs.key)}">
+        <ui:fragment rendered="#{viewHelper.hasMessages(cc.attrs.key)}">
             <i title="#{viewHelper.getMessage(cc.attrs.key)}" class="icon-exclamation-sign inline-error #{cc.attrs.cssClass}" />
         </ui:fragment>
     </cc:implementation>

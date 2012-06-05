@@ -20,7 +20,8 @@ public class ViewHelper {
             MultipleMessagesException ex) {
         FacesContext fc = FacesContext.getCurrentInstance();
         for (String message : ex.getMessages()) {
-            fc.addMessage(clientId, new FacesMessage(getExceptionMessage(message)));
+            fc.addMessage(clientId, new FacesMessage(
+                    getExceptionMessage(message)));
         }
     }
 
@@ -32,30 +33,34 @@ public class ViewHelper {
     }
 
     public static void addExceptionFacesMessage(String clientId, Exception ex) {
-        FacesContext.getCurrentInstance().addMessage(clientId, new FacesMessage(getExceptionMessage(ex.getMessage())));
+        FacesContext.getCurrentInstance().addMessage(clientId,
+                new FacesMessage(getExceptionMessage(ex.getMessage())));
     }
 
     public String addErrorClass(String clientId) {
-        if (hasErrors(clientId)) {
+        if (hasMessages(clientId)) {
             return "error";
         } else {
             return "";
         }
     }
 
-    public boolean hasErrors(String clientId) {
+    public boolean hasMessages(String clientId) {
         FacesContext fc = FacesContext.getCurrentInstance();
         Iterator<FacesMessage> it = fc.getMessages(clientId);
         return it.hasNext();
     }
-    
-    public boolean hasErrorsRecursive(String clientId) {
-        Iterator<String> it = FacesContext.getCurrentInstance().getClientIdsWithMessages();
+
+    public boolean hasMessagesRecursive(String clientId) {
+        Iterator<String> it = FacesContext.getCurrentInstance().
+                getClientIdsWithMessages();
         String id;
-        while(it.hasNext()) {
+        while (it.hasNext()) {
             id = it.next();
-            if(id.startsWith(clientId)) {
-                return true;
+            if (id != null) {
+                if (id.startsWith(clientId)) {
+                    return true;
+                }
             }
         }
         return false;

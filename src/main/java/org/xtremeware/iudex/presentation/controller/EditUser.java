@@ -96,7 +96,7 @@ public class EditUser {
         }
 
         if (!correctPassword) {
-            fc.addMessage(null, new FacesMessage(
+            fc.addMessage("editForm:actualPassword", new FacesMessage(
                     "La contraseña actual no es correcta"));
         } else {
             UserVo userVo = new UserVo();

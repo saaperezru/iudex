@@ -1,5 +1,6 @@
 package org.xtremeware.iudex.presentation.controller;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
@@ -51,7 +52,7 @@ public class Login {
                 getUsersFacade();
         FacesContext fc = FacesContext.getCurrentInstance();
         if(user.getRequiresCaptcha() && fc.getViewRoot().getViewId().equals("/index.xhtml")) {
-            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("loginMessage", "Has hecho muchos intentos de inicio de sesión fallidos, por ello debemos pedirte algunos datos adicionales");
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("loginMessage", "Has realizado muchos intentos fallidos de inicio de sesión, por ello debemos pedirte algo de información adicional.");
             return "requiresCaptcha";
         }
         
@@ -68,10 +69,12 @@ public class Login {
                 user.setFailedLoginAttempts(0);
                 return "success";
             } else {
-                FacesContext.getCurrentInstance().getExternalContext().getFlash().put("loginMessage", "Nombre de usuario o contraseña inválidos");
+                FacesContext.getCurrentInstance().addMessage("loginForm:userName", new FacesMessage("Nombre de usuario o contraseña inválidos"));
+                FacesContext.getCurrentInstance().addMessage("loginForm:password", new FacesMessage("Nombre de usuario o contraseña inválidos"));
             }
         } catch (Exception ex) {
-            ViewHelper.addExceptionFacesMessage("loginForm", ex);
+            ViewHelper.addExceptionFacesMessage("loginForm:userName", ex);
+            ViewHelper.addExceptionFacesMessage("loginForm:password", ex);
         }
         user.setFailedLoginAttempts(user.getFailedLoginAttempts() + 1);
         return "failure";

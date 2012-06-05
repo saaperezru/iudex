@@ -106,7 +106,7 @@ public class SignUp {
             ViewHelper.addExceptionFacesMessage("signUpForm", ex);
             return "failure";
         } catch (MultipleMessagesException ex) {
-            ViewHelper.addExceptionFacesMessage(password, ex);
+            ViewHelper.addExceptionFacesMessage("signUpForm", ex);
             return "failure";
         }
     }

@@ -8,30 +8,30 @@
                 xmlns="http://www.w3.org/1999/xhtml">
 
     <ui:define name="content">
-        <div class="row-fluid">
-            <div class="span12">
-                <br />
-                <br />
-                <br />
-                <c:choose>
-                    <c:when test="#{accountConfirmation.confirmed}">
-                        <p align="center">
-                            Confirmación exitosa
-                        </p>
-                        <br />
-                        <p align="center">
-                            <h:link outcome="logIn" value="Iniciar sesión" class="btn btn-success" />
-                        </p>
-                    </c:when>
-                    <c:otherwise>
-                        <p align="center">
-                            No se pudo confirmar la clave
-                        </p>
-                    </c:otherwise>
-                </c:choose>
-                <br />
-                <br />
-                <br />
+        <div class="container">
+            <div class="row">
+                <div class="span6 offset3">
+                    <div class="well">
+                        <ui:fragment rendered="#{accountConfirmation.confirmed}">
+                            <ul class="alert alert-success">
+                                <li>
+                                    Confirmación exitosa
+                                </li>
+                            </ul>
+                            <br />
+                            <p align="center">
+                                <h:link outcome="logIn" value="Iniciar sesión" class="btn btn-success" />
+                            </p>
+                        </ui:fragment>
+                        <ui:fragment rendered="#{not accountConfirmation.confirmed}">
+                            <ul class="alert alert-error">
+                                <li>
+                                    No se pudo confirmar la clave
+                                </li>
+                            </ul>
+                        </ui:fragment>
+                    </div>
+                </div>
             </div>
         </div>
     </ui:define>

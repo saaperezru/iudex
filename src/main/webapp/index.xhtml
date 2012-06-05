@@ -23,16 +23,11 @@
                     <div class="span4">
                         <h:form id="loginForm" class="form-inline well form-login">
                             <legend>Inicia sesión </legend>
-                            <ui:fragment rendered="#{not empty flash.loginMessage}">
-                                <ul class="alert alert-error">
-                                    <li><h:outputText  value="#{flash.loginMessage}" /></li>
-                                </ul>
-                            </ui:fragment>
                             <div class="control-group #{viewHelper.addErrorClass('loginForm:userName')}">
                                 <label class="control-label " for="userName">Usuario</label>
                                 <div class="controls ">
                                     <div class="input-append">
-                                        <h:inputText id="userName" value="#{login.userName}" required="true" maxlength="20" class="input-medium">
+                                        <h:inputText id="userName" value="#{login.userName}" required="true" maxlength="20" class="input-username">
                                             <f:validateLength maximum="20" />
                                         </h:inputText>
                                         <span class="add-on">@unal.edu.co</span>
@@ -43,7 +38,7 @@
                             <div class="control-group #{viewHelper.addErrorClass('loginForm:password')}">
                                 <label class="control-label " for="password">Contraseña</label>
                                 <div class="controls ">
-                                    <h:inputSecret id="password" value="#{login.password}" required="true" maxlength="18" class="input-block-level">
+                                    <h:inputSecret id="password" value="#{login.password}" required="true" maxlength="18">
                                         <f:validateLength minimum="8" maximum="18" /> 
                                     </h:inputSecret>
                                     <iudex:inlineError key="loginForm:password" />
@@ -67,7 +62,7 @@
 
                         <div id="forgottenPasswordModal" class="modal hide fade">
                             <div class="modal-header">
-                                <button class="close" data-dismiss="modal">×</button>
+                                <button type="button" class="close" data-dismiss="modal">×</button>
                                 <h2>Olvidé mi contraseña</h2>
                             </div>
                             <iframe name="forgottenPasswordFrame" id="forgottenPasswordFrame" class="modal-iframe" style="height: 200px;"/>
@@ -76,7 +71,7 @@
                         <h:form id="signUpForm" class="form-horizontal form-no-margin">
                             <div id="signUpModal" class="modal hide fade">
                                 <div class="modal-header">
-                                    <button class="close" data-dismiss="modal">×</button>
+                                    <button type="button" class="close" data-dismiss="modal">×</button>
                                     <h2>Registro de una nueva cuenta</h2>
                                 </div>
                                 <div class="modal-body">
@@ -150,7 +145,7 @@
                         </h:form>
                     </div>
 
-                    <ui:fragment rendered="#{viewHelper.hasErrorsRecursive('signUpForm')}">
+                    <ui:fragment rendered="#{viewHelper.hasMessagesRecursive('signUpForm')}">
                         <script type="text/javascript">
                             jQuery(document).ready(function() {
                                 jQuery("#signUpModal").modal("show");

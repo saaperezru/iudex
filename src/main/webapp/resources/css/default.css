@@ -3,8 +3,33 @@ body {
     background-image: url(../resources/images/fabric-plaid.png);
 }
 
+.social-icons {
+    position: absolute;
+    left: 50%;
+    margin-left: -515px;
+}
+
+.social-icons a {
+    display: block;
+    width: 32px;
+    height: 32px;
+}
+
+.social-icons a:hover {
+    opacity: 0.85;
+}
+
+.social-icons .facebook-icon {
+    background-image: url(../resources/images/facebook.png);
+}
+
+.social-icons .twitter-icon {
+    background-image: url(../resources/images/twitter.png);
+}
+
 .form-login {
     height: 260px;
+    width: 260px;
 }
 
 div.share-icon {

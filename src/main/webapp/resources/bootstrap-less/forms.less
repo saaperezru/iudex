@@ -507,8 +507,10 @@ select:focus:required:invalid {
   text-align: center;
   padding-bottom: 10px;
   padding-top: 10px;
- position : relative;
-#gradient > .vertical(lighten(@green, 25%),lighten(@green, 15%));
+  position : relative;
+  border: solid 1px @btnBorder;
+  .box-shadow(~"inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05)");
+  #gradient > .vertical(@btnSuccessBackground, @btnSuccessBackgroundHighlight);
   .border-radius(15px);
 }
 

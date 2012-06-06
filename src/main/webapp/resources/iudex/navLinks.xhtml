@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:cc="http://java.sun.com/jsf/composite"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <!-- INTERFACE -->
+    <cc:interface>
+    </cc:interface>
+
+    <!-- IMPLEMENTATION -->
+    <cc:implementation>
+        <ui:fragment rendered="#{user.loggedIn}">
+            <ui:fragment rendered="#{user.role.toString().equals('ADMINISTRATOR')}">
+                <li>
+                    <a href="#{request.contextPath}/courses/list.xhtml">Cursos</a> 
+                </li>
+                <li>
+                    <a href="#{request.contextPath}/subjects/list.xhtml">Materias</a> 
+                </li>
+                <li>
+                    <a href="#{request.contextPath}/professors/list.xhtml">Profesores</a> 
+                </li>
+                <li>
+                    <a href="#{request.contextPath}/users/list.xhtml">Usuarios</a> 
+                </li>
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        Más
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="#{request.contextPath}/feedback/list.xhtml">Comentarios de realimentación</a> 
+                        </li>
+                        <li class="divider" />
+                        <li>
+                            <a href="#{request.contextPath}/feedbackTypes/list.xhtml">Tipos de comentarios de realimentación</a> 
+                        </li>
+                    </ul>
+                </li>
+            </ui:fragment>
+        </ui:fragment>
+    </cc:implementation>
+</html>

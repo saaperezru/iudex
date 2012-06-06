@@ -2,7 +2,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:h="http://java.sun.com/jsf/html">
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:iudex="http://java.sun.com/jsf/composite/iudex">
 
     <h:head>
         <title>IUDEX <ui:insert name="title"></ui:insert></title>
@@ -59,7 +60,10 @@
                     <div class="nav-collapse">
                         <ul class="nav pull-left">
                             <li><a href="#about">Acerca de</a></li>
+                            <ui:fragment rendered="#{not user.loggedIn or not user.role.toString().equals('ADMINISTRATOR')}">
                             <li><a id="feedbackLink" data-toggle="modal" data-target="#feedbackModal" href="#{request.contextPath}/feedback/create.xhtml" target="feedbackFrame">Contáctanos</a></li>
+                            </ui:fragment>
+                            <iudex:navLinks />
                         </ul>
 
                         <ul class="nav pull-right">
@@ -117,6 +121,8 @@
             <br/>
         </div>
         <!--end content-->
+        
+        <ui:fragment rendered="#{not user.loggedIn or not user.role.toString().equals('ADMINISTRATOR')}">
         <!-- Begin feedback button -->
         <div class="btn-feedback">
             <a id="feedbackButton" class="btn btn-inverse" data-toggle="modal" data-target="#feedbackModal" href="#{request.contextPath}/feedback/create.xhtml" target="feedbackFrame">
@@ -124,6 +130,7 @@
                 Contáctanos
             </a>
         </div>
+        <!-- End feedback button -->
         <div id="feedbackModal" class="modal hide fade">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">×</button>
@@ -131,7 +138,7 @@
             </div>
             <iframe name="feedbackFrame" id="feedbackFrame" class="modal-iframe"/>
         </div>
-        <!-- End feedback button -->
+        </ui:fragment>
 
         <script>
             jQuery(document).ready(function() {

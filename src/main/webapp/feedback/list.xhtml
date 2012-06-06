@@ -41,7 +41,7 @@
                             <div class="thumbnail expandable" style="padding: 15px;">
                                 <strong>
                                     <h:outputText value="#{feedback.date}">
-                                        <f:convertDateTime pattern="dd/MM/yyyy." />
+                                        <f:convertDateTime pattern="dd/MM/yyyy hh:mm:ss aa." />
                                     </h:outputText>
                                 </strong>
                                 <h:outputText value="#{feedback.feedbackTypeName}" class="label label-feedback-#{feedback.feedbackTypeId}" />

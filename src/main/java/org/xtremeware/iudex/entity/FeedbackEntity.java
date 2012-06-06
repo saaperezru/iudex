@@ -35,7 +35,7 @@ public class FeedbackEntity implements Serializable, Entity<FeedbackVo> {
     @Lob
     @Column(name = "CONTENT", nullable = false)
     private String content;
-    @Temporal(javax.persistence.TemporalType.DATE)
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     @Column(name = "DATE_FEEDBACK", nullable = false)
     private Date date;
 

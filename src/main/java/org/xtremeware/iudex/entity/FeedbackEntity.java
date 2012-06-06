@@ -9,11 +9,11 @@ import org.xtremeware.iudex.vo.FeedbackVo;
 @javax.persistence.Entity(name = "Feedback")
 @NamedQueries({
     @NamedQuery(name = "getByTypeId",
-    query = "SELECT f FROM Feedback f WHERE f.type.id = :feedbackTypeId"),
+    query = "SELECT f FROM Feedback f WHERE f.type.id = :feedbackTypeId ORDER BY f.date DESC, f.id DESC"),
     @NamedQuery(name = "getFeedbackByContentLike",
-    query = "SELECT f FROM Feedback f WHERE f.content = :query"),
+    query = "SELECT f FROM Feedback f WHERE f.content = :query ORDER BY f.date DESC, f.id DESC"),
     @NamedQuery(name = "getAllFeedbacks",
-    query = "SELECT f FROM Feedback f")
+    query = "SELECT f FROM Feedback f ORDER BY f.date DESC, f.id DESC")
 })
 @Table(name = "FEEDBACK")
 public class FeedbackEntity implements Serializable, Entity<FeedbackVo> {

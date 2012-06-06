@@ -2,7 +2,7 @@ package org.xtremeware.iudex.businesslogic.service.deleteimplementations;
 
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Delete;
-import org.xtremeware.iudex.businesslogic.service.lucene.LuceneProfessorHelper;
+import org.xtremeware.iudex.businesslogic.service.search.lucene.LuceneProfessorHelper;
 import org.xtremeware.iudex.dao.CrudDao;
 import org.xtremeware.iudex.entity.ProfessorEntity;
 import org.xtremeware.iudex.helper.DataBaseException;

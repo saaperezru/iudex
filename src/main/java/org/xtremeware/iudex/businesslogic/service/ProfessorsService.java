@@ -3,6 +3,7 @@ package org.xtremeware.iudex.businesslogic.service;
 import java.util.*;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.businesslogic.service.crudinterfaces.*;
+import org.xtremeware.iudex.businesslogic.service.search.Search;
 import org.xtremeware.iudex.dao.AbstractDaoBuilder;
 import org.xtremeware.iudex.entity.ProfessorEntity;
 import org.xtremeware.iudex.helper.*;
@@ -12,11 +13,13 @@ public class ProfessorsService extends CrudService<ProfessorVo, ProfessorEntity>
 
     private final int MAX_PROFESSOR_NAME_LENGTH;
     private final int MAX_PROFESSOR_DECRIPTION_LENGTH;
+    private Search search;
 
     public ProfessorsService(AbstractDaoBuilder daoFactory,
-            Create create, Read read, Update update, Delete delete) {
+            Create create, Read read, Update update, Delete delete,
+            Search search) {
         super(daoFactory, create, read, update, delete);
-
+        this.search = search;
         MAX_PROFESSOR_NAME_LENGTH =
                 Integer.parseInt(ConfigurationVariablesHelper.getVariable(
                 ConfigurationVariablesHelper.MAX_PROFESSOR_NAME_LENGTH));
@@ -29,6 +32,10 @@ public class ProfessorsService extends CrudService<ProfessorVo, ProfessorEntity>
             throws DataBaseException {
         professorName = SecurityHelper.sanitizeHTML(professorName); 
         return getDaoFactory().getProfessorDao().getByNameLike(entityManager, professorName.toUpperCase() );
+    }
+    
+    public List<Long> search(String query){
+        return search.search(SecurityHelper.sanitizeHTML(query));
     }
 
     public List<ProfessorVo> getBySubjectId(EntityManager entityManager, long subjectId)

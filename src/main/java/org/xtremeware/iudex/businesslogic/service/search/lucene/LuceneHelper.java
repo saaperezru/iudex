@@ -1,37 +1,35 @@
-package org.xtremeware.iudex.businesslogic.service.lucene;
+package org.xtremeware.iudex.businesslogic.service.search.lucene;
 
 import java.io.*;
 import java.util.List;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.*;
 import org.apache.lucene.index.*;
 import org.apache.lucene.index.IndexWriterConfig.OpenMode;
 import org.apache.lucene.store.*;
 import org.apache.lucene.util.Version;
 import org.xtremeware.iudex.helper.*;
-import org.xtremeware.iudex.vo.ValueObject;
+import org.xtremeware.iudex.vo.IdentifiableValueObject;
 
-public abstract class LuceneHelper<E extends ValueObject> {
+public abstract class LuceneHelper<E,F extends IdentifiableValueObject<E>> {
 
     private OpenMode openMode;
+    private Version version;
     private Directory directory;
+    private Analyzer analyzer;
 
-    protected LuceneHelper(File indexFile) {
-        try {
-            this.openMode = OpenMode.CREATE;
-            deleteDir(indexFile);
-            this.directory = FSDirectory.open(indexFile);
-        } catch (Exception exception) {
-            throw new ExternalServiceException(exception.getMessage(), exception);
-        }
+    protected LuceneHelper(OpenMode openMode, Version version, Directory directory, Analyzer analyzer) {
+        this.openMode = openMode;
+        this.version = version;
+        this.directory = directory;
+        this.analyzer = analyzer;
     }
 
-    private void deleteDir(File dir) {
+    protected static void deleteDir(File dir) {
         if (dir.isDirectory()) {
             String[] children = dir.list();
             for (int i = 0; i < children.length; i++) {
                 deleteDir(new File(dir, children[i]));
-
             }
         }
         if(!dir.delete()){
@@ -39,39 +37,30 @@ public abstract class LuceneHelper<E extends ValueObject> {
         }
     }
 
-    public void addElementsToAnIndex(List<E> elements) {
+    public void addElementsToAnIndex(List<F> elements) {
         IndexWriter indexWriter = startIndexWriter();
         Document document = null;
-        for (E element : elements) {
-            document = addFieldsToADocument(getId(element), getContent(element));
+        for (F element : elements) {
+            document = createDocument(element);
             writeADocument(indexWriter, document);
         }
         closeIndexWriter(indexWriter);
         openMode = OpenMode.APPEND;
     }
+    
+    protected abstract Document createDocument(F element) ;
 
-    public void addElementToAnIndex(E vo) {
+    public void addElementToAnIndex(F vo) {
         IndexWriter indexWriter = startIndexWriter();
-        Document document = addFieldsToADocument(getId(vo), getContent(vo));
+        Document document = createDocument(vo);
         writeADocument(indexWriter, document);
         closeIndexWriter(indexWriter);
         openMode = OpenMode.APPEND;
     }
-    
-    protected abstract String getId(E vo);
-    
-    protected abstract String getContent(E vo);
-
-    private Document addFieldsToADocument(String id, String content) {
-        Document document = new Document();
-        document.add(new Field("id", id, Field.Store.YES, Field.Index.ANALYZED));
-        document.add(new Field("name", content, Field.Store.YES, Field.Index.ANALYZED));
-        return document;
-    }
 
     private IndexWriter startIndexWriter() {
         try {
-            return new IndexWriter(directory, new IndexWriterConfig(Version.LUCENE_36, new StandardAnalyzer(Version.LUCENE_36)).setOpenMode(openMode));
+            return new IndexWriter(directory, new IndexWriterConfig(version, analyzer).setOpenMode(openMode));
         } catch (Exception exception) {
             throw new ExternalServiceException(exception.getMessage(), exception);
         }
@@ -95,26 +84,46 @@ public abstract class LuceneHelper<E extends ValueObject> {
         }
     }
 
-    public void updateElementoInAnIndex(E vo) {
+    public void updateElementoInAnIndex(F vo) {
         IndexWriter indexWriter = startIndexWriter();
-        Document document = addFieldsToADocument(getId(vo), getContent(vo));
+        Document document = createDocument(vo);
         try {
-            indexWriter.updateDocument(new Term(getId(vo), "id"), document);
+            indexWriter.updateDocument(createTermForDelete(vo.getId()), document);
         } catch (Exception exception) {
             throw new ExternalServiceException(exception.getMessage(), exception);
         }
         closeIndexWriter(indexWriter);
 
     }
+    
+    protected abstract Term createTermForDelete(E id);
 
-    public void deleteElementoInTheIndex(Long id) {
+    public void deleteElementoInTheIndex(E id) {
         IndexWriter indexWriter = startIndexWriter();
         try {
-            indexWriter.deleteDocuments(new Term(id.toString(), "id"));
+            indexWriter.deleteDocuments(createTermForDelete(id));
         } catch (Exception exception) {
             throw new ExternalServiceException(exception.getMessage(), exception);
         }
         closeIndexWriter(indexWriter);
 
+    }
+    
+    public abstract List<E> search(String query);
+
+    protected Analyzer getAnalyzer() {
+        return analyzer;
+    }
+
+    protected Directory getDirectory() {
+        return directory;
+    }
+
+    protected OpenMode getOpenMode() {
+        return openMode;
+    }
+
+    protected Version getVersion() {
+        return version;
     }
 }

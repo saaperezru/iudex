@@ -4,9 +4,11 @@ import java.util.*;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.businesslogic.service.createimplementations.*;
 import org.xtremeware.iudex.businesslogic.service.deleteimplementations.*;
-import org.xtremeware.iudex.businesslogic.service.lucene.LuceneProfessorHelper;
-import org.xtremeware.iudex.businesslogic.service.lucene.LuceneSubjectHelper;
+import org.xtremeware.iudex.businesslogic.service.search.lucene.LuceneProfessorHelper;
+import org.xtremeware.iudex.businesslogic.service.search.lucene.LuceneSubjectHelper;
 import org.xtremeware.iudex.businesslogic.service.readimplementations.SimpleRead;
+import org.xtremeware.iudex.businesslogic.service.search.ProfessorSearch;
+import org.xtremeware.iudex.businesslogic.service.search.SubjectSearch;
 import org.xtremeware.iudex.businesslogic.service.updateimplementations.*;
 import org.xtremeware.iudex.dao.AbstractDaoBuilder;
 import org.xtremeware.iudex.entity.*;
@@ -41,22 +43,29 @@ public class ServiceBuilder {
     public ServiceBuilder(AbstractDaoBuilder daoFactory, MailingConfigVo mailingConfig, EntityManager entityManager) {
         this.daoFactory = daoFactory;
         this.mailingService = new MailingService(mailingConfig);
-
-        List<ProfessorEntity> professorEntitys = entityManager.createQuery("SELECT p FROM Professor p", ProfessorEntity.class).getResultList();
-        List<ProfessorVo> professorsVo = new ArrayList<ProfessorVo>();
-        for (ProfessorEntity professorEntity : professorEntitys) {
-            professorsVo.add(professorEntity.toVo());
-        }
         
-        LuceneProfessorHelper.getInstance().addElementsToAnIndex(professorsVo);
-        
-        List<SubjectEntity> subjectEntitys = entityManager.createQuery("SELECT p FROM Subject p", SubjectEntity.class).getResultList();
-        List<SubjectVo> subjectsVo = new ArrayList<SubjectVo>();
-        for (SubjectEntity subjectEntity : subjectEntitys) {
-            subjectsVo.add(subjectEntity.toVo());
-        }
-        
-        LuceneSubjectHelper.getInstance().addElementsToAnIndex(subjectsVo);
+//        System.out.println("[DEBUG] STARTED PROFESSOR INDEING");
+//        List<Long> professorids = entityManager.createQuery("SELECT p.id FROM Professor p", Long.class).getResultList();
+//        System.out.println("[DEBUG] FOUNDS IDS");
+//        ProfessorEntity professorEntity = null;
+//        
+//        for (Long id : professorids) {
+//            professorEntity = entityManager.createQuery("SELECT p FROM Professor p WHERE p.id = :professorId", ProfessorEntity.class).setParameter("professorId", id).getSingleResult();
+//            LuceneProfessorHelper.getInstance().addElementToAnIndex(professorEntity.toVo());
+//            System.out.println("[DEBUG] ADDED NEW PROFESSOR");
+//        }
+//        
+//        System.out.println("[DEBUG] FINISHED PROFESSOR INDEING");
+//        System.out.println("[DEBUG] STARTED SUBJECT INDEING");
+//        
+//        List<SubjectEntity> subjectEntitys = entityManager.createQuery("SELECT p FROM Subject p", SubjectEntity.class).setMaxResults(10).getResultList();
+//        List<SubjectVo> subjectsVo = new ArrayList<SubjectVo>();
+//        for (SubjectEntity subjectEntity : subjectEntitys) {
+//            subjectsVo.add(subjectEntity.toVo());
+//        }
+//        
+//        LuceneSubjectHelper.getInstance().addElementsToAnIndex(subjectsVo);
+//        System.out.println("[DEBUG] FINISHED SUBJECT INDEING");
     }
 
     private AbstractDaoBuilder getDaoFactory() {
@@ -158,7 +167,8 @@ public class ServiceBuilder {
                     new ProfessorCreation(getDaoFactory().getProfessorDao()),
                     new SimpleRead<ProfessorEntity>(getDaoFactory().getProfessorDao()),
                     new ProfessorUpdate(getDaoFactory().getProfessorDao()),
-                    new ProfessorDelete(getDaoFactory().getProfessorDao()));
+                    new ProfessorDelete(getDaoFactory().getProfessorDao()),
+                    new ProfessorSearch());
         }
         return professorsService;
     }
@@ -189,7 +199,8 @@ public class ServiceBuilder {
                     new SubjectCreation(getDaoFactory().getSubjectDao()),
                     new SimpleRead<SubjectEntity>(getDaoFactory().getSubjectDao()),
                     new SubjectUpdate(getDaoFactory().getSubjectDao()),
-                    new SubjectDelete(getDaoFactory().getSubjectDao()));
+                    new SubjectDelete(getDaoFactory().getSubjectDao()),
+                    new SubjectSearch());
         }
         return subjectsService;
     }

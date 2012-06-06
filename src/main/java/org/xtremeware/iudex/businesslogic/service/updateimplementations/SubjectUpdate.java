@@ -2,7 +2,7 @@ package org.xtremeware.iudex.businesslogic.service.updateimplementations;
 
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Update;
-import org.xtremeware.iudex.businesslogic.service.lucene.LuceneSubjectHelper;
+import org.xtremeware.iudex.businesslogic.service.search.lucene.LuceneSubjectHelper;
 import org.xtremeware.iudex.dao.CrudDao;
 import org.xtremeware.iudex.entity.SubjectEntity;
 import org.xtremeware.iudex.helper.DataBaseException;

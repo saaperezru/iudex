@@ -8,6 +8,7 @@ import org.xtremeware.iudex.businesslogic.DuplicityException;
 import org.xtremeware.iudex.entity.ProfessorEntity;
 import org.xtremeware.iudex.helper.*;
 import org.xtremeware.iudex.businesslogic.helper.FacadesTestHelper;
+import org.xtremeware.iudex.businesslogic.service.search.lucene.LuceneProfessorHelper;
 import org.xtremeware.iudex.vo.*;
 
 /**
@@ -620,5 +621,10 @@ public class ProfessorsFacadeIT {
             assertEquals("entity.notFound", ex.getMessage());
         }
 
+    }
+    
+    @Test
+    public void test1() throws Exception {
+        LuceneProfessorHelper.getInstance().search("mario perez");
     }
 }

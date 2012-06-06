@@ -11,175 +11,184 @@ import org.xtremeware.iudex.vo.*;
 
 public class ProfessorsFacade extends AbstractFacade {
 
-    public ProfessorsFacade(ServiceBuilder serviceFactory, EntityManagerFactory emFactory) {
-        super(serviceFactory, emFactory);
-    }
+	public ProfessorsFacade(ServiceBuilder serviceFactory, EntityManagerFactory emFactory) {
+		super(serviceFactory, emFactory);
+	}
 
-    public Map<Long, String> getProfessorsAutocomplete(String programName) {
-        EntityManager entityManager = null;
-        Map<Long, String> professorsIdAndNames = new HashMap<Long, String>();
-        if (isNotNull(programName)) {
-            try {
-                entityManager = getEntityManagerFactory().createEntityManager();
-                List<ProfessorVo> professorVos = getServiceFactory().getProfessorsService().getByNameLike(entityManager, programName);
-                for (ProfessorVo professorVo : professorVos) {
-                    professorsIdAndNames.put(
-                            professorVo.getId(),
-                            professorVo.getFirstName() + " " + professorVo.getLastName());
-                }
-            } catch (Exception exception) {
-                getServiceFactory().getLogService().error(exception.getMessage(), exception);
-                throw new RuntimeException(exception);
-            } finally {
-                FacadesHelperImplementation.closeEntityManager(entityManager);
-            }
-        }
-        return professorsIdAndNames;
-    }
+	public Map<Long, String> getProfessorsAutocomplete(String programName) {
+		EntityManager entityManager = null;
+		Map<Long, String> professorsIdAndNames = new HashMap<Long, String>();
+		if (isNotNull(programName)) {
+			try {
+				entityManager = getEntityManagerFactory().createEntityManager();
+				List<ProfessorVo> professorVos = getServiceFactory().getProfessorsService().getByNameLike(entityManager, programName);
+				for (ProfessorVo professorVo : professorVos) {
+					professorsIdAndNames.put(
+							professorVo.getId(),
+							professorVo.getFirstName() + " " + professorVo.getLastName());
+				}
+			} catch (Exception exception) {
+				getServiceFactory().getLogService().error(exception.getMessage(), exception);
+				throw new RuntimeException(exception);
+			} finally {
+				FacadesHelperImplementation.closeEntityManager(entityManager);
+			}
+		}
+		return professorsIdAndNames;
+	}
 
-    public ProfessorVo createProfessor(ProfessorVo professorVo) 
-            throws MultipleMessagesException, DuplicityException {
-        ProfessorVo createdVo = null;
-        EntityManager entityManager = null;
-        EntityTransaction transaction = null;
-        try {
-            entityManager = getEntityManagerFactory().createEntityManager();
-            transaction = entityManager.getTransaction();
-            transaction.begin();
-            createdVo = getServiceFactory().getProfessorsService().create(entityManager, professorVo);
-            transaction.commit();
-        } catch (Exception exception) {
-            getServiceFactory().getLogService().error(exception.getMessage(), exception);
-            FacadesHelperImplementation.checkException(exception, MultipleMessagesException.class);
-            FacadesHelperImplementation.checkDuplicityViolation(entityManager, transaction, exception);
-            FacadesHelperImplementation.rollbackTransaction(entityManager, transaction, exception);
-        } finally {
-            FacadesHelperImplementation.closeEntityManager(entityManager);
-        }
-        return createdVo;
-    }
+	public ProfessorVo createProfessor(ProfessorVo professorVo)
+			throws MultipleMessagesException, DuplicityException {
+		ProfessorVo createdVo = null;
+		EntityManager entityManager = null;
+		EntityTransaction transaction = null;
+		try {
+			entityManager = getEntityManagerFactory().createEntityManager();
+			transaction = entityManager.getTransaction();
+			transaction.begin();
+			createdVo = getServiceFactory().getProfessorsService().create(entityManager, professorVo);
+			transaction.commit();
+		} catch (Exception exception) {
+			getServiceFactory().getLogService().error(exception.getMessage(), exception);
+			FacadesHelperImplementation.checkException(exception, MultipleMessagesException.class);
+			FacadesHelperImplementation.checkDuplicityViolation(entityManager, transaction, exception);
+			FacadesHelperImplementation.rollbackTransaction(entityManager, transaction, exception);
+		} finally {
+			FacadesHelperImplementation.closeEntityManager(entityManager);
+		}
+		return createdVo;
+	}
 
-    public ProfessorVo updateProfessor(ProfessorVo professorVo) 
-            throws MultipleMessagesException, DuplicityException {
-        ProfessorVo createdProfessorVo = null;
-        EntityManager entityManager = null;
-        EntityTransaction transaction = null;
-        try {
-            entityManager = getEntityManagerFactory().createEntityManager();
-            transaction = entityManager.getTransaction();
-            transaction.begin();
-            createdProfessorVo = getServiceFactory().getProfessorsService().update(entityManager, professorVo);
-            transaction.commit();
-        } catch (Exception exception) {
-            getServiceFactory().getLogService().error(exception.getMessage(), exception);
-            FacadesHelperImplementation.checkException(exception, MultipleMessagesException.class);
-            FacadesHelperImplementation.checkDuplicityViolation(entityManager, transaction, exception);
-            FacadesHelperImplementation.rollbackTransaction(entityManager, transaction, exception);
-        } finally {
-            FacadesHelperImplementation.closeEntityManager(entityManager);
-        }
-        return createdProfessorVo;
-    }
+	public ProfessorVo updateProfessor(ProfessorVo professorVo)
+			throws MultipleMessagesException, DuplicityException {
+		ProfessorVo createdProfessorVo = null;
+		EntityManager entityManager = null;
+		EntityTransaction transaction = null;
+		try {
+			entityManager = getEntityManagerFactory().createEntityManager();
+			transaction = entityManager.getTransaction();
+			transaction.begin();
+			createdProfessorVo = getServiceFactory().getProfessorsService().update(entityManager, professorVo);
+			transaction.commit();
+		} catch (Exception exception) {
+			getServiceFactory().getLogService().error(exception.getMessage(), exception);
+			FacadesHelperImplementation.checkException(exception, MultipleMessagesException.class);
+			FacadesHelperImplementation.checkDuplicityViolation(entityManager, transaction, exception);
+			FacadesHelperImplementation.rollbackTransaction(entityManager, transaction, exception);
+		} finally {
+			FacadesHelperImplementation.closeEntityManager(entityManager);
+		}
+		return createdProfessorVo;
+	}
 
-    public void deleteProfessor(long professorId) throws DataBaseException {
-        EntityManager entityManager = null;
-        EntityTransaction transaction = null;
-        try {
-            entityManager = getEntityManagerFactory().createEntityManager();
-            transaction = entityManager.getTransaction();
-            transaction.begin();
-            getServiceFactory().getProfessorsService().delete(entityManager, professorId);
-            transaction.commit();
-        } catch (Exception exception) {
-            getServiceFactory().getLogService().error(exception.getMessage(), exception);
-            FacadesHelperImplementation.checkExceptionAndRollback(entityManager, transaction, exception, DataBaseException.class);
-            FacadesHelperImplementation.rollbackTransaction(entityManager, transaction, exception);
-        } finally {
-            FacadesHelperImplementation.closeEntityManager(entityManager);
-        }
-    }
+	public void deleteProfessor(long professorId) throws DataBaseException {
+		EntityManager entityManager = null;
+		EntityTransaction transaction = null;
+		try {
+			entityManager = getEntityManagerFactory().createEntityManager();
+			transaction = entityManager.getTransaction();
+			transaction.begin();
+			getServiceFactory().getProfessorsService().delete(entityManager, professorId);
+			transaction.commit();
+		} catch (Exception exception) {
+			getServiceFactory().getLogService().error(exception.getMessage(), exception);
+			FacadesHelperImplementation.checkExceptionAndRollback(entityManager, transaction, exception, DataBaseException.class);
+			FacadesHelperImplementation.rollbackTransaction(entityManager, transaction, exception);
+		} finally {
+			FacadesHelperImplementation.closeEntityManager(entityManager);
+		}
+	}
 
-    public BinaryRatingVo getProfessorRatingByUserId(long professorId, long userId){
-        EntityManager entityManager = null;
-        BinaryRatingVo binaryRatingVo = null;
-        try {
-            entityManager = getEntityManagerFactory().createEntityManager();
-            binaryRatingVo = getServiceFactory().getProfessorRatingsService().getByEvaluatedObjectAndUserId(entityManager, professorId, userId);
-        } catch (Exception exception) {
-            getServiceFactory().getLogService().error(exception.getMessage(), exception);
-            throw new RuntimeException(exception);
-        } finally {
-            FacadesHelperImplementation.closeEntityManager(entityManager);
-        }
-        return binaryRatingVo;
-    }
+	public BinaryRatingVo getProfessorRatingByUserId(long professorId, long userId) {
+		EntityManager entityManager = null;
+		BinaryRatingVo binaryRatingVo = null;
+		try {
+			entityManager = getEntityManagerFactory().createEntityManager();
+			binaryRatingVo = getServiceFactory().getProfessorRatingsService().getByEvaluatedObjectAndUserId(entityManager, professorId, userId);
+		} catch (Exception exception) {
+			getServiceFactory().getLogService().error(exception.getMessage(), exception);
+			throw new RuntimeException(exception);
+		} finally {
+			FacadesHelperImplementation.closeEntityManager(entityManager);
+		}
+		return binaryRatingVo;
+	}
 
-    public BinaryRatingVo rateProfessor(long professorId, long userId, int value)
-            throws MultipleMessagesException, DuplicityException {
-        EntityManager entityManager = null;
-        EntityTransaction transaction = null;
-        BinaryRatingVo binaryRatingVo = null;
-        try {
-            binaryRatingVo = new BinaryRatingVo();
-            binaryRatingVo.setEvaluatedObjectId(professorId);
-            binaryRatingVo.setUserId(userId);
-            binaryRatingVo.setValue(value);
+	public BinaryRatingVo rateProfessor(long professorId, long userId, int value)
+			throws MultipleMessagesException, DuplicityException {
+		EntityManager entityManager = null;
+		EntityTransaction transaction = null;
+		BinaryRatingVo binaryRatingVo = null;
+		try {
+			entityManager = getEntityManagerFactory().createEntityManager();
 
-            entityManager = getEntityManagerFactory().createEntityManager();
-            transaction = entityManager.getTransaction();
-            transaction.begin();
-            binaryRatingVo = getServiceFactory().
-                    getProfessorRatingsService().create(entityManager, binaryRatingVo);
-            transaction.commit();
+			BinaryRatingVo existingRating = getServiceFactory().getProfessorRatingsService().getByEvaluatedObjectAndUserId(entityManager, professorId, userId);
 
-        } catch (Exception exception) {
-            getServiceFactory().getLogService().error(exception.getMessage(), exception);
-            FacadesHelperImplementation.checkException(exception, MultipleMessagesException.class);
-            FacadesHelperImplementation.checkDuplicityViolation(entityManager, transaction, exception);
-            FacadesHelperImplementation.rollbackTransaction(entityManager, transaction, exception);
-        } finally {
-            FacadesHelperImplementation.closeEntityManager(entityManager);
-        }
-        return binaryRatingVo;
-    }
+			transaction = entityManager.getTransaction();
+			transaction.begin();
 
-    public ProfessorVoFull getProfessor(long professorId) {
-        EntityManager entityManager = null;
-        ProfessorVoFull professorVoFull = null;
-        try {
-            entityManager = getEntityManagerFactory().createEntityManager();
-            ProfessorVo professorVo = getServiceFactory().getProfessorsService().read(entityManager, professorId);
-            if (isNotNull(professorVo)) {
-                professorVoFull = new ProfessorVoFull(professorVo,
-                        getServiceFactory().getProfessorRatingsService().
-                        getSummary(entityManager, professorId));
-            }
-        } catch (Exception exception) {
-            getServiceFactory().getLogService().error(exception.getMessage(), exception);
-            throw new RuntimeException(exception);
-        } finally {
-            FacadesHelperImplementation.closeEntityManager(entityManager);
-        }
-        return professorVoFull;
-    }
+			if (existingRating == null) {
+				binaryRatingVo = new BinaryRatingVo();
+				binaryRatingVo.setEvaluatedObjectId(professorId);
+				binaryRatingVo.setUserId(userId);
+				binaryRatingVo.setValue(value);
 
-    public RatingSummaryVo getProfessorRatingSummary(long professorId) {
-        EntityManager entityManager = null;
-        RatingSummaryVo ratingSummaryVo = null;
-        try {
-            entityManager = getEntityManagerFactory().createEntityManager();
-            ratingSummaryVo = getServiceFactory().getProfessorRatingsService().getSummary(entityManager, professorId);
+				binaryRatingVo = getServiceFactory().
+						getProfessorRatingsService().create(entityManager, binaryRatingVo);
+			} else {
+				existingRating.setValue(value);
+				binaryRatingVo = getServiceFactory().getCommentRatingService().update(entityManager, existingRating);
+			}
+			transaction.commit();
 
-        } catch (Exception exception) {
-            getServiceFactory().getLogService().error(exception.getMessage(), exception);
-            throw new RuntimeException(exception);
-        } finally {
-            FacadesHelperImplementation.closeEntityManager(entityManager);
-        }
-        return ratingSummaryVo;
-    }
+		} catch (Exception exception) {
+			getServiceFactory().getLogService().error(exception.getMessage(), exception);
+			FacadesHelperImplementation.checkException(exception, MultipleMessagesException.class);
+			FacadesHelperImplementation.checkDuplicityViolation(entityManager, transaction, exception);
+			FacadesHelperImplementation.rollbackTransaction(entityManager, transaction, exception);
+		} finally {
+			FacadesHelperImplementation.closeEntityManager(entityManager);
+		}
+		return binaryRatingVo;
+	}
 
-    private boolean isNotNull(Object object) {
-        return object != null;
-    }
+	public ProfessorVoFull getProfessor(long professorId) {
+		EntityManager entityManager = null;
+		ProfessorVoFull professorVoFull = null;
+		try {
+			entityManager = getEntityManagerFactory().createEntityManager();
+			ProfessorVo professorVo = getServiceFactory().getProfessorsService().read(entityManager, professorId);
+			if (isNotNull(professorVo)) {
+				professorVoFull = new ProfessorVoFull(professorVo,
+						getServiceFactory().getProfessorRatingsService().
+						getSummary(entityManager, professorId));
+			}
+		} catch (Exception exception) {
+			getServiceFactory().getLogService().error(exception.getMessage(), exception);
+			throw new RuntimeException(exception);
+		} finally {
+			FacadesHelperImplementation.closeEntityManager(entityManager);
+		}
+		return professorVoFull;
+	}
+
+	public RatingSummaryVo getProfessorRatingSummary(long professorId) {
+		EntityManager entityManager = null;
+		RatingSummaryVo ratingSummaryVo = null;
+		try {
+			entityManager = getEntityManagerFactory().createEntityManager();
+			ratingSummaryVo = getServiceFactory().getProfessorRatingsService().getSummary(entityManager, professorId);
+
+		} catch (Exception exception) {
+			getServiceFactory().getLogService().error(exception.getMessage(), exception);
+			throw new RuntimeException(exception);
+		} finally {
+			FacadesHelperImplementation.closeEntityManager(entityManager);
+		}
+		return ratingSummaryVo;
+	}
+
+	private boolean isNotNull(Object object) {
+		return object != null;
+	}
 }

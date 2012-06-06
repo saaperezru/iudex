@@ -18,11 +18,7 @@ public class CommentVoVwFull implements ValueObject{
 	public CommentVoVwFull(CommentVo vo, UserVoVwSmall user, RatingSummaryVo rating) {
 		this.vo = vo;
 		this.rating = rating;		
-		if (vo.isAnonymous()) {
-			this.user = null;
-		} else {
-			this.user = user;
-		}
+		this.user = user;
 	}
 
 	@Override

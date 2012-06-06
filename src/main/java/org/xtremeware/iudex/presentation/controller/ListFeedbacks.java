@@ -19,8 +19,20 @@ import org.xtremeware.iudex.vo.FeedbackVo;
 @ViewScoped
 public class ListFeedbacks implements Serializable {
 
+    // TODO: Make the page size configurable
+    private static final int pageSize = 10;
     private Long feedbackTypeId;
     private List<FeedbackVoVwFull> feedbacks;
+    private List<Integer> pages;
+    private Integer currentPage;
+
+    public Integer getCurrentPage() {
+        return currentPage;
+    }
+    
+    public List<Integer> getPages() {
+        return pages;
+    }
 
     public List<FeedbackVoVwFull> getFeedbacks() {
         if (feedbacks == null) {
@@ -38,15 +50,28 @@ public class ListFeedbacks implements Serializable {
     }
 
     public void loadFeedbacks() {
+        loadFeedbacks(1);
+    }
+
+    public void loadFeedbacks(int page) {
         FeedbacksFacade feedbacksFacade = Config.getInstance().getFacadeFactory().
                 getFeedbacksFacade();
         List<FeedbackVo> feedbackVos;
+        int firstResult = (page - 1) * pageSize;
+        int pagesCount;
         if (feedbackTypeId != null && !feedbackTypeId.equals(0L)) {
             feedbackVos = feedbacksFacade.getFeedbacksByFeedbackType(
-                    feedbackTypeId);
+                    feedbackTypeId, firstResult, pageSize);
+            pagesCount = (int)Math.ceil(feedbacksFacade.countFeedbacksByFeedbackType(feedbackTypeId) / (float)pageSize);
         } else {
-            feedbackVos = feedbacksFacade.getAllFeedbacks();
+            feedbackVos = feedbacksFacade.getAllFeedbacks(firstResult, pageSize);
+            pagesCount = (int)Math.ceil(feedbacksFacade.countAllFeedbacks() / (float)pageSize);
         }
+        pages = new ArrayList<Integer>(pagesCount);
+        for(int i = 1; i <= pagesCount; i++){
+            pages.add(i);
+        }
+        currentPage = page;
         FeedbackVoVwBuilder builder = FeedbackVoVwBuilder.getInstance();
         feedbacks = new ArrayList<FeedbackVoVwFull>(feedbackVos.size());
         for (FeedbackVo feedbackVo : feedbackVos) {

@@ -9,7 +9,7 @@
                 xmlns:iudex="http://java.sun.com/jsf/composite/iudex">
 
     <ui:define name="title">- Comentarios de realimentación</ui:define>
-    
+
     <ui:define name="content">
         <h:outputStylesheet library="css" name="feedback.css" />
         <div class="container">
@@ -49,6 +49,26 @@
                             </div>
                             <br/>   
                         </ui:repeat>
+                        <h:form>
+                            <div class="pagination">
+                                <ul>
+                                    <ui:repeat value="#{listFeedbacks.pages}" var="page">
+                                        <ui:fragment rendered="#{page != listFeedbacks.currentPage}">
+                                            <li>
+                                                <h:commandLink action="#{listFeedbacks.loadFeedbacks(page)}" value="#{page}">
+                                                    <f:ajax render="feedbacksList" onevent="function(e){if(e.status == 'success') initExpandables();}" />
+                                                </h:commandLink>
+                                            </li>
+                                        </ui:fragment>
+                                        <ui:fragment rendered="#{page == listFeedbacks.currentPage}">
+                                            <li class="active">
+                                                <h:commandLink action="#{listFeedbacks.loadFeedbacks(page)}" value="#{page}" />
+                                            </li>
+                                        </ui:fragment>
+                                    </ui:repeat>
+                                </ul>
+                            </div>
+                        </h:form>
                     </h:panelGroup>
                 </div>
             </div>

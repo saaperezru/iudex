@@ -22,12 +22,20 @@ public interface FeedbackDao extends CrudDao<FeedbackEntity> {
      * entities.
      * @return The list of found feedbacks.
      */
-    List<FeedbackEntity> getByTypeId(EntityManager entityManager, long feedbackTypeId)
+    List<FeedbackEntity> getByTypeId(EntityManager entityManager,
+            long feedbackTypeId, int firstResult, int maxResults)
             throws DataBaseException;
 
-    List<FeedbackEntity> getByContentLike(EntityManager entityManager, String query)
+    List<FeedbackEntity> getByContentLike(EntityManager entityManager,
+            String query)
             throws DataBaseException;
 
-    List<FeedbackEntity> getAll(EntityManager entityManager)
+    List<FeedbackEntity> getAll(EntityManager entityManager, int firstResult,
+            int maxResults)
             throws DataBaseException;
+
+    long countAll(EntityManager entityManager) throws DataBaseException;
+
+    long countByTypeId(EntityManager entityManager, long feedbackTypeId) throws
+            DataBaseException;
 }

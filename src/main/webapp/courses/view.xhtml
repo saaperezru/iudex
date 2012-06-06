@@ -12,6 +12,58 @@
 	</f:metadata>
 	<ui:define name="content">
 		<div class="container comments-container">
+
+
+			<!--Professor bar --> 
+			<div class="well span4 container-fluid fixed-navbar" >
+				<div class="row-fluid">
+					<div class="span7 " style="text-align: center; line-height: 200%">
+						<h:outputText class="fittext-subject fittext" value="#{viewCourse.course.subject.name}"/>
+					</div>
+					<div class="span4 container-fluid cuadro-promedio" >
+						<div class="row-fluid">
+							<h:outputText id="fittext-rating-title" class="fittext" value="PROMEDIO"/>
+						</div>
+						<div class="row-fluid" >
+							<div class="span6" style="margin-top: 10%;">
+								<h:outputText id="fittext-rating" class="fittext" value="#{viewCourse.course.ratingAverage}"/>
+							</div>
+							<div class="span6">
+								<img style="vertical-align: middle;" src="#{request.contextPath}/resources/images/star.png" />
+							</div>
+						</div>
+						<div class="row-fluid">
+							<h:outputText id="fittext-rating-info" class="fittext" value="#{viewCourse.course.ratingCount} personas han votado"/>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="professor-photo" >
+						<a href=""><img src="#{viewCourse.professor.imageUrl}"/></a>
+						<span class="vote-prof">
+							<div></div>
+						</span>
+						<ul class="actions">
+							<li class="upvote-prof"><a href="#" class="icon-thumbs-up"></a></li>
+							<li class="downvote-prof"><a href="#" class="icon-thumbs-down"></a></li>
+						</ul>
+						<div>
+							<h5><a href="#{viewCourse.course.professor.website}">#{viewCourse.course.professor.fullName}</a></h5>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<a onclick="$('.comment-star5').toggle('slow')">5 Estrellas</a>
+					<a onclick="$('.comment-star4').toggle('slow')">4 Estrellas</a>
+					<a onclick="$('.comment-star3').toggle('slow')">3 Estrellas</a>
+					<a onclick="$('.comment-star2').toggle('slow')">2 Estrellas</a>
+					<a onclick="$('.comment-star1').toggle('slow')">1 Estrellas</a>
+				</div>
+
+			</div><!--/.well -->
+
+			<!--End of Professor bar --> 
+
 			<c:if test="#{user.loggedIn}">
 				<div class="row ">
 					<div class="offset5 span7 ">
@@ -20,7 +72,7 @@
 								<h:outputText value="CALIFICA EL CURSO" class="span6 fittext-rateInput"/>  
 								<div class="span6">
 									<p:rating value="#{viewCourse.courseRating}" onRate="showCommentInput()" >  
-										<p:ajax event="rate" listener="#{viewCourse.handleRate}" update="messages"/>
+										<p:ajax event="rate" listener="#{viewCourse.handleRate}" update="messages,:fittext-rating,:fittext-rating-info" oncomplete="updatedRating()"/>
 									</p:rating>  
 								</div>
 								<p:growl id="messages" showDetail="true"/> 
@@ -121,64 +173,11 @@
 
 
 
-			<!--Professor bar --> 
-			<div class="well span4 container-fluid fixed-navbar" >
-				<div class="row-fluid">
-					<div class="span7 " style="text-align: center; line-height: 200%">
-						<h:outputText class="fittext-subject fittext" value="#{viewCourse.course.subject.name}"/>
-					</div>
-					<div class="span4 container-fluid cuadro-promedio" >
-						<div class="row-fluid">
-							<h:outputText id="fittext-rating-title" class="fittext" value="PROMEDIO"/>
-						</div>
-						<div class="row-fluid" >
-							<div class="span6" style="margin-top: 10%;">
-								<h:outputText id="fittext-rating" class="fittext" value="#{viewCourse.course.ratingAverage}"/>
-							</div>
-							<div class="span6">
-								<img style="vertical-align: middle;" src="#{request.contextPath}/resources/images/star.png" />
-							</div>
-						</div>
-						<div class="row-fluid">
-							<h:outputText id="fittext-rating-info" class="fittext" value="#{viewCourse.course.ratingCount} personas han votado"/>
-						</div>
-					</div>
-				</div>
-				<div class="row">
-					<div class="professor-photo" >
-						<a href=""><img src="#{viewCourse.professor.imageUrl}"/></a>
-						<span class="vote-prof">
-							<div></div>
-						</span>
-						<ul class="actions">
-							<li class="upvote-prof"><a href="#" class="icon-thumbs-up"></a></li>
-							<li class="downvote-prof"><a href="#" class="icon-thumbs-down"></a></li>
-						</ul>
-						<div>
-							<h5><a href="#{viewCourse.course.professor.website}">#{viewCourse.course.professor.fullName}</a></h5>
-						</div>
-					</div>
-				</div>
-				<div class="row">
-					<a onclick="$('.comment-star5').toggle('slow')">5 Estrellas</a>
-					<a onclick="$('.comment-star4').toggle('slow')">4 Estrellas</a>
-					<a onclick="$('.comment-star3').toggle('slow')">3 Estrellas</a>
-					<a onclick="$('.comment-star2').toggle('slow')">2 Estrellas</a>
-					<a onclick="$('.comment-star1').toggle('slow')">1 Estrellas</a>
-				</div>
-
-			</div><!--/.well -->
-
-			<!--End of Professor bar --> 
-
 
 		</div>
 		<script type="text/javascript">
 			//Beginning of fittext code
 			$(".fittext-subject").fitText(0.7);
-			$("#fittext-rating").fitText(0.15);
-			$("#fittext-rating-title").fitText(0.4);
-			$("#fittext-rating-info").fitText(0.6);
 			$(".fittext-rateInput").fitText(1.1);
 			$(".fittext-coment-program").fitText(1.1);
 			//End of fittext code
@@ -199,6 +198,13 @@
 			function onVote(e){
 				$('.vote-count').popover();
 			}
+			function updatedRating(){
+				$("#fittext-rating").fitText(0.15);
+				$("#fittext-rating-title").fitText(0.4);
+				$("#fittext-rating-info").fitText(0.6);
+
+			}
+			updatedRating();
 			//This snippet allows multiple JSF forms to work at a time in the same page
 			window.myfaces = window.myfaces || {};
 			myfaces.config = myfaces.config || {};

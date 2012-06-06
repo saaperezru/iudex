@@ -11,6 +11,7 @@
 		<f:event type="preRenderView" listener="#{viewCourse.preRenderView()}" />
 	</f:metadata>
 	<ui:define name="content">
+		<h:outputStylesheet library="css" name="style_courses.css" />
 		<div class="container comments-container">
 
 
@@ -38,33 +39,33 @@
 					</div>
 				</div>
 				<div class="row">
-					<div class="professor-photo" >
+					<div class="professor-photo thumbnail" >
 						<a href=""><img src="#{viewCourse.professor.imageUrl}"/></a>
-						<span class="vote-prof">
-							<div></div>
-						</span>
+						<div id="professor-photo-caption"><h5><a href="#{viewCourse.course.professor.website}">#{viewCourse.course.professor.fullName}</a></h5></div>
 						<ul class="actions">
 							<li class="upvote-prof"><a href="#" class="icon-thumbs-up"></a></li>
 							<li class="downvote-prof"><a href="#" class="icon-thumbs-down"></a></li>
 						</ul>
 						<div>
-							<h5><a href="#{viewCourse.course.professor.website}">#{viewCourse.course.professor.fullName}</a></h5>
 						</div>
 					</div>
 				</div>
-				<div class="row">
-					<a onclick="$('.comment-star5').toggle('slow')">5 Estrellas</a>
-					<a onclick="$('.comment-star4').toggle('slow')">4 Estrellas</a>
-					<a onclick="$('.comment-star3').toggle('slow')">3 Estrellas</a>
-					<a onclick="$('.comment-star2').toggle('slow')">2 Estrellas</a>
-					<a onclick="$('.comment-star1').toggle('slow')">1 Estrellas</a>
+				<div class="row comments-control">
+					<h3> Filtrar comentarios por calificación del curso: </h3>
+					<div class="btn-group" data-toggle="buttons-checkbox">
+						<a class="btn btn-primary active" onclick="$('.comment-star5').toggle('slow')">5</a>
+						<a class="btn btn-primary active" onclick="$('.comment-star4').toggle('slow')">4</a>
+						<a class="btn btn-primary active" onclick="$('.comment-star3').toggle('slow')">3</a>
+						<a class="btn btn-primary active" onclick="$('.comment-star2').toggle('slow')">2</a>
+						<a class="btn btn-primary active" onclick="$('.comment-star1').toggle('slow')">1</a>
+					</div>
 				</div>
 
 			</div><!--/.well -->
 
 			<!--End of Professor bar --> 
 
-			<c:if test="#{user.loggedIn}">
+			<ui:fragment  rendered="#{user.loggedIn}">
 				<div class="row ">
 					<div class="offset5 span7 ">
 						<div class="row-fluid">
@@ -72,7 +73,7 @@
 								<h:outputText value="CALIFICA EL CURSO" class="span6 fittext-rateInput"/>  
 								<div class="span6">
 									<p:rating value="#{viewCourse.courseRating}" onRate="showCommentInput()" >  
-										<p:ajax event="rate" listener="#{viewCourse.handleRate}" update="messages,:fittext-rating,:fittext-rating-info" oncomplete="updatedRating()"/>
+										<p:ajax event="rate" listener="#{viewCourse.handleRate}" update="messages,:fittext-rating,:fittext-rating-info,:courseCommentForm:new-comment-rating" oncomplete="updatedRating()"/>
 									</p:rating>  
 								</div>
 								<p:growl id="messages" showDetail="true"/> 
@@ -80,30 +81,37 @@
 						</div>
 						<div class="row-fluid hidden" id="commentInput">
 							<!-- Beginning of comment -->
-							<h:form class="courseCommentForm">
+							<h:form id="courseCommentForm">
 								<div class="row-fluid">
 									<div class="comment span12">
 										<div class="comment-container span12">
-											<div class="comment-rating">
-												Calificación del curso : 
+											<h:panelGroup layout="block" class="comment-rating" id="new-comment-rating">
+												<span>Calificación del curso :</span>
 												<ui:repeat var="i" value="#{utils.buildArrayCeil(viewCourse.courseRating)}">
-													<span class="icon-star"/>
+													<span class="star"/>
 												</ui:repeat>
-											</div>
+
+											</h:panelGroup>
 											<div class="comment-photo thumbnail">
-												<img src="#{request.contextPath}#{user.imageUrl}" alt="profesor x" />
+												<img src="#{request.contextPath}#{user.imageUrl}"/>
 												<h4>#{user.firstName}</h4>
-												<span>${utils.parseProgramName(user.programId)}</span>
+												<span class="fittext fittext-coment-program">#{utils.parseProgramName(user.programId)}</span>
 											</div>
 											<p>
-												<h:inputTextarea value="#{createComment.content}"/>
+												<h:inputTextarea class="comment-content" value="#{createComment.content}"/>
 											</p>
 										</div>
-										<div class="controls">
-											<h:selectBooleanCheckbox value="#{createComment.anonymous}" label="Hacer el comentario anónimo"/>
-											<h:commandButton action="#{createComment.createComment()}">
-												<f:ajax onevent="hideCommentBox" execute="@form"/>
-											</h:commandButton>
+										<div class="span12">
+											<div id="anonymous-control" class="span7">
+												<span>"¿Deseas que este comentario sea anónimo?"</span>
+												<p:selectBooleanButton value="#{createComment.anonymous}" onLabel="Sí" offLabel="No" />
+											</div>
+											<div class="span4">
+												<h:commandLink action="#{createComment.createComment()}" class="btn btn-large " value="Comentar">
+													<i class="icon-comment"></i>
+													<f:ajax onevent="hideCommentBox()" execute="@form"/>
+												</h:commandLink>
+											</div>
 										</div>
 									</div>
 
@@ -113,7 +121,7 @@
 						</div>
 					</div>
 				</div>
-			</c:if>
+			</ui:fragment>
 			<div class="row">
 				<div class="offset5 span7">
 					<h:form id="voteForm">
@@ -123,9 +131,9 @@
 								<div class="comment span12">
 									<div class="comment-container span12">
 										<div class="comment-rating">
-											Calificación del curso : 
+											<span>Calificación del curso : </span>
 											<ui:repeat var="i" value="#{utils.buildArrayCeil(comment.courseRating)}">
-												<span class="icon-star"/>
+												<span class="star"/>
 											</ui:repeat>
 										</div>
 										<div class="comment-photo thumbnail">
@@ -191,7 +199,7 @@
 
 			}
 			function hideCommentBox(){
-				$('commentInput').hide('slow');
+				$('#commentInput').hide('slow');
 			}
 			$('.not-registered').popover();
 			$('.vote-count').popover();

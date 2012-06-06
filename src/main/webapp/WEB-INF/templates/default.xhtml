@@ -7,28 +7,42 @@
     <h:head>
         <title></title>
         <meta http-equiv="Content-Type" content="text/xhtml; charset=utf-8" />
-        
+
         <link rel="icon" href="#{request.contextPath}/favicon.ico" />
         <link rel="shortcut" href="#{request.contextPath}/favicon.ico" />
-        
+
         <link rel="stylesheet/less" href="#{request.contextPath}/resources/bootstrap-less/bootstrap.less" />
         <link rel="stylesheet/less" href="#{request.contextPath}/resources/bootstrap-less/responsive.less" />
-        
+
         <link href='http://fonts.googleapis.com/css?family=Yanone+Kaffeesatz:700' rel='stylesheet' type='text/css' />
         <link href='http://fonts.googleapis.com/css?family=Dosis' rel='stylesheet' type='text/css' />
-        
+
         <h:outputStylesheet library="css" name="common.css" />
         <h:outputStylesheet library="css" name="default.css" />
-        
+
         <h:outputScript library="primefaces" name="jquery/jquery.js" />
         <h:outputScript library="jquery" name="jquery.fittext.js" />
         <h:outputScript library="jquery" name="jquery.expander.min.js" />
-        
+
         <h:outputScript library="bootstrap" name="js/bootstrap.min.js" />
-        
+
         <h:outputScript library="bootstrap-less" name="less-1.3.0.min.js" />
-        
+
         <h:outputScript library="js" name="common.js" />
+
+        <script type="text/javascript">
+
+            var _gaq = _gaq || [];
+            _gaq.push(['_setAccount', 'UA-32430864-1']);
+            _gaq.push(['_trackPageview']);
+
+            (function() {
+                var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+                ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+            })();
+
+        </script>
     </h:head>
     <h:body>
 
@@ -84,7 +98,7 @@
             </div>
         </div>
         <!--end navbar-->
-        
+
         <!--content-->
         <ui:insert name="content">
 

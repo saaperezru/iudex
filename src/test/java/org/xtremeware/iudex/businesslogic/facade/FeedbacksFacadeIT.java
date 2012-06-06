@@ -93,7 +93,7 @@ public class FeedbacksFacadeIT {
     public void BL_9_3() throws Exception {
         FeedbacksFacade ff = Config.getInstance().getFacadeFactory().
                 getFeedbacksFacade();
-        List<FeedbackVo> fvs = ff.getAllFeedbacks();
+        List<FeedbackVo> fvs = ff.getAllFeedbacks(0, (int)ff.countAllFeedbacks());
         for (FeedbackVo fv : fvs) {
             FeedbackVo result = entityManager.createQuery(
                     "SELECT p FROM Feedback p WHERE p.id =:id", FeedbackEntity.class).
@@ -116,7 +116,7 @@ public class FeedbacksFacadeIT {
         FeedbacksFacade ff = Config.getInstance().getFacadeFactory().
                 getFeedbacksFacade();
         for (Long id : feedbackTypeIds) {
-            List<FeedbackVo> fvs = ff.getFeedbacksByFeedbackType(id);
+            List<FeedbackVo> fvs = ff.getFeedbacksByFeedbackType(id, 0, (int)ff.countFeedbacksByFeedbackType(id));
             for (FeedbackVo fv : fvs) {
                 FeedbackVo result = entityManager.createQuery(
                         "SELECT p FROM Feedback p WHERE p.id =:id", FeedbackEntity.class).
@@ -137,7 +137,7 @@ public class FeedbacksFacadeIT {
     public void BL_9_4_1() throws Exception {
         FeedbacksFacade ff = Config.getInstance().getFacadeFactory().
                 getFeedbacksFacade();
-        List<FeedbackVo> fvs = ff.getFeedbacksByFeedbackType(Long.MAX_VALUE);
+        List<FeedbackVo> fvs = ff.getFeedbacksByFeedbackType(Long.MAX_VALUE, 0, 1);
         assertTrue(fvs.isEmpty());
     }
 

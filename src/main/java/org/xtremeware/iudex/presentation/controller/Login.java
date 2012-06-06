@@ -1,5 +1,6 @@
 package org.xtremeware.iudex.presentation.controller;
 
+import java.io.Serializable;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -16,7 +17,7 @@ import org.xtremeware.iudex.vo.UserVo;
  */
 @ManagedBean
 @RequestScoped
-public class Login {
+public class Login implements Serializable {
 
     private String userName;
     private String password;

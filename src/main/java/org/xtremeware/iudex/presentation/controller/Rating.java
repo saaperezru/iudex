@@ -1,5 +1,6 @@
 package org.xtremeware.iudex.presentation.controller;
 
+import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.faces.bean.ManagedBean;
@@ -16,7 +17,7 @@ import org.xtremeware.iudex.vo.BinaryRatingVo;
  */
 @ManagedBean
 @RequestScoped
-public class Rating {
+public class Rating implements Serializable {
 
     @ManagedProperty(value = "#{user}")
     private User user;

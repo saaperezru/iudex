@@ -1,5 +1,6 @@
 package org.xtremeware.iudex.presentation.controller;
 
+import java.io.Serializable;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
@@ -12,7 +13,7 @@ import org.xtremeware.iudex.helper.Config;
  */
 @ManagedBean
 @RequestScoped
-public class ForgottenPassword {
+public class ForgottenPassword implements Serializable {
     
     private String userName;
     

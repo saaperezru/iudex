@@ -1,5 +1,6 @@
 package org.xtremeware.iudex.presentation.controller;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 import javax.faces.application.FacesMessage;
@@ -20,7 +21,7 @@ import org.xtremeware.iudex.vo.UserVo;
  */
 @ManagedBean
 @RequestScoped
-public class EditUser {
+public class EditUser implements Serializable {
 
     private String firstName;
     private String lastName;

@@ -54,16 +54,20 @@ public class FeedbackEntity implements Serializable, Entity<FeedbackVo> {
             return false;
         }
         final FeedbackEntity other = (FeedbackEntity) obj;
-        if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
+        if (this.id != other.id &&
+                (this.id == null || !this.id.equals(other.id))) {
             return false;
         }
-        if (this.type != other.type && (this.type == null || !this.type.equals(other.type))) {
+        if (this.type != other.type && (this.type == null ||
+                !this.type.equals(other.type))) {
             return false;
         }
-        if ((this.content == null) ? (other.content != null) : !this.content.equals(other.content)) {
+        if ((this.content == null) ? (other.content != null) : !this.content.
+                equals(other.content)) {
             return false;
         }
-        if (this.date != other.date && (this.date == null || !this.date.equals(other.date))) {
+        if (this.date != other.date && (this.date == null ||
+                !this.date.equals(other.date))) {
             return false;
         }
         return true;
@@ -81,7 +85,8 @@ public class FeedbackEntity implements Serializable, Entity<FeedbackVo> {
 
     @Override
     public String toString() {
-        return "FeedbackEntity{" + "id=" + id + ", type=" + type + ", content=" + content + ", date=" + date + '}';
+        return "FeedbackEntity{" + "id=" + id + ", type=" + type + ", content=" +
+                content + ", date=" + date + '}';
     }
 
     @Override

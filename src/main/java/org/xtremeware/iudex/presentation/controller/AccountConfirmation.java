@@ -1,5 +1,6 @@
 package org.xtremeware.iudex.presentation.controller;
 
+import java.io.Serializable;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
@@ -11,7 +12,7 @@ import org.xtremeware.iudex.helper.Config;
  */
 @ManagedBean
 @RequestScoped
-public class AccountConfirmation {
+public class AccountConfirmation implements Serializable {
 
     @ManagedProperty(value = "#{param['key']}")
     private String key;

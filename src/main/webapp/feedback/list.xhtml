@@ -6,7 +6,8 @@
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:c="http://java.sun.com/jsp/jstl/core"
                 xmlns="http://www.w3.org/1999/xhtml"
-                xmlns:iudex="http://java.sun.com/jsf/composite/iudex">
+                xmlns:iudex="http://java.sun.com/jsf/composite/iudex"
+                xmlns:pou="http://primefaces.org/ui">
 
     <ui:define name="title">- Comentarios de realimentación</ui:define>
 
@@ -14,7 +15,7 @@
         <h:outputStylesheet library="css" name="feedback.css" />
         <div class="container">
             <div class="row">
-                <div class="span12">
+                <div class="span4">
                     <div class="well">
                         <h:form id="filterForm">
                             <legend>Comentarios de realimentación</legend>
@@ -30,12 +31,25 @@
                                 </div>
                             </div>
                         </h:form>
+
+                        <script type="text/javascript">
+                            function initPieChart(a, b, c) {
+                                this.cfg.seriesColors = ["#3a87ad", "#b94a48", "#51a351"];
+                                this.cfg.grid = {
+                                    background: '#ffffff',
+                                    shadow: false,
+                                    borderWidth: 0
+                                }
+                                this.cfg.highlighter.show = true;
+                            }
+                        </script>
+
+                        <pou:pieChart value="#{listFeedbacks.pieModel}" legendPosition="s" showDataLabels="true" fill="false" sliceMargin="4" shadow="false" extender="initPieChart" />
+
                     </div>
                 </div>
-            </div>
 
-            <div class="row">
-                <div class="span12">
+                <div class="span8">
                     <h:panelGroup id="feedbacksList">
                         <ui:repeat value="#{listFeedbacks.feedbacks}" var="feedback">
                             <div class="thumbnail expandable" style="padding: 15px;">

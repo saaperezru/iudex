@@ -5,10 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import org.primefaces.model.chart.PieChartModel;
 import org.xtremeware.iudex.businesslogic.facade.FeedbacksFacade;
 import org.xtremeware.iudex.helper.Config;
 import org.xtremeware.iudex.presentation.vovw.FeedbackVoVwFull;
 import org.xtremeware.iudex.presentation.vovw.builder.FeedbackVoVwBuilder;
+import org.xtremeware.iudex.vo.FeedbackTypeVo;
 import org.xtremeware.iudex.vo.FeedbackVo;
 
 /**
@@ -25,7 +27,23 @@ public class ListFeedbacks implements Serializable {
     private List<FeedbackVoVwFull> feedbacks;
     private List<Integer> pages;
     private Integer currentPage;
-
+    private PieChartModel pieModel;
+    
+    public PieChartModel getPieModel() {
+        if (pieModel == null) {
+            pieModel = new PieChartModel();
+            FeedbacksFacade feedbacksFacade = Config.getInstance().
+                    getFacadeFactory().getFeedbacksFacade();
+            List<FeedbackTypeVo> feedbackTypes = feedbacksFacade.
+                    getFeedbackTypes();
+            for (FeedbackTypeVo feedbackType : feedbackTypes) {
+                pieModel.set(feedbackType.getName(), feedbacksFacade.
+                        countFeedbacksByFeedbackType(feedbackType.getId()));
+            }
+        }
+        return pieModel;
+    }
+    
     public Integer getCurrentPage() {
         return currentPage;
     }
@@ -33,26 +51,26 @@ public class ListFeedbacks implements Serializable {
     public List<Integer> getPages() {
         return pages;
     }
-
+    
     public List<FeedbackVoVwFull> getFeedbacks() {
         if (feedbacks == null) {
             loadFeedbacks();
         }
         return feedbacks;
     }
-
+    
     public Long getFeedbackTypeId() {
         return feedbackTypeId;
     }
-
+    
     public void setFeedbackTypeId(Long feedbackTypeId) {
         this.feedbackTypeId = feedbackTypeId;
     }
-
+    
     public void loadFeedbacks() {
         loadFeedbacks(1);
     }
-
+    
     public void loadFeedbacks(int page) {
         FeedbacksFacade feedbacksFacade = Config.getInstance().getFacadeFactory().
                 getFeedbacksFacade();
@@ -62,13 +80,16 @@ public class ListFeedbacks implements Serializable {
         if (feedbackTypeId != null && !feedbackTypeId.equals(0L)) {
             feedbackVos = feedbacksFacade.getFeedbacksByFeedbackType(
                     feedbackTypeId, firstResult, pageSize);
-            pagesCount = (int)Math.ceil(feedbacksFacade.countFeedbacksByFeedbackType(feedbackTypeId) / (float)pageSize);
+            pagesCount = (int) Math.ceil(feedbacksFacade.
+                    countFeedbacksByFeedbackType(feedbackTypeId) /
+                    (float) pageSize);
         } else {
             feedbackVos = feedbacksFacade.getAllFeedbacks(firstResult, pageSize);
-            pagesCount = (int)Math.ceil(feedbacksFacade.countAllFeedbacks() / (float)pageSize);
+            pagesCount = (int) Math.ceil(feedbacksFacade.countAllFeedbacks() /
+                    (float) pageSize);
         }
         pages = new ArrayList<Integer>(pagesCount);
-        for(int i = 1; i <= pagesCount; i++){
+        for (int i = 1; i <= pagesCount; i++) {
             pages.add(i);
         }
         currentPage = page;

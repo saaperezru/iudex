@@ -41,3 +41,15 @@ pre.stack-trace {
     font-size: 10pt;
     margin-left: 15px;
 }
+
+.jqplot-target {
+    font-family: inherit !important;
+}
+
+table.jqplot-table-legend {
+    border-style: none !important;
+}
+
+td.jqplot-table-legend-swatch {
+    padding-right: 5px !important;
+}

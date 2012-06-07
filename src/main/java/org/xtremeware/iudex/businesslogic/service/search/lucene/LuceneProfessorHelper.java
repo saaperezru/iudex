@@ -19,7 +19,7 @@ import org.xtremeware.iudex.vo.ProfessorVo;
  *
  * @author josebermeo
  */
-public final class LuceneProfessorHelper extends LuceneHelper<Long,ProfessorVo> {
+public final class LuceneProfessorHelper extends LuceneHelper<Long, ProfessorVo> {
 
     private static LuceneProfessorHelper instance;
 
@@ -46,18 +46,16 @@ public final class LuceneProfessorHelper extends LuceneHelper<Long,ProfessorVo> 
         ResultCollector collector = null;
         IndexReader indexReader = null;
         try {
-            //FuzzyQuery fuzzyQuery = new FuzzyQuery(new Term(query, "name"));
-            Query q = new QueryParser(getVersion(), "name", getAnalyzer()).parse(query);
+            Query q = new QueryParser(getVersion(), "name", getAnalyzer()).parse(query + "~0.9");
             indexReader = IndexReader.open(getDirectory());
             IndexSearcher indexSearcher = new IndexSearcher(indexReader);
             collector = new ResultCollector(new HashSet<Integer>());
             indexSearcher.search(q, collector);
-            //indexSearcher.search(fuzzyQuery, collector);
         } catch (Exception exception) {
             throw new ExternalServiceException(exception.getMessage(), exception);
         }
         List<Long> resultsIds = new ArrayList<Long>();
-        for(Integer integer : collector.getBag()){
+        for (Integer integer : collector.getBag()) {
             try {
                 resultsIds.add(Long.parseLong(indexReader.document(integer).get("id")));
             } catch (Exception exception) {
@@ -66,7 +64,7 @@ public final class LuceneProfessorHelper extends LuceneHelper<Long,ProfessorVo> 
         }
         return resultsIds;
     }
-    
+
     public static synchronized LuceneProfessorHelper getInstance() {
         while (instance == null) {
             Directory directory = null;
@@ -81,7 +79,7 @@ public final class LuceneProfessorHelper extends LuceneHelper<Long,ProfessorVo> 
                     directory,
                     new StandardAnalyzer(Version.LUCENE_36, ConfigLucine.getSpanishStopWords()));
         }
-        
+
         return instance;
     }
 }

@@ -79,7 +79,7 @@ public class LuceneFeedbackHelper extends LuceneHelper<Long,FeedbackVo> {
             instance = new LuceneFeedbackHelper(IndexWriterConfig.OpenMode.CREATE_OR_APPEND,
                     Version.LUCENE_36,
                     directory,
-                    new StandardAnalyzer(Version.LUCENE_36, ConfigLucine.getSpanishStopWords()));
+                    new StandardAnalyzer(Version.LUCENE_36));
         }
         
         return instance;

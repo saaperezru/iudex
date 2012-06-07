@@ -47,13 +47,11 @@ public final class LuceneSubjectHelper extends LuceneHelper<Long, SubjectVo> {
         ResultCollector collector = null;
         IndexReader indexReader = null;
         try {
-            //FuzzyQuery fuzzyQuery = new FuzzyQuery(new Term(query, "name"));
-            Query q = new QueryParser(getVersion(), "name", getAnalyzer()).parse(query);
+            Query q = new QueryParser(getVersion(), "name", getAnalyzer()).parse(query+"~0.9");
             indexReader = IndexReader.open(getDirectory());
             IndexSearcher indexSearcher = new IndexSearcher(indexReader);
             collector = new ResultCollector(new HashSet<Integer>());
             indexSearcher.search(q, collector);
-            //indexSearcher.search(fuzzyQuery, collector);
         } catch (Exception exception) {
             throw new ExternalServiceException(exception.getMessage(), exception);
         }

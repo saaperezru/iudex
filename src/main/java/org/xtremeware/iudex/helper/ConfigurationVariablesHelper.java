@@ -44,6 +44,8 @@ public final class ConfigurationVariablesHelper {
 	public static final String EXCEPTIONS_BUNDLE_BASE_NAME = "exceptions.bundleBaseName";
 	public static final String LUCENE_PROFESSOR_INDEX_PATH = "luceneProfessorIndex.path";
         public static final String LUCENE_SUBJECT_INDEX_PATH = "luceneSubjectIndex.path";
+        public static final String LUCENE_FEEDBACK_INDEX_PATH = "luceneFeedbackIndex.path";
+        public static final String CREATE_LUCENE_INDEX = "lucene.create";
         
 
 	private ConfigurationVariablesHelper(String configurationFilePath)  {

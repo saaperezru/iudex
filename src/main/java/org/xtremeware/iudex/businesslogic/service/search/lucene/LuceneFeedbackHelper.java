@@ -5,34 +5,34 @@ import java.util.*;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.*;
-import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.index.IndexWriterConfig.OpenMode;
+import org.apache.lucene.index.*;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.search.*;
 import org.apache.lucene.store.*;
 import org.apache.lucene.util.Version;
 import org.xtremeware.iudex.helper.*;
-import org.xtremeware.iudex.vo.ProfessorVo;
+import org.xtremeware.iudex.helper.ExternalServiceException;
+import org.xtremeware.iudex.vo.*;
 
 /**
  *
  * @author josebermeo
  */
-public final class LuceneProfessorHelper extends LuceneHelper<Long,ProfessorVo> {
+public class LuceneFeedbackHelper extends LuceneHelper<Long,FeedbackVo> {
 
-    private static LuceneProfessorHelper instance;
+    private static LuceneFeedbackHelper instance;
 
-    private LuceneProfessorHelper(OpenMode openMode, Version version, Directory directory, Analyzer analyzer) {
+    private LuceneFeedbackHelper(IndexWriterConfig.OpenMode openMode, Version version, Directory directory, Analyzer analyzer) {
         super(openMode, version, directory, analyzer);
     }
 
     @Override
-    protected Document createDocument(ProfessorVo professorVo) {
+    protected Document createDocument(FeedbackVo feedbackVo) {
         Document document = new Document();
-        document.add(new Field("id", professorVo.getId().toString(), Field.Store.YES, Field.Index.ANALYZED));
-        document.add(new Field("name",
-                professorVo.getFirstName() + " " + professorVo.getLastName(), Field.Store.YES, Field.Index.ANALYZED));
+        document.add(new Field("id", feedbackVo.getId().toString(), Field.Store.YES, Field.Index.NOT_ANALYZED));
+        document.add(new Field("Type", feedbackVo.getFeedbackTypeId().toString(), Field.Store.YES, Field.Index.NOT_ANALYZED));
+        document.add(new Field("feedback",feedbackVo.getContent(), Field.Store.YES, Field.Index.ANALYZED));
         return document;
     }
 
@@ -67,16 +67,16 @@ public final class LuceneProfessorHelper extends LuceneHelper<Long,ProfessorVo> 
         return resultsIds;
     }
     
-    public static synchronized LuceneProfessorHelper getInstance() {
+    public static synchronized LuceneFeedbackHelper getInstance() {
         while (instance == null) {
             Directory directory = null;
             try {
                 directory = FSDirectory.open(new File(ConfigurationVariablesHelper.getVariable(
-                        ConfigurationVariablesHelper.LUCENE_PROFESSOR_INDEX_PATH)));
+                        ConfigurationVariablesHelper.LUCENE_FEEDBACK_INDEX_PATH)));
             } catch (Exception exception) {
                 throw new ExternalServiceException(exception.getMessage(), exception);
             }
-            instance = new LuceneProfessorHelper(OpenMode.CREATE_OR_APPEND,
+            instance = new LuceneFeedbackHelper(IndexWriterConfig.OpenMode.CREATE_OR_APPEND,
                     Version.LUCENE_36,
                     directory,
                     new StandardAnalyzer(Version.LUCENE_36, ConfigLucine.getSpanishStopWords()));

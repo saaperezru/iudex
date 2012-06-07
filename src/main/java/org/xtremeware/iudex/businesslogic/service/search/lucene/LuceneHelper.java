@@ -1,6 +1,5 @@
 package org.xtremeware.iudex.businesslogic.service.search.lucene;
 
-import java.io.*;
 import java.util.List;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.*;
@@ -23,18 +22,6 @@ public abstract class LuceneHelper<E,F extends IdentifiableValueObject<E>> {
         this.version = version;
         this.directory = directory;
         this.analyzer = analyzer;
-    }
-
-    protected static void deleteDir(File dir) {
-        if (dir.isDirectory()) {
-            String[] children = dir.list();
-            for (int i = 0; i < children.length; i++) {
-                deleteDir(new File(dir, children[i]));
-            }
-        }
-        if(!dir.delete()){
-            throw new RuntimeException("Failed to clean the folder");
-        }
     }
 
     public void addElementsToAnIndex(List<F> elements) {

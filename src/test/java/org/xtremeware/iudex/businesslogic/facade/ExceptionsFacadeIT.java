@@ -2,7 +2,9 @@ package org.xtremeware.iudex.businesslogic.facade;
 
 import java.util.Locale;
 import static org.junit.Assert.assertEquals;
+import org.junit.BeforeClass;
 import org.junit.Test;
+import org.xtremeware.iudex.businesslogic.helper.FacadesTestHelper;
 import org.xtremeware.iudex.helper.Config;
 
 /**
@@ -10,6 +12,11 @@ import org.xtremeware.iudex.helper.Config;
  * @author healarconr
  */
 public class ExceptionsFacadeIT {
+    
+    @BeforeClass
+    public static void setUpClass() throws Exception {
+        FacadesTestHelper.initializeDatabase();
+    }
 
     @Test
     public void testGetMessage() {

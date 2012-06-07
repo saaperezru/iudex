@@ -40,13 +40,15 @@ public final class Config {
         mailingConf.setSmtpServerPort(Integer.parseInt(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAILING_SMTP_PORT)));
         mailingConf.setSmtpUser(ConfigurationVariablesHelper.getVariable(
                 ConfigurationVariablesHelper.MAILING_SMTP_USER));
-		
-		try {
-            this.serviceFactory = new ServiceBuilder(daoFactory, mailingConf, this.persistenceUnit.createEntityManager());
-        } catch (Exception e) {
-            e.printStackTrace();
+        createIndex();
+        this.serviceFactory = new ServiceBuilder(daoFactory, mailingConf, this.persistenceUnit.createEntityManager());
+        facadeFactory = new FacadeFactory(serviceFactory, this.persistenceUnit);
+    }
+    
+    private void createIndex() {
+        if( ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.CREATE_LUCENE_INDEX).equals("true")){
+            ConfigLucine.indexDataBase(persistenceUnit.createEntityManager());
         }
-		facadeFactory = new FacadeFactory(serviceFactory, this.persistenceUnit);
     }
 
     public static synchronized Config getInstance() {

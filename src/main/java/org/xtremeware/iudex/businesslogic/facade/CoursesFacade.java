@@ -39,9 +39,9 @@ public class CoursesFacade extends AbstractFacade {
             try {
                 entityManager = getEntityManagerFactory().createEntityManager();
 
-                List<Long> professors = getServiceFactory().getProfessorsService().getByNameLike(entityManager, query);
+                List<Long> professors = getServiceFactory().getProfessorsService().search(query);
 
-                List<Long> subjects = getServiceFactory().getSubjectsService().getByNameLike(entityManager, query);
+                List<Long> subjects = getServiceFactory().getSubjectsService().search(query);
 
                 for (Long professorVoId : professors) {
                     for (CourseVo courseVo : getServiceFactory().getCoursesService().getByProfessorId(entityManager, professorVoId)) {

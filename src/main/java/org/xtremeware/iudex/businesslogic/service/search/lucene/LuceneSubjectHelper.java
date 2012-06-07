@@ -47,11 +47,13 @@ public final class LuceneSubjectHelper extends LuceneHelper<Long, SubjectVo> {
         ResultCollector collector = null;
         IndexReader indexReader = null;
         try {
+            //FuzzyQuery fuzzyQuery = new FuzzyQuery(new Term(query, "name"));
             Query q = new QueryParser(getVersion(), "name", getAnalyzer()).parse(query);
             indexReader = IndexReader.open(getDirectory());
             IndexSearcher indexSearcher = new IndexSearcher(indexReader);
             collector = new ResultCollector(new HashSet<Integer>());
             indexSearcher.search(q, collector);
+            //indexSearcher.search(fuzzyQuery, collector);
         } catch (Exception exception) {
             throw new ExternalServiceException(exception.getMessage(), exception);
         }
@@ -68,19 +70,17 @@ public final class LuceneSubjectHelper extends LuceneHelper<Long, SubjectVo> {
 
     public static synchronized LuceneSubjectHelper getInstance() {
         while (instance == null) {
-            FSDirectory directory = null;
+            Directory directory = null;
             try {
-                File file = new File(ConfigurationVariablesHelper.getVariable(
-                        ConfigurationVariablesHelper.LUCENE_SUBJECT_INDEX_PATH));
-                deleteDir(file);
-                directory = FSDirectory.open(file);
+                directory = FSDirectory.open(new File(ConfigurationVariablesHelper.getVariable(
+                        ConfigurationVariablesHelper.LUCENE_SUBJECT_INDEX_PATH)));
             } catch (Exception exception) {
                 throw new ExternalServiceException(exception.getMessage(), exception);
             }
-            instance = new LuceneSubjectHelper(IndexWriterConfig.OpenMode.CREATE,
+            instance = new LuceneSubjectHelper(IndexWriterConfig.OpenMode.CREATE_OR_APPEND,
                     Version.LUCENE_36,
                     directory,
-                    new StandardAnalyzer(Version.LUCENE_36));
+                    new StandardAnalyzer(Version.LUCENE_36, ConfigLucine.getSpanishStopWords()));
         }
         return instance;
     }

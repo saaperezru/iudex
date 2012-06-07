@@ -15,6 +15,7 @@ import org.xtremeware.iudex.vo.*;
 
 public class CourseVoVwBuilder {
 
+	private static final String NO_PERIOD_STRING = "Sin periodo.";
 	private static CourseVoVwBuilder instance;
 	private FacadeFactory facadeFactory;
 
@@ -36,7 +37,14 @@ public class CourseVoVwBuilder {
 				course.getSubjectVo().getName(),
 				course.getSubjectVo().getCode(), subjectFacade.getSubjectsRatingSummary(course.getSubjectVo().getId()));
 		ProfessorVoVwFull professor = ProfessorVoVwBuilder.getInstance().getProfessorFull(course.getProfessorVo());
-		return new CourseVoVwFull(course.getVo(), subject, professor);
+		PeriodVo period = facadeFactory.getPeriodsFacade().getPeriod(course.getVo().getPeriodId());
+		String periodString;
+		if (period == null) {
+			periodString = NO_PERIOD_STRING;
+		} else {
+			periodString = String.valueOf(period.getYear()) + " - " + String.valueOf(period.getSemester());
+		}
+		return new CourseVoVwFull(course.getVo(), subject, professor, periodString);
 	}
 
 	public List<CourseVoVwFull> getSearchResults(String query) {
@@ -49,6 +57,7 @@ public class CourseVoVwBuilder {
 		ArrayList<CourseVoVwFull> results = new ArrayList<CourseVoVwFull>(search.size());
 		HashMap<Long, ProfessorVoVwFull> professorsVo = new HashMap<Long, ProfessorVoVwFull>();
 		HashMap<Long, SubjectVoVwSmall> subjectsVo = new HashMap<Long, SubjectVoVwSmall>();
+		HashMap<Long, String> periods = new HashMap<Long, String>();
 
 		ProfessorVoVwFull professor;
 		SubjectVoVwSmall subject;
@@ -56,6 +65,7 @@ public class CourseVoVwBuilder {
 			CourseVoFull course = coursesFacade.getCourse(courseId);
 			Long professorId = course.getProfessorVo().getId();
 			Long subjectId = course.getSubjectVo().getId();
+			String periodString = NO_PERIOD_STRING;
 			//Loof for the VoVw instances of the professor of this course 
 			if (!professorsVo.containsKey(professorId)) {
 				//The instance of this professor doesn't exists, create it
@@ -71,8 +81,15 @@ public class CourseVoVwBuilder {
 				subject = new SubjectVoVwSmall(subjectId, subjectFull.getVo().getName(), subjectFull.getVo().getCode(), subjectFull.getRatingSummary());
 				subjectsVo.put(subjectId, subject);
 			}
+			PeriodVo period = facadeFactory.getPeriodsFacade().getPeriod(course.getVo().getPeriodId());
+			if (period != null) {
+				if (!periods.containsKey(course.getVo().getPeriodId())){
+					periods.put(course.getVo().getPeriodId(), String.valueOf(period.getYear()) + " - " + String.valueOf(period.getSemester()));
+				}
+				periodString = periods.get(course.getVo().getPeriodId());
+			}
 			//Now that you have the correct instances create the specific course VoVw
-			results.add(new CourseVoVwFull(course.getVo(), subject, professor));
+			results.add(new CourseVoVwFull(course.getVo(), subject, professor,periodString));
 		}
 
 		return results;

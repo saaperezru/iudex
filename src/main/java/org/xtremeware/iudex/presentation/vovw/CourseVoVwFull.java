@@ -9,12 +9,14 @@ public class CourseVoVwFull implements ValueObject{
 	private CourseVo vo;
 	private SubjectVoVwSmall subjectVo;
 	private ProfessorVoVwFull professorVo;
+	private String period;
 
 
-	public CourseVoVwFull(CourseVo vo, SubjectVoVwSmall subjectVo, ProfessorVoVwFull professorVo) {
+	public CourseVoVwFull(CourseVo vo, SubjectVoVwSmall subjectVo, ProfessorVoVwFull professorVo,String period) {
 		this.vo = vo;
 		this.subjectVo = subjectVo;
 		this.professorVo = professorVo;
+		this.period = period;
 	}
 
 	@Override
@@ -74,4 +76,11 @@ public class CourseVoVwFull implements ValueObject{
 		return vo.getRatingCount();
 	}
 
+	public String getPeriod() {
+		return period;
+	}
+
+	public void setPeriod(String period) {
+		this.period = period;
+	}
 }

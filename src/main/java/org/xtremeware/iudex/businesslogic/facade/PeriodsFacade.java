@@ -82,4 +82,19 @@ public class PeriodsFacade extends AbstractFacade {
         return periodVos;
 
     }
+
+	public PeriodVo getPeriod(long periodId){
+        EntityManager entityManager = null;
+		PeriodVo period = null;
+        try {
+            entityManager = getEntityManagerFactory().createEntityManager();
+            period = getServiceFactory().getPeriodsService().read(entityManager,periodId);
+        } catch (Exception enException) {
+            getServiceFactory().getLogService().error(enException.getMessage(), enException);
+            throw new RuntimeException(enException);
+        } finally {
+            FacadesHelperImplementation.closeEntityManager(entityManager);
+        }
+        return period;
+	}
 }

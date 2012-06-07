@@ -13,6 +13,7 @@ import org.xtremeware.iudex.businesslogic.DuplicityException;
 import org.xtremeware.iudex.businesslogic.service.MaxCommentsLimitReachedException;
 import org.xtremeware.iudex.helper.Config;
 import org.xtremeware.iudex.helper.MultipleMessagesException;
+import org.xtremeware.iudex.vo.BinaryRatingVo;
 import org.xtremeware.iudex.vo.CommentVo;
 
 /**
@@ -21,7 +22,7 @@ import org.xtremeware.iudex.vo.CommentVo;
  */
 @ManagedBean
 @ViewScoped
-public class CreateComment implements Serializable{
+public class CreateComment implements Serializable {
 
 	private String content;
 	private boolean anonymous;
@@ -36,8 +37,8 @@ public class CreateComment implements Serializable{
 	public CreateComment() {
 	}
 
-	public void createComment(){
-		if(user != null && user.isLoggedIn()){
+	public void createComment() {
+		if (user != null && user.isLoggedIn()) {
 			try {
 				CommentVo comment = new CommentVo();
 				comment.setAnonymous(anonymous);
@@ -45,7 +46,7 @@ public class CreateComment implements Serializable{
 				Date now = new Date();
 				comment.setDate(now);
 				comment.setCourseId(viewCourse.getCourse().getId());
-				comment.setRating((float)viewCourse.getCourseRating());
+				comment.setRating((float) viewCourse.getCourseRating());
 				comment.setUserId(user.getId());
 				Config.getInstance().getFacadeFactory().getCommentsFacade().createComment(comment);
 			} catch (MultipleMessagesException ex) {
@@ -90,7 +91,4 @@ public class CreateComment implements Serializable{
 		this.user = user;
 	}
 
-
-
-	
 }

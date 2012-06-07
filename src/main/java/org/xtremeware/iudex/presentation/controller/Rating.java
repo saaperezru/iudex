@@ -20,6 +20,7 @@ import org.xtremeware.iudex.vo.BinaryRatingVo;
 @RequestScoped
 public class Rating implements Serializable {
 
+	private static enum ratingState{NO_CHANGE,FROM_NEUTRAL,FROM_OPPOSED,TO_NEUTRAL};
     @ManagedProperty(value = "#{user}")
     private User user;
 
@@ -60,10 +61,10 @@ public class Rating implements Serializable {
      * desired rateValue.
      * @throws DataBaseException
      */
-    private int rateComment(CommentVoVwFull comment, int value) {
+    private ratingState rateComment(CommentVoVwFull comment, int value) {
 		CommentsFacade commentsFacade = Config.getInstance().getFacadeFactory().getCommentsFacade();
         Long commentId = comment.getId();
-        int returnValue = 0;
+        ratingState returnValue = ratingState.NO_CHANGE;
         if (user != null && user.isLoggedIn()) {
             Long userId = user.getId();
             int finalValue = 0; // Value to be stored in the comment
@@ -73,19 +74,22 @@ public class Rating implements Serializable {
                     int actualValue = commentRatingByUserId.getValue();
                     if (actualValue == value) {
                         finalValue = 0;
-                        returnValue = 2;
+                        returnValue = ratingState.TO_NEUTRAL;
                     } else if (actualValue == 0) {
                         finalValue = value;
-                        returnValue = 1;
+                        returnValue = ratingState.FROM_NEUTRAL;
                     } else {
                         finalValue = value;
-                        returnValue = -1;
+                        returnValue = ratingState.FROM_OPPOSED;
                     }
-                }
+                }else{
+					finalValue = value;
+					returnValue = ratingState.FROM_NEUTRAL;
+				}
                 Config.getInstance().getFacadeFactory().getCommentsFacade().rateComment(commentId, userId, finalValue);
             } catch (Exception ex) {
                 Logger.getLogger(ViewCourse.class.getName()).log(Level.SEVERE, null, ex);
-                returnValue = 0;
+                returnValue = ratingState.NO_CHANGE;
             }
         }
         return returnValue;
@@ -94,12 +98,12 @@ public class Rating implements Serializable {
 
     public void voteNegativeComment(CommentVoVwFull comment) {
         switch (rateComment(comment, -1)) {
-            case -1:
+            case FROM_OPPOSED:
                 comment.getRating().setPositive(comment.getRating().getPositive() - 1);
-            case 1:
+            case FROM_NEUTRAL:
                 comment.getRating().setNegative(comment.getRating().getNegative() + 1);
                 break;
-            case 2:
+            case TO_NEUTRAL:
                 comment.getRating().setNegative(comment.getRating().getNegative() - 1);
                 break;
         }
@@ -107,12 +111,12 @@ public class Rating implements Serializable {
 
     public void votePositiveComment(CommentVoVwFull comment) throws DataBaseException {
         switch (rateComment(comment, 1)) {
-            case -1:
+            case FROM_OPPOSED:
                 comment.getRating().setNegative(comment.getRating().getNegative() - 1);
-            case 1:
+            case FROM_NEUTRAL:
                 comment.getRating().setPositive(comment.getRating().getPositive() + 1);
                 break;
-            case 2:
+            case TO_NEUTRAL:
                 comment.getRating().setPositive(comment.getRating().getPositive() - 1);
                 break;
         }

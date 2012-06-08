@@ -7,9 +7,8 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
-import org.xtremeware.iudex.businesslogic.facade.CoursesFacade;
-import org.xtremeware.iudex.helper.Config;
-import org.xtremeware.iudex.presentation.vovw.CourseVoVwFull;
+import org.xtremeware.iudex.presentation.vovw.CourseListVoVwSmall;
+import org.xtremeware.iudex.presentation.vovw.CourseVoVwSmall;
 import org.xtremeware.iudex.presentation.vovw.builder.CourseVoVwBuilder;
 
 /**
@@ -17,23 +16,14 @@ import org.xtremeware.iudex.presentation.vovw.builder.CourseVoVwBuilder;
  * @author healarconr
  */
 
-@ManagedBean
+@ManagedBean 
 @ViewScoped
 public class Search implements Serializable {
 
     private String query;
-    private List<CourseVoVwFull> courses;
-    private List<Long> listCourses;
-
-    public List<Long> getListCourses() {
-        return listCourses;
-    }
-
-    public void setListCourses(List<Long> listCourses) {
-        this.listCourses = listCourses;
-    }
+    private List<CourseListVoVwSmall> courses;
     
-    public List<CourseVoVwFull> getCourses() {
+    public List<CourseListVoVwSmall> getCourses() {
         return courses;
     }
     
@@ -44,14 +34,14 @@ public class Search implements Serializable {
         return query;
     }
 
-    public void setCourses(List<CourseVoVwFull> courses) {
+    public void setCourses(List<CourseListVoVwSmall> courses) {
         this.courses = courses;
     }
 
     public void setQuery(String query) {
         this.query = query;
     }
-
+    
     public boolean isCoursesEmpty() {
         return (this.getCourses() == null || this.getCourses().isEmpty());
     }
@@ -67,14 +57,9 @@ public class Search implements Serializable {
         return "success";
     }
     
-    public String test(int id){
-        return "ID= "+id;
-    }
 
     public void preRenderView() {
-        CoursesFacade coursesFacade = Config.getInstance().getFacadeFactory().getCoursesFacade();
         try {
-            this.listCourses = coursesFacade.search(query);
             this.courses = CourseVoVwBuilder.getInstance().getSearchResults(query);
         } catch (Exception ex) {
             FacesContext.getCurrentInstance().addMessage("searchForm", new FacesMessage(ex.getMessage()));

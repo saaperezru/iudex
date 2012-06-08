@@ -8,7 +8,7 @@ import javax.faces.bean.ViewScoped;
 import org.primefaces.model.chart.PieChartModel;
 import org.xtremeware.iudex.businesslogic.facade.FeedbacksFacade;
 import org.xtremeware.iudex.helper.Config;
-import org.xtremeware.iudex.presentation.vovw.FeedbackVoVwFull;
+import org.xtremeware.iudex.presentation.vovw.FeedbackVoVwLarge;
 import org.xtremeware.iudex.presentation.vovw.builder.FeedbackVoVwBuilder;
 import org.xtremeware.iudex.vo.FeedbackTypeVo;
 import org.xtremeware.iudex.vo.FeedbackVo;
@@ -24,7 +24,7 @@ public class ListFeedbacks implements Serializable {
     // TODO: Make the page size configurable
     private static final int pageSize = 10;
     private Long feedbackTypeId;
-    private List<FeedbackVoVwFull> feedbacks;
+    private List<FeedbackVoVwLarge> feedbacks;
     private List<Integer> pages;
     private Integer currentPage;
     private PieChartModel pieModel;
@@ -52,7 +52,7 @@ public class ListFeedbacks implements Serializable {
         return pages;
     }
     
-    public List<FeedbackVoVwFull> getFeedbacks() {
+    public List<FeedbackVoVwLarge> getFeedbacks() {
         if (feedbacks == null) {
             loadFeedbacks();
         }
@@ -94,7 +94,7 @@ public class ListFeedbacks implements Serializable {
         }
         currentPage = page;
         FeedbackVoVwBuilder builder = FeedbackVoVwBuilder.getInstance();
-        feedbacks = new ArrayList<FeedbackVoVwFull>(feedbackVos.size());
+        feedbacks = new ArrayList<FeedbackVoVwLarge>(feedbackVos.size());
         for (FeedbackVo feedbackVo : feedbackVos) {
             feedbacks.add(builder.getFeedbackVoVwFull(feedbackVo));
         }

@@ -8,14 +8,14 @@ import org.xtremeware.iudex.vo.FeedbackVo;
  *
  * @author healarconr
  */
-public class FeedbackVoVwFull implements Serializable {
+public class FeedbackVoVwLarge implements Serializable {
 
     private Long feedbackTypeId;
     private String feedbackTypeName;
     private String content;
     private Date date;
 
-    public FeedbackVoVwFull(FeedbackVo feedbackVo, String feedbackTypeName) {
+    public FeedbackVoVwLarge(FeedbackVo feedbackVo, String feedbackTypeName) {
         feedbackTypeId = feedbackVo.getFeedbackTypeId();
         this.feedbackTypeName = feedbackTypeName;
         content = feedbackVo.getContent();
@@ -62,7 +62,7 @@ public class FeedbackVoVwFull implements Serializable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final FeedbackVoVwFull other = (FeedbackVoVwFull) obj;
+        final FeedbackVoVwLarge other = (FeedbackVoVwLarge) obj;
         if ((this.feedbackTypeName == null) ? (other.feedbackTypeName != null) :
                 !this.feedbackTypeName.equals(other.feedbackTypeName)) {
             return false;
@@ -93,7 +93,9 @@ public class FeedbackVoVwFull implements Serializable {
 
     @Override
     public String toString() {
-        return "FeedbackVoVwFull{" + "feedbackTypeName=" + feedbackTypeName +
-                ", content=" + content + ", date=" + date + '}';
+        return "FeedbackVoVwLarge{" + "feedbackTypeId=" + feedbackTypeId +
+                ", feedbackTypeName=" + feedbackTypeName + ", content=" +
+                content +
+                ", date=" + date + '}';
     }
 }

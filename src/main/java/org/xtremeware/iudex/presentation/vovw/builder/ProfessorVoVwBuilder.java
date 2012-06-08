@@ -3,7 +3,7 @@ package org.xtremeware.iudex.presentation.vovw.builder;
 import org.xtremeware.iudex.businesslogic.facade.FacadeFactory;
 import org.xtremeware.iudex.businesslogic.facade.ProfessorsFacade;
 import org.xtremeware.iudex.helper.Config;
-import org.xtremeware.iudex.presentation.vovw.ProfessorVoVwFull;
+import org.xtremeware.iudex.presentation.vovw.ProfessorVoVwLarge;
 import org.xtremeware.iudex.vo.ProfessorVo;
 import org.xtremeware.iudex.vo.ProfessorVoFull;
 
@@ -24,20 +24,20 @@ public class ProfessorVoVwBuilder {
 		return instance;
 	}
 
-	public ProfessorVoVwFull getProfessorFull(long professorId) {
+	public ProfessorVoVwLarge getProfessorFull(long professorId) {
 		ProfessorsFacade professorsFacade = facadeFactory.getProfessorsFacade();
 		ProfessorVoFull professor = professorsFacade.getProfessor(professorId);
 		if (professor == null) {
 			return null;
 		}
 		normalizeUrls(professor);
-		return new ProfessorVoVwFull(professor.getVo(), professor.getRatingSummary());
+		return new ProfessorVoVwLarge(professor.getVo(), professor.getRatingSummary());
 	}
 
-	public ProfessorVoVwFull getProfessorFull(ProfessorVo professor) {
+	public ProfessorVoVwLarge getProfessorFull(ProfessorVo professor) {
 		ProfessorsFacade professorsFacade = facadeFactory.getProfessorsFacade();
 		normalizeUrls(professor);
-		return new ProfessorVoVwFull(professor, professorsFacade.getProfessorRatingSummary(professor.getId()));
+		return new ProfessorVoVwLarge(professor, professorsFacade.getProfessorRatingSummary(professor.getId()));
 	}
 
 	private void normalizeUrls(ProfessorVoFull professor) {

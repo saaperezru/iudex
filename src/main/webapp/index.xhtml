@@ -10,8 +10,9 @@
                 xmlns:pou="http://primefaces.org/ui">
 
     <ui:define name="title">- Inicio</ui:define>
-    
+
     <ui:define name="content">
+        <h:outputStylesheet library="css" name="home.css" />
         <h:outputStylesheet library="css" name="captcha.css" />
         <div class="container">
             <div class="row">
@@ -164,50 +165,64 @@
                     </div>
                 </ui:fragment>
             </div>
-            <div class="row-fluid">
-                <form class="form-search" method="get" action="#{request.contextPath}/search.xhtml" >
-                    <input type="text" name="query" value="#{search.query}" class="search-query"   placeholder = "Busca un profesor o una materia">
-                        <button id="searchButton" type="submit" />
-                    </input>
-                </form>
-            </div>
             <div class="row">
                 <div class="span12">
-                    <div class="well">
-                        <h1>En <strong>IUDEX</strong> puedes</h1>
-                        <br/>
-                        <table>
-                            <tr>
-                                <td style="width: 33%; vertical-align: top;">
-                                    <div class="share-icon" />
-                                    <div>
-                                        <h2>Compartir</h2>
-                                        <p>Comparte tu opinión acerca de un profesor o un curso de forma anónima.</p>
-                                        <p>Así el resto de tus amigos sabrá si un profesor es «rajón», no sabe enseñar, llega tarde a clase o tiene metodologías.</p>
-                                    </div>
-
-                                </td>
-                                <td style="width: 33%; vertical-align: top;">
-                                    <div class="comment-icon" />
-                                    <div>
-                                        <h2>Comentar</h2>
-                                        <p>Comenta acerca de los temas que más te gustan de un profesor o de una materia.</p>
-                                    </div>
-
-                                </td>
-                                <td style="width: 33%; vertical-align: top;">
-                                    <div class="rate-icon" />
-                                    <div>
-                                        <h2>Calificar</h2>
-                                        <p>Califica profesores, cursos y materias.</p>
-                                        <p>Con esto ayudas a otros a seleccionar los mejores profesores y materias, a la vez que recibes los mejores consejos acerca de profesores y materias importantes para tu desarrollo profesional.</p>
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
+                    <form class="form-search" method="get" action="#{request.contextPath}/search.xhtml" >
+                        <input type="text" name="query" value="#{search.query}" class="search-query"   placeholder = "Busca un profesor o una materia">
+                            <button id="searchButton" type="submit" />
+                        </input>
+                    </form>
                 </div>
             </div>
+
+            <div class="row">
+                <div class="span12">
+                    <hr/>
+                    <h1>Comentarios más recientes</h1>        
+                    <br/>
+                </div>
+            </div>
+
+            <ui:repeat value="#{home.lastComments}" var="comment">
+                <div class="row">
+                    <div class="span12 thumbnail comment">
+                        <div class="row">
+                            <div class="span2 comment-photo">
+                                <div class="thumbnail">
+                                    <h:graphicImage value="#{comment.user.imageUrl}" alt="#{comment.user.username}" />
+                                </div>
+                                <h4><h:outputText value="#{comment.user.username}" /></h4>
+                                <h:outputText value="#{comment.user.mainProgram}" />
+                            </div>
+                            <div class="span10">
+                                <div class="comment-header">
+                                    <div class="pull-left">
+                                        <p>
+                                            <label>Curso:</label>
+                                            <h:outputText value="#{comment.subject}" /> -
+                                            <h:outputText value="#{comment.period}" />
+                                        </p>
+                                        <p>
+                                            <label>Profesor:</label>
+                                            <h:outputText value="#{comment.professor}" />
+                                        </p>
+                                    </div>
+                                    <div class="pull-right">
+                                        <label>Calificación del curso:</label>
+                                        <ui:repeat var="i" value="#{utils.buildArrayCeil(comment.courseRating)}">
+                                            <span class="star"/>
+                                        </ui:repeat>
+                                    </div>
+                                    <div class="clearfix" />
+                                </div>
+                                <p>
+                                    <h:outputText value="#{comment.content}" />
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ui:repeat>
         </div>
     </ui:define>
 </ui:composition>

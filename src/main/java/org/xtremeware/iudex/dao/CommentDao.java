@@ -22,7 +22,8 @@ public interface CommentDao extends CrudDao<CommentEntity> {
      * associated professor .
      * @return The list of found comments.
      */
-    List<CommentEntity> getByProfessorId(EntityManager entityManager, long professorId)
+    List<CommentEntity> getByProfessorId(EntityManager entityManager,
+            long professorId)
             throws DataBaseException;
 
     /**
@@ -35,7 +36,8 @@ public interface CommentDao extends CrudDao<CommentEntity> {
      * associated course.
      * @return The list of found comments.
      */
-    List<CommentEntity> getBySubjectId(EntityManager entityManager, long subjectId)
+    List<CommentEntity> getBySubjectId(EntityManager entityManager,
+            long subjectId)
             throws DataBaseException;
 
     /**
@@ -71,4 +73,7 @@ public interface CommentDao extends CrudDao<CommentEntity> {
      */
     int getUserCommentsCounter(EntityManager entityManager, long userId)
             throws DataBaseException;
+
+    List<CommentEntity> getLastComments(EntityManager entityManager,
+            int maxResults) throws DataBaseException;
 }

@@ -1,11 +1,18 @@
 package org.xtremeware.iudex.businesslogic.service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.EntityManager;
-import org.xtremeware.iudex.businesslogic.service.crudinterfaces.*;
+import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Create;
+import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Delete;
+import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Read;
+import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Update;
 import org.xtremeware.iudex.dao.AbstractDaoBuilder;
-import org.xtremeware.iudex.entity.*;
-import org.xtremeware.iudex.helper.*;
+import org.xtremeware.iudex.entity.CommentEntity;
+import org.xtremeware.iudex.helper.ConfigurationVariablesHelper;
+import org.xtremeware.iudex.helper.DataBaseException;
+import org.xtremeware.iudex.helper.MultipleMessagesException;
+import org.xtremeware.iudex.helper.SecurityHelper;
 import org.xtremeware.iudex.vo.CommentVo;
 
 /**
@@ -53,6 +60,15 @@ public class CommentsService extends CrudService<CommentVo, CommentEntity> {
         return commentVos;
     }
 
+    public List<CommentVo> getLastComments(EntityManager entityManager, int maxResults) throws DataBaseException {
+        List<CommentEntity> commentEntities = getDaoFactory().getCommentDao().getLastComments(entityManager, maxResults);
+        List<CommentVo> commentVos = new ArrayList<CommentVo>(commentEntities.size());
+        for(CommentEntity commentEntity : commentEntities) {
+            commentVos.add(commentEntity.toVo());
+        }
+        return commentVos;
+    }
+    
     /**
      * Validates whether the CommentVo object satisfies the business rules and
      * contains correct references to other objects

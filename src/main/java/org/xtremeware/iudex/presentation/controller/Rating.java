@@ -9,7 +9,7 @@ import javax.faces.bean.RequestScoped;
 import org.xtremeware.iudex.businesslogic.facade.CommentsFacade;
 import org.xtremeware.iudex.helper.Config;
 import org.xtremeware.iudex.helper.DataBaseException;
-import org.xtremeware.iudex.presentation.vovw.CommentVoVwFull;
+import org.xtremeware.iudex.presentation.vovw.CommentVoVwMedium;
 import org.xtremeware.iudex.vo.BinaryRatingVo;
 
 /**
@@ -61,7 +61,7 @@ public class Rating implements Serializable {
      * desired rateValue.
      * @throws DataBaseException
      */
-    private ratingState rateComment(CommentVoVwFull comment, int value) {
+    private ratingState rateComment(CommentVoVwMedium comment, int value) {
 		CommentsFacade commentsFacade = Config.getInstance().getFacadeFactory().getCommentsFacade();
         Long commentId = comment.getId();
         ratingState returnValue = ratingState.NO_CHANGE;
@@ -96,7 +96,7 @@ public class Rating implements Serializable {
 
     }
 
-    public void voteNegativeComment(CommentVoVwFull comment) {
+    public void voteNegativeComment(CommentVoVwMedium comment) {
         switch (rateComment(comment, -1)) {
             case FROM_OPPOSED:
                 comment.getRating().setPositive(comment.getRating().getPositive() - 1);
@@ -109,7 +109,7 @@ public class Rating implements Serializable {
         }
     }
 
-    public void votePositiveComment(CommentVoVwFull comment) throws DataBaseException {
+    public void votePositiveComment(CommentVoVwMedium comment) throws DataBaseException {
         switch (rateComment(comment, 1)) {
             case FROM_OPPOSED:
                 comment.getRating().setNegative(comment.getRating().getNegative() - 1);

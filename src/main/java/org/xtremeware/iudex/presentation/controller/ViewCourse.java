@@ -17,9 +17,9 @@ import org.primefaces.event.RateEvent;
 import org.xtremeware.iudex.businesslogic.facade.FacadeFactory;
 import org.xtremeware.iudex.helper.Config;
 import org.xtremeware.iudex.helper.MultipleMessagesException;
-import org.xtremeware.iudex.presentation.vovw.CommentVoVwFull;
-import org.xtremeware.iudex.presentation.vovw.CourseVoVwFull;
-import org.xtremeware.iudex.presentation.vovw.ProfessorVoVwFull;
+import org.xtremeware.iudex.presentation.vovw.CommentVoVwMedium;
+import org.xtremeware.iudex.presentation.vovw.CourseVoVwLarge;
+import org.xtremeware.iudex.presentation.vovw.ProfessorVoVwLarge;
 import org.xtremeware.iudex.presentation.vovw.SubjectVoVwSmall;
 import org.xtremeware.iudex.presentation.vovw.builder.CommentVoVwBuilder;
 import org.xtremeware.iudex.presentation.vovw.builder.CourseVoVwBuilder;
@@ -37,8 +37,8 @@ public class ViewCourse implements Serializable {
 	public ViewCourse() {
 		id = Long.valueOf(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id"));
 	}
-	private CourseVoVwFull course;
-	private List<CommentVoVwFull> comments;
+	private CourseVoVwLarge course;
+	private List<CommentVoVwMedium> comments;
 	private Long id;
 	private CourseRatingVo courseRating;
 	@ManagedProperty(value = "#{user}")
@@ -48,23 +48,23 @@ public class ViewCourse implements Serializable {
 		this.id = id;
 	}
 
-	public List<CommentVoVwFull> getComments() {
+	public List<CommentVoVwMedium> getComments() {
 		return comments;
 	}
 
-	public void setComments(List<CommentVoVwFull> comments) {
+	public void setComments(List<CommentVoVwMedium> comments) {
 		this.comments = comments;
 	}
 
-	public CourseVoVwFull getCourse() {
+	public CourseVoVwLarge getCourse() {
 		return course;
 	}
 
-	public void setCourse(CourseVoVwFull course) {
+	public void setCourse(CourseVoVwLarge course) {
 		this.course = course;
 	}
 
-	public ProfessorVoVwFull getProfessor() {
+	public ProfessorVoVwLarge getProfessor() {
 		return course.getProfessor();
 	}
 

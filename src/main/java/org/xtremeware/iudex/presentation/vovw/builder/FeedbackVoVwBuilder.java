@@ -2,7 +2,7 @@ package org.xtremeware.iudex.presentation.vovw.builder;
 
 import org.xtremeware.iudex.businesslogic.facade.FacadeFactory;
 import org.xtremeware.iudex.helper.Config;
-import org.xtremeware.iudex.presentation.vovw.FeedbackVoVwFull;
+import org.xtremeware.iudex.presentation.vovw.FeedbackVoVwLarge;
 import org.xtremeware.iudex.vo.FeedbackVo;
 
 /**
@@ -26,8 +26,8 @@ public class FeedbackVoVwBuilder {
         return instance;
     }
 
-    public FeedbackVoVwFull getFeedbackVoVwFull(FeedbackVo feedbackVo) {
-        return new FeedbackVoVwFull(feedbackVo,
+    public FeedbackVoVwLarge getFeedbackVoVwFull(FeedbackVo feedbackVo) {
+        return new FeedbackVoVwLarge(feedbackVo,
                 facadeFactory.getFeedbacksFacade().getFeedbackType(feedbackVo.
                 getFeedbackTypeId()).getName());
     }

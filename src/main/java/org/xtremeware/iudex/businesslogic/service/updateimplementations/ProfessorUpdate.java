@@ -25,7 +25,7 @@ public class ProfessorUpdate implements Update<ProfessorEntity> {
         ProfessorEntity professorEntity = getDao().read(entityManager, entity.getId());
         if (professorEntity != null) {
             professorEntity =  getDao().update(entityManager, entity);
-            LuceneProfessorHelper.getInstance().updateElementoInAnIndex(professorEntity.toVo());
+            LuceneProfessorHelper.getInstance().updateElementoInAnIndex(professorEntity.toVo(),entityManager);
             return professorEntity;
         } else {
             return null;

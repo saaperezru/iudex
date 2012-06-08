@@ -24,7 +24,7 @@ public class ProfessorCreation implements Create<ProfessorEntity>{
     public ProfessorEntity create(EntityManager entityManager, ProfessorEntity entity)
             throws DataBaseException, DuplicityException {
         getCrudDao().create(entityManager, entity);    
-        LuceneProfessorHelper.getInstance().addElementToAnIndex(entity.toVo());
+        LuceneProfessorHelper.getInstance().addElementToAnIndex(entity.toVo(), entityManager);
         
         return entity;
     }

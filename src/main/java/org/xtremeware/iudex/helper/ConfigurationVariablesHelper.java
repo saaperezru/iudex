@@ -47,6 +47,7 @@ public final class ConfigurationVariablesHelper {
         public static final String LUCENE_FEEDBACK_INDEX_PATH = "luceneFeedbackIndex.path";
         public static final String CREATE_LUCENE_INDEX = "lucene.create";
         public static final String SPANISH_STOP_WORDS_PATH = "spanishStopWords.path";
+        public static final String LUCENE_COURSE_INDEX_PATH = "luceneCourseIndex.path";
 
 	private ConfigurationVariablesHelper(String configurationFilePath)  {
 		try {

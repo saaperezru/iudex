@@ -10,13 +10,14 @@ import org.apache.lucene.search.Scorer;
  *
  * @author josebermeo
  */
-public class ResultCollector extends Collector {
+public class ResultCollector extends Collector{
 
     private final Set<Integer> bag;
 
     public ResultCollector(Set<Integer> bag) {
         this.bag = bag;
     }
+    
     private int base = 0;
 
     @Override

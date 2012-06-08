@@ -3,6 +3,7 @@ package org.xtremeware.iudex.businesslogic.service;
 import java.util.*;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.businesslogic.service.crudinterfaces.*;
+import org.xtremeware.iudex.businesslogic.service.search.Search;
 import org.xtremeware.iudex.dao.AbstractDaoBuilder;
 import org.xtremeware.iudex.entity.CourseEntity;
 import org.xtremeware.iudex.helper.*;
@@ -13,11 +14,11 @@ public class CoursesService extends CrudService<CourseVo, CourseEntity> {
     private static final double MIN_AVERAGE = 0.0;
     private static final double MAX_AVERAGE = 5.0;
     private static final long MIN_COUNT = 0L;
+    private Search search;
 
-    public CoursesService(AbstractDaoBuilder daoFactory,
-            Create create, Read read, Update update, Delete delete) {
+    public CoursesService(Search search, AbstractDaoBuilder daoFactory, Create create, Read read, Update update, Delete delete) {
         super(daoFactory, create, read, update, delete);
-
+        this.search = search;
     }
 
     @Override
@@ -97,6 +98,10 @@ public class CoursesService extends CrudService<CourseVo, CourseEntity> {
         if (!multipleMessageException.getMessages().isEmpty()) {
             throw multipleMessageException;
         }
+    }
+    
+    public List<Long> search(String query) {
+        return search.search(SecurityHelper.sanitizeHTML(query));
     }
 
     public List<CourseVo> getByProfessorId(EntityManager entityManager, long professorId)

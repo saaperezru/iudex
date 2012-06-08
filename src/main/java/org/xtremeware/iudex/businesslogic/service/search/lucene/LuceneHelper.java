@@ -1,6 +1,7 @@
 package org.xtremeware.iudex.businesslogic.service.search.lucene;
 
 import java.util.List;
+import javax.persistence.EntityManager;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.*;
 import org.apache.lucene.index.*;
@@ -24,22 +25,22 @@ public abstract class LuceneHelper<E,F extends IdentifiableValueObject<E>> {
         this.analyzer = analyzer;
     }
 
-    public void addElementsToAnIndex(List<F> elements) {
+    public void addElementsToAnIndex(List<F> elements, EntityManager entityManager) throws DataBaseException{
         IndexWriter indexWriter = startIndexWriter();
         Document document = null;
         for (F element : elements) {
-            document = createDocument(element);
+            document = createDocument(element,entityManager);
             writeADocument(indexWriter, document);
         }
         closeIndexWriter(indexWriter);
         openMode = OpenMode.APPEND;
     }
     
-    protected abstract Document createDocument(F element) ;
+    protected abstract Document createDocument(F element, EntityManager entityManager) throws DataBaseException;
 
-    public void addElementToAnIndex(F vo) {
+    public void addElementToAnIndex(F vo, EntityManager entityManager) throws DataBaseException{
         IndexWriter indexWriter = startIndexWriter();
-        Document document = createDocument(vo);
+        Document document = createDocument(vo,entityManager);
         writeADocument(indexWriter, document);
         closeIndexWriter(indexWriter);
         openMode = OpenMode.APPEND;
@@ -71,9 +72,9 @@ public abstract class LuceneHelper<E,F extends IdentifiableValueObject<E>> {
         }
     }
 
-    public void updateElementoInAnIndex(F vo) {
+    public void updateElementoInAnIndex(F vo, EntityManager entityManager) throws DataBaseException{
         IndexWriter indexWriter = startIndexWriter();
-        Document document = createDocument(vo);
+        Document document = createDocument(vo, entityManager);
         try {
             indexWriter.updateDocument(createTermForDelete(vo.getId()), document);
         } catch (Exception exception) {

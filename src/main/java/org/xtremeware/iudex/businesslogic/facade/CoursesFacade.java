@@ -33,27 +33,37 @@ public class CoursesFacade extends AbstractFacade {
         EntityManager entityManager = null;
 
         Set<Long> coursesIds = new HashSet<Long>();
+        List<Long> finalListcoursesIds = new ArrayList<Long>();
         if (query != null && !query.isEmpty()) {
 
 
             try {
                 entityManager = getEntityManagerFactory().createEntityManager();
+                return getServiceFactory().getCoursesService().search(query);
 
-                List<Long> professors = getServiceFactory().getProfessorsService().search(query);
+//                List<Long> professors = getServiceFactory().getProfessorsService().search(query);
+//
+//                List<Long> subjects = getServiceFactory().getSubjectsService().search(query);
+//                
+//                for (Long subjectVoId : subjects) {
+//                    for (CourseVo courseVo : getServiceFactory().getCoursesService().getBySubjectId(entityManager, subjectVoId)) {
+//                        if(!coursesIds.contains(courseVo.getId())){
+//                            coursesIds.add(courseVo.getId());
+//                            finalListcoursesIds.add(courseVo.getId());
+//                        }
+//                        
+//                    }
+//
+//                }
+//                for (Long professorVoId : professors) {
+//                    for (CourseVo courseVo : getServiceFactory().getCoursesService().getByProfessorId(entityManager, professorVoId)) {
+//                        if(!coursesIds.contains(courseVo.getId())){
+//                            coursesIds.add(courseVo.getId());
+//                            finalListcoursesIds.add(courseVo.getId());
+//                        }
+//                    }
+//                }
 
-                List<Long> subjects = getServiceFactory().getSubjectsService().search(query);
-
-                for (Long professorVoId : professors) {
-                    for (CourseVo courseVo : getServiceFactory().getCoursesService().getByProfessorId(entityManager, professorVoId)) {
-                        coursesIds.add(courseVo.getId());
-                    }
-                }
-                for (Long subjectVoId : subjects) {
-                    for (CourseVo courseVo : getServiceFactory().getCoursesService().getBySubjectId(entityManager, subjectVoId)) {
-                        coursesIds.add(courseVo.getId());
-                    }
-
-                }
 
             } catch (Exception e) {
                 getServiceFactory().getLogService().error(e.getMessage(), e);
@@ -62,7 +72,7 @@ public class CoursesFacade extends AbstractFacade {
                 FacadesHelper.closeEntityManager(entityManager);
             }
         }
-        return Arrays.asList(coursesIds.toArray(new Long[]{}));
+        return finalListcoursesIds;
     }
 
     public CourseVo createCourse(long professorId, long subjectId, long periodId)

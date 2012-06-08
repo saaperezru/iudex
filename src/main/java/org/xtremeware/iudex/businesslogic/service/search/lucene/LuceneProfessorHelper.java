@@ -2,6 +2,7 @@ package org.xtremeware.iudex.businesslogic.service.search.lucene;
 
 import java.io.File;
 import java.util.*;
+import javax.persistence.EntityManager;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.*;
@@ -29,7 +30,7 @@ public final class LuceneProfessorHelper extends LuceneHelper<Long, ProfessorVo>
     }
 
     @Override
-    protected Document createDocument(ProfessorVo professorVo) {
+    protected Document createDocument(ProfessorVo professorVo, EntityManager entityManager) throws DataBaseException{
         Document document = new Document();
         document.add(new Field("id", professorVo.getId().toString(), Field.Store.YES, Field.Index.ANALYZED));
         document.add(new Field("name",
@@ -44,21 +45,25 @@ public final class LuceneProfessorHelper extends LuceneHelper<Long, ProfessorVo>
 
     @Override
     public List<Long> search(String query) {
-        ResultCollector collector = null;
+        //ResultCollector collector = null;
+        TopScoreDocCollector collector = null;
         IndexReader indexReader = null;
         try {
             QueryParser q = new QueryParser(getVersion(), "name", getAnalyzer());
             indexReader = IndexReader.open(getDirectory());
             IndexSearcher indexSearcher = new IndexSearcher(indexReader);
-            collector = new ResultCollector(new HashSet<Integer>());      
+            //collector = new ResultCollector(new HashSet<Integer>(), new or);
+            collector = TopScoreDocCollector.create(10, true);
             indexSearcher.search(q.parse(query+fuzzySearch), collector);
         } catch (Exception exception) {
             throw new ExternalServiceException(exception.getMessage(), exception);
         }
         List<Long> resultsIds = new ArrayList<Long>();
-        for (Integer integer : collector.getBag()) {
+        ScoreDoc[] hits = collector.topDocs().scoreDocs;
+        
+        for (ScoreDoc scoreDoc : hits) {
             try {
-                resultsIds.add(Long.parseLong(indexReader.document(integer).get("id")));
+                resultsIds.add(Long.parseLong(indexReader.document(scoreDoc.doc).get("id")));
             } catch (Exception exception) {
                 throw new ExternalServiceException(exception.getMessage(), exception);
             }

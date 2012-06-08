@@ -3,6 +3,7 @@ package org.xtremeware.iudex.businesslogic.service;
 import org.xtremeware.iudex.businesslogic.service.createimplementations.*;
 import org.xtremeware.iudex.businesslogic.service.deleteimplementations.*;
 import org.xtremeware.iudex.businesslogic.service.readimplementations.SimpleRead;
+import org.xtremeware.iudex.businesslogic.service.search.CourseSearch;
 import org.xtremeware.iudex.businesslogic.service.search.ProfessorSearch;
 import org.xtremeware.iudex.businesslogic.service.search.SubjectSearch;
 import org.xtremeware.iudex.businesslogic.service.updateimplementations.*;
@@ -79,11 +80,12 @@ public class ServiceBuilder {
 
     public CoursesService getCoursesService() {
         if (coursesService == null) {
-            coursesService = new CoursesService(getDaoFactory(),
-                    new SimpleCreate<CourseEntity>(getDaoFactory().getCourseDao()),
+            coursesService = new CoursesService(new CourseSearch(),
+                    getDaoFactory(),
+                    new CourseCreation(getDaoFactory().getCourseDao()),
                     new SimpleRead<CourseEntity>(getDaoFactory().getCourseDao()),
-                    new SimpleUpdate<CourseEntity>(getDaoFactory().getCourseDao()),
-                    new SimpleDelete<CourseEntity>(getDaoFactory().getCourseDao()));
+                    new CourseUpdate(getDaoFactory().getCourseDao()),
+                    new CourseDelete(getDaoFactory().getCourseDao()));
         }
         return coursesService;
     }

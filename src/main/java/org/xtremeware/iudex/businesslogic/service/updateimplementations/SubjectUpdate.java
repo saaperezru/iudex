@@ -25,7 +25,7 @@ public class SubjectUpdate implements Update<SubjectEntity> {
         SubjectEntity subjectEntity = getDao().read(entityManager, entity.getId());
         if (subjectEntity != null) {
             subjectEntity = getDao().update(entityManager, entity);
-            LuceneSubjectHelper.getInstance().updateElementoInAnIndex(subjectEntity.toVo());
+            LuceneSubjectHelper.getInstance().updateElementoInAnIndex(subjectEntity.toVo(),entityManager);
             return subjectEntity;
         } else {
             return null;

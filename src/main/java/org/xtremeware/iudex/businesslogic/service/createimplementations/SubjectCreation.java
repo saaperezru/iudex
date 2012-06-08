@@ -24,7 +24,7 @@ public class SubjectCreation implements Create<SubjectEntity> {
     public SubjectEntity create(EntityManager entityManager, SubjectEntity entity)
             throws DataBaseException, DuplicityException {
         getCrudDao().create(entityManager, entity);
-        LuceneSubjectHelper.getInstance().addElementToAnIndex(entity.toVo());
+        LuceneSubjectHelper.getInstance().addElementToAnIndex(entity.toVo(), entityManager);
 
         return entity;
     }

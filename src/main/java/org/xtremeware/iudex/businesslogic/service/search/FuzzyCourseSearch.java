@@ -7,13 +7,11 @@ import org.xtremeware.iudex.businesslogic.service.search.lucene.LuceneCourseHelp
  *
  * @author josebermeo
  */
-public class CourseSearch implements Search<Long> {
+public class FuzzyCourseSearch implements Search<Long> {
 
     @Override
     public List<Long> search(String query, int totalHints) {
-        return LuceneCourseHelper.getInstance().search(query,totalHints);
+        return LuceneCourseHelper.getInstance().fussySearch(query,totalHints);
     }
     
 }
-    
-

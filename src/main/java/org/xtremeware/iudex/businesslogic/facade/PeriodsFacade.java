@@ -14,7 +14,7 @@ public class PeriodsFacade extends AbstractFacade {
         super(serviceFactory, emFactory);
     }
 
-    public void deletePeriod(long periodId) 
+    public void deletePeriod(long periodId)
             throws DataBaseException {
         EntityManager entityManager = null;
         EntityTransaction transaction = null;
@@ -41,9 +41,9 @@ public class PeriodsFacade extends AbstractFacade {
      * @return Returns null if there is a problem while persisting (logs all
      * errors) and throws an exception if data isn't valid.
      */
-    public PeriodVo createPeriod(int year, int semester) 
+    public PeriodVo createPeriod(int year, int semester)
             throws MultipleMessagesException, DataBaseException, DuplicityException {
-       
+
         PeriodVo periodVo = new PeriodVo();
         periodVo.setYear(year);
         periodVo.setSemester(semester);
@@ -60,7 +60,7 @@ public class PeriodsFacade extends AbstractFacade {
             FacadesHelper.checkException(exception, MultipleMessagesException.class);
             FacadesHelper.checkDuplicityViolation(entityManager, transaction, exception);
             FacadesHelper.rollbackTransaction(entityManager, transaction, exception);
-        }finally {
+        } finally {
             FacadesHelper.closeEntityManager(entityManager);
         }
         return periodVo;
@@ -83,12 +83,12 @@ public class PeriodsFacade extends AbstractFacade {
 
     }
 
-	public PeriodVo getPeriod(long periodId){
+    public PeriodVo getPeriod(long periodId) {
         EntityManager entityManager = null;
-		PeriodVo period = null;
+        PeriodVo period = null;
         try {
             entityManager = getEntityManagerFactory().createEntityManager();
-            period = getServiceFactory().getPeriodsService().read(entityManager,periodId);
+            period = getServiceFactory().getPeriodsService().read(entityManager, periodId);
         } catch (Exception enException) {
             getServiceFactory().getLogService().error(enException.getMessage(), enException);
             throw new RuntimeException(enException);
@@ -96,5 +96,5 @@ public class PeriodsFacade extends AbstractFacade {
             FacadesHelper.closeEntityManager(entityManager);
         }
         return period;
-	}
+    }
 }

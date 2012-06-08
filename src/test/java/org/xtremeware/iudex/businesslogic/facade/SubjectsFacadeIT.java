@@ -590,10 +590,4 @@ public class SubjectsFacadeIT {
         assertNull(subjectsFacade.getSubjectsRatingSummary(3372983L));
 
     }
-    
-    
-    @Test
-    public void test1() throws Exception {
-        LuceneSubjectHelper.getInstance().search("SEGURIDAD");
-    }
 }

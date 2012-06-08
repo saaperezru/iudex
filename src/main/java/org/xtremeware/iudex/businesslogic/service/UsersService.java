@@ -98,15 +98,15 @@ public class UsersService extends CrudService<UserVo, UserEntity> {
     }
 
     private void checkUserName(MultipleMessagesException multipleMessagesException,
-            String UserName) {
-        if (UserName == null) {
+            String userName) {
+        if (userName == null) {
             multipleMessagesException.addMessage(
                     "user.userName.null");
         } else {
-            if (UserName.length() < MIN_USERNAME_LENGTH) {
+            if (userName.length() < MIN_USERNAME_LENGTH) {
                 multipleMessagesException.addMessage(
                         "user.userName.tooShort");
-            } else if (UserName.length() > MAX_USERNAME_LENGTH) {
+            } else if (userName.length() > MAX_USERNAME_LENGTH) {
                 multipleMessagesException.addMessage(
                         "user.userName.tooLong");
             }

@@ -3,9 +3,6 @@ package org.xtremeware.iudex.businesslogic.service;
 import org.xtremeware.iudex.businesslogic.service.createimplementations.*;
 import org.xtremeware.iudex.businesslogic.service.deleteimplementations.*;
 import org.xtremeware.iudex.businesslogic.service.readimplementations.SimpleRead;
-import org.xtremeware.iudex.businesslogic.service.search.CourseSearch;
-import org.xtremeware.iudex.businesslogic.service.search.ProfessorSearch;
-import org.xtremeware.iudex.businesslogic.service.search.SubjectSearch;
 import org.xtremeware.iudex.businesslogic.service.updateimplementations.*;
 import org.xtremeware.iudex.dao.AbstractDaoBuilder;
 import org.xtremeware.iudex.entity.*;
@@ -80,8 +77,7 @@ public class ServiceBuilder {
 
     public CoursesService getCoursesService() {
         if (coursesService == null) {
-            coursesService = new CoursesService(new CourseSearch(),
-                    getDaoFactory(),
+            coursesService = new CoursesService(getDaoFactory(),
                     new CourseCreation(getDaoFactory().getCourseDao()),
                     new SimpleRead<CourseEntity>(getDaoFactory().getCourseDao()),
                     new CourseUpdate(getDaoFactory().getCourseDao()),
@@ -130,11 +126,10 @@ public class ServiceBuilder {
     public ProfessorsService getProfessorsService() {
         if (professorsService == null) {
             professorsService = new ProfessorsService(getDaoFactory(),
-                    new ProfessorCreation(getDaoFactory().getProfessorDao()),
+                    new SimpleCreate<ProfessorEntity>(getDaoFactory().getProfessorDao()),
                     new SimpleRead<ProfessorEntity>(getDaoFactory().getProfessorDao()),
-                    new ProfessorUpdate(getDaoFactory().getProfessorDao()),
-                    new ProfessorDelete(getDaoFactory().getProfessorDao()),
-                    new ProfessorSearch());
+                    new SimpleUpdate<ProfessorEntity>(getDaoFactory().getProfessorDao()),
+                    new SimpleDelete<ProfessorEntity>(getDaoFactory().getProfessorDao()));
         }
         return professorsService;
     }
@@ -164,25 +159,24 @@ public class ServiceBuilder {
     public SubjectsService getSubjectsService() {
         if (subjectsService == null) {
             subjectsService = new SubjectsService(getDaoFactory(),
-                    new SubjectCreation(getDaoFactory().getSubjectDao()),
+                    new SimpleCreate<SubjectEntity>(getDaoFactory().getSubjectDao()),
                     new SimpleRead<SubjectEntity>(getDaoFactory().getSubjectDao()),
-                    new SubjectUpdate(getDaoFactory().getSubjectDao()),
-                    new SubjectDelete(getDaoFactory().getSubjectDao()),
-                    new SubjectSearch());
+                    new SimpleUpdate<SubjectEntity>(getDaoFactory().getSubjectDao()),
+                    new SimpleDelete<SubjectEntity>(getDaoFactory().getSubjectDao()));
         }
         return subjectsService;
     }
 
     public SubjectRatingsService getSubjectRatingsService() {
-		if (subjectRatingsService == null) {
-			subjectRatingsService = new SubjectRatingsService(getDaoFactory(),
-					new SimpleCreate<SubjectRatingEntity>(getDaoFactory().getSubjectRatingDao()),
-					new SimpleRead<SubjectRatingEntity>(getDaoFactory().getSubjectRatingDao()),
-					new SimpleUpdate<SubjectRatingEntity>(getDaoFactory().getSubjectRatingDao()),
-					new SimpleDelete<SubjectRatingEntity>(getDaoFactory().getSubjectRatingDao()));
-		}
-		return subjectRatingsService;
-	}
+        if (subjectRatingsService == null) {
+            subjectRatingsService = new SubjectRatingsService(getDaoFactory(),
+                    new SimpleCreate<SubjectRatingEntity>(getDaoFactory().getSubjectRatingDao()),
+                    new SimpleRead<SubjectRatingEntity>(getDaoFactory().getSubjectRatingDao()),
+                    new SimpleUpdate<SubjectRatingEntity>(getDaoFactory().getSubjectRatingDao()),
+                    new SimpleDelete<SubjectRatingEntity>(getDaoFactory().getSubjectRatingDao()));
+        }
+        return subjectRatingsService;
+    }
 
     public UsersService getUsersService() {
         if (usersService == null) {

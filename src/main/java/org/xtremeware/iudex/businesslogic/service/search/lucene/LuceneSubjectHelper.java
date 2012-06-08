@@ -23,7 +23,6 @@ import org.xtremeware.iudex.vo.SubjectVo;
 public final class LuceneSubjectHelper extends LuceneHelper<Long, SubjectVo> {
 
     private static LuceneSubjectHelper instance;
-    private final String fuzzySearch = "~";
 
     private LuceneSubjectHelper(OpenMode openMode, Version version, Directory directory, Analyzer analyzer) {
         super(openMode, version, directory, analyzer);
@@ -42,43 +41,17 @@ public final class LuceneSubjectHelper extends LuceneHelper<Long, SubjectVo> {
     protected Term createTermForDelete(Long id) {
         return new Term(id.toString(), "id");
     }
-
-//    @Override
-//    public List<Long> search(String query) {
-//        ResultCollector collector = null;
-//        IndexReader indexReader = null;
-//        try {
-//            QueryParser q = new QueryParser(getVersion(), "name", getAnalyzer());
-//            indexReader = IndexReader.open(getDirectory());
-//            IndexSearcher indexSearcher = new IndexSearcher(indexReader);
-//            collector = new ResultCollector(new HashSet<Integer>());      
-//            indexSearcher.search(q.parse(query+fuzzySearch), collector);
-//        } catch (Exception exception) {
-//            throw new ExternalServiceException(exception.getMessage(), exception);
-//        }
-//        List<Long> resultsIds = new ArrayList<Long>();
-//        for (Integer integer : collector.getBag()) {
-//            try {
-//                resultsIds.add(Long.parseLong(indexReader.document(integer).get("id")));
-//            } catch (Exception exception) {
-//                throw new ExternalServiceException(exception.getMessage(), exception);
-//            }
-//        }
-//        return resultsIds;
-//    }
     
     @Override
-    public List<Long> search(String query) {
-        //ResultCollector collector = null;
+    public List<Long> search(String query, int totalHints) {
         TopScoreDocCollector collector = null;
         IndexReader indexReader = null;
         try {
             QueryParser q = new QueryParser(getVersion(), "name", getAnalyzer());
             indexReader = IndexReader.open(getDirectory());
             IndexSearcher indexSearcher = new IndexSearcher(indexReader);
-            //collector = new ResultCollector(new HashSet<Integer>(), new or);
-            collector = TopScoreDocCollector.create(10, true);
-            indexSearcher.search(q.parse(query+fuzzySearch), collector);
+            collector = TopScoreDocCollector.create(totalHints, true);
+            indexSearcher.search(q.parse(query), collector);
         } catch (Exception exception) {
             throw new ExternalServiceException(exception.getMessage(), exception);
         }

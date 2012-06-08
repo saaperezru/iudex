@@ -14,6 +14,8 @@ import org.xtremeware.iudex.vo.RatingSummaryVo;
  * @author josebermeo
  */
 public abstract class SqlBinaryRatingDao<E extends Entity> implements BinaryRatingDao<E>, CrudDao<E> {
+    
+    private static final String objectId = "evaluatedObjectId"; 
 
     /**
      * Returns a list of rating entities given the evaluated object
@@ -28,7 +30,7 @@ public abstract class SqlBinaryRatingDao<E extends Entity> implements BinaryRati
         checkEntityManager(entityManager);
         try {
             return entityManager.createNamedQuery(getQueryForEvaluatedObjectId(), getEntityClass()).
-                    setParameter("evaluatedObjectId", evaluatedObjectId).getResultList();
+                    setParameter(objectId, evaluatedObjectId).getResultList();
         } catch (Exception e) {
             throw new DataBaseException(e.getMessage(), e.getCause());
         }
@@ -49,7 +51,7 @@ public abstract class SqlBinaryRatingDao<E extends Entity> implements BinaryRati
         checkEntityManager(entityManager);
         try {
             return (E) entityManager.createNamedQuery(getQueryForEvaluatedObjectIdAndUserId(), getEntityClass()).
-                    setParameter("evaluatedObjectId", evaluatedObjectId).setParameter("userId", userId).getSingleResult();
+                    setParameter(objectId, evaluatedObjectId).setParameter("userId", userId).getSingleResult();
         } catch (NoResultException noResultException) {
             return null;
         } catch (Exception exception) {
@@ -92,10 +94,10 @@ public abstract class SqlBinaryRatingDao<E extends Entity> implements BinaryRati
 
         try {
             ratingSummaryVo.setPositive(entityManager.createNamedQuery(getQueryForPositiveRating(), Long.class).
-                    setParameter("evaluatedObjectId", evaluatedObjectId).getSingleResult().intValue());
+                    setParameter(objectId, evaluatedObjectId).getSingleResult().intValue());
 
             ratingSummaryVo.setNegative(entityManager.createNamedQuery(getQueryForNegativeRating(), Long.class).
-                    setParameter("evaluatedObjectId", evaluatedObjectId).getSingleResult().intValue());
+                    setParameter(objectId, evaluatedObjectId).getSingleResult().intValue());
         } catch (Exception e) {
             throw new DataBaseException(e.getMessage(), e.getCause());
         }

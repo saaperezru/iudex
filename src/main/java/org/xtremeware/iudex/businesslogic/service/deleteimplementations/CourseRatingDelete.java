@@ -2,12 +2,8 @@ package org.xtremeware.iudex.businesslogic.service.deleteimplementations;
 
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Delete;
-import org.xtremeware.iudex.dao.AbstractDaoBuilder;
-import org.xtremeware.iudex.dao.CourseDao;
-import org.xtremeware.iudex.dao.CrudDao;
-import org.xtremeware.iudex.entity.CourseEntity;
-import org.xtremeware.iudex.entity.CourseRatingEntity;
-import org.xtremeware.iudex.helper.Config;
+import org.xtremeware.iudex.dao.*;
+import org.xtremeware.iudex.entity.*;
 import org.xtremeware.iudex.helper.DataBaseException;
 
 public class CourseRatingDelete implements Delete<CourseRatingEntity> {

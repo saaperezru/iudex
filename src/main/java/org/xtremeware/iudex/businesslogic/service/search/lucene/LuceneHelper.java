@@ -97,7 +97,7 @@ public abstract class LuceneHelper<E,F extends IdentifiableValueObject<E>> {
 
     }
     
-    public abstract List<E> search(String query);
+    public abstract List<E> search(String query, int totalhints);
 
     protected Analyzer getAnalyzer() {
         return analyzer;

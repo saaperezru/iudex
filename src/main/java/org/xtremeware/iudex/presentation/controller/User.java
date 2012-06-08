@@ -1,10 +1,8 @@
 package org.xtremeware.iudex.presentation.controller;
 
-import java.io.IOException;
 import java.io.Serializable;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.context.FacesContext;
 import org.xtremeware.iudex.helper.Role;
 
 /**

@@ -50,8 +50,8 @@ public class UsersFacade extends AbstractFacade {
      * @return the added user
      * @throws MultipleMessagesException if there are validation problems
      */
-    public UserVo createUser(UserVo user) 
-            throws MultipleMessagesException,DuplicityException {
+    public UserVo createUser(UserVo user)
+            throws MultipleMessagesException, DuplicityException {
         EntityManager entityManager = null;
         EntityTransaction transaction = null;
         UserVo newUser = null;
@@ -98,7 +98,7 @@ public class UsersFacade extends AbstractFacade {
      * @throws InactiveUserException if the user is still inactive
      * @throws MultipleMessagesException if there are validation problems
      */
-    public UserVo logIn(String username, String password) 
+    public UserVo logIn(String username, String password)
             throws InactiveUserException, MultipleMessagesException {
         EntityManager entityManager = null;
         UserVo userVo = null;
@@ -223,7 +223,7 @@ public class UsersFacade extends AbstractFacade {
             FacadesHelper.closeEntityManager(entityManager);
         }
     }
-    
+
     public void deleteUser(long userId) throws DataBaseException {
         EntityManager entityManager = null;
         EntityTransaction transaction = null;
@@ -241,24 +241,24 @@ public class UsersFacade extends AbstractFacade {
             FacadesHelper.closeEntityManager(entityManager);
         }
     }
-	
-	/**
-	 * 	Searches for a user with the specified id. If noting found returns null.
-	 * @param userId
-	 * @return Found user. If nothing was found return null.
-	 */
-	public UserVo getUser(long userId){
+
+    /**
+     * Searches for a user with the specified id. If noting found returns null.
+     *
+     * @param userId
+     * @return Found user. If nothing was found return null.
+     */
+    public UserVo getUser(long userId) {
         EntityManager entityManager = null;
-        EntityTransaction transaction = null;
-		UserVo user = null;
+        UserVo user = null;
         try {
             entityManager = getEntityManagerFactory().createEntityManager();
-			user = getServiceFactory().getUsersService().read(entityManager, userId);
+            user = getServiceFactory().getUsersService().read(entityManager, userId);
         } catch (Exception exception) {
             getServiceFactory().getLogService().error(exception.getMessage(), exception);
         } finally {
             FacadesHelper.closeEntityManager(entityManager);
         }
-		return user;
-	}
+        return user;
+    }
 }

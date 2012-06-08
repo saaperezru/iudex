@@ -44,7 +44,7 @@ public class CourseVoVwBuilder {
 		CoursesFacade coursesFacade = facadeFactory.getCoursesFacade();
 
 		Date beforeSearch = new Date();
-		List<Long> search = coursesFacade.search(query);
+		List<Long> search = coursesFacade.search(query,100);
 		Date afterSearch = new Date();
 		Config.getInstance().getServiceFactory().getLogService().info("Searching for " + query + " took : " + String.valueOf(afterSearch.getTime() - beforeSearch.getTime()));
 		ArrayList<CourseVoVwLarge> results = new ArrayList<CourseVoVwLarge>(search.size());

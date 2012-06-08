@@ -1,26 +1,25 @@
 package org.xtremeware.iudex.presentation.vovw;
 
-import java.util.List;
 import org.xtremeware.iudex.vo.ValueObject;
 
-public class UserVoVwSmall implements ValueObject{
+public class UserVoVwSmall implements ValueObject {
 
     private Long id;
     private String name;
     private String username;
-	private String mainProgram;
-	private String imageUrl;
+    private String mainProgram;
+    private String imageUrl;
 
     public UserVoVwSmall(Long id, String name, String username) {
     }
 
-	public UserVoVwSmall(long userId, String name, String userName, String mainProgram, String image) {
+    public UserVoVwSmall(long userId, String name, String userName, String mainProgram, String image) {
         this.id = userId;
         this.name = name;
         this.username = userName;
-		this.mainProgram = mainProgram;
-		this.imageUrl = image;
-	}
+        this.mainProgram = mainProgram;
+        this.imageUrl = image;
+    }
 
     @Override
     public boolean equals(Object obj) {
@@ -81,20 +80,19 @@ public class UserVoVwSmall implements ValueObject{
         this.username = username;
     }
 
-	public String getMainProgram() {
-		return mainProgram;
-	}
+    public String getMainProgram() {
+        return mainProgram;
+    }
 
-	public void setMainProgram(String mainProgram) {
-		this.mainProgram = mainProgram;
-	}
+    public void setMainProgram(String mainProgram) {
+        this.mainProgram = mainProgram;
+    }
 
-	public String getImageUrl() {
-		return imageUrl;
-	}
+    public String getImageUrl() {
+        return imageUrl;
+    }
 
-	public void setImageUrl(String imageUrl) {
-		this.imageUrl = imageUrl;
-	}
-
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
 }

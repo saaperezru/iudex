@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.xtremeware.iudex.businesslogic.service.search.lucene;
 
 import java.io.File;
@@ -36,7 +32,7 @@ public class LuceneCourseHelper extends LuceneHelper<Long, CourseVo> {
 
     private static LuceneCourseHelper instance;
     private AbstractDaoBuilder abstractDaoBuilder;
-    private final String fuzzySearch = "~0.6"; 
+    private static final String fuzzySearch = "~"; 
 
     private LuceneCourseHelper(AbstractDaoBuilder abstractDaoBuilder, OpenMode openMode, Version version, Directory directory, Analyzer analyzer) {
         super(openMode, version, directory, analyzer);
@@ -64,18 +60,20 @@ public class LuceneCourseHelper extends LuceneHelper<Long, CourseVo> {
     protected Term createTermForDelete(Long id) {
         return new Term(id.toString(), "id");
     }
+    
+    public List<Long> fussySearch(String query, int totalHints) {
+        return search(query+fuzzySearch, totalHints);   
+    }
 
     @Override
-    public List<Long> search(String query) {
-        //ResultCollector collector = null;
+    public List<Long> search(String query, int totalHints) {
         TopScoreDocCollector collector = null;
         IndexReader indexReader = null;
         try {
             QueryParser q = new QueryParser(getVersion(), "name", getAnalyzer());
             indexReader = IndexReader.open(getDirectory());
             IndexSearcher indexSearcher = new IndexSearcher(indexReader);
-            //collector = new ResultCollector(new HashSet<Integer>(), new or);
-            collector = TopScoreDocCollector.create(10, true);
+            collector = TopScoreDocCollector.create(totalHints, true);
             indexSearcher.search(q.parse(query), collector);
         } catch (Exception exception) {
             throw new ExternalServiceException(exception.getMessage(), exception);

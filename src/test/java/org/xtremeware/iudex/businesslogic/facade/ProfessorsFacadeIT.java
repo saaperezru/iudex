@@ -622,9 +622,4 @@ public class ProfessorsFacadeIT {
         }
 
     }
-    
-    @Test
-    public void test1() throws Exception {
-        LuceneProfessorHelper.getInstance().search("mario perez");
-    }
 }

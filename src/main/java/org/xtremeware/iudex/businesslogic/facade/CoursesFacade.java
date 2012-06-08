@@ -7,6 +7,7 @@ import javax.persistence.EntityTransaction;
 import org.xtremeware.iudex.businesslogic.DuplicityException;
 import org.xtremeware.iudex.businesslogic.helper.FacadesHelper;
 import org.xtremeware.iudex.businesslogic.service.ServiceBuilder;
+import org.xtremeware.iudex.businesslogic.service.search.SearchBehaviorFactory;
 import org.xtremeware.iudex.helper.DataBaseException;
 import org.xtremeware.iudex.helper.MultipleMessagesException;
 import org.xtremeware.iudex.vo.*;
@@ -29,42 +30,21 @@ public class CoursesFacade extends AbstractFacade {
      * @return A list of CourseVoVwFull with the information of the found
      * courses.
      */
-    public List<Long> search(String query) {
+    public List<Long> search(String query, int totalHints) {
         EntityManager entityManager = null;
-
-        Set<Long> coursesIds = new HashSet<Long>();
-        List<Long> finalListcoursesIds = new ArrayList<Long>();
+        List<Long> resultList = new ArrayList<Long>();
         if (query != null && !query.isEmpty()) {
-
-
             try {
                 entityManager = getEntityManagerFactory().createEntityManager();
-                return getServiceFactory().getCoursesService().search(query);
-
-//                List<Long> professors = getServiceFactory().getProfessorsService().search(query);
-//
-//                List<Long> subjects = getServiceFactory().getSubjectsService().search(query);
-//                
-//                for (Long subjectVoId : subjects) {
-//                    for (CourseVo courseVo : getServiceFactory().getCoursesService().getBySubjectId(entityManager, subjectVoId)) {
-//                        if(!coursesIds.contains(courseVo.getId())){
-//                            coursesIds.add(courseVo.getId());
-//                            finalListcoursesIds.add(courseVo.getId());
-//                        }
-//                        
-//                    }
-//
-//                }
-//                for (Long professorVoId : professors) {
-//                    for (CourseVo courseVo : getServiceFactory().getCoursesService().getByProfessorId(entityManager, professorVoId)) {
-//                        if(!coursesIds.contains(courseVo.getId())){
-//                            coursesIds.add(courseVo.getId());
-//                            finalListcoursesIds.add(courseVo.getId());
-//                        }
-//                    }
-//                }
-
-
+                getServiceFactory().getCoursesService().setSearch(
+                        SearchBehaviorFactory.getCourseSearch());
+                resultList = getServiceFactory().getCoursesService().search(query,totalHints);
+                if (!resultList.isEmpty()) {
+                    return resultList;
+                }
+                getServiceFactory().getCoursesService().setSearch(
+                        SearchBehaviorFactory.getFuzzyCourseSearch());
+                return getServiceFactory().getCoursesService().search(query,totalHints);
             } catch (Exception e) {
                 getServiceFactory().getLogService().error(e.getMessage(), e);
                 throw new RuntimeException(e);
@@ -72,7 +52,7 @@ public class CoursesFacade extends AbstractFacade {
                 FacadesHelper.closeEntityManager(entityManager);
             }
         }
-        return finalListcoursesIds;
+        return resultList;
     }
 
     public CourseVo createCourse(long professorId, long subjectId, long periodId)

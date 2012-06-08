@@ -16,9 +16,8 @@ public class CoursesService extends CrudService<CourseVo, CourseEntity> {
     private static final long MIN_COUNT = 0L;
     private Search search;
 
-    public CoursesService(Search search, AbstractDaoBuilder daoFactory, Create create, Read read, Update update, Delete delete) {
+    public CoursesService(AbstractDaoBuilder daoFactory, Create create, Read read, Update update, Delete delete) {
         super(daoFactory, create, read, update, delete);
-        this.search = search;
     }
 
     @Override
@@ -100,8 +99,8 @@ public class CoursesService extends CrudService<CourseVo, CourseEntity> {
         }
     }
     
-    public List<Long> search(String query) {
-        return search.search(SecurityHelper.sanitizeHTML(query));
+    public List<Long> search(String query, int totalHints) {
+        return search.search(SecurityHelper.sanitizeHTML(query),totalHints);
     }
 
     public List<CourseVo> getByProfessorId(EntityManager entityManager, long professorId)
@@ -158,5 +157,9 @@ public class CoursesService extends CrudService<CourseVo, CourseEntity> {
         course.setRatingAverage(courseVo.getRatingAverage());
         course.setRatingCount(courseVo.getRatingCount());
         return course;
+    }
+
+    public void setSearch(Search search) {
+        this.search = search;
     }
 }

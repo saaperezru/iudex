@@ -3,7 +3,6 @@ package org.xtremeware.iudex.businesslogic.service;
 import java.util.*;
 import javax.persistence.EntityManager;
 import org.xtremeware.iudex.businesslogic.service.crudinterfaces.*;
-import org.xtremeware.iudex.businesslogic.service.search.Search;
 import org.xtremeware.iudex.dao.AbstractDaoBuilder;
 import org.xtremeware.iudex.entity.SubjectEntity;
 import org.xtremeware.iudex.helper.*;
@@ -17,19 +16,16 @@ public class SubjectsService extends CrudService<SubjectVo, SubjectEntity> {
 
     private final int MAX_SUBJECT_NAME_LENGTH;
     private final int MAX_SUBJECT_DESCRIPTION_LENGTH;
-    private Search search;
     /**
      * SubjectsService constructor
      *
      * @param daoFactory
      */
     public SubjectsService(AbstractDaoBuilder daoFactory,
-            Create create, Read read, Update update, Delete delete,
-            Search search) {
+            Create create, Read read, Update update, Delete delete) {
         super(daoFactory, create, read, update, delete);
         MAX_SUBJECT_NAME_LENGTH = Integer.parseInt(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAX_SUBJECT_NAME_LENGTH));
         MAX_SUBJECT_DESCRIPTION_LENGTH = Integer.parseInt(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAX_SUBJECT_DESCRIPTION_LENGTH));
-        this.search = search;
     }
 
     /**
@@ -110,10 +106,6 @@ public class SubjectsService extends CrudService<SubjectVo, SubjectEntity> {
         subjectEntity.setCode(valueObject.getCode());
 
         return subjectEntity;
-    }
-
-    public List<Long> search(String query) {
-        return search.search(SecurityHelper.sanitizeHTML(query));
     }
 
     /**

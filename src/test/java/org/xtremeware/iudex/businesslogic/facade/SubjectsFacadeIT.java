@@ -7,7 +7,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.xtremeware.iudex.businesslogic.DuplicityException;
 import org.xtremeware.iudex.businesslogic.helper.FacadesTestHelper;
-import org.xtremeware.iudex.businesslogic.service.search.lucene.LuceneSubjectHelper;
 import org.xtremeware.iudex.helper.Config;
 import org.xtremeware.iudex.helper.ConfigurationVariablesHelper;
 import org.xtremeware.iudex.helper.DataBaseException;

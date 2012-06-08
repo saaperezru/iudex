@@ -31,9 +31,7 @@
             </div>
 
             <div>
-                <h1>Con Acordion como columna.</h1>
                 <h:form prependId="false">  
-
                     <p:dataTable id="acordion" var="course" value="#{search.courses}"  
                                  paginator="true" rows="10"  
                                  paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
@@ -50,7 +48,7 @@
                         <p:column >
                             <p:accordionPanel activeIndex="-1">  
                                 <p:tab title="Periodos">  
-                                    <p:dataTable id="PeriodsCourse#{course.hashCode()}" var="period" value="#{course.coursesVoVwSmall}">
+                                    <p:dataTable id="PeriodsCourse#{course.hashCode()}" var="period" value="#{search.parseCourseVoVwSmall(course.coursesId)}">
                                         <p:column id="Select">
                                             <h:link  hreflang="courses/view.xhtml?id=#{period.courseId}" class="btn btn-success" value="Seleccionar"/>
                                         </p:column>

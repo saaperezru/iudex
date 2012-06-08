@@ -39,8 +39,9 @@ public class CourseVoVwBuilder {
 		return new CourseVoVwFull(course.getVo(), subject, professor);
 	}
         
-        public List<CourseVoVwSmall> getCoursesVoVwSmall(List<Long> coursesId){
-                List<CourseVoVwSmall> coursesSmall = new ArrayList<CourseVoVwSmall>();
+        public  CourseVoVwSmall getCourseVoVwSmall(Long courseId){
+                // TODO: use Get period by ID
+            
                 //Get all periods and add them to a hasTable to find them faster
                 List<PeriodVo> periodVoList = facadeFactory.getPeriodsFacade().listPeriods();
                 HashMap<Long, PeriodVo> periodHash = new HashMap<Long, PeriodVo>();
@@ -48,18 +49,13 @@ public class CourseVoVwBuilder {
                     if(! periodHash.containsKey(periodVo.getId())){
                         periodHash.put(periodVo.getId(), periodVo);
                     }
-                }
-                
+                }                
                 // For each course ID find it's Vo, create the VovWSmall and add it to the list.
-                for (Long courseId : coursesId){
-                   CourseVoFull course = facadeFactory.getCoursesFacade().getCourse(courseId);
-                   CourseVoVwSmall courseSmall = new CourseVoVwSmall(courseId, 
-                                                                      periodHash.get(course.getVo().getPeriodId()).getYear()+" - "+periodHash.get(course.getVo().getPeriodId()).getSemester(),
-                                                                      course.getVo().getRatingAverage(), course.getVo().getRatingCount());
-                   
-                   coursesSmall.add(courseSmall);
-                }
-                return coursesSmall;
+                CourseVoFull course = facadeFactory.getCoursesFacade().getCourse(courseId);
+                CourseVoVwSmall courseSmall = new CourseVoVwSmall(courseId, 
+                                                                    periodHash.get(course.getVo().getPeriodId()).getYear()+" - "+periodHash.get(course.getVo().getPeriodId()).getSemester(),
+                                                                    course.getVo().getRatingAverage(), course.getVo().getRatingCount());                   
+                return courseSmall;
         }
 
 	public List<CourseListVoVwSmall> getSearchResults(String query) {
@@ -100,14 +96,12 @@ public class CourseVoVwBuilder {
                     if(!coursesList.containsKey(courseList.hashCode())){
                         //The instance of this subject doesn't exists in the hash, add it
                         coursesList.put(courseList.hashCode(), courseList);
+                        results.add(courseList);
                     }
                     //Now that the Course exist in the hastTable add the course ID
-                    coursesList.get(courseList.hashCode()).addCourse(courseId);	
+                    coursesList.get(courseList.hashCode()).addCourse(getCourseVoVwSmall(courseId));	
 		}
-                //Now that you have found all the courses for the matched teachers, add them to the list
-                for(int hascode : coursesList.keySet() ){
-                    results.add(coursesList.get(hascode));
-                }
+
 		return results;
 
 

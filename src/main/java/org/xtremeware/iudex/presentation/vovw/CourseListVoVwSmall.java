@@ -3,7 +3,6 @@ package org.xtremeware.iudex.presentation.vovw;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import org.xtremeware.iudex.presentation.vovw.builder.CourseVoVwBuilder;
 
 /**
  *
@@ -15,7 +14,6 @@ public class CourseListVoVwSmall implements Serializable {
     String ProfessorName;
     Long SubjectId;
     String SubjectName;
-    List<Long> coursesId = new ArrayList<Long>();
     List<CourseVoVwSmall> CoursesVoVwSmall = new ArrayList<CourseVoVwSmall>();
 
     public CourseListVoVwSmall(Long ProfessorId, String ProfessorName, Long SubjectId, String SubjectName) {
@@ -53,7 +51,7 @@ public class CourseListVoVwSmall implements Serializable {
 
     @Override
     public String toString() {
-        return "CourseListVoVwSmall{" + "ProfessorId=" + ProfessorId + ", ProfessorName=" + ProfessorName + ", SubjectId=" + SubjectId + ", SubjectName=" + SubjectName + ", coursesId=" + coursesId + '}';
+        return "CourseListVoVwSmall{" + "ProfessorId=" + ProfessorId + ", ProfessorName=" + ProfessorName + ", SubjectId=" + SubjectId + ", SubjectName=" + SubjectName + ", CoursesVoVwSmall=" + CoursesVoVwSmall + '}';
     }
 
     public Long getProfessorId() {
@@ -88,30 +86,16 @@ public class CourseListVoVwSmall implements Serializable {
         this.SubjectName = SubjectName;
     }
 
-    public List<Long> getCoursesId() {
-        return coursesId;
-    }
-
-    public void setCoursesId(List<Long> coursesId) {
-        this.coursesId = coursesId;
-    }
-    
-    public void addCourse(Long courseID){
-        this.coursesId.add(courseID);
-    }
-
-    public void setCoursesVoVwSmall(List<CourseVoVwSmall> CoursesVoVwSmall) {
-        this.CoursesVoVwSmall = CoursesVoVwSmall;
-    }
-  
     public List<CourseVoVwSmall> getCoursesVoVwSmall(){
-        if(this.CoursesVoVwSmall.isEmpty()){
-               this.CoursesVoVwSmall.addAll(CourseVoVwBuilder.getInstance().getCoursesVoVwSmall(this.coursesId));
-        }
         return CoursesVoVwSmall;
     }
     
+    public void setCoursesVoVwSmall(List<CourseVoVwSmall> CoursesVoVwSmall) {
+        this.CoursesVoVwSmall = CoursesVoVwSmall;
+    }
     
-     
-    
+    public void addCourse(CourseVoVwSmall courseVovWSmall){
+        this.CoursesVoVwSmall.add(courseVovWSmall);
+    }
+
 }

@@ -8,25 +8,23 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import org.xtremeware.iudex.presentation.vovw.CourseListVoVwSmall;
-import org.xtremeware.iudex.presentation.vovw.CourseVoVwSmall;
 import org.xtremeware.iudex.presentation.vovw.builder.CourseVoVwBuilder;
 
 /**
  *
  * @author healarconr
  */
-
-@ManagedBean 
+@ManagedBean
 @ViewScoped
 public class Search implements Serializable {
 
     private String query;
     private List<CourseListVoVwSmall> courses;
-    
+
     public List<CourseListVoVwSmall> getCourses() {
         return courses;
     }
-    
+
     public String getQuery() {
         FacesContext fc = FacesContext.getCurrentInstance();
         Map<String, String> params = fc.getExternalContext().getRequestParameterMap();
@@ -41,7 +39,7 @@ public class Search implements Serializable {
     public void setQuery(String query) {
         this.query = query;
     }
-    
+
     public boolean isCoursesEmpty() {
         return (this.getCourses() == null || this.getCourses().isEmpty());
     }
@@ -56,7 +54,6 @@ public class Search implements Serializable {
 //        this.query = params.get("searchForm:query");
         return "success";
     }
-    
 
     public void preRenderView() {
         try {
@@ -65,4 +62,5 @@ public class Search implements Serializable {
             FacesContext.getCurrentInstance().addMessage("searchForm", new FacesMessage(ex.getMessage()));
         }
     }
+
 }

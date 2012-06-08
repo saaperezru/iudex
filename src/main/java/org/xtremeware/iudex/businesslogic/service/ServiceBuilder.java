@@ -1,6 +1,5 @@
 package org.xtremeware.iudex.businesslogic.service;
 
-import javax.persistence.EntityManager;
 import org.xtremeware.iudex.businesslogic.service.createimplementations.*;
 import org.xtremeware.iudex.businesslogic.service.deleteimplementations.*;
 import org.xtremeware.iudex.businesslogic.service.readimplementations.SimpleRead;
@@ -35,7 +34,7 @@ public class ServiceBuilder {
     private LogService logService;
     private AbstractDaoBuilder daoFactory;
 
-    public ServiceBuilder(AbstractDaoBuilder daoFactory, MailingConfigVo mailingConfig, EntityManager entityManager) {
+    public ServiceBuilder(AbstractDaoBuilder daoFactory, MailingConfigVo mailingConfig) {
         this.daoFactory = daoFactory;
         this.mailingService = new MailingService(mailingConfig);
     }

@@ -7,5 +7,5 @@ import java.util.List;
  * @author josebermeo
  */
 public interface Search<E> {
-    public List<E> search(String query);
+    List<E> search(String query);
 }

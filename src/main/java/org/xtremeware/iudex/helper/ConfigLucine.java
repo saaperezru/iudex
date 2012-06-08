@@ -75,7 +75,7 @@ public final class ConfigLucine {
             try {
                 
                 FileInputStream fstream = new FileInputStream(
-                        ConfigLucine.class.getResource("/org/xtremeware/iudex/spanishStopWords.txt").getFile());
+                        ConfigLucine.class.getResource("/org/xtremeware/iudex/iudex.properties").getFile());
                 
                 DataInputStream in = new DataInputStream(fstream);
                 BufferedReader br = new BufferedReader(new InputStreamReader(in));

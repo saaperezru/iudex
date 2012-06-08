@@ -10,7 +10,7 @@ import org.xtremeware.iudex.helper.Config;
  *
  * @author healarconr
  */
-public class FacadesHelper {
+public final class FacadesHelper {
 
     private FacadesHelper() {
     }

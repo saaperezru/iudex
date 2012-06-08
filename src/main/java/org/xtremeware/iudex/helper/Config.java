@@ -41,7 +41,7 @@ public final class Config {
         mailingConf.setSmtpUser(ConfigurationVariablesHelper.getVariable(
                 ConfigurationVariablesHelper.MAILING_SMTP_USER));
         createIndex();
-        this.serviceFactory = new ServiceBuilder(daoFactory, mailingConf, this.persistenceUnit.createEntityManager());
+        this.serviceFactory = new ServiceBuilder(daoFactory, mailingConf);
         facadeFactory = new FacadeFactory(serviceFactory, this.persistenceUnit);
     }
     

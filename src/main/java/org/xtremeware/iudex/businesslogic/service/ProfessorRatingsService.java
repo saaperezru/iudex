@@ -1,8 +1,10 @@
 package org.xtremeware.iudex.businesslogic.service;
 
 import javax.persistence.EntityManager;
+import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Create;
 import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Read;
 import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Delete;
+import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Update;
 import org.xtremeware.iudex.dao.AbstractDaoBuilder;
 import org.xtremeware.iudex.entity.ProfessorRatingEntity;
 import org.xtremeware.iudex.helper.DataBaseException;
@@ -11,8 +13,8 @@ import org.xtremeware.iudex.vo.BinaryRatingVo;
 
 public class ProfessorRatingsService extends BinaryRatingService< ProfessorRatingEntity> {
 
-    public ProfessorRatingsService(AbstractDaoBuilder daoFactory, Read read, Delete delete) {
-        super(daoFactory,read,delete,daoFactory.getProfessorRatingDao());
+    public ProfessorRatingsService(AbstractDaoBuilder daoFactory,Create create, Read read, Update update,Delete delete) {
+        super(daoFactory,create,read,update,delete,daoFactory.getProfessorRatingDao());
     }
 
     @Override
@@ -64,4 +66,13 @@ public class ProfessorRatingsService extends BinaryRatingService< ProfessorRatin
         entity.setValue(binaryRatingVo.getValue());
         return entity;
     }
+	@Override
+	protected void validateVoForUpdate(EntityManager entityManager, BinaryRatingVo valueObject) throws MultipleMessagesException, DataBaseException {
+		validateVoForCreation(entityManager, valueObject);
+        MultipleMessagesException multipleMessageException = new MultipleMessagesException();
+        if (valueObject.getId() == null) {
+            multipleMessageException.addMessage("professorRating.id.null");
+            throw multipleMessageException;
+        }
+	}
 }

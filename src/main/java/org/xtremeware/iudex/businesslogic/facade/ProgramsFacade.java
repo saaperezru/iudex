@@ -101,4 +101,19 @@ public class ProgramsFacade extends AbstractFacade {
         }
         return programVos;
     }
+
+	public ProgramVo getProgram(long programId){
+        EntityManager entityManager = null;
+        ProgramVo program = null;
+        try {
+            entityManager = getEntityManagerFactory().createEntityManager();
+            program = getServiceFactory().getProgramsService().read(entityManager,programId);
+        } catch (Exception exception) {
+            getServiceFactory().getLogService().error(exception.getMessage(), exception);
+            throw new RuntimeException(exception);
+        } finally {
+            FacadesHelper.closeEntityManager(entityManager);
+        }
+        return program;
+	}
 }

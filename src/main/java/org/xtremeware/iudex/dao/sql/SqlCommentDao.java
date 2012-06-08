@@ -2,6 +2,7 @@ package org.xtremeware.iudex.dao.sql;
 
 import java.util.List;
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import org.xtremeware.iudex.dao.*;
 import org.xtremeware.iudex.entity.CommentEntity;
 import org.xtremeware.iudex.helper.DataBaseException;
@@ -125,5 +126,17 @@ public class SqlCommentDao extends SqlCrudDao<CommentEntity> implements CommentD
     @Override
     protected Class getEntityClass() {
         return CommentEntity.class;
+    }
+
+    @Override
+    public List<CommentEntity> getLastComments(EntityManager entityManager,
+            int maxResults) throws DataBaseException {
+        try {
+            Query query = entityManager.createNamedQuery("getAllCommentsRecentFirst");
+            query.setMaxResults(maxResults);
+            return query.getResultList();
+        } catch(Exception ex) {
+            throw new DataBaseException(ex.getMessage(), ex.getCause());
+        }
     }
 }

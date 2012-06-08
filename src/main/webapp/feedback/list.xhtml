@@ -6,48 +6,88 @@
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:c="http://java.sun.com/jsp/jstl/core"
                 xmlns="http://www.w3.org/1999/xhtml"
-                xmlns:iudex="http://java.sun.com/jsf/composite/iudex">
+                xmlns:iudex="http://java.sun.com/jsf/composite/iudex"
+                xmlns:pou="http://primefaces.org/ui">
+
+    <ui:define name="title">- Comentarios de realimentación</ui:define>
 
     <ui:define name="content">
+        <h:outputStylesheet library="css" name="feedback.css" />
+        <div class="container">
+            <div class="row">
+                <div class="span4">
+                    <div class="well">
+                        <h:form id="filterForm">
+                            <legend>Comentarios de realimentación</legend>
+                            <div class="control-group">
+                                <label class="">Filtrar por tipo</label>
+                                <div>
+                                    <h:selectOneMenu id="type" value="#{listFeedbacks.feedbackTypeId}">
+                                        <f:selectItem itemLabel="Todos" />
+                                        <f:selectItems value="#{lists.feedbackTypes}" />
+                                        <f:validateLongRange minimum="0" />
+                                        <f:ajax listener="${listFeedbacks.loadFeedbacks()}" render="feedbacksList" onevent="function(e){if(e.status == 'success') initExpandables();}" />
+                                    </h:selectOneMenu>
+                                </div>
+                            </div>
+                        </h:form>
 
-		<div class="container">
-        <div class="row-fluid">
-            <div class="span4 well">
-                <h3 style="text-align: center;">Comentarios de realimentación</h3>
-                <br/>
-                <h:form id="filterForm">
-                    <div class="control-group">
-                        <label class="">Filtrar por tipo</label>
-                        <div>
-                            <h:selectOneMenu id="type" value="#{listFeedbacks.feedbackTypeId}">
-                                <f:selectItem itemLabel="" />
-                                <f:selectItems value="#{lists.feedbackTypes}" />
-                                <f:validateLongRange minimum="0" />
-                                <f:ajax listener="${listFeedbacks.loadFeedbacks()}" render="@all" />
-                            </h:selectOneMenu>
-                        </div>
+                        <script type="text/javascript">
+                            function initPieChart(a, b, c) {
+                                this.cfg.seriesColors = ["#3a87ad", "#b94a48", "#51a351"];
+                                this.cfg.grid = {
+                                    background: '#ffffff',
+                                    shadow: false,
+                                    borderWidth: 0
+                                }
+                                this.cfg.highlighter.show = true;
+                            }
+                        </script>
+
+                        <pou:pieChart value="#{listFeedbacks.pieModel}" legendPosition="s" showDataLabels="true" fill="false" sliceMargin="4" shadow="false" extender="initPieChart" />
+
                     </div>
-                </h:form>
+                </div>
 
-            </div>
-            <div class="span8">
-
-                <ui:repeat id="feedbacksList" value="#{listFeedbacks.feedbacks}" var="feedback">
-                    <div class="thumbnail expandable" style="padding: 15px;">
-                        <strong>
-                            <h:outputText value="#{feedback.date}">
-                                <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss aa." />
-                            </h:outputText>
-                        </strong>
-                        <h:outputText value="#{feedback.content}" />
-                    </div>
-                    <br/>   
-                </ui:repeat>
-
+                <div class="span8">
+                    <h:panelGroup id="feedbacksList">
+                        <ui:repeat value="#{listFeedbacks.feedbacks}" var="feedback">
+                            <div class="thumbnail expandable" style="padding: 15px;">
+                                <strong>
+                                    <h:outputText value="#{feedback.date}">
+                                        <f:convertDateTime pattern="dd/MM/yyyy hh:mm:ss aa." />
+                                    </h:outputText>
+                                </strong>
+                                <h:outputText value="#{feedback.feedbackTypeName}" class="label label-feedback-#{feedback.feedbackTypeId}" />
+                                <h:outputText value="#{feedback.content}" />
+                            </div>
+                            <br/>   
+                        </ui:repeat>
+                        <h:form>
+                            <div class="pagination">
+                                <ul>
+                                    <ui:repeat value="#{listFeedbacks.pages}" var="page">
+                                        <ui:fragment rendered="#{page != listFeedbacks.currentPage}">
+                                            <li>
+                                                <h:commandLink action="#{listFeedbacks.loadFeedbacks(page)}" value="#{page}">
+                                                    <f:ajax render="feedbacksList" onevent="function(e){if(e.status == 'success') initExpandables();}" />
+                                                </h:commandLink>
+                                            </li>
+                                        </ui:fragment>
+                                        <ui:fragment rendered="#{page == listFeedbacks.currentPage}">
+                                            <li class="active">
+                                                <h:commandLink action="#{listFeedbacks.loadFeedbacks(page)}" value="#{page}" />
+                                            </li>
+                                        </ui:fragment>
+                                    </ui:repeat>
+                                </ul>
+                            </div>
+                        </h:form>
+                    </h:panelGroup>
+                </div>
             </div>
         </div>
 
-		</div>
     </ui:define>
 
 </ui:composition>

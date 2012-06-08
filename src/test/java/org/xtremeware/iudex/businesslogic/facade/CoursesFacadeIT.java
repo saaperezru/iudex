@@ -190,7 +190,7 @@ public class CoursesFacadeIT {
         query = "Marios";
         search = facade.search(query);
         assertNotNull(search);
-        assertEquals(search.size(), 0);
+        assertEquals(search.size(), 3);
         search = facade.search(null);
         assertNotNull(search);
         assertEquals(search.size(), 0);

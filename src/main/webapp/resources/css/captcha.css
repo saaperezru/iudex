@@ -1,0 +1,12 @@
+.control-group-captcha {
+    text-align: center;
+}
+
+.control-group-captcha .inline-error {
+    vertical-align: top;
+}
+
+.control-group div#recaptcha_widget_div {
+    width: 318px;
+    display: inline-block;
+}

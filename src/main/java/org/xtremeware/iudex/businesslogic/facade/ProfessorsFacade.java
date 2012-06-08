@@ -23,7 +23,7 @@ public class ProfessorsFacade extends AbstractFacade {
                 entityManager = getEntityManagerFactory().createEntityManager();
                 List<Long> professorVos = getServiceFactory().getProfessorsService().getByNameLike(entityManager, programName);
                 for (Long professorVoId : professorVos) {
-					ProfessorVo professorVo = getServiceFactory().getProfessorsService().read(entityManager, professorVoId);
+                    ProfessorVo professorVo = getServiceFactory().getProfessorsService().read(entityManager, professorVoId);
                     professorsIdAndNames.put(
                             professorVo.getId(),
                             professorVo.getFirstName() + " " + professorVo.getLastName());
@@ -38,7 +38,7 @@ public class ProfessorsFacade extends AbstractFacade {
         return professorsIdAndNames;
     }
 
-    public ProfessorVo createProfessor(ProfessorVo professorVo) 
+    public ProfessorVo createProfessor(ProfessorVo professorVo)
             throws MultipleMessagesException, DuplicityException {
         ProfessorVo createdVo = null;
         EntityManager entityManager = null;
@@ -60,7 +60,7 @@ public class ProfessorsFacade extends AbstractFacade {
         return createdVo;
     }
 
-    public ProfessorVo updateProfessor(ProfessorVo professorVo) 
+    public ProfessorVo updateProfessor(ProfessorVo professorVo)
             throws MultipleMessagesException, DuplicityException {
         ProfessorVo createdProfessorVo = null;
         EntityManager entityManager = null;
@@ -100,7 +100,7 @@ public class ProfessorsFacade extends AbstractFacade {
         }
     }
 
-    public BinaryRatingVo getProfessorRatingByUserId(long professorId, long userId){
+    public BinaryRatingVo getProfessorRatingByUserId(long professorId, long userId) {
         EntityManager entityManager = null;
         BinaryRatingVo binaryRatingVo = null;
         try {
@@ -121,16 +121,25 @@ public class ProfessorsFacade extends AbstractFacade {
         EntityTransaction transaction = null;
         BinaryRatingVo binaryRatingVo = null;
         try {
-            binaryRatingVo = new BinaryRatingVo();
-            binaryRatingVo.setEvaluatedObjectId(professorId);
-            binaryRatingVo.setUserId(userId);
-            binaryRatingVo.setValue(value);
-
             entityManager = getEntityManagerFactory().createEntityManager();
+
+            BinaryRatingVo existingRating = getServiceFactory().getProfessorRatingsService().getByEvaluatedObjectAndUserId(entityManager, professorId, userId);
+
             transaction = entityManager.getTransaction();
             transaction.begin();
-            binaryRatingVo = getServiceFactory().
-                    getProfessorRatingsService().create(entityManager, binaryRatingVo);
+
+            if (existingRating == null) {
+                binaryRatingVo = new BinaryRatingVo();
+                binaryRatingVo.setEvaluatedObjectId(professorId);
+                binaryRatingVo.setUserId(userId);
+                binaryRatingVo.setValue(value);
+
+                binaryRatingVo = getServiceFactory().
+                        getProfessorRatingsService().create(entityManager, binaryRatingVo);
+            } else {
+                existingRating.setValue(value);
+                binaryRatingVo = getServiceFactory().getProfessorRatingsService().update(entityManager, existingRating);
+            }
             transaction.commit();
 
         } catch (Exception exception) {

@@ -1,6 +1,7 @@
 package org.xtremeware.iudex.presentation.controller;
 
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.io.StringWriter;
 import javax.faces.application.ProjectStage;
 import javax.faces.bean.ManagedBean;
@@ -13,7 +14,7 @@ import javax.faces.context.FacesContext;
  */
 @ManagedBean
 @RequestScoped
-public class Error {
+public class Error implements Serializable {
 
     private String stackTrace;
 

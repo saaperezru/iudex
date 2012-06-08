@@ -241,4 +241,24 @@ public class UsersFacade extends AbstractFacade {
             FacadesHelper.closeEntityManager(entityManager);
         }
     }
+	
+	/**
+	 * 	Searches for a user with the specified id. If noting found returns null.
+	 * @param userId
+	 * @return Found user. If nothing was found return null.
+	 */
+	public UserVo getUser(long userId){
+        EntityManager entityManager = null;
+        EntityTransaction transaction = null;
+		UserVo user = null;
+        try {
+            entityManager = getEntityManagerFactory().createEntityManager();
+			user = getServiceFactory().getUsersService().read(entityManager, userId);
+        } catch (Exception exception) {
+            getServiceFactory().getLogService().error(exception.getMessage(), exception);
+        } finally {
+            FacadesHelper.closeEntityManager(entityManager);
+        }
+		return user;
+	}
 }

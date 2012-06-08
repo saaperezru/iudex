@@ -4,9 +4,9 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
-import org.xtremeware.iudex.presentation.vovw.CommentVoVwFull;
-import org.xtremeware.iudex.presentation.vovw.CourseVoVwFull;
-import org.xtremeware.iudex.presentation.vovw.SubjectVoVwFull;
+import org.xtremeware.iudex.presentation.vovw.CommentVoVwMedium;
+import org.xtremeware.iudex.presentation.vovw.CourseVoVwLarge;
+import org.xtremeware.iudex.presentation.vovw.SubjectVoVwLarge;
 
 /**
  *
@@ -18,25 +18,25 @@ public class ViewSubject {
 
     public class CourseInfo {
 
-        private CourseVoVwFull course;
-        private List<CommentVoVwFull> comments;
+        private CourseVoVwLarge course;
+        private List<CommentVoVwMedium> comments;
 
-        public CourseInfo(CourseVoVwFull course, List<CommentVoVwFull> comments) {
+        public CourseInfo(CourseVoVwLarge course, List<CommentVoVwMedium> comments) {
             this.course = course;
             this.comments = comments;
         }
 
-        public List<CommentVoVwFull> getComments() {
+        public List<CommentVoVwMedium> getComments() {
             return comments;
         }
 
-        public CourseVoVwFull getCourse() {
+        public CourseVoVwLarge getCourse() {
             return course;
         }
     }
     @ManagedProperty(value = "#{param['id']}")
     private long id;
-    private SubjectVoVwFull subject;
+    private SubjectVoVwLarge subject;
     private List<CourseInfo> courses;
 
     public long getId() {
@@ -47,7 +47,7 @@ public class ViewSubject {
         this.id = id;
     }
 
-    public SubjectVoVwFull getSubject() {
+    public SubjectVoVwLarge getSubject() {
         return subject;
     }
 

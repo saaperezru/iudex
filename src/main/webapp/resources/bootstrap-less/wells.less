@@ -1,0 +1,48 @@
+// WELLS
+// -----
+
+.well {
+  min-height: 20px;
+  padding: 19px;
+  margin-bottom: 20px;
+  background-color: @white;
+  border: 1px solid #eee;
+  border: 1px solid rgba(0,0,0,.05);
+  .border-radius(4px);
+  .box-shadow(inset 0 1px 1px rgba(0,0,0,.05));
+  blockquote {
+    border-color: #ddd;
+    border-color: rgba(0,0,0,.15);
+  }
+}
+
+.green-well {
+  min-height: 20px;
+  padding: 19px;
+  margin-bottom: 20px;
+  background-color: lighten(@green, 43%);
+  //background-image: url(../images/green-fibers.png);
+  //color: @white;
+  border: 1px solid lighten(@green, 33%);
+  //border: 1px solid rgba(0,0,0,.05);
+  .border-radius(4px);
+  .box-shadow(inset 0 1px 1px rgba(0,0,0,.05));
+  blockquote {
+    border-color: #ddd;
+    border-color: rgba(0,0,0,.15);
+  }
+}
+
+.well > form, .well > form > .form-actions {
+  margin-bottom: 0;
+}
+
+// Sizes
+.well-large {
+  padding: 24px;
+  .border-radius(6px);
+}
+.well-small {
+  padding: 9px;
+  .border-radius(3px);
+}

@@ -1,0 +1,55 @@
+ul.alert {
+    margin-left: 0;
+    padding-left: 30px;
+}
+
+pre.stack-trace {
+    padding: 20px;
+    background-color: white;
+    font-size: 8pt;
+}
+
+.panel {
+    background-color: #ffffff;
+    border-radius: 7px;
+    background-image: url(../resources/images/panel-bg.gif);
+    background-repeat: repeat-x;
+    background-position: bottom;
+    padding: 30px;
+    border: solid 1px #cccccc;
+}
+
+.subject, .professor {
+    margin-bottom: 10px;
+}
+
+.subject h1, .professor h1 {
+    padding-left: 10px;
+}
+
+.terms p {
+    text-indent: 25px;
+    margin-bottom: 25px;
+}
+
+.footer {
+    margin-bottom: 25px;
+}
+
+.footer a {
+    color: #555;
+    font-size: 10pt;
+    margin-left: 15px;
+}
+
+.jqplot-target {
+    font-family: inherit !important;
+}
+
+table.jqplot-table-legend {
+    border-style: none !important;
+}
+
+td.jqplot-table-legend-swatch {
+    padding-right: 5px !important;
+}

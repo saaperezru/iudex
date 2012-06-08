@@ -1,5 +1,6 @@
 package org.xtremeware.iudex.presentation.controller;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.faces.bean.ManagedBean;
@@ -16,7 +17,7 @@ import org.xtremeware.iudex.vo.ProgramVo;
  */
 @ManagedBean
 @RequestScoped
-public class Lists {
+public class Lists implements Serializable {
 
 	private List<SelectItem> programs;
 	private List<SelectItem> feedbackTypes;

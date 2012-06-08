@@ -11,31 +11,54 @@
         <meta name="author" content="" />
         <link rel="icon" href="#{request.contextPath}/favicon.ico" />
         <link rel="shortcut" href="#{request.contextPath}/favicon.ico" />
-        <h:outputStylesheet library="bootstrap" name="css/bootstrap.min.css" />
-        <h:outputStylesheet library="bootstrap" name="css/bootstrap-responsive.min.css" />
-        <h:outputStylesheet library="css" name="style.css" />
+        <link rel="stylesheet/less" href="#{request.contextPath}/resources/bootstrap-less/bootstrap.less" />
+        <link href='http://fonts.googleapis.com/css?family=Yanone+Kaffeesatz:700' rel='stylesheet' type='text/css' />
+        <link href='http://fonts.googleapis.com/css?family=Dosis' rel='stylesheet' type='text/css' />
+        <h:outputStylesheet library="css" name="common.css" />
+        <h:outputStylesheet library="css" name="default.css" />
+        <h:outputScript library="bootstrap-less" name="less-1.3.0.min.js" />
+        <script type="text/javascript">
+
+            var _gaq = _gaq || [];
+            _gaq.push(['_setAccount', 'UA-32430864-1']);
+            _gaq.push(['_trackPageview']);
+
+            (function() {
+                var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+                ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+            })();
+
+        </script>
     </h:head>
     <h:body>
-        <div class="container-fluid">
-            <div class="offset1 span10">
-                <div class="hero-unit">
-                    <ui:insert name="header">
-                    </ui:insert>
+        <div class="container">
+            <div class="row">
+                <div class="span10 offset1">
+                    <div class="hero-unit">
+                        <ui:insert name="header">
+                        </ui:insert>
+                    </div>    
                 </div>
             </div>
-            <div class="offset1 span10">
-                <ui:insert name="content">
-                </ui:insert>
+            <div class="row">
+                <div class="span10 offset1">
+                    <ui:insert name="content">
+                    </ui:insert>
+                </div>
             </div>
         </div>
 
         <!-- footer -->
-        <div class="container-fluid">
-            <div class="offset1 span10">
-                <hr />
-                <p>
-                    © Xtremeware 2012
-                </p>
+        <div class="container">
+            <div class="row">
+                <div class="offset1 span10">
+                    <hr />
+                    <p>
+                        © Xtremeware 2012
+                    </p>
+                    <br/>
+                </div>
             </div>
         </div>
         <!--end content-->

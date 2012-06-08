@@ -1,86 +1,92 @@
 package org.xtremeware.iudex.presentation.vovw.builder;
 
 import java.util.*;
-import org.xtremeware.iudex.businesslogic.facade.CoursesFacade;
-import org.xtremeware.iudex.businesslogic.facade.FacadeFactory;
-import org.xtremeware.iudex.businesslogic.facade.ProfessorsFacade;
-import org.xtremeware.iudex.businesslogic.facade.SubjectsFacade;
+import org.xtremeware.iudex.businesslogic.facade.*;
 import org.xtremeware.iudex.helper.Config;
-import org.xtremeware.iudex.presentation.vovw.CourseVoVwFull;
-import org.xtremeware.iudex.presentation.vovw.ProfessorVoVwFull;
-import org.xtremeware.iudex.presentation.vovw.SubjectVoVwSmall;
+import org.xtremeware.iudex.presentation.vovw.*;
 import org.xtremeware.iudex.vo.*;
 
 public class CourseVoVwBuilder {
-	
+
+	private static final String NO_PERIOD_STRING = "Sin periodo.";
 	private static CourseVoVwBuilder instance;
 	private FacadeFactory facadeFactory;
-	private static HashMap<Long, ProfessorVoVwFull> professorsVo  = new HashMap<Long, ProfessorVoVwFull>(18000);
-	private static HashMap<Long, SubjectVoVwSmall> subjectsVo = new HashMap<Long, SubjectVoVwSmall>(18000);
-	
-	public CourseVoVwBuilder(FacadeFactory facadeFactory) {
+
+	private CourseVoVwBuilder(FacadeFactory facadeFactory) {
 		this.facadeFactory = facadeFactory;
 	}
-	
+
 	public static synchronized CourseVoVwBuilder getInstance() {
 		if (instance == null) {
 			instance = new CourseVoVwBuilder(Config.getInstance().getFacadeFactory());
 		}
 		return instance;
 	}
-	
-	public CourseVoVwFull getCourseVoVwFull(long courseId) {
+
+	public CourseVoVwLarge getCourseVoVwFull(long courseId) {
 		SubjectsFacade subjectFacade = facadeFactory.getSubjectsFacade();
-		ProfessorsFacade professorsFacade = facadeFactory.getProfessorsFacade();
 		CourseVoFull course = facadeFactory.getCoursesFacade().getCourse(courseId);
 		SubjectVoVwSmall subject = new SubjectVoVwSmall(course.getSubjectVo().getId(),
 				course.getSubjectVo().getName(),
 				course.getSubjectVo().getCode(), subjectFacade.getSubjectsRatingSummary(course.getSubjectVo().getId()));
-		ProfessorVoVwFull professor = new ProfessorVoVwFull(course.getProfessorVo(),
-				professorsFacade.getProfessorRatingSummary(course.getProfessorVo().getId()));
-		return new CourseVoVwFull(course.getVo(), subject, professor);
+		ProfessorVoVwLarge professor = ProfessorVoVwBuilder.getInstance().getProfessorFull(course.getProfessorVo());
+		PeriodVo period = facadeFactory.getPeriodsFacade().getPeriod(course.getVo().getPeriodId());
+		String periodString;
+		if (period == null) {
+			periodString = NO_PERIOD_STRING;
+		} else {
+			periodString = String.valueOf(period.getYear()) + " - " + String.valueOf(period.getSemester());
+		}
+		return new CourseVoVwLarge(course.getVo(), subject, professor, periodString);
 	}
-	
-	public List<CourseVoVwFull> getSearchResults(String query) {
+
+	public List<CourseVoVwLarge> getSearchResults(String query) {
 		CoursesFacade coursesFacade = facadeFactory.getCoursesFacade();
-		
+
 		Date beforeSearch = new Date();
 		List<Long> search = coursesFacade.search(query);
 		Date afterSearch = new Date();
-		Config.getInstance().getServiceFactory().getLogService().info("Searching for "+ query +" took : " + String.valueOf(afterSearch.getTime()-beforeSearch.getTime()));
-		Date beforeConversion = new Date();
-		ArrayList<CourseVoVwFull> results = new ArrayList<CourseVoVwFull>(search.size());
-		
-		ProfessorVoVwFull professor;
+		Config.getInstance().getServiceFactory().getLogService().info("Searching for " + query + " took : " + String.valueOf(afterSearch.getTime() - beforeSearch.getTime()));
+		ArrayList<CourseVoVwLarge> results = new ArrayList<CourseVoVwLarge>(search.size());
+		HashMap<Long, ProfessorVoVwLarge> professorsVo = new HashMap<Long, ProfessorVoVwLarge>();
+		HashMap<Long, SubjectVoVwSmall> subjectsVo = new HashMap<Long, SubjectVoVwSmall>();
+		HashMap<Long, String> periods = new HashMap<Long, String>();
+
+		ProfessorVoVwLarge professor;
 		SubjectVoVwSmall subject;
 		for (Long courseId : search) {
 			CourseVoFull course = coursesFacade.getCourse(courseId);
 			Long professorId = course.getProfessorVo().getId();
 			Long subjectId = course.getSubjectVo().getId();
+			String periodString = NO_PERIOD_STRING;
 			//Loof for the VoVw instances of the professor of this course 
-			if (professorsVo.containsKey(professorId)) {
-				professor = professorsVo.get(professorId);
-			} else {
+			if (!professorsVo.containsKey(professorId)) {
 				//The instance of this professor doesn't exists, create it
-				professor = new ProfessorVoVwFull(course.getProfessorVo(), null);
-				professorsVo.put(professorId, professor);
+				professorsVo.put(professorId, ProfessorVoVwBuilder.getInstance().getProfessorFull(professorId));
 			}
+			professor = professorsVo.get(professorId);
 			//Loof for the VoVw instances of the subject of this course 
 			if (subjectsVo.containsKey(subjectId)) {
 				subject = subjectsVo.get(subjectId);
 			} else {
 				//The instance of this subject doesn't exists, create it
-				subject = new SubjectVoVwSmall(subjectId, course.getSubjectVo().getName(), course.getSubjectVo().getCode(), null);
+				SubjectVoFull subjectFull = facadeFactory.getSubjectsFacade().getSubject(subjectId);
+				subject = new SubjectVoVwSmall(subjectId, subjectFull.getVo().getName(), subjectFull.getVo().getCode(), subjectFull.getRatingSummary());
 				subjectsVo.put(subjectId, subject);
 			}
+			PeriodVo period = facadeFactory.getPeriodsFacade().getPeriod(course.getVo().getPeriodId());
+			if (period != null) {
+				if (!periods.containsKey(course.getVo().getPeriodId())){
+					periods.put(course.getVo().getPeriodId(), String.valueOf(period.getYear()) + " - " + String.valueOf(period.getSemester()));
+				}
+				periodString = periods.get(course.getVo().getPeriodId());
+			}
 			//Now that you have the correct instances create the specific course VoVw
-			results.add(new CourseVoVwFull(course.getVo(), subject, professor));
+			results.add(new CourseVoVwLarge(course.getVo(), subject, professor,periodString));
 		}
-		Date afterConversion = new Date();
-		Config.getInstance().getServiceFactory().getLogService().info("Converting search results for "+ query +" took : " + String.valueOf(afterConversion.getTime()-beforeConversion.getTime()));
 
 		return results;
-		
-		
+
+
 	}
 }

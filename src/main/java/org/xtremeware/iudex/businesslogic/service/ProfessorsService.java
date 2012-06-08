@@ -66,7 +66,7 @@ public class ProfessorsService extends CrudService<ProfessorVo, ProfessorEntity>
         checkDescription(multipleMessagesException, professorVo.getDescription());
         checkEmail(multipleMessagesException, professorVo.getEmail());
         checkImageUrl(multipleMessagesException, professorVo.getImageUrl());
-        checkWebSide(multipleMessagesException, null);
+        checkWebSide(multipleMessagesException, professorVo.getWebsite());
 
         if (!multipleMessagesException.getMessages().isEmpty()) {
             throw multipleMessagesException;

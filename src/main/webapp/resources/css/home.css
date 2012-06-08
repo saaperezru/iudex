@@ -1,0 +1,54 @@
+h1 {
+    text-align: center;
+}
+
+.comment {
+    margin-bottom: 7px;
+    padding: 10px !important;
+}
+
+.comment-photo {
+    text-align: center;
+}
+
+.comment-photo > .thumbnail {
+    display: inline-block;
+    width: 54px;
+}
+
+.comment-photo > .thumbnail > img {
+    width: 48px;
+    height: 48px;
+}
+
+.comment label {
+    display: inline;
+    margin-right: 6px;
+    font-weight: bold;
+}
+
+.comment-header {
+    margin-bottom: 8px;
+}
+
+.comment-header, .comment-header label {
+    font-size: small;
+    color: #999999;
+}
+
+.comment-header p {
+    margin-bottom: 2px;
+}
+
+.star{
+    top: -10px;
+    display: inline-block;
+    background-repeat : no-repeat;
+    background-image: url('../resources/images/star.png');
+    width : 20px;
+    height: 20px;
+    line-height : 20px;
+    background-position: top right;
+    background-size: 20px 20px;
+    vertical-align: bottom;
+}

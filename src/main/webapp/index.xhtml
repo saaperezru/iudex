@@ -160,16 +160,15 @@
                                 </div>
                             </div>
                         </h:form>
+                        <ui:fragment rendered="#{viewHelper.hasMessagesRecursive('signUpForm')}">
+                            <script type="text/javascript">
+                                jQuery(document).ready(function() {
+                                    jQuery("#signUpModal").modal("show");
+                                });
+                            </script>
+                        </ui:fragment>
                     </div>
-
-                    <ui:fragment rendered="#{viewHelper.hasMessagesRecursive('signUpForm')}">
-                        <script type="text/javascript">
-                            jQuery(document).ready(function() {
-                                jQuery("#signUpModal").modal("show");
-                            });
-                        </script>
-                    </ui:fragment>
-
+                    
                 </ui:fragment>
                 <ui:fragment rendered="#{user.loggedIn}">
                     <div class="span12">

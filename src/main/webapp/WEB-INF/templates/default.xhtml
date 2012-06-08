@@ -2,26 +2,47 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:h="http://java.sun.com/jsf/html"
-	  xmlns:p="http://primefaces.org/ui"
-      xmlns:c="http://java.sun.com/jsp/jstl/core">
+      xmlns:h="http://java.sun.com/jsf/html">
 
     <h:head>
-        <title></title>
+        <title>IUDEX <ui:insert name="title"></ui:insert></title>
         <meta http-equiv="Content-Type" content="text/xhtml; charset=utf-8" />
-        <meta name="description" content="" />
-        <meta name="keywords" content="" />
-        <meta name="author" content="" />
+
         <link rel="icon" href="#{request.contextPath}/favicon.ico" />
         <link rel="shortcut" href="#{request.contextPath}/favicon.ico" />
-        <h:outputStylesheet library="bootstrap" name="css/bootstrap.min.css" />
-        <h:outputStylesheet library="bootstrap" name="css/bootstrap-responsive.min.css" />
-        <h:outputStylesheet library="css" name="style.css" />
-		<h:outputScript library="primefaces" name="jquery/jquery.js" />
-		<h:outputScript library="jquery" name="jquery.fittext.js" />
-		<h:outputScript library="jquery" name="jquery.expander.min.js" />
+
+        <link rel="stylesheet/less" href="#{request.contextPath}/resources/bootstrap-less/bootstrap.less" />
+        <link rel="stylesheet/less" href="#{request.contextPath}/resources/bootstrap-less/responsive.less" />
+
+        <link href='http://fonts.googleapis.com/css?family=Yanone+Kaffeesatz:700' rel='stylesheet' type='text/css' />
+        <link href='http://fonts.googleapis.com/css?family=Dosis' rel='stylesheet' type='text/css' />
+
+        <h:outputStylesheet library="css" name="common.css" />
+        <h:outputStylesheet library="css" name="default.css" />
+
+        <h:outputScript library="primefaces" name="jquery/jquery.js" />
+        <h:outputScript library="jquery" name="jquery.fittext.js" />
+        <h:outputScript library="jquery" name="jquery.expander.min.js" />
+
         <h:outputScript library="bootstrap" name="js/bootstrap.min.js" />
-        <h:outputScript library="bootstrap" name="js/bootstrap-tooltip.js" />
+
+        <h:outputScript library="bootstrap-less" name="less-1.3.0.min.js" />
+
+        <h:outputScript library="js" name="common.js" />
+
+        <script type="text/javascript">
+
+            var _gaq = _gaq || [];
+            _gaq.push(['_setAccount', 'UA-32430864-1']);
+            _gaq.push(['_trackPageview']);
+
+            (function() {
+                var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+                ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+            })();
+
+        </script>
     </h:head>
     <h:body>
 
@@ -35,67 +56,90 @@
                         <span class="icon-bar"></span>
                     </a>
                     <h:link outcome="home" class="brand" value="IUDEX" />
-					<div class="nav-collapse">
+                    <div class="nav-collapse">
                         <ul class="nav pull-left">
                             <li><a href="#about">Acerca de</a></li>
-							<li><h:link outcome="feedback" value="Contacto" /></li>
+                            <li><a id="feedbackLink" data-toggle="modal" data-target="#feedbackModal" href="#{request.contextPath}/feedback/create.xhtml" target="feedbackFrame">Contáctanos</a></li>
                         </ul>
-						<ul class="nav pull-right">
-							<form id="searchForm" method="get" action="#{request.contextPath}/search.xhtml" class="nav">
-								<h:inputText id="query" value="#{search.query}" class="search-query span4"  label="Keyword" />
-								<button type="submit" class="btn btn-small"><i class="icon-search"/>Buscar</button>
-							</form>
-							<c:if test="#{user.loggedIn}">
-								<li class="divider-vertical"></li>
-								<li class="dropdown">
-									<div class="btn-group pull-right">
-										<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-											<i class="icon-user"></i>#{user.userName}
-											<span class="caret"></span>
-										</a>
-										<h:form>
-											<ul class="dropdown-menu">
-												<li><h:link outcome="editUser" value="Editar cuenta" /></li>
-												<li class="divider"></li>
-												<li>
-													<h:commandLink action="#{user.logOut()}" value="Cerrar sesión" />
-												</li>
-											</ul>
-										</h:form>
-									</div>
-								</li>
-							</c:if>
-						</ul>
+
+                        <ul class="nav pull-right">
+                            <ui:fragment rendered="#{user.loggedIn}">
+                                <li class="divider-vertical"></li>
+
+                                <li class="dropdown">
+
+                                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                        <h:outputText value="#{user.userName}" />
+                                        <span class="caret"></span>
+                                    </a>
+
+                                    <ul class="dropdown-menu">
+                                        <li><h:link outcome="editUser" value="Editar cuenta" /></li>
+                                        <li class="divider"></li>
+                                        <li>
+                                            <h:form class="navbar-form">
+                                                <h:commandLink action="#{user.logOut()}" value="Cerrar sesión" />
+                                            </h:form>
+                                        </li>
+
+                                    </ul>
+
+                                </li>
+                            </ui:fragment>
+                        </ul>
+                        <ui:fragment rendered="#{not facesContext.viewRoot.viewId.startsWith('/index.xhtml') and not facesContext.viewRoot.viewId.startsWith('/search.xhtml')}">
+                            <form method="get" action="#{request.contextPath}/search.xhtml" class="navbar-search pull-right">
+                                <button type="submit" class="btn"><i class="icon-search icon-white" /></button>
+                                <input type="text" name="query" value="#{search.query}" class="search-query" placeholder="Busca un profesor o una materia"/>
+                            </form>
+                        </ui:fragment>
                     </div><!--/.nav-collapse -->
                 </div>
             </div>
         </div>
         <!--end navbar-->
+
         <!--content-->
+        <ui:insert name="content">
 
-		<ui:insert name="content">
-
-		</ui:insert>
+        </ui:insert>
 
         <!-- footer -->
-        <div class="container-fluid" id="footer">
-            <div class="offset1 span10">
-                <hr />
-                <p>
-                    © Xtremeware 2012
-                </p>
+        <div class="container footer">
+            <hr />
+            <div class="pull-left">
+                © Xtremeware 2012
             </div>
+            <div class="pull-right">
+                <a href="#{request.contextPath}/privacy.xhtml">Privacidad</a>
+                <a href="#{request.contextPath}/termsAndConditions.xhtml">Términos y condiciones</a>
+            </div>
+            <br/>
         </div>
         <!--end content-->
+        <!-- Begin feedback button -->
+        <div class="btn-feedback">
+            <a id="feedbackButton" class="btn btn-inverse" data-toggle="modal" data-target="#feedbackModal" href="#{request.contextPath}/feedback/create.xhtml" target="feedbackFrame">
+                <img src="${request.contextPath}/resources/images/feedback.png" />
+                Contáctanos
+            </a>
+        </div>
+        <div id="feedbackModal" class="modal hide fade">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">×</button>
+                <h2>¡Comunícate con nosotros!</h2>
+            </div>
+            <iframe name="feedbackFrame" id="feedbackFrame" class="modal-iframe"/>
+        </div>
+        <!-- End feedback button -->
 
         <script>
-			jQuery(document).ready(function() {
+            jQuery(document).ready(function() {
                 jQuery(".inline-error").tooltip();
-                jQuery(".expandable").expander({
-                    slicePoint: 200,
-                    expandText: "leer más",
-                    userCollapseText: "leer menos"
-                });
+                initExpandables();
+            });
+            jQuery('#feedbackButton,#feedbackLink').click(function(){
+                jQuery('#feedbackFrame').attr('src', jQuery(this).attr('href'));
             });
         </script>
     </h:body>

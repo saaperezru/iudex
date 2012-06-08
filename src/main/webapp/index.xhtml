@@ -9,199 +9,205 @@
                 xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:pou="http://primefaces.org/ui">
 
+    <ui:define name="title">- Inicio</ui:define>
+    
     <ui:define name="content">
-		<div  id="header">
-		<div class="container">
-			<div id="header-row">
-				
-        <div class="row-fluid">
-            <div class="span6">
-				<div class="span12">
-					<img src="resources/images/logo.png" class="logo"/>
-				</div>
-            </div>
-            <div class="span6">
-                <c:if test="#{!user.loggedIn}">
-                    <div class="row-fluid">
-                        <div class="container-fluid">
-                            <h:form id="loginForm" class="form-horizontal well">
-                                    <legend>Inicia sesión o <a data-toggle="modal" href="#myModal" class="btn btn-warning btn-large">!Registrate!</a> </legend>
-                                    <ui:fragment rendered="#{not empty flash.loginMessage}">
-                                        <ul class="alert alert-error">
-                                            <li><h:outputText  value="#{flash.loginMessage}" /></li>
-                                        </ul>
-                                    </ui:fragment>
-                                    <div class="control-group #{viewHelper.addErrorClass('loginForm:userName')}">
+        <h:outputStylesheet library="css" name="captcha.css" />
+        <div class="container">
+            <div class="row">
+                <iudex:socialIcons />
+                <ui:fragment rendered="#{!user.loggedIn}">
+                    <div class="span8">
+                        <div class="well">
+                            <iudex:carousel size="small" />
+                        </div>
+                    </div>
+                    <div class="span4">
+                        <h:form id="loginForm" class="form-inline well form-login">
+                            <legend>Inicia sesión </legend>
+                            <div class="control-group #{viewHelper.addErrorClass('loginForm:userName')}">
+                                <label class="control-label " for="userName">Usuario</label>
+                                <div class="controls ">
+                                    <div class="input-append">
+                                        <h:inputText id="userName" value="#{login.userName}" required="true" maxlength="20" class="input-username">
+                                            <f:validateLength maximum="20" />
+                                        </h:inputText>
+                                        <span class="add-on">@unal.edu.co</span>
+                                    </div>
+                                    <iudex:inlineError key="loginForm:userName" />
+                                </div>
+                            </div>
+                            <div class="control-group #{viewHelper.addErrorClass('loginForm:password')}">
+                                <label class="control-label " for="password">Contraseña</label>
+                                <div class="controls ">
+                                    <h:inputSecret id="password" value="#{login.password}" required="true" maxlength="18">
+                                        <f:validateLength minimum="8" maximum="18" /> 
+                                    </h:inputSecret>
+                                    <iudex:inlineError key="loginForm:password" />
+                                    <br/>
+                                    <a id="forgottenPasswordLink" data-toggle="modal" data-target="#forgottenPasswordModal" href="#{request.contextPath}/forgottenPassword.xhtml">Olvidé mi contraseña</a>
+                                    <script type="text/javascript">
+                                        jQuery(document).ready(function(){
+                                            jQuery('#forgottenPasswordLink').click(function(){
+                                                jQuery('#forgottenPasswordFrame').attr('src', jQuery(this).attr('href'));
+                                            });
+                                        });
+                                    </script>
+                                </div>
+                            </div>
+
+                            <div class="form-actions">
+                                <h:commandButton action="#{login.logIn()}" value="Acceder" class="btn btn-success" />
+                                <a data-toggle="modal" href="#signUpModal" class="btn btn-info">Registrarme</a>
+                            </div>
+                        </h:form>
+
+                        <div id="forgottenPasswordModal" class="modal hide fade">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">×</button>
+                                <h2>Olvidé mi contraseña</h2>
+                            </div>
+                            <iframe name="forgottenPasswordFrame" id="forgottenPasswordFrame" class="modal-iframe" style="height: 200px;"/>
+                        </div>
+
+                        <h:form id="signUpForm" class="form-horizontal form-no-margin">
+                            <div id="signUpModal" class="modal hide fade">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">×</button>
+                                    <h2>Registro de una nueva cuenta</h2>
+                                </div>
+                                <div class="modal-body">
+                                    <h:messages for="signUpForm" class="alert alert-error"/>
+                                    <div class="control-group #{viewHelper.addErrorClass('signUpForm:userName')}">
                                         <label class="control-label " for="userName">Usuario</label>
                                         <div class="controls ">
-                                            <h:inputText id="userName" value="#{login.userName}" required="true" maxlength="20">
-                                                <f:validateLength maximum="20" />
-                                            </h:inputText>
-                                            <iudex:inlineError key="loginForm:userName" />
+                                            <div class="input-append">
+                                                <h:inputText id="userName" value="#{signUp.userName}" required="true" maxlength="20" class="input-medium">
+                                                    <f:validateLength maximum="20" />
+                                                </h:inputText>
+                                                <span class="add-on">@unal.edu.co</span>
+                                            </div>
+                                            <iudex:inlineError key="signUpForm:userName" />
                                         </div>
                                     </div>
-                                    <div class="control-group #{viewHelper.addErrorClass('loginForm:password')}">
+                                    <div class="control-group #{viewHelper.addErrorClass('signUpForm:password')}">
                                         <label class="control-label " for="password">Contraseña</label>
                                         <div class="controls ">
-                                            <h:inputSecret id="password" value="#{login.password}" required="true" maxlength="18">
+                                            <h:inputSecret id="password" value="#{signUp.password}" required="true" maxlength="18">
                                                 <f:validateLength minimum="8" maximum="18" /> 
                                             </h:inputSecret>
-                                            <iudex:inlineError key="loginForm:password" />
+                                            <iudex:inlineError key="signUpForm:password" />
                                         </div>
                                     </div>
 
-                                    <center>
-                                        <span>
-                                            <h:commandButton action="#{login.logIn()}" value="Acceder" class="btn btn-success" />
-                                        </span>
-                                        <span>
-                                            <h:link outcome="forgottenPassword" value="Olvidé mi contraseña" class="btn" />
-                                        </span>
-                                    </center>
-                            </h:form>
+                                    <div class="control-group #{viewHelper.addErrorClass('signUpForm:name')}" for="name">
+                                        <label for="name" class="control-label ">Nombres</label>
+                                        <div class="controls ">
+                                            <h:inputText id="name" value="#{signUp.firstName}" required="true" maxlength="50">
+                                                <f:validateLength maximum="50" />
+                                            </h:inputText>
+                                            <iudex:inlineError key="signUpForm:name" />
+                                        </div>
+                                    </div>
+                                    <div class="control-group #{viewHelper.addErrorClass('signUpForm:lastName')}" for="name">
+                                        <label for="lastName" class="control-label ">Apellidos</label>
+                                        <div class="controls ">
+                                            <h:inputText id="lastName" value="#{signUp.lastName}" required="true" maxlength="50">
+                                                <f:validateLength maximum="50" />
+                                            </h:inputText>
+                                            <iudex:inlineError key="signUpForm:lastName" />
+                                        </div>
+                                    </div>
+
+                                    <div class="control-group #{viewHelper.addErrorClass('signUpForm:program')}">
+                                        <label class="control-label " for="program">Carrera</label>
+                                        <div class="controls ">
+                                            <h:selectOneMenu id="program" value="#{signUp.programId}" required="true">
+                                                <f:selectItem itemLabel="" />
+                                                <f:selectItems value="#{lists.programs}" />
+                                                <f:validateLongRange minimum="1" />
+                                            </h:selectOneMenu>
+                                            <iudex:inlineError key="signUpForm:program" />
+                                        </div>
+                                    </div>
+
+                                    <div class="control-group control-group-captcha #{viewHelper.addErrorClass('signUpForm:captcha')}">
+                                        <p>
+                                            ¿No eres un robot, verdad? Entonces esto será fácil.
+                                        </p>
+                                        <pou:captcha id="captcha" secure="true" />
+                                        <iudex:inlineError key="signUpForm:captcha" />
+                                    </div>
+                                </div>
+
+                                <div class="modal-footer">
+                                    <h:commandButton action="#{signUp.signUp}" value="Registrarme" class="btn btn-success"/>
+                                </div>
+                            </div>
+                        </h:form>
+                    </div>
+
+                    <ui:fragment rendered="#{viewHelper.hasMessagesRecursive('signUpForm')}">
+                        <script type="text/javascript">
+                            jQuery(document).ready(function() {
+                                jQuery("#signUpModal").modal("show");
+                            });
+                        </script>
+                    </ui:fragment>
+
+                </ui:fragment>
+                <ui:fragment rendered="#{user.loggedIn}">
+                    <div class="span12">
+                        <div class="well">
+                            <iudex:carousel size="big" />
                         </div>
-						
-                    </div>	
-					<div id="myModal" class="modal hide fade" style="display: none; ">
-						<div class="modal-header">
-						<button class="close" data-dismiss="modal">×</button>
-						<h3>Registrando una nueva cuenta</h3>
-						</div>
-						<h:form id="signUpForm" class="form-horizontal ">
-						<div class="modal-body">
-						<h4>Necesitamos algunos datos :</h4>
-						
-												<h:messages for="signUpForm" class="alert alert-error"/>
-												<div class="control-group #{viewHelper.addErrorClass('signUpForm:userName')}">
-													<label class="control-label " for="userName">Usuario</label>
-													<div class="controls ">
-														<h:inputText id="userName" value="#{signUp.userName}" required="true" maxlength="20">
-															<f:validateLength maximum="20" />
-														</h:inputText>
-														<iudex:inlineError key="signUpForm:userName" />
-													</div>
-												</div>
-												<div class="control-group #{viewHelper.addErrorClass('signUpForm:password')}">
-													<label class="control-label " for="password">Contraseña</label>
-													<div class="controls ">
-														<h:inputSecret id="password" value="#{signUp.password}" required="true" maxlength="18">
-															<f:validateLength minimum="8" maximum="18" /> 
-														</h:inputSecret>
-														<iudex:inlineError key="signUpForm:password" />
-													</div>
-												</div>
-
-												<div class="control-group #{viewHelper.addErrorClass('signUpForm:name')}" for="name">
-													<label for="name" class="control-label ">Nombres</label>
-													<div class="controls ">
-														<h:inputText id="name" value="#{signUp.firstName}" required="true" maxlength="50">
-															<f:validateLength maximum="50" />
-														</h:inputText>
-														<iudex:inlineError key="signUpForm:name" />
-													</div>
-												</div>
-												<div class="control-group #{viewHelper.addErrorClass('signUpForm:lastName')}" for="name">
-													<label for="lastName" class="control-label ">Apellidos</label>
-													<div class="controls ">
-														<h:inputText id="lastName" value="#{signUp.lastName}" required="true" maxlength="50">
-															<f:validateLength maximum="50" />
-														</h:inputText>
-														<iudex:inlineError key="signUpForm:lastName" />
-													</div>
-												</div>
-
-												<div class="control-group #{viewHelper.addErrorClass('signUpForm:program')}">
-													<label class="control-label " for="program">Carrera</label>
-													<div class="controls ">
-														<h:selectOneMenu id="program" value="#{signUp.programId}" required="true">
-															<f:selectItem itemLabel="" />
-															<f:selectItems value="#{lists.programs}" />
-															<f:validateLongRange minimum="1" />
-														</h:selectOneMenu>
-														<iudex:inlineError key="signUpForm:program" />
-													</div>
-												</div>
-												<p>
-													¿No eres un robot, verdad? Entonces esto será fácil.
-												</p>
-												<div class="control-group #{viewHelper.addErrorClass('signUpForm:captcha')}">
-													<div class="controls span12">
-														<pou:captcha id="captcha" secure="true" />
-														<iudex:inlineError key="signUpForm:captcha" />
-													</div>
-												</div>
-						</div>
-						<div class="modal-footer">
-						<span>
-														<h:commandButton action="#{signUp.signUp}" value="Registrarme" class="btn btn-success"/>
-													</span>
-						</div>
-																</h:form>
-
-				</div>
-			</c:if>
+                    </div>
+                </ui:fragment>
             </div>
-			<span id="fittext-header" class="fittext">UNA NUEVA FORMA DE  <span class="highlight">ESCOGER</span> Y <span class="highlight"> RECOMENDAR </span> MATERIAS Y PROFESORES </span>
-			
-				</div>
-			</div>
-				<br/>
-		<div class="row-fluid">
-				<form id="searchForm" method="get" action="#{request.contextPath}/search.xhtml" class="">
-					<div id="searchBar">
-						<div class="searchBar_left"></div>
-						<div class="searchBar_inner"></div>
-						<div class="searchBar_right"></div>
-						<div class="searchBar_inner_left"></div>
-						<div class="searchBar_inner_inner"></div>
-						<div class="searchBar_inner_right"></div>
-						<input type="text" name="query" value="#{search.query}" class="search-query"  label="Keyword" placeholder = "BUSCA UN PROFESOR O UNA MATERIA"/>
-						<button id="searchButton" type="submit" />
-					</div>
-				</form>
-		</div>
-        <div class="row-fluid">
-			
-			<div class="page-header">
-				<h1>En IUDEX puedes</h1>
-			</div>
-                <div class="span3">
-                    <div class="span3">
-						<img src="resources/images/share.png" class="autosize"/>
-                    </div>
-                    <div class="span9">
-                        <h2>Comparte</h2>
-                        <p>Comparte tu opinión acerca de un profesor o un curso de forma anónima.</p>
-                        <p>Así el resto de tus amigos sabrá si un profesor es «rajón», no sabe enseñar, llega tarde a clase o tiene metodologías.</p>
-                    </div>
-                </div>
-                <div class="span4">
-                    <div class="span3">
-                        <img src="resources/images/comment.png" class="autosize"/>
-                    </div>
-                    <div class="span9">
-                        <h2>Comenta</h2>
-                        <p>Comenta acerca de los temas que más te gustan de un profesor o de una materia.</p>
-                    </div>
-                </div>
-                <div class="span3">
-                    <div class="span3">
-                        <img src="resources/images/rate.png" class="autosize"/>
-                    </div>
-                    <div class="span9">
-                        <h2>Califica</h2>
-                        <p>Califica profesores, cursos y materias.</p>
-                        <p>Con esto ayudas a otros a seleccionar los mejores profesores y materias, a la vez que recibes los mejores consejos acerca de profesores y materias importantes para tu desarrollo profesional.</p>
+            <div class="row-fluid">
+                <form class="form-search" method="get" action="#{request.contextPath}/search.xhtml" >
+                    <input type="text" name="query" value="#{search.query}" class="search-query"   placeholder = "Busca un profesor o una materia">
+                        <button id="searchButton" type="submit" />
+                    </input>
+                </form>
+            </div>
+            <div class="row">
+                <div class="span12">
+                    <div class="well">
+                        <h1>En <strong>IUDEX</strong> puedes</h1>
+                        <br/>
+                        <table>
+                            <tr>
+                                <td style="width: 33%; vertical-align: top;">
+                                    <div class="share-icon" />
+                                    <div>
+                                        <h2>Compartir</h2>
+                                        <p>Comparte tu opinión acerca de un profesor o un curso de forma anónima.</p>
+                                        <p>Así el resto de tus amigos sabrá si un profesor es «rajón», no sabe enseñar, llega tarde a clase o tiene metodologías.</p>
+                                    </div>
+
+                                </td>
+                                <td style="width: 33%; vertical-align: top;">
+                                    <div class="comment-icon" />
+                                    <div>
+                                        <h2>Comentar</h2>
+                                        <p>Comenta acerca de los temas que más te gustan de un profesor o de una materia.</p>
+                                    </div>
+
+                                </td>
+                                <td style="width: 33%; vertical-align: top;">
+                                    <div class="rate-icon" />
+                                    <div>
+                                        <h2>Calificar</h2>
+                                        <p>Califica profesores, cursos y materias.</p>
+                                        <p>Con esto ayudas a otros a seleccionar los mejores profesores y materias, a la vez que recibes los mejores consejos acerca de profesores y materias importantes para tu desarrollo profesional.</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
                     </div>
                 </div>
-		</div>
-	
-		</div>
-			</div>
-		<!--fitText code-->
-		<script type="text/javascript">
-			$("#fittext-header").fitText(2.3);
-		</script>
-		<!-- End of fitText code-->
+            </div>
+        </div>
     </ui:define>
 </ui:composition>

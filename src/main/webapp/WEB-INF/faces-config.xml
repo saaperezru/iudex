@@ -14,27 +14,27 @@
     <navigation-rule>
         <from-view-id>/index.xhtml</from-view-id>
         <navigation-case>
-            <from-action>#{signUp.signUp()}</from-action>
+            <from-action>#{signUp.signUp}</from-action>
             <from-outcome>success</from-outcome>
             <to-view-id>/registrationComplete.xhtml</to-view-id>
         </navigation-case>
         <navigation-case>
-            <from-action>#{signUp.signUp()}</from-action>
+            <from-action>#{signUp.signUp}</from-action>
             <from-outcome>failure</from-outcome>
             <to-view-id>/index.xhtml</to-view-id>
         </navigation-case>
         <navigation-case>
-            <from-action>#{login.logIn()}</from-action>
+            <from-action>#{login.logIn}</from-action>
             <from-outcome>success</from-outcome>
             <to-view-id>/index.xhtml</to-view-id>
         </navigation-case>
         <navigation-case>
-            <from-action>#{login.logIn()}</from-action>
+            <from-action>#{login.logIn}</from-action>
             <from-outcome>failure</from-outcome>
             <to-view-id>/index.xhtml</to-view-id>
         </navigation-case>
         <navigation-case>
-            <from-action>#{login.logIn()}</from-action>
+            <from-action>#{login.logIn}</from-action>
             <from-outcome>requiresCaptcha</from-outcome>
             <to-view-id>/logIn.xhtml</to-view-id>
             <redirect>true</redirect>
@@ -43,13 +43,13 @@
     <navigation-rule>
         <from-view-id>/logIn.xhtml</from-view-id>
         <navigation-case>
-            <from-action>#{login.logIn()}</from-action>
+            <from-action>#{login.logIn}</from-action>
             <from-outcome>success</from-outcome>
             <to-view-id>/index.xhtml</to-view-id>
             <redirect>true</redirect>
         </navigation-case>
         <navigation-case>
-            <from-action>#{login.logIn()}</from-action>
+            <from-action>#{login.logIn}</from-action>
             <from-outcome>failure</from-outcome>
             <to-view-id>/logIn.xhtml</to-view-id>
         </navigation-case>
@@ -92,7 +92,7 @@
     </navigation-rule>
 	<navigation-rule>
         <navigation-case>
-            <from-action>#{search.submit()}</from-action>
+            <from-action>#{search.submit}</from-action>
             <from-outcome>success</from-outcome>
             <to-view-id>/search.xhtml</to-view-id>
             <redirect>

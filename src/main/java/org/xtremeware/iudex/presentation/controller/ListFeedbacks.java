@@ -1,11 +1,14 @@
 package org.xtremeware.iudex.presentation.controller;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import org.xtremeware.iudex.businesslogic.facade.FeedbacksFacade;
 import org.xtremeware.iudex.helper.Config;
+import org.xtremeware.iudex.presentation.vovw.FeedbackVoVwFull;
+import org.xtremeware.iudex.presentation.vovw.builder.FeedbackVoVwBuilder;
 import org.xtremeware.iudex.vo.FeedbackVo;
 
 /**
@@ -16,10 +19,22 @@ import org.xtremeware.iudex.vo.FeedbackVo;
 @ViewScoped
 public class ListFeedbacks implements Serializable {
 
+    // TODO: Make the page size configurable
+    private static final int pageSize = 10;
     private Long feedbackTypeId;
-    private List<FeedbackVo> feedbacks;
+    private List<FeedbackVoVwFull> feedbacks;
+    private List<Integer> pages;
+    private Integer currentPage;
 
-    public List<FeedbackVo> getFeedbacks() {
+    public Integer getCurrentPage() {
+        return currentPage;
+    }
+    
+    public List<Integer> getPages() {
+        return pages;
+    }
+
+    public List<FeedbackVoVwFull> getFeedbacks() {
         if (feedbacks == null) {
             loadFeedbacks();
         }
@@ -35,13 +50,32 @@ public class ListFeedbacks implements Serializable {
     }
 
     public void loadFeedbacks() {
+        loadFeedbacks(1);
+    }
+
+    public void loadFeedbacks(int page) {
         FeedbacksFacade feedbacksFacade = Config.getInstance().getFacadeFactory().
                 getFeedbacksFacade();
+        List<FeedbackVo> feedbackVos;
+        int firstResult = (page - 1) * pageSize;
+        int pagesCount;
         if (feedbackTypeId != null && !feedbackTypeId.equals(0L)) {
-            feedbacks = feedbacksFacade.getFeedbacksByFeedbackType(
-                    feedbackTypeId);
+            feedbackVos = feedbacksFacade.getFeedbacksByFeedbackType(
+                    feedbackTypeId, firstResult, pageSize);
+            pagesCount = (int)Math.ceil(feedbacksFacade.countFeedbacksByFeedbackType(feedbackTypeId) / (float)pageSize);
         } else {
-            feedbacks = feedbacksFacade.getAllFeedbacks();
+            feedbackVos = feedbacksFacade.getAllFeedbacks(firstResult, pageSize);
+            pagesCount = (int)Math.ceil(feedbacksFacade.countAllFeedbacks() / (float)pageSize);
+        }
+        pages = new ArrayList<Integer>(pagesCount);
+        for(int i = 1; i <= pagesCount; i++){
+            pages.add(i);
+        }
+        currentPage = page;
+        FeedbackVoVwBuilder builder = FeedbackVoVwBuilder.getInstance();
+        feedbacks = new ArrayList<FeedbackVoVwFull>(feedbackVos.size());
+        for (FeedbackVo feedbackVo : feedbackVos) {
+            feedbacks.add(builder.getFeedbackVoVwFull(feedbackVo));
         }
     }
 }

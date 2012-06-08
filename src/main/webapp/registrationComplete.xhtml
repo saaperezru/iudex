@@ -4,19 +4,21 @@
                 template="WEB-INF/templates/default.xhtml"
                 xmlns="http://www.w3.org/1999/xhtml">
 
+    <ui:define name="title">- Registro exitoso</ui:define>
+    
     <ui:define name="content">
-        <div class="row-fluid">
-            <div class="span12">
-                <br />
-                <br />
-                <br />
-                <p align="center">
-                    Su registro ha sido exitoso. Hemos enviado un mensaje de correo electrónico a su
-                    cuenta de correo universitaria para confirmar su identidad.
-                </p>  
-                <br />
-                <br />
-                <br />
+        <div class="container">
+            <div class="row">
+                <div class="span6 offset3">
+                    <div class="well">
+                        <ul class="alert alert-success">
+                            <li>
+                                Su registro ha sido exitoso. Hemos enviado un mensaje de correo electrónico a su
+                                cuenta de correo universitaria para confirmar su identidad.
+                            </li>  
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
     </ui:define>    

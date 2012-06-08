@@ -15157,7 +15157,7 @@ insert into USER_PROGRAM values ('1','1','35'),
 
 -- TYPE_FEEDBACK
 
-insert into TYPE_FEEDBACK values ('1','Comentario General'),
+insert into TYPE_FEEDBACK values ('1','Comentario general'),
  ('2','Error'),
  ('3','Sugerencia');
  

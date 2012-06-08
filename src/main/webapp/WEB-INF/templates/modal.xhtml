@@ -1,0 +1,60 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html">
+
+    <h:head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/xhtml; charset=utf-8" />
+        <meta name="description" content="" />
+        <meta name="keywords" content="" />
+        <meta name="author" content="" />
+        <link rel="icon" href="#{request.contextPath}/favicon.ico" />
+        <link rel="shortcut" href="#{request.contextPath}/favicon.ico" />
+        <link rel="stylesheet/less" href="#{request.contextPath}/resources/bootstrap-less/bootstrap.less" />
+        <link href='http://fonts.googleapis.com/css?family=Yanone+Kaffeesatz:700' rel='stylesheet' type='text/css' />
+        <link href='http://fonts.googleapis.com/css?family=Dosis' rel='stylesheet' type='text/css' />
+        <h:outputStylesheet library="css" name="common.css" />
+        <h:outputStylesheet library="css" name="modal.css" />
+        <h:outputStylesheet library="bootstrap-less" name="bootstrap.less" />
+        <h:outputScript library="primefaces" name="jquery/jquery.js" />
+        <h:outputScript library="jquery" name="jquery.fittext.js" />
+        <h:outputScript library="jquery" name="jquery.expander.min.js" />
+        <!--<h:outputScript library="bootstrap" name="js/bootstrap.min.js" />-->
+        <h:outputScript library="bootstrap" name="js/bootstrap-tooltip.js" />
+        <h:outputScript library="bootstrap-less" name="less-1.3.0.min.js" />
+        <script type="text/javascript">
+
+            var _gaq = _gaq || [];
+            _gaq.push(['_setAccount', 'UA-32430864-1']);
+            _gaq.push(['_trackPageview']);
+
+            (function() {
+                var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+                ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+            })();
+
+        </script>
+    </h:head>
+    <h:body>
+
+        <!--content-->
+
+        <ui:insert name="content">
+
+        </ui:insert>
+
+        <script>
+            jQuery(document).ready(function() {
+                jQuery(".inline-error").tooltip();
+                jQuery(".expandable").expander({
+                    slicePoint: 200,
+                    expandText: "leer más",
+                    userCollapseText: "leer menos"
+                });
+            });
+        </script>
+    </h:body>
+</html>

@@ -1,11 +1,17 @@
 package org.xtremeware.iudex.businesslogic.service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.EntityManager;
-import org.xtremeware.iudex.businesslogic.service.crudinterfaces.*;
+import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Create;
+import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Delete;
+import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Read;
+import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Update;
 import org.xtremeware.iudex.dao.AbstractDaoBuilder;
 import org.xtremeware.iudex.entity.FeedbackEntity;
-import org.xtremeware.iudex.helper.*;
+import org.xtremeware.iudex.helper.DataBaseException;
+import org.xtremeware.iudex.helper.MultipleMessagesException;
+import org.xtremeware.iudex.helper.SecurityHelper;
 import org.xtremeware.iudex.vo.FeedbackVo;
 
 /**
@@ -138,11 +144,11 @@ public class FeedbacksService extends CrudService<FeedbackVo, FeedbackEntity> {
         return arrayList;
     }
 
-    public List<FeedbackVo> getFeedbacksByFeedbackType(EntityManager entityManager, long feedbackTypeId)
+    public List<FeedbackVo> getFeedbacksByFeedbackType(EntityManager entityManager, long feedbackTypeId, int firstResult, int maxResults)
             throws DataBaseException {
 
         List<FeedbackEntity> feedbackEntitys = getDaoFactory().getFeedbackDao().
-                getByTypeId(entityManager, feedbackTypeId);
+                getByTypeId(entityManager, feedbackTypeId, firstResult, maxResults);
 
         ArrayList<FeedbackVo> arrayList = new ArrayList<FeedbackVo>();
         for (FeedbackEntity feedbackEntity : feedbackEntitys) {
@@ -151,14 +157,22 @@ public class FeedbacksService extends CrudService<FeedbackVo, FeedbackEntity> {
         return arrayList;
     }
 
-    public List<FeedbackVo> getAllFeedbacks(EntityManager entityManager)
+    public List<FeedbackVo> getAllFeedbacks(EntityManager entityManager, int firstResult, int maxResults)
             throws DataBaseException {
 
-        List<FeedbackEntity> feedbackEntitys = getDaoFactory().getFeedbackDao().getAll(entityManager);
+        List<FeedbackEntity> feedbackEntitys = getDaoFactory().getFeedbackDao().getAll(entityManager, firstResult, maxResults);
         ArrayList<FeedbackVo> arrayList = new ArrayList<FeedbackVo>();
         for (FeedbackEntity feedbackEntity : feedbackEntitys) {
             arrayList.add(feedbackEntity.toVo());
         }
         return arrayList;
+    }
+    
+    public long countAllFeedbacks(EntityManager em) throws DataBaseException {
+        return getDaoFactory().getFeedbackDao().countAll(em);
+    }
+    
+    public long countFeedbacksByTypeId(EntityManager em, long feedbackTypeId) throws DataBaseException {
+        return getDaoFactory().getFeedbackDao().countByTypeId(em, feedbackTypeId);
     }
 }

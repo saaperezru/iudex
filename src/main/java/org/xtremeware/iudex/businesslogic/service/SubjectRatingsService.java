@@ -10,8 +10,8 @@ import org.xtremeware.iudex.vo.BinaryRatingVo;
 
 public class SubjectRatingsService extends BinaryRatingService<SubjectRatingEntity> {
 
-    public SubjectRatingsService(AbstractDaoBuilder daoFactory, Read read, Delete delete) {
-        super(daoFactory,read,delete,daoFactory.getSubjectRatingDao());
+    public SubjectRatingsService(AbstractDaoBuilder daoFactory, Create create, Read read, Update update,Delete delete) {
+        super(daoFactory,create,read,update,delete,daoFactory.getSubjectRatingDao());
     }
 
     @Override
@@ -56,4 +56,14 @@ public class SubjectRatingsService extends BinaryRatingService<SubjectRatingEnti
         entity.setValue(binaryRatingVo.getValue());
         return entity;
     }
+
+	@Override
+	protected void validateVoForUpdate(EntityManager entityManager, BinaryRatingVo valueObject) throws MultipleMessagesException, DataBaseException {
+		validateVoForCreation(entityManager, valueObject);
+        MultipleMessagesException multipleMessageException = new MultipleMessagesException();
+        if (valueObject.getId() == null) {
+            multipleMessageException.addMessage("subjectRating.id.null");
+            throw multipleMessageException;
+        }
+	}
 }

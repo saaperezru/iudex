@@ -146,18 +146,38 @@ public class CoursesFacade extends AbstractFacade {
 		EntityTransaction transaction = null;
 		CourseRatingVo rating = null;
 		try {
-			CourseRatingVo vo = new CourseRatingVo();
-			vo.setCourseId(courseId);
-			vo.setUserId(userId);
-			vo.setValue(value);
-
 			entityManager = getEntityManagerFactory().createEntityManager();
-			transaction = entityManager.getTransaction();
-			transaction.begin();
 
-			rating = getServiceFactory().getCourseRatingsService().create(entityManager, vo);
+			CourseRatingVo existingRating = getServiceFactory().getCourseRatingsService().getByCourseIdAndUserId(entityManager, courseId, userId);
 
-			transaction.commit();
+			if (value == 0.0) {
+				if (existingRating != null) {
+					transaction = entityManager.getTransaction();
+					transaction.begin();
+
+					getServiceFactory().getCourseRatingsService().delete(entityManager, existingRating.getId());
+
+					transaction.commit();
+				}
+			} else {
+				transaction = entityManager.getTransaction();
+				transaction.begin();
+
+				if (existingRating == null) {
+					CourseRatingVo vo = new CourseRatingVo();
+					vo.setCourseId(courseId);
+					vo.setUserId(userId);
+					vo.setValue(value);
+
+
+					rating = getServiceFactory().getCourseRatingsService().create(entityManager, vo);
+				} else {
+					existingRating.setValue(value);
+					rating = getServiceFactory().getCourseRatingsService().update(entityManager, existingRating);
+				}
+				transaction.commit();
+			}
+
 		} catch (Exception exception) {
 			getServiceFactory().getLogService().error(exception.getMessage(), exception);
 			FacadesHelperImplementation.checkException(exception, MultipleMessagesException.class);

@@ -1,0 +1,23 @@
+.input-feedback {
+    height: 130px;
+    width: 480px;
+    min-width: 480px;
+    max-width: 480px;
+    display: inline-block;
+}
+
+.label {
+    margin-right: 10px;
+}
+
+.label-feedback-1 {
+    background-color: #3a87ad !important;
+}
+
+.label-feedback-2 {
+    background-color: #b94a48 !important;
+}
+
+.label-feedback-3 {
+    background-color: #51a351 !important;
+}

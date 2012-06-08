@@ -85,18 +85,26 @@ public class SubjectsFacade extends AbstractFacade {
         EntityTransaction transaction = null;
         BinaryRatingVo ratingVo = null;
         try {
+            entityManager = getEntityManagerFactory().createEntityManager();
+			
+			BinaryRatingVo existingRating = getServiceFactory().getSubjectRatingsService().getByEvaluatedObjectAndUserId(entityManager, subjectId, userId);
+
+            transaction = entityManager.getTransaction();
+            transaction.begin();
+
+ 			if (existingRating == null){
             BinaryRatingVo binaryRatingVo = new BinaryRatingVo();
             binaryRatingVo.setEvaluatedObjectId(subjectId);
             binaryRatingVo.setUserId(userId);
             binaryRatingVo.setValue(value);
 
-            entityManager = getEntityManagerFactory().createEntityManager();
-            transaction = entityManager.getTransaction();
-            transaction.begin();
-            
             ratingVo = getServiceFactory().
                     getSubjectRatingsService().create(entityManager, binaryRatingVo);
-            
+			}else{
+				existingRating.setValue(value);
+				ratingVo = getServiceFactory().getSubjectRatingsService().update(entityManager, existingRating);
+			}
+
             transaction.commit();
         } catch (Exception exception) {
             getServiceFactory().getLogService().error(exception.getMessage(), exception);

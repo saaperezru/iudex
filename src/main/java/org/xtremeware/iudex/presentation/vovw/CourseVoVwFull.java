@@ -1,6 +1,8 @@
 
 package org.xtremeware.iudex.presentation.vovw;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.xtremeware.iudex.vo.CourseVo;
 import org.xtremeware.iudex.vo.ValueObject;
 
@@ -9,7 +11,7 @@ public class CourseVoVwFull implements ValueObject{
 	private CourseVo vo;
 	private SubjectVoVwSmall subjectVo;
 	private ProfessorVoVwFull professorVo;
-
+        public  List<Long> periods = new ArrayList() { {add(1); add(2);add(3); add(4);add(5); add(6);}};
 
 	public CourseVoVwFull(CourseVo vo, SubjectVoVwSmall subjectVo, ProfessorVoVwFull professorVo) {
 		this.vo = vo;
@@ -74,4 +76,14 @@ public class CourseVoVwFull implements ValueObject{
 		return vo.getRatingCount();
 	}
 
+        public  List<Long> getPeriods() {
+            return periods;
+        }
+
+        public void setPeriods(List<Long> periods) {
+            this.periods = periods;
+        }
+
+        
+        
 }

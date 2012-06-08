@@ -1,17 +1,20 @@
 package org.xtremeware.iudex.presentation.vovw.builder;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import org.xtremeware.iudex.businesslogic.facade.CoursesFacade;
 import org.xtremeware.iudex.businesslogic.facade.FacadeFactory;
 import org.xtremeware.iudex.businesslogic.facade.ProfessorsFacade;
 import org.xtremeware.iudex.businesslogic.facade.SubjectsFacade;
-import org.xtremeware.iudex.businesslogic.helper.FacadesHelperImplementation;
 import org.xtremeware.iudex.helper.Config;
-import org.xtremeware.iudex.helper.DataBaseException;
 import org.xtremeware.iudex.presentation.vovw.CourseVoVwFull;
 import org.xtremeware.iudex.presentation.vovw.ProfessorVoVwFull;
 import org.xtremeware.iudex.presentation.vovw.SubjectVoVwSmall;
-import org.xtremeware.iudex.vo.*;
+import org.xtremeware.iudex.vo.CourseVoFull;
+import org.xtremeware.iudex.vo.ProfessorVoFull;
+import org.xtremeware.iudex.vo.SubjectVoFull;
 
 public class CourseVoVwBuilder {
 	

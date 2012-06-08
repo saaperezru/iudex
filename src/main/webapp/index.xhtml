@@ -7,7 +7,8 @@
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:iudex="http://java.sun.com/jsf/composite/iudex"
                 xmlns="http://www.w3.org/1999/xhtml"
-                xmlns:pou="http://primefaces.org/ui">
+                xmlns:pou="http://primefaces.org/ui"
+                xmlns:maocv="http://myfaces.apache.org/commons/validators">
 
     <ui:define name="title">- Inicio</ui:define>
 
@@ -29,12 +30,9 @@
                             <div class="control-group #{viewHelper.addErrorClass('loginForm:userName')}">
                                 <label class="control-label " for="userName">Usuario</label>
                                 <div class="controls ">
-                                    <div class="input-append">
-                                        <h:inputText id="userName" value="#{login.userName}" required="true" maxlength="20" class="input-username">
-                                            <f:validateLength maximum="20" />
-                                        </h:inputText>
-                                        <span class="add-on">@unal.edu.co</span>
-                                    </div>
+                                    <h:inputText id="userName" value="#{login.userName}" required="true" maxlength="20">
+                                        <f:validateLength maximum="20" />
+                                    </h:inputText>
                                     <iudex:inlineError key="loginForm:userName" />
                                 </div>
                             </div>
@@ -79,6 +77,11 @@
                                 </div>
                                 <div class="modal-body">
                                     <h:messages for="signUpForm" class="alert alert-error"/>
+
+                                    <p>En IUDEX usamos las cuentas de correo electrónico de la UN
+                                        para garantizar que nuestros usuarios estén vinculados
+                                        realmente con la universidad.</p>
+
                                     <div class="control-group #{viewHelper.addErrorClass('signUpForm:userName')}">
                                         <label class="control-label " for="userName">Usuario</label>
                                         <div class="controls ">
@@ -91,6 +94,7 @@
                                             <iudex:inlineError key="signUpForm:userName" />
                                         </div>
                                     </div>
+
                                     <div class="control-group #{viewHelper.addErrorClass('signUpForm:password')}">
                                         <label class="control-label " for="password">Contraseña</label>
                                         <div class="controls ">
@@ -98,6 +102,16 @@
                                                 <f:validateLength minimum="8" maximum="18" /> 
                                             </h:inputSecret>
                                             <iudex:inlineError key="signUpForm:password" />
+                                        </div>
+                                    </div>
+
+                                    <div class="control-group #{viewHelper.addErrorClass('signUpForm:passwordConfirmation')}">
+                                        <label class="control-label" for="password">Confirmar contraseña</label>
+                                        <div class="controls ">
+                                            <h:inputSecret id="passwordConfirmation" value="" maxlength="18" validatorMessage="La confirmación de la contraseña no coincide">
+                                                <maocv:validateCompareTo forId="password" operator="eq" />
+                                            </h:inputSecret>
+                                            <iudex:inlineError key="signUpForm:passwordConfirmation" />
                                         </div>
                                     </div>
 

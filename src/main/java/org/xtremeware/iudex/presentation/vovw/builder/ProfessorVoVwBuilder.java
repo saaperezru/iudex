@@ -9,7 +9,7 @@ import org.xtremeware.iudex.vo.ProfessorVoFull;
 
 public class ProfessorVoVwBuilder {
 
-	private static final String DEFAULTIMAGEURL = "../resources/images/professor.png";
+	private static final String DEFAULT_IMAGE_URL = "/resources/images/professor.png";
 	private static ProfessorVoVwBuilder instance;
 	private FacadeFactory facadeFactory;
 
@@ -46,7 +46,7 @@ public class ProfessorVoVwBuilder {
 
 	private void normalizeUrls(ProfessorVo professor) {
 		if (professor.getImageUrl() == null || professor.getImageUrl().isEmpty()) {
-			professor.setImageUrl(DEFAULTIMAGEURL);
+			professor.setImageUrl(DEFAULT_IMAGE_URL);
 		}
 		if (!professor.getWebsite().contains("http://") && !professor.getWebsite().contains("https://")) {
 			professor.setWebsite("http://" + professor.getWebsite());

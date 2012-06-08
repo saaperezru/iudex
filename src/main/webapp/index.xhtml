@@ -203,10 +203,9 @@
                         <div class="row">
                             <div class="span2 comment-photo">
                                 <div class="thumbnail">
-                                    <h:graphicImage value="#{comment.user.imageUrl}" alt="#{comment.user.username}" />
+                                    <h:graphicImage value="#{comment.professorImageUrl}" alt="#{comment.professorName}" />
                                 </div>
-                                <h4><h:outputText value="#{comment.user.username}" /></h4>
-                                <h:outputText value="#{comment.user.mainProgram}" />
+                                <h4><h:outputText value="#{comment.professorName}" /></h4>
                             </div>
                             <div class="span10">
                                 <div class="comment-header">
@@ -218,7 +217,7 @@
                                         </p>
                                         <p>
                                             <label>Profesor:</label>
-                                            <h:outputText value="#{comment.professor}" />
+                                            <h:outputText value="#{comment.professorName}" />
                                         </p>
                                     </div>
                                     <div class="pull-right">
@@ -229,9 +228,10 @@
                                     </div>
                                     <div class="clearfix" />
                                 </div>
-                                <p>
+                                <blockquote>
                                     <h:outputText value="#{comment.content}" />
-                                </p>
+                                    <cite><h:outputText value="#{comment.user.username}"/></cite>
+                                </blockquote>
                             </div>
                         </div>
                     </div>

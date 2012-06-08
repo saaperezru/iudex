@@ -34,9 +34,13 @@ public class CommentVoVwLarge extends CommentVoVwMedium {
         return course.getSubject().getName();
     }
 
-    public String getProfessor() {
+    public String getProfessorName() {
         ProfessorVoVwLarge professor = course.getProfessor();
         return professor.getFirstName() + " " + professor.getLastName();
+    }
+    
+    public String getProfessorImageUrl() {
+        return course.getProfessor().getImageUrl();
     }
 
     public String getPeriod() {

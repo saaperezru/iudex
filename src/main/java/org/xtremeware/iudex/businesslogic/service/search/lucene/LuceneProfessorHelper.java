@@ -22,6 +22,7 @@ import org.xtremeware.iudex.vo.ProfessorVo;
 public final class LuceneProfessorHelper extends LuceneHelper<Long, ProfessorVo> {
 
     private static LuceneProfessorHelper instance;
+    private final String fuzzySearch = "~0.6"; 
 
     private LuceneProfessorHelper(OpenMode openMode, Version version, Directory directory, Analyzer analyzer) {
         super(openMode, version, directory, analyzer);
@@ -50,7 +51,7 @@ public final class LuceneProfessorHelper extends LuceneHelper<Long, ProfessorVo>
             indexReader = IndexReader.open(getDirectory());
             IndexSearcher indexSearcher = new IndexSearcher(indexReader);
             collector = new ResultCollector(new HashSet<Integer>());      
-            indexSearcher.search(q.parse(query), collector);
+            indexSearcher.search(q.parse(query+fuzzySearch), collector);
         } catch (Exception exception) {
             throw new ExternalServiceException(exception.getMessage(), exception);
         }

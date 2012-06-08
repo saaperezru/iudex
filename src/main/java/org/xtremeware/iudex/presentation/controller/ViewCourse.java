@@ -115,7 +115,7 @@ public class ViewCourse implements Serializable {
 
 
 	public void handleRate(RateEvent rateEvent) {
-		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Calificación exitosa", "Has calificado esta materia con un :" + ((Double) rateEvent.getRating()).intValue() + ". ¡Agradecemos tu opinión!");
+		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Calificación exitosa", "Has calificado esta materia con un : " + ((Double) rateEvent.getRating()).intValue() + ". ¡Agradecemos tu opinión!");
 
 		FacesContext.getCurrentInstance().addMessage(null, message);
 	}

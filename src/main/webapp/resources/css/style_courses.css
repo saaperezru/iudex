@@ -1,10 +1,10 @@
 
-.fixed-navbar{
+#fixed-navbar{
 	position: fixed;
 	top : 70px;
 	height: 86%;
 	bottom : 55px;
-	margin-left: 0;
+	margin-left: 0 !important;
 	/*left: -10%;*/
 }
 
@@ -33,10 +33,6 @@ body{
 	width: 100%;
 	line-height: 120%;
 }
-.comment{
-	background-color: white;
-}
-
 a.thumb-up {
     width: 20px;
     height: 20px;
@@ -51,12 +47,13 @@ a.thumb-down {
     display: inline-block;
 }
 .comment {
+	background-color: white;
     position: relative;
     border: solid 1px #AAA;
     padding: 10px 10px;
     border-radius: 4px;
-    margin-top: 20px;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
+	margin-top: 0;
     display: inline-block
 }
 .vote , .comment-text, .comment-photo{
@@ -152,7 +149,7 @@ div.professor-photo ul.actions li a {
 .upvote{
     background-image: url(../resources/images/arrow-up.png);
     display: inline-block;
-    top : 0px;
+    top : 10px;
     right : 3px;
     position: absolute;
     width: 64px;
@@ -162,14 +159,14 @@ div.professor-photo ul.actions li a {
     background-image: url(../resources/images/arrow-down.png);
     display: inline-block;
     position: absolute;
-    bottom: 0px;
+    bottom: 10px;
     right : 3px;
     width: 64px;
     height: 64px;
 }
 .vote-count{
     position: absolute;
-    top: 50%;
+    top: 45%;
     right : 3px;
     font-size: 20px;
     text-align: center;
@@ -236,4 +233,38 @@ div.professor-photo ul.actions li a {
 	display: inline-block;
 	margin-left: auto;
 	margin-right: auto;
+}
+.fittext-period{
+	text-align: center;
+}
+#courseRatingForm{
+	margin-bottom: 5px;
+	border : #bbb 1px solid;
+}
+#rate-and-comment{
+	width : 274px;
+	height: 33px;
+	margin: 20px 0;
+	opacity: 0.3;
+}
+#rate-and-comment-img{
+	background: url('../resources/images/arrow.png') no-repeat top right;
+	background-size: 53px 33px;
+	position: relative;
+	top: 5px;
+	width: 45px;
+	height: 53px;
+	opacity: 0.15;
+}
+.ui-growl{
+	font :  "Dosis", "Helvetica Neue", Helvetica, Arial, sans-serif;
+	top: 70px;
+}
+#courseCommentForm{
+	margin-top: 10px;
+}
+.fittext-no-messages{
+	line-height: 150%;
+	opacity: 0.5;
+	text-align: center;
 }

@@ -46,11 +46,11 @@ public final class LuceneProfessorHelper extends LuceneHelper<Long, ProfessorVo>
         ResultCollector collector = null;
         IndexReader indexReader = null;
         try {
-            Query q = new QueryParser(getVersion(), "name", getAnalyzer()).parse(query + "~0.9");
+            QueryParser q = new QueryParser(getVersion(), "name", getAnalyzer());
             indexReader = IndexReader.open(getDirectory());
             IndexSearcher indexSearcher = new IndexSearcher(indexReader);
-            collector = new ResultCollector(new HashSet<Integer>());
-            indexSearcher.search(q, collector);
+            collector = new ResultCollector(new HashSet<Integer>());      
+            indexSearcher.search(q.parse(query), collector);
         } catch (Exception exception) {
             throw new ExternalServiceException(exception.getMessage(), exception);
         }

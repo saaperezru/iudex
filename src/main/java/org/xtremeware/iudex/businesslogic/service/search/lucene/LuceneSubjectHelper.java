@@ -47,16 +47,16 @@ public final class LuceneSubjectHelper extends LuceneHelper<Long, SubjectVo> {
         ResultCollector collector = null;
         IndexReader indexReader = null;
         try {
-            Query q = new QueryParser(getVersion(), "name", getAnalyzer()).parse(query+"~0.9");
+            QueryParser q = new QueryParser(getVersion(), "name", getAnalyzer());
             indexReader = IndexReader.open(getDirectory());
             IndexSearcher indexSearcher = new IndexSearcher(indexReader);
-            collector = new ResultCollector(new HashSet<Integer>());
-            indexSearcher.search(q, collector);
+            collector = new ResultCollector(new HashSet<Integer>());      
+            indexSearcher.search(q.parse(query), collector);
         } catch (Exception exception) {
             throw new ExternalServiceException(exception.getMessage(), exception);
         }
         List<Long> resultsIds = new ArrayList<Long>();
-        for(Integer integer : collector.getBag()){
+        for (Integer integer : collector.getBag()) {
             try {
                 resultsIds.add(Long.parseLong(indexReader.document(integer).get("id")));
             } catch (Exception exception) {

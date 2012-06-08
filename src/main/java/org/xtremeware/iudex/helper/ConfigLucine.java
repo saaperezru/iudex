@@ -73,19 +73,18 @@ public final class ConfigLucine {
     public static Set<String> getSpanishStopWords() {
         if (stopWords == null) {
             try {
-                
-                FileInputStream fstream = new FileInputStream(
-                        ConfigLucine.class.getResource("/org/xtremeware/iudex/iudex.properties").getFile());
+                String file = ConfigurationVariablesHelper.getVariable(
+                        ConfigurationVariablesHelper.SPANISH_STOP_WORDS_PATH);              
+                FileInputStream fstream = new FileInputStream(file);
                 
                 DataInputStream in = new DataInputStream(fstream);
                 BufferedReader br = new BufferedReader(new InputStreamReader(in));
                 String strLine;
-                
+                stopWords = new HashSet<String>();
                 while ((strLine = br.readLine()) != null) {
                     stopWords.addAll(Arrays.asList(strLine.split(" ")));
                 }
                 in.close();
-                System.out.println(stopWords.size());
             } catch (Exception exception) {
                 throw new RuntimeException(exception.getMessage(), exception.getCause());
             }

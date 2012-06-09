@@ -26,7 +26,7 @@ public class PeriodsFacade extends AbstractFacade {
             transaction.commit();
         } catch (DataBaseException exception) {
             getServiceFactory().getLogService().error(exception.getMessage(), exception);
-            FacadesHelper.rollbackTransaction(entityManager, transaction, exception);
+            FacadesHelper.rollbackTransactionAndCloseEntityManager(entityManager, transaction, exception);
         } finally {
             FacadesHelper.closeEntityManager(entityManager);
         }
@@ -57,9 +57,9 @@ public class PeriodsFacade extends AbstractFacade {
             transaction.commit();
         } catch (Exception exception) {
             getServiceFactory().getLogService().error(exception.getMessage(), exception);
-            FacadesHelper.checkException(exception, MultipleMessagesException.class);
+            FacadesHelper.checkException(entityManager, exception, MultipleMessagesException.class);
             FacadesHelper.checkDuplicityViolation(entityManager, transaction, exception);
-            FacadesHelper.rollbackTransaction(entityManager, transaction, exception);
+            FacadesHelper.rollbackTransactionAndCloseEntityManager(entityManager, transaction, exception);
         } finally {
             FacadesHelper.closeEntityManager(entityManager);
         }
@@ -75,6 +75,7 @@ public class PeriodsFacade extends AbstractFacade {
 
         } catch (Exception enException) {
             getServiceFactory().getLogService().error(enException.getMessage(), enException);
+            FacadesHelper.closeEntityManager(entityManager);
             throw new RuntimeException(enException);
         } finally {
             FacadesHelper.closeEntityManager(entityManager);
@@ -91,6 +92,7 @@ public class PeriodsFacade extends AbstractFacade {
             period = getServiceFactory().getPeriodsService().read(entityManager, periodId);
         } catch (Exception enException) {
             getServiceFactory().getLogService().error(enException.getMessage(), enException);
+            FacadesHelper.closeEntityManager(entityManager);
             throw new RuntimeException(enException);
         } finally {
             FacadesHelper.closeEntityManager(entityManager);

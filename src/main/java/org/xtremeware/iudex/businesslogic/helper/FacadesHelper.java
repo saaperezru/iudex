@@ -17,11 +17,14 @@ public final class FacadesHelper {
 
     private static <E extends Exception> void checkException(EntityManager entityManager,
             EntityTransaction transaction, Exception exception, Class<E> exceptionClass,
-            boolean rollback) throws
+            boolean rollback, boolean closeEntity) throws
             E {
         if (exceptionClass.isInstance(exception)) {
             if (rollback) {
                 rollbackTransaction(entityManager, transaction);
+            }
+            if (closeEntity) {
+                closeEntityManager(entityManager);
             }
             throw exceptionClass.cast(exception);
         }
@@ -40,7 +43,7 @@ public final class FacadesHelper {
             EntityManager entityManager,
             EntityTransaction transaction, Exception exception, Class<E> exceptionClass) throws
             E {
-        checkException(entityManager, transaction, exception, exceptionClass, true);
+        checkException(entityManager, transaction, exception, exceptionClass, true,true);
     }
 
     public static void checkDuplicityViolation(
@@ -60,17 +63,17 @@ public final class FacadesHelper {
 
     }
 
-    /**
-     * Checks if the exception is an instance of the exception class. If so,
-     * throws it.
-     *
-     * @param ex the exception to check
-     * @param exceptionClass the exception class
-     */
+    public static <E extends Exception> void checkException(EntityManager entityManager,
+            Exception ex,
+            Class<E> exceptionClass) throws
+            E {
+        checkException(entityManager, null, ex, exceptionClass, false,true);
+    }
+    
     public static <E extends Exception> void checkException(Exception ex,
             Class<E> exceptionClass) throws
             E {
-        checkException(null, null, ex, exceptionClass, false);
+        checkException(null, null, ex, exceptionClass, false,false);
     }
 
     /**
@@ -81,7 +84,7 @@ public final class FacadesHelper {
      */
     private static void rollbackTransaction(EntityManager em,
             EntityTransaction tx) {
-        rollbackTransaction(em, tx, null);
+        rollbackTransactionAndCloseEntityManager(em, tx, null);
     }
 
     /**
@@ -92,13 +95,14 @@ public final class FacadesHelper {
      * @param tx the entity transaction
      * @param exception the exception to wrap
      */
-    public static void rollbackTransaction(EntityManager em,
+    public static void rollbackTransactionAndCloseEntityManager(EntityManager em,
             EntityTransaction tx,
             Exception exception) {
         try {
             if (em != null && tx != null) {
                 tx.rollback();
             }
+            closeEntityManager(em);
         } catch (Exception ex) {
             Config.getInstance().getServiceFactory().getLogService().error(ex.getMessage(), ex);
         }

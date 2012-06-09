@@ -33,13 +33,13 @@ public class CommentsFacade extends AbstractFacade {
         } catch (Exception exception) {
             getServiceFactory().getLogService().error(exception.getMessage(),
                     exception);
-            FacadesHelper.checkException(exception,
+            FacadesHelper.checkException(entityManager,exception,
                     MultipleMessagesException.class);
-            FacadesHelper.checkException(exception,
+            FacadesHelper.checkException(entityManager,exception,
                     MaxCommentsLimitReachedException.class);
             FacadesHelper.checkDuplicityViolation(entityManager,
                     transaction, exception);
-            FacadesHelper.rollbackTransaction(entityManager,
+            FacadesHelper.rollbackTransactionAndCloseEntityManager(entityManager,
                     transaction, exception);
         } finally {
             FacadesHelper.closeEntityManager(entityManager);
@@ -63,7 +63,7 @@ public class CommentsFacade extends AbstractFacade {
                     exception);
             FacadesHelper.checkExceptionAndRollback(entityManager,
                     transaction, exception, DataBaseException.class);
-            FacadesHelper.rollbackTransaction(entityManager,
+            FacadesHelper.rollbackTransactionAndCloseEntityManager(entityManager,
                     transaction, exception);
         } finally {
             FacadesHelper.closeEntityManager(entityManager);
@@ -80,6 +80,7 @@ public class CommentsFacade extends AbstractFacade {
         } catch (Exception exception) {
             getServiceFactory().getLogService().error(exception.getMessage(),
                     exception);
+            FacadesHelper.closeEntityManager(entityManager);
             throw new RuntimeException(exception);
         } finally {
             FacadesHelper.closeEntityManager(entityManager);
@@ -98,6 +99,7 @@ public class CommentsFacade extends AbstractFacade {
         } catch (Exception exception) {
             getServiceFactory().getLogService().error(exception.getMessage(),
                     exception);
+            FacadesHelper.closeEntityManager(entityManager);
             throw new RuntimeException(exception);
         } finally {
             FacadesHelper.closeEntityManager(entityManager);
@@ -116,6 +118,7 @@ public class CommentsFacade extends AbstractFacade {
         } catch (Exception exception) {
             getServiceFactory().getLogService().error(exception.getMessage(),
                     exception);
+            FacadesHelper.closeEntityManager(entityManager);
             throw new RuntimeException(exception);
         } finally {
             FacadesHelper.closeEntityManager(entityManager);
@@ -156,11 +159,11 @@ public class CommentsFacade extends AbstractFacade {
         } catch (Exception exception) {
             getServiceFactory().getLogService().error(exception.getMessage(),
                     exception);
-            FacadesHelper.checkException(exception,
+            FacadesHelper.checkException(entityManager,exception,
                     MultipleMessagesException.class);
             FacadesHelper.checkDuplicityViolation(entityManager,
                     transaction, exception);
-            FacadesHelper.rollbackTransaction(entityManager,
+            FacadesHelper.rollbackTransactionAndCloseEntityManager(entityManager,
                     transaction, exception);
         } finally {
             FacadesHelper.closeEntityManager(entityManager);
@@ -178,6 +181,7 @@ public class CommentsFacade extends AbstractFacade {
         } catch (Exception exception) {
             getServiceFactory().getLogService().error(exception.getMessage(),
                     exception);
+            FacadesHelper.closeEntityManager(entityManager);
             throw new RuntimeException(exception);
         } finally {
             FacadesHelper.closeEntityManager(entityManager);

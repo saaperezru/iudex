@@ -7,7 +7,7 @@ import org.xtremeware.iudex.helper.Config;
 import org.xtremeware.iudex.presentation.vovw.*;
 import org.xtremeware.iudex.vo.*;
 
-public class CourseVoVwBuilder {
+public final class CourseVoVwBuilder {
 
     private static final String NO_PERIOD_STRING = "Sin periodo.";
     private static CourseVoVwBuilder instance;
@@ -36,7 +36,7 @@ public class CourseVoVwBuilder {
         if (period == null) {
             periodString = NO_PERIOD_STRING;
         } else {
-            periodString = String.valueOf(period.getYear()) + " - " + String.valueOf(period.getSemester());
+            periodString = period.getYear() + " - " + period.getSemester();
         }
         return new CourseVoVwLarge(course.getVo(), subject, professor, periodString);
     }

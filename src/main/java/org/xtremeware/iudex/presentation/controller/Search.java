@@ -1,12 +1,8 @@
 package org.xtremeware.iudex.presentation.controller;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import java.util.*;
+import javax.faces.bean.*;
 import javax.faces.context.FacesContext;
 import org.xtremeware.iudex.presentation.vovw.CourseListVoVwSmall;
 import org.xtremeware.iudex.presentation.vovw.builder.CourseVoVwBuilder;
@@ -24,8 +20,8 @@ public class Search implements Serializable {
     ;
     private List<Integer> pages = new ArrayList<Integer>();
     private Integer currentPage;
-    private static final int itemsPerPage = 10;
-    private static final int maxItemsPerPage = 100;
+    private static final int ITEMS_PERPAGE = 10;
+    private static final int MAX_ITEMS_PERPAGE = 100;
 
     public List<CourseListVoVwSmall> getCourses() {
         if (courses.isEmpty()) {
@@ -36,7 +32,7 @@ public class Search implements Serializable {
 
     public void loadCourses() {
 
-        for (int count = 1; count <= Math.ceil(CourseVoVwBuilder.getInstance().getSearchCount(query, maxItemsPerPage) / itemsPerPage); count++) {
+        for (int count = 1; count <= Math.ceil(CourseVoVwBuilder.getInstance().getSearchCount(query, MAX_ITEMS_PERPAGE) / ITEMS_PERPAGE); count++) {
             this.pages.add(count);
         }
         loadCourses(1);
@@ -44,7 +40,7 @@ public class Search implements Serializable {
 
     public void loadCourses(int page) {
         this.courses.clear();
-        this.courses.addAll(CourseVoVwBuilder.getInstance().getSearchResults(query, itemsPerPage, itemsPerPage * page));
+        this.courses.addAll(CourseVoVwBuilder.getInstance().getSearchResults(query, ITEMS_PERPAGE, ITEMS_PERPAGE * page));
         currentPage = page;
     }
 

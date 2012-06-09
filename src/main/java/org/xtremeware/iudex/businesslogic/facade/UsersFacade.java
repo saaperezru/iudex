@@ -35,7 +35,7 @@ public class UsersFacade extends AbstractFacade {
             transaction.commit();
         } catch (Exception exception) {
             getServiceFactory().getLogService().error(exception.getMessage(), exception);
-            FacadesHelper.rollbackTransaction(entityManager, transaction, exception);
+            FacadesHelper.rollbackTransactionAndCloseEntityManager(entityManager, transaction, exception);
         } finally {
             FacadesHelper.closeEntityManager(entityManager);
         }
@@ -82,7 +82,7 @@ public class UsersFacade extends AbstractFacade {
             FacadesHelper.checkDuplicityViolation(entityManager, transaction, exception);
             FacadesHelper.checkExceptionAndRollback(entityManager, transaction, exception,
                     MultipleMessagesException.class);
-            FacadesHelper.rollbackTransaction(entityManager, transaction, exception);
+            FacadesHelper.rollbackTransactionAndCloseEntityManager(entityManager, transaction, exception);
         } finally {
             FacadesHelper.closeEntityManager(entityManager);
         }
@@ -108,8 +108,9 @@ public class UsersFacade extends AbstractFacade {
                     username, password);
         } catch (Exception exception) {
             getServiceFactory().getLogService().error(exception.getMessage(), exception);
-            FacadesHelper.checkException(exception, InactiveUserException.class);
-            FacadesHelper.checkException(exception, MultipleMessagesException.class);
+            FacadesHelper.checkException(entityManager, exception, InactiveUserException.class);
+            FacadesHelper.checkException(entityManager, exception, MultipleMessagesException.class);
+            FacadesHelper.closeEntityManager(entityManager);
             throw new RuntimeException(exception);
         } finally {
             FacadesHelper.closeEntityManager(entityManager);
@@ -138,9 +139,8 @@ public class UsersFacade extends AbstractFacade {
         } catch (Exception exception) {
             getServiceFactory().getLogService().error(exception.getMessage(), exception);
             FacadesHelper.checkDuplicityViolation(entityManager, transaction, exception);
-            FacadesHelper.checkExceptionAndRollback(entityManager, transaction, exception,
-                    MultipleMessagesException.class);
-            FacadesHelper.rollbackTransaction(entityManager, transaction, exception);
+            FacadesHelper.checkException(entityManager, exception, MultipleMessagesException.class);
+            FacadesHelper.rollbackTransactionAndCloseEntityManager(entityManager, transaction, exception);
         } finally {
             FacadesHelper.closeEntityManager(entityManager);
         }
@@ -148,17 +148,17 @@ public class UsersFacade extends AbstractFacade {
     }
 
     public void recoverPassword(String userName) {
-        EntityManager em = null;
-        EntityTransaction tx = null;
+        EntityManager entityManager = null;
+        EntityTransaction transaction = null;
         try {
-            em = getEntityManagerFactory().createEntityManager();
-            tx = em.getTransaction();
-            tx.begin();
+            entityManager = getEntityManagerFactory().createEntityManager();
+            transaction = entityManager.getTransaction();
+            transaction.begin();
 
             ServiceBuilder serviceBuilder = getServiceFactory();
 
             ForgottenPasswordKeyVo vo = serviceBuilder.getUsersService().
-                    createForgottenPasswordKey(em,
+                    createForgottenPasswordKey(entityManager,
                     userName);
 
             if (vo != null) {
@@ -175,30 +175,31 @@ public class UsersFacade extends AbstractFacade {
                         ConfigurationVariablesHelper.MAILING_TEMPLATES_RECOVER_PASSWORD_SUBJECT),
                         userName + "@unal.edu.co");
             }
-            tx.commit();
+            transaction.commit();
         } catch (Exception ex) {
             getServiceFactory().getLogService().error(ex.getMessage(), ex);
-            FacadesHelper.rollbackTransaction(em, tx, ex);
+            FacadesHelper.rollbackTransactionAndCloseEntityManager(entityManager, transaction, ex);
         } finally {
-            FacadesHelper.closeEntityManager(em);
+            FacadesHelper.closeEntityManager(entityManager);
         }
     }
 
     public UserVo validateForgottenPasswordKey(String key) {
-        EntityManager em = null;
-        UserVo vo = null;
+        EntityManager entityManager = null;
+        UserVo userVo = null;
         try {
-            em = getEntityManagerFactory().createEntityManager();
+            entityManager = getEntityManagerFactory().createEntityManager();
 
-            vo = getServiceFactory().getUsersService().
-                    getUserByForgottenPasswordKey(em, key);
-        } catch (Exception ex) {
-            getServiceFactory().getLogService().error(ex.getMessage(), ex);
-            throw new RuntimeException(ex);
+            userVo = getServiceFactory().getUsersService().
+                    getUserByForgottenPasswordKey(entityManager, key);
+        } catch (Exception exception) {
+            getServiceFactory().getLogService().error(exception.getMessage(), exception);
+            FacadesHelper.closeEntityManager(entityManager);
+            throw new RuntimeException(exception);
         } finally {
-            FacadesHelper.closeEntityManager(em);
+            FacadesHelper.closeEntityManager(entityManager);
         }
-        return vo;
+        return userVo;
     }
 
     public void resetPassword(String key, String password) throws
@@ -216,9 +217,9 @@ public class UsersFacade extends AbstractFacade {
             transaction.commit();
         } catch (Exception exception) {
             getServiceFactory().getLogService().error(exception.getMessage(), exception);
-            FacadesHelper.checkExceptionAndRollback(entityManager, transaction, exception,
+            FacadesHelper.checkException(entityManager, exception,
                     MultipleMessagesException.class);
-            FacadesHelper.rollbackTransaction(entityManager, transaction, exception);
+            FacadesHelper.rollbackTransactionAndCloseEntityManager(entityManager, transaction, exception);
         } finally {
             FacadesHelper.closeEntityManager(entityManager);
         }
@@ -236,7 +237,7 @@ public class UsersFacade extends AbstractFacade {
         } catch (Exception exception) {
             getServiceFactory().getLogService().error(exception.getMessage(), exception);
             FacadesHelper.checkExceptionAndRollback(entityManager, transaction, exception, DataBaseException.class);
-            FacadesHelper.rollbackTransaction(entityManager, transaction, exception);
+            FacadesHelper.rollbackTransactionAndCloseEntityManager(entityManager, transaction, exception);
         } finally {
             FacadesHelper.closeEntityManager(entityManager);
         }
@@ -256,6 +257,8 @@ public class UsersFacade extends AbstractFacade {
             user = getServiceFactory().getUsersService().read(entityManager, userId);
         } catch (Exception exception) {
             getServiceFactory().getLogService().error(exception.getMessage(), exception);
+            FacadesHelper.closeEntityManager(entityManager);
+            throw new RuntimeException(exception); 
         } finally {
             FacadesHelper.closeEntityManager(entityManager);
         }

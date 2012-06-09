@@ -30,6 +30,7 @@ public class FeedbacksFacade extends AbstractFacade {
         } catch (Exception exception) {
             getServiceFactory().getLogService().error(exception.getMessage(),
                     exception);
+            FacadesHelper.closeEntityManager(entityManager);
             throw new RuntimeException(exception);
         } finally {
             FacadesHelper.closeEntityManager(entityManager);
@@ -48,6 +49,7 @@ public class FeedbacksFacade extends AbstractFacade {
         } catch (Exception exception) {
             getServiceFactory().getLogService().error(exception.getMessage(),
                     exception);
+            FacadesHelper.closeEntityManager(entityManager);
             throw new RuntimeException(exception);
         } finally {
             FacadesHelper.closeEntityManager(entityManager);
@@ -57,30 +59,32 @@ public class FeedbacksFacade extends AbstractFacade {
 
     public List<FeedbackVo> getAllFeedbacks(int firstResult, int maxResults) {
         List<FeedbackVo> list = null;
-        EntityManager em = null;
+        EntityManager entityManager = null;
         try {
-            em = getEntityManagerFactory().createEntityManager();
-            list = getServiceFactory().getFeedbacksService().getAllFeedbacks(em, firstResult, maxResults);
+            entityManager = getEntityManagerFactory().createEntityManager();
+            list = getServiceFactory().getFeedbacksService().getAllFeedbacks(entityManager, firstResult, maxResults);
         } catch (Exception ex) {
             getServiceFactory().getLogService().error(ex.getMessage(), ex);
+            FacadesHelper.closeEntityManager(entityManager);
             throw new RuntimeException(ex);
         } finally {
-            FacadesHelper.closeEntityManager(em);
+            FacadesHelper.closeEntityManager(entityManager);
         }
         return list;
     }
 
     public FeedbackTypeVo getFeedbackType(long feedbackTypeId) {
-        EntityManager em = null;
+        EntityManager entityManager = null;
         try {
-            em = getEntityManagerFactory().createEntityManager();
-            return getServiceFactory().getFeedbackTypesService().read(em,
+            entityManager = getEntityManagerFactory().createEntityManager();
+            return getServiceFactory().getFeedbackTypesService().read(entityManager,
                     feedbackTypeId);
         } catch (Exception ex) {
             getServiceFactory().getLogService().error(ex.getMessage(), ex);
+            FacadesHelper.closeEntityManager(entityManager);
             throw new RuntimeException(ex);
         } finally {
-            FacadesHelper.closeEntityManager(em);
+            FacadesHelper.closeEntityManager(entityManager);
         }
     }
 
@@ -104,11 +108,11 @@ public class FeedbacksFacade extends AbstractFacade {
         } catch (Exception exception) {
             getServiceFactory().getLogService().error(exception.getMessage(),
                     exception);
-            FacadesHelper.checkException(exception,
+            FacadesHelper.checkException(entityManager, exception,
                     MultipleMessagesException.class);
             FacadesHelper.checkDuplicityViolation(entityManager,
                     transaction, exception);
-            FacadesHelper.rollbackTransaction(entityManager,
+            FacadesHelper.rollbackTransactionAndCloseEntityManager(entityManager,
                     transaction, exception);
         } finally {
             FacadesHelper.closeEntityManager(entityManager);
@@ -117,28 +121,30 @@ public class FeedbacksFacade extends AbstractFacade {
     }
     
     public long countAllFeedbacks() {
-        EntityManager em = null;
+        EntityManager entityManager = null;
         try {
-            em = getEntityManagerFactory().createEntityManager();
-            return getServiceFactory().getFeedbacksService().countAllFeedbacks(em);
+            entityManager = getEntityManagerFactory().createEntityManager();
+            return getServiceFactory().getFeedbacksService().countAllFeedbacks(entityManager);
         } catch (Exception ex) {
             getServiceFactory().getLogService().error(ex.getMessage(), ex);
+            FacadesHelper.closeEntityManager(entityManager);
             throw new RuntimeException(ex);
         } finally {
-            FacadesHelper.closeEntityManager(em);
+            FacadesHelper.closeEntityManager(entityManager);
         }
     }
     
     public long countFeedbacksByFeedbackType(long feedbackTypeId) {
-        EntityManager em = null;
+        EntityManager entityManager = null;
         try {
-            em = getEntityManagerFactory().createEntityManager();
-            return getServiceFactory().getFeedbacksService().countFeedbacksByTypeId(em, feedbackTypeId);
+            entityManager = getEntityManagerFactory().createEntityManager();
+            return getServiceFactory().getFeedbacksService().countFeedbacksByTypeId(entityManager, feedbackTypeId);
         } catch (Exception ex) {
             getServiceFactory().getLogService().error(ex.getMessage(), ex);
+            FacadesHelper.closeEntityManager(entityManager);
             throw new RuntimeException(ex);
         } finally {
-            FacadesHelper.closeEntityManager(em);
+            FacadesHelper.closeEntityManager(entityManager);
         }
     }
 }

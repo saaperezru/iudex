@@ -30,6 +30,7 @@ public class ProfessorsFacade extends AbstractFacade {
                 }
             } catch (Exception exception) {
                 getServiceFactory().getLogService().error(exception.getMessage(), exception);
+                FacadesHelper.closeEntityManager(entityManager);
                 throw new RuntimeException(exception);
             } finally {
                 FacadesHelper.closeEntityManager(entityManager);
@@ -51,9 +52,9 @@ public class ProfessorsFacade extends AbstractFacade {
             transaction.commit();
         } catch (Exception exception) {
             getServiceFactory().getLogService().error(exception.getMessage(), exception);
-            FacadesHelper.checkException(exception, MultipleMessagesException.class);
+            FacadesHelper.checkException(entityManager,exception, MultipleMessagesException.class);
             FacadesHelper.checkDuplicityViolation(entityManager, transaction, exception);
-            FacadesHelper.rollbackTransaction(entityManager, transaction, exception);
+            FacadesHelper.rollbackTransactionAndCloseEntityManager(entityManager, transaction, exception);
         } finally {
             FacadesHelper.closeEntityManager(entityManager);
         }
@@ -73,9 +74,9 @@ public class ProfessorsFacade extends AbstractFacade {
             transaction.commit();
         } catch (Exception exception) {
             getServiceFactory().getLogService().error(exception.getMessage(), exception);
-            FacadesHelper.checkException(exception, MultipleMessagesException.class);
+            FacadesHelper.checkException(entityManager, exception, MultipleMessagesException.class);
             FacadesHelper.checkDuplicityViolation(entityManager, transaction, exception);
-            FacadesHelper.rollbackTransaction(entityManager, transaction, exception);
+            FacadesHelper.rollbackTransactionAndCloseEntityManager(entityManager, transaction, exception);
         } finally {
             FacadesHelper.closeEntityManager(entityManager);
         }
@@ -94,7 +95,7 @@ public class ProfessorsFacade extends AbstractFacade {
         } catch (Exception exception) {
             getServiceFactory().getLogService().error(exception.getMessage(), exception);
             FacadesHelper.checkExceptionAndRollback(entityManager, transaction, exception, DataBaseException.class);
-            FacadesHelper.rollbackTransaction(entityManager, transaction, exception);
+            FacadesHelper.rollbackTransactionAndCloseEntityManager(entityManager, transaction, exception);
         } finally {
             FacadesHelper.closeEntityManager(entityManager);
         }
@@ -108,6 +109,7 @@ public class ProfessorsFacade extends AbstractFacade {
             binaryRatingVo = getServiceFactory().getProfessorRatingsService().getByEvaluatedObjectAndUserId(entityManager, professorId, userId);
         } catch (Exception exception) {
             getServiceFactory().getLogService().error(exception.getMessage(), exception);
+            FacadesHelper.closeEntityManager(entityManager);
             throw new RuntimeException(exception);
         } finally {
             FacadesHelper.closeEntityManager(entityManager);
@@ -144,9 +146,9 @@ public class ProfessorsFacade extends AbstractFacade {
 
         } catch (Exception exception) {
             getServiceFactory().getLogService().error(exception.getMessage(), exception);
-            FacadesHelper.checkException(exception, MultipleMessagesException.class);
+            FacadesHelper.checkException(entityManager, exception, MultipleMessagesException.class);
             FacadesHelper.checkDuplicityViolation(entityManager, transaction, exception);
-            FacadesHelper.rollbackTransaction(entityManager, transaction, exception);
+            FacadesHelper.rollbackTransactionAndCloseEntityManager(entityManager, transaction, exception);
         } finally {
             FacadesHelper.closeEntityManager(entityManager);
         }
@@ -166,6 +168,7 @@ public class ProfessorsFacade extends AbstractFacade {
             }
         } catch (Exception exception) {
             getServiceFactory().getLogService().error(exception.getMessage(), exception);
+            FacadesHelper.closeEntityManager(entityManager);
             throw new RuntimeException(exception);
         } finally {
             FacadesHelper.closeEntityManager(entityManager);
@@ -182,6 +185,7 @@ public class ProfessorsFacade extends AbstractFacade {
 
         } catch (Exception exception) {
             getServiceFactory().getLogService().error(exception.getMessage(), exception);
+            FacadesHelper.closeEntityManager(entityManager);
             throw new RuntimeException(exception);
         } finally {
             FacadesHelper.closeEntityManager(entityManager);

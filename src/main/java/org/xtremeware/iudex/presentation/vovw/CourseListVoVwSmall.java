@@ -58,40 +58,40 @@ public class CourseListVoVwSmall implements Serializable {
         return professorId;
     }
 
-    public void setProfessorId(Long ProfessorId) {
-        this.professorId = ProfessorId;
+    public void setProfessorId(Long professorId) {
+        this.professorId = professorId;
     }
 
     public String getProfessorName() {
         return professorName;
     }
 
-    public void setProfessorName(String ProfessorName) {
-        this.professorName = ProfessorName;
+    public void setProfessorName(String professorName) {
+        this.professorName = professorName;
     }
 
     public Long getSubjectId() {
         return subjectId;
     }
 
-    public void setSubjectId(Long SubjectId) {
-        this.subjectId = SubjectId;
+    public void setSubjectId(Long subjectId) {
+        this.subjectId = subjectId;
     }
 
     public String getSubjectName() {
         return subjectName;
     }
 
-    public void setSubjectName(String SubjectName) {
-        this.subjectName = SubjectName;
+    public void setSubjectName(String subjectName) {
+        this.subjectName = subjectName;
     }
 
     public List<CourseVoVwSmall> getCoursesVoVwSmall(){
         return coursesVoVwSmall;
     }
     
-    public void setCoursesVoVwSmall(List<CourseVoVwSmall> CoursesVoVwSmall) {
-        this.coursesVoVwSmall = CoursesVoVwSmall;
+    public void setCoursesVoVwSmall(List<CourseVoVwSmall> coursesVoVwSmall) {
+        this.coursesVoVwSmall = coursesVoVwSmall;
     }
     
     public void addCourse(CourseVoVwSmall courseVovWSmall){

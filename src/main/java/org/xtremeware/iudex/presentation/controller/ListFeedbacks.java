@@ -22,7 +22,7 @@ import org.xtremeware.iudex.vo.FeedbackVo;
 public class ListFeedbacks implements Serializable {
 
     // TODO: Make the page size configurable
-    private static final int pageSize = 10;
+    private static final int PAGESIZE = 10;
     private Long feedbackTypeId;
     private List<FeedbackVoVwLarge> feedbacks;
     private List<Integer> pages;
@@ -75,18 +75,18 @@ public class ListFeedbacks implements Serializable {
         FeedbacksFacade feedbacksFacade = Config.getInstance().getFacadeFactory().
                 getFeedbacksFacade();
         List<FeedbackVo> feedbackVos;
-        int firstResult = (page - 1) * pageSize;
+        int firstResult = (page - 1) * PAGESIZE;
         int pagesCount;
         if (feedbackTypeId != null && !feedbackTypeId.equals(0L)) {
             feedbackVos = feedbacksFacade.getFeedbacksByFeedbackType(
-                    feedbackTypeId, firstResult, pageSize);
+                    feedbackTypeId, firstResult, PAGESIZE);
             pagesCount = (int) Math.ceil(feedbacksFacade.
                     countFeedbacksByFeedbackType(feedbackTypeId) /
-                    (float) pageSize);
+                    (float) PAGESIZE);
         } else {
-            feedbackVos = feedbacksFacade.getAllFeedbacks(firstResult, pageSize);
+            feedbackVos = feedbacksFacade.getAllFeedbacks(firstResult, PAGESIZE);
             pagesCount = (int) Math.ceil(feedbacksFacade.countAllFeedbacks() /
-                    (float) pageSize);
+                    (float) PAGESIZE);
         }
         pages = new ArrayList<Integer>(pagesCount);
         for (int i = 1; i <= pagesCount; i++) {

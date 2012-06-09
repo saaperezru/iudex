@@ -15,60 +15,47 @@
 
     <ui:define name="content">
         <div class="container">
-            <div class="panel">
-                <form id="searchForm" method="get" action="#{request.contextPath}/search.xhtml" class="">
-                    <div id="searchBar">
-                        <div class="searchBar_left"></div>
-                        <div class="searchBar_inner"></div>
-                        <div class="searchBar_right"></div>
-                        <div class="searchBar_inner_left"></div>
-                        <div class="searchBar_inner_inner"></div>
-                        <div class="searchBar_inner_right"></div>
-                        <input type="text" name="query" value="#{search.query}" class="search-query"  label="Keyword" placeholder = "BUSCA UN PROFESOR O UNA MATERIA"/>
-                        <button id="searchButton" type="submit" />
-                    </div>
-                </form>
+            <div class="row">
+                <div class="span12">
+                    <form class="form-search" method="get" action="#{request.contextPath}/search.xhtml" >
+                        <input type="text" name="query" value="#{search.query}" class="search-query"   placeholder = "Busca un profesor o una materia">
+                            <button id="searchButton" type="submit" />
+                        </input>
+                    </form>
+                </div>
             </div>
 
             <div>
                 <h:form prependId="false">  
-                    <p:dataTable id="acordion" var="course" value="#{search.courses}"  
+                    <p:dataTable id="DataSearch" var="course" value="#{search.courses}"  
                                  paginator="true" rows="10"  
-                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
-                                 rowsPerPageTemplate="5,10,15">  
-                        <f:facet name="header">  
-                            Cursos  
-                        </f:facet>  
-                        <p:column sortBy="true">  
+                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">  
+                        <p:column>  
                             <f:facet name="header">  
-                                <h:outputText value="Profesor - Materia" />  
+                                <h:outputText value="Profesor" />  
                             </f:facet>  
-                            <h:outputText value="#{course.professorName} - #{course.subjectName}" />  
+                            <h:outputText value="#{course.professorName}" />  
                         </p:column>
-                        <p:column >
-                            <p:accordionPanel activeIndex="-1">  
-                                <p:tab title="Periodos">  
-                                    <p:dataTable id="PeriodsCourse#{course.hashCode()}" var="period" value="#{search.parseCourseVoVwSmall(course.coursesId)}">
-                                        <p:column id="Select">
-                                            <h:link  hreflang="courses/view.xhtml?id=#{period.courseId}" class="btn btn-success" value="Seleccionar"/>
-                                        </p:column>
-                                        <p:column id="Period">
-                                            <f:facet name="Period">
-                                                Periodo
-                                            </f:facet>
-                                            <h:outputText value="#{period.period}" />
-                                        </p:column>
-                                        <p:column id="rating">
-                                            <f:facet name="Rating">
-                                                Calificación
-                                            </f:facet>
-                                            <h:outputText value="#{period.average}" />
-                                        </p:column>
 
-                                    </p:dataTable>
+                        <p:column>  
+                            <f:facet name="header">  
+                                <h:outputText value="Materia" />  
+                            </f:facet>  
+                            <h:outputText value="#{course.subjectName}" />  
+                        </p:column>
 
-                                </p:tab>  
-                            </p:accordionPanel>  
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Periodo" />  
+                            </f:facet>
+                            <h:panelGrid columns="2">
+                                <ui:repeat  value="#{course.coursesVoVwSmall}" var="coursePeriod">
+                                    <h:link value="#{coursePeriod.Period}" outcome="courses/view.xhtml">
+                                        <f:param name ="id" value ="#{coursePeriod.courseId}"/>
+                                    </h:link>
+                                    <h:outputText value="#{coursePeriod.average}" />
+                                </ui:repeat>
+                            </h:panelGrid>
                         </p:column>
                     </p:dataTable>  
                 </h:form> 

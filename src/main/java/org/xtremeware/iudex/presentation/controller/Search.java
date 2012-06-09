@@ -20,7 +20,8 @@ public class Search implements Serializable {
 
     private String query;
     private List<CourseListVoVwSmall> courses;
-    private static final int itemsPerPage = 10;
+    //TODO: Change itemsPerPage = 10 when finish the pagination
+    private static final int itemsPerPage = 100;
 
     public List<CourseListVoVwSmall> getCourses() {
         return courses;

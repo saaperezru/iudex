@@ -1,10 +1,16 @@
 package org.xtremeware.iudex.presentation.vovw.builder;
 
-import java.util.*;
-import org.xtremeware.iudex.businesslogic.facade.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import org.xtremeware.iudex.businesslogic.facade.FacadeFactory;
+import org.xtremeware.iudex.businesslogic.facade.SubjectsFacade;
 import org.xtremeware.iudex.helper.Config;
 import org.xtremeware.iudex.presentation.vovw.*;
-import org.xtremeware.iudex.vo.*;
+import org.xtremeware.iudex.vo.CourseVoFull;
+import org.xtremeware.iudex.vo.PeriodVo;
+import org.xtremeware.iudex.vo.SubjectVoFull;
 
 public class CourseVoVwBuilder {
 
@@ -24,21 +30,12 @@ public class CourseVoVwBuilder {
     }
 
     public CourseVoVwSmall getCourseVoVwSmall(Long courseId) {
-        // TODO: use Get period by ID
-
-        //Get all periods and add them to a hasTable to find them faster
-        List<PeriodVo> periodVoList = facadeFactory.getPeriodsFacade().listPeriods();
-        HashMap<Long, PeriodVo> periodHash = new HashMap<Long, PeriodVo>();
-        for (PeriodVo periodVo : periodVoList) {
-            if (!periodHash.containsKey(periodVo.getId())) {
-                periodHash.put(periodVo.getId(), periodVo);
-            }
-        }
-        // For each course ID find it's Vo, create the VovWSmall and add it to the list.
+        
         CourseVoFull course = facadeFactory.getCoursesFacade().getCourse(courseId);
+        PeriodVo periodVo = facadeFactory.getPeriodsFacade().getPeriod(course.getVo().getPeriodId());
         CourseVoVwSmall courseSmall = new CourseVoVwSmall(courseId,
-                periodHash.get(course.getVo().getPeriodId()).getYear() + " - " + periodHash.get(course.getVo().getPeriodId()).getSemester(),
-                course.getVo().getRatingAverage(), course.getVo().getRatingCount());
+                                                            periodVo.getYear() + " - " + periodVo.getSemester(),
+                                                            course.getVo().getRatingAverage(), course.getVo().getRatingCount());
         return courseSmall;
     }
 

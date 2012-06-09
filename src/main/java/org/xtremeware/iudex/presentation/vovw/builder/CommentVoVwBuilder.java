@@ -1,8 +1,11 @@
 package org.xtremeware.iudex.presentation.vovw.builder;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TimeZone;
 import org.xtremeware.iudex.businesslogic.facade.CommentsFacade;
 import org.xtremeware.iudex.businesslogic.facade.FacadeFactory;
 import org.xtremeware.iudex.helper.Config;
@@ -69,6 +72,14 @@ public class CommentVoVwBuilder {
                 commentUser = users.get(userId);
             }
             commentVoVwMedium = destination.get(i);
+			SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MMM-dd HH:mm:ss");
+			SimpleDateFormat visibleFormat = new SimpleDateFormat("yyyy-mm");
+			dateFormatGmt.setTimeZone(TimeZone.getTimeZone("GMT - 5"));
+			try {
+				commentVo.setDate(visibleFormat.parse(dateFormatGmt.format(commentVo.getDate())));
+			} catch (ParseException ex) {
+				Config.getInstance().getServiceFactory().getLogService().error("Error while parsing date in CommentVoVwMedium building process.",ex);
+			}
             commentVoVwMedium.setVo(commentVo);
             commentVoVwMedium.setUser(commentUser);
             commentVoVwMedium.setRating(commentsFacade.getCommentRatingSummary(commentVo.

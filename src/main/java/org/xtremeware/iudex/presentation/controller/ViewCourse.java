@@ -4,6 +4,8 @@ package org.xtremeware.iudex.presentation.controller;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -32,7 +34,6 @@ import org.xtremeware.iudex.vo.*;
 @ManagedBean
 @ViewScoped
 public class ViewCourse implements Serializable {
-
 
 	public ViewCourse() {
 		id = Long.valueOf(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id"));
@@ -84,12 +85,14 @@ public class ViewCourse implements Serializable {
 		int userCommentVoteValue = 0;
 		if (user != null && user.isLoggedIn()) {
 			BinaryRatingVo commentRatingByUserId = Config.getInstance().getFacadeFactory().getCommentsFacade().getCommentRatingByUserId(commentId, user.getId());
-			if (commentRatingByUserId!=null) userCommentVoteValue = commentRatingByUserId.getValue();
+			if (commentRatingByUserId != null) {
+				userCommentVoteValue = commentRatingByUserId.getValue();
+			}
 		}
 		return userCommentVoteValue;
 	}
 
-	public double getCourseRating() {
+	public Integer getCourseRating() {
 		if (user != null && user.isLoggedIn()) {
 			courseRating = Config.getInstance().getFacadeFactory().getCoursesFacade().getCourseRatingByUserId(id, user.getId());
 			if (courseRating == null) {
@@ -98,26 +101,33 @@ public class ViewCourse implements Serializable {
 				courseRating.setUserId(user.getId());
 			}
 		}
-		return courseRating.getValue();
+		return (int)courseRating.getValue();
 	}
 
-	public void setCourseRating(double rating) {
-		float value = (float) rating;
+	public void setCourseRating(Integer rating) {
+		double conversion = Double.valueOf(Integer.toString(rating));
+		float value = (float)conversion;
 		this.courseRating.setValue(value);
 		try {
 			Config.getInstance().getFacadeFactory().getCoursesFacade().rateCourse(id, user.getId(), value);
 		} catch (MultipleMessagesException ex) {
-			Logger.getLogger(CourseRatingVo.class.getName()).log(Level.SEVERE, null, ex);
+			Config.getInstance().getServiceFactory().getLogService().error(ex);
 		} catch (Exception ex) {
-			Logger.getLogger(CourseRatingVo.class.getName()).log(Level.SEVERE, null, ex);
+			Config.getInstance().getServiceFactory().getLogService().error(ex);
 		}
 	}
 
-
-	public void handleRate(RateEvent rateEvent) {
-		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Calificación exitosa", "Has calificado esta materia con un : " + ((Double) rateEvent.getRating()).intValue() + ". ¡Agradecemos tu opinión!");
+	public void onRate(RateEvent rateEvent) {
+		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Calificación exitosa", "Has calificado esta materia con un : " + (rateEvent.getRating()) + ". ¡Agradecemos tu opinión!");
 
 		FacesContext.getCurrentInstance().addMessage(null, message);
+	}
+
+	public void oncancel() {
+		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Calificación eliminada", "Hemos eliminado exitosamente tu calificación.");
+
+		FacesContext.getCurrentInstance().addMessage(null, message);
+
 	}
 
 	public void preRenderView() {
@@ -129,6 +139,15 @@ public class ViewCourse implements Serializable {
 					((ConfigurableNavigationHandler) FacesContext.getCurrentInstance().getApplication().getNavigationHandler()).performNavigation("notfound");
 				}
 				comments = CommentVoVwBuilder.getInstance().getCommentsByCourseId(id);
+				Collections.sort(comments, new Comparator<CommentVoVwMedium>() {
+
+					@Override
+					public int compare(CommentVoVwMedium o1, CommentVoVwMedium o2) {
+						int o1Rating = o1.getRating().getPositive() - o1.getRating().getNegative();
+						int o2Rating = o2.getRating().getPositive() - o2.getRating().getNegative();
+						return (o1Rating > o2Rating ? -1 : (o1Rating == o2Rating ? 0 : 1));
+					}
+				});
 			} catch (Exception ex) {
 				Config.getInstance().getServiceFactory().getLogService().error(ex.getMessage(), ex);
 				((ConfigurableNavigationHandler) FacesContext.getCurrentInstance().getApplication().getNavigationHandler()).performNavigation("notfound");

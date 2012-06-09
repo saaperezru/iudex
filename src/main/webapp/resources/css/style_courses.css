@@ -149,7 +149,7 @@ div.professor-photo ul.actions li a {
 .upvote{
     background-image: url(../resources/images/arrow-up.png);
     display: inline-block;
-    top : 10px;
+    top : 28px;
     right : 3px;
     position: absolute;
     width: 64px;
@@ -166,7 +166,7 @@ div.professor-photo ul.actions li a {
 }
 .vote-count{
     position: absolute;
-    top: 45%;
+    top: 52%;
     right : 3px;
     font-size: 20px;
     text-align: center;
@@ -184,8 +184,8 @@ div.professor-photo ul.actions li a {
     border-radius: 10px; /* future proofing */
     -khtml-border-radius: 10px; /* for old Konqueror browsers */
     /* end round corners*/
-    background-color: white;
-    padding-top: 1%;
+	background-color: #F3F3F3;
+	padding: 10px 5px;
 }
 .comment-photo > img{
     height : 110px;
@@ -254,7 +254,7 @@ div.professor-photo ul.actions li a {
 	top: 5px;
 	width: 45px;
 	height: 53px;
-	opacity: 0.15;
+	opacity: 0.3;
 }
 .ui-growl{
 	font :  "Dosis", "Helvetica Neue", Helvetica, Arial, sans-serif;

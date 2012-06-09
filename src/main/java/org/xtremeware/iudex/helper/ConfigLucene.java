@@ -15,11 +15,10 @@ import org.xtremeware.iudex.entity.CourseEntity;
  *
  * @author josebermeo
  */
-public final class ConfigLucine {
+public final class ConfigLucene {
 
-    private ConfigLucine() {
+    private ConfigLucene() {
     }
-
     private static Set<String> stopWords;
 
     public static void indexDataBase(EntityManager entityManager) {
@@ -28,19 +27,31 @@ public final class ConfigLucine {
 
     private static void createCourseIndex(EntityManager entityManager) {
         try {
-            File file = new File(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.LUCENE_COURSE_INDEX_PATH));
+            File file =
+                    new File(ConfigLucene.class.getResource(ConfigurationVariablesHelper.
+                    getVariable(
+                    ConfigurationVariablesHelper.LUCENE_COURSE_INDEX_PATH)).
+                    getFile());
             Directory directory = FSDirectory.open(file);
-            IndexWriter indexWriter = new IndexWriter(directory, new IndexWriterConfig(
+            IndexWriter indexWriter = new IndexWriter(directory,
+                    new IndexWriterConfig(
                     Version.LUCENE_36,
-                    new StandardAnalyzer(Version.LUCENE_36, getSpanishStopWords())).setOpenMode(OpenMode.CREATE));
+                    new StandardAnalyzer(Version.LUCENE_36,
+                    getSpanishStopWords())).setOpenMode(OpenMode.CREATE));
 
-            List<Long> courseIds = entityManager.createQuery("SELECT p.id FROM Course p", Long.class).getResultList();
+            List<Long> courseIds = entityManager.createQuery(
+                    "SELECT p.id FROM Course p", Long.class).getResultList();
             for (Long id : courseIds) {
-                CourseEntity courseEntity = entityManager.createQuery("SELECT p FROM Course p WHERE p.id = :courseId", CourseEntity.class).setParameter("courseId", id).getSingleResult();
+                CourseEntity courseEntity = entityManager.createQuery(
+                        "SELECT p FROM Course p WHERE p.id = :courseId",
+                        CourseEntity.class).setParameter("courseId", id).
+                        getSingleResult();
                 Document document = new Document();
-                document.add(new Field("id", courseEntity.getId().toString(), Field.Store.YES, Field.Index.NOT_ANALYZED));
-                 
-                String name = courseEntity.getProfessor().getFirstName() + " " + courseEntity.getProfessor().getLastName();
+                document.add(new Field("id", courseEntity.getId().toString(),
+                        Field.Store.YES, Field.Index.NOT_ANALYZED));
+
+                String name = courseEntity.getProfessor().getFirstName() + " " +
+                        courseEntity.getProfessor().getLastName();
                 name = name + " " + courseEntity.getSubject().getName();
 
                 document.add(new Field("name",
@@ -49,19 +60,24 @@ public final class ConfigLucine {
             }
             indexWriter.close();
         } catch (Exception exception) {
-            throw new RuntimeException(exception.getMessage(), exception.getCause());
+            throw new RuntimeException(exception.getMessage(), exception.
+                    getCause());
         }
     }
 
     public static Set<String> getSpanishStopWords() {
         if (stopWords == null) {
             try {
-                String file = ConfigurationVariablesHelper.getVariable(
-                        ConfigurationVariablesHelper.SPANISH_STOP_WORDS_PATH);
+                String file =
+                        ConfigLucene.class.getResource(ConfigurationVariablesHelper.
+                        getVariable(
+                        ConfigurationVariablesHelper.SPANISH_STOP_WORDS_PATH)).
+                        getFile();
                 FileInputStream fstream = new FileInputStream(file);
 
                 DataInputStream in = new DataInputStream(fstream);
-                BufferedReader br = new BufferedReader(new InputStreamReader(in));
+                BufferedReader br =
+                        new BufferedReader(new InputStreamReader(in));
                 String strLine;
                 stopWords = new HashSet<String>();
                 while ((strLine = br.readLine()) != null) {
@@ -69,7 +85,8 @@ public final class ConfigLucine {
                 }
                 in.close();
             } catch (Exception exception) {
-                throw new RuntimeException(exception.getMessage(), exception.getCause());
+                throw new RuntimeException(exception.getMessage(), exception.
+                        getCause());
             }
         }
         return stopWords;

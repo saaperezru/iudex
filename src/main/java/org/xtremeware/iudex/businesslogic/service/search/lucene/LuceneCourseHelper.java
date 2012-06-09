@@ -22,7 +22,7 @@ import org.apache.lucene.util.Version;
 import org.xtremeware.iudex.dao.AbstractDaoBuilder;
 import org.xtremeware.iudex.entity.ProfessorEntity;
 import org.xtremeware.iudex.helper.*;
-import org.xtremeware.iudex.vo.*;
+import org.xtremeware.iudex.vo.CourseVo;
 
 /**
  *
@@ -32,23 +32,30 @@ public class LuceneCourseHelper extends LuceneHelper<Long, CourseVo> {
 
     private static LuceneCourseHelper instance;
     private AbstractDaoBuilder abstractDaoBuilder;
-    private static final String fuzzySearch = "~"; 
+    private static final String fuzzySearch = "~";
 
-    private LuceneCourseHelper(AbstractDaoBuilder abstractDaoBuilder, OpenMode openMode, Version version, Directory directory, Analyzer analyzer) {
+    private LuceneCourseHelper(AbstractDaoBuilder abstractDaoBuilder,
+            OpenMode openMode, Version version, Directory directory,
+            Analyzer analyzer) {
         super(openMode, version, directory, analyzer);
         this.abstractDaoBuilder = abstractDaoBuilder;
     }
 
     @Override
-    protected Document createDocument(CourseVo courseVo, EntityManager entityManager) throws DataBaseException {
+    protected Document createDocument(CourseVo courseVo,
+            EntityManager entityManager) throws DataBaseException {
         Document document = new Document();
-        document.add(new Field("id", courseVo.getId().toString(), Field.Store.YES, Field.Index.NOT_ANALYZED));
+        document.add(new Field("id", courseVo.getId().toString(),
+                Field.Store.YES, Field.Index.NOT_ANALYZED));
         ProfessorEntity professorEntity;
-        String name = "";
+        String name;
 
-        professorEntity = abstractDaoBuilder.getProfessorDao().read(entityManager, courseVo.getProfessorId());
-        name = professorEntity.getFirstName() + " " + professorEntity.getLastName();
-        name = name + " " + abstractDaoBuilder.getSubjectDao().read(entityManager, courseVo.getSubjectId()).getName();
+        professorEntity = abstractDaoBuilder.getProfessorDao().read(
+                entityManager, courseVo.getProfessorId());
+        name = professorEntity.getFirstName() + " " + professorEntity.
+                getLastName();
+        name = name + " " + abstractDaoBuilder.getSubjectDao().read(
+                entityManager, courseVo.getSubjectId()).getName();
 
         document.add(new Field("name",
                 name, Field.Store.YES, Field.Index.ANALYZED));
@@ -60,9 +67,9 @@ public class LuceneCourseHelper extends LuceneHelper<Long, CourseVo> {
     protected Term createTermForDelete(Long id) {
         return new Term(id.toString(), "id");
     }
-    
+
     public List<Long> fussySearch(String query, int totalHints) {
-        return search(query+fuzzySearch, totalHints);   
+        return search(query + fuzzySearch, totalHints);
     }
 
     @Override
@@ -80,12 +87,14 @@ public class LuceneCourseHelper extends LuceneHelper<Long, CourseVo> {
         }
         List<Long> resultsIds = new ArrayList<Long>();
         ScoreDoc[] hits = collector.topDocs().scoreDocs;
-        
+
         for (ScoreDoc scoreDoc : hits) {
             try {
-                resultsIds.add(Long.parseLong(indexReader.document(scoreDoc.doc).get("id")));
+                resultsIds.add(Long.parseLong(indexReader.document(scoreDoc.doc).
+                        get("id")));
             } catch (Exception exception) {
-                throw new ExternalServiceException(exception.getMessage(), exception);
+                throw new ExternalServiceException(exception.getMessage(),
+                        exception);
             }
         }
         return resultsIds;
@@ -95,16 +104,21 @@ public class LuceneCourseHelper extends LuceneHelper<Long, CourseVo> {
         while (instance == null) {
             Directory directory = null;
             try {
-                directory = FSDirectory.open(new File(ConfigurationVariablesHelper.getVariable(
-                        ConfigurationVariablesHelper.LUCENE_COURSE_INDEX_PATH)));
+                directory = FSDirectory.open(new File(LuceneCourseHelper.class.
+                        getResource(ConfigurationVariablesHelper.getVariable(
+                        ConfigurationVariablesHelper.LUCENE_COURSE_INDEX_PATH)).
+                        getFile()));
             } catch (Exception exception) {
-                throw new ExternalServiceException(exception.getMessage(), exception);
+                throw new ExternalServiceException(exception.getMessage(),
+                        exception);
             }
-            instance = new LuceneCourseHelper(Config.getInstance().getDaoFactory(),
+            instance = new LuceneCourseHelper(
+                    Config.getInstance().getDaoFactory(),
                     IndexWriterConfig.OpenMode.CREATE_OR_APPEND,
                     Version.LUCENE_36,
                     directory,
-                    new StandardAnalyzer(Version.LUCENE_36, ConfigLucine.getSpanishStopWords()));
+                    new StandardAnalyzer(Version.LUCENE_36, ConfigLucene.
+                    getSpanishStopWords()));
         }
         return instance;
     }

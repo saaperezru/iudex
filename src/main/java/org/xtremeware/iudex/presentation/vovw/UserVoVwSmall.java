@@ -1,5 +1,6 @@
 package org.xtremeware.iudex.presentation.vovw;
 
+import java.util.List;
 import org.xtremeware.iudex.vo.ValueObject;
 
 public class UserVoVwSmall implements ValueObject {
@@ -20,6 +21,14 @@ public class UserVoVwSmall implements ValueObject {
         this.mainProgram = mainProgram;
         this.imageUrl = image;
     }
+
+	public UserVoVwSmall(long userId, String name, String userName, String mainProgram, String image) {
+        this.id = userId;
+        this.name = name;
+        this.username = userName;
+		this.mainProgram = mainProgram;
+		this.imageUrl = image;
+	}
 
     @Override
     public boolean equals(Object obj) {

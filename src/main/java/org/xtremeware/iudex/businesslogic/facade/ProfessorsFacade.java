@@ -11,9 +11,9 @@ import org.xtremeware.iudex.vo.*;
 
 public class ProfessorsFacade extends AbstractFacade {
 
-    public ProfessorsFacade(ServiceBuilder serviceFactory, EntityManagerFactory emFactory) {
-        super(serviceFactory, emFactory);
-    }
+	public ProfessorsFacade(ServiceBuilder serviceFactory, EntityManagerFactory emFactory) {
+		super(serviceFactory, emFactory);
+	}
 
     public Map<Long, String> getProfessorsAutocomplete(String programName) {
         EntityManager entityManager = null;
@@ -173,12 +173,13 @@ public class ProfessorsFacade extends AbstractFacade {
         return professorVoFull;
     }
 
-    public RatingSummaryVo getProfessorRatingSummary(long professorId) {
-        EntityManager entityManager = null;
-        RatingSummaryVo ratingSummaryVo = null;
-        try {
-            entityManager = getEntityManagerFactory().createEntityManager();
-            ratingSummaryVo = getServiceFactory().getProfessorRatingsService().getSummary(entityManager, professorId);
+				binaryRatingVo = getServiceFactory().
+						getProfessorRatingsService().create(entityManager, binaryRatingVo);
+			} else {
+				existingRating.setValue(value);
+				binaryRatingVo = getServiceFactory().getCommentRatingService().update(entityManager, existingRating);
+			}
+			transaction.commit();
 
         } catch (Exception exception) {
             getServiceFactory().getLogService().error(exception.getMessage(), exception);
@@ -189,7 +190,43 @@ public class ProfessorsFacade extends AbstractFacade {
         return ratingSummaryVo;
     }
 
-    private boolean isNotNull(Object object) {
-        return object != null;
-    }
+	public ProfessorVoFull getProfessor(long professorId) {
+		EntityManager entityManager = null;
+		ProfessorVoFull professorVoFull = null;
+		try {
+			entityManager = getEntityManagerFactory().createEntityManager();
+			ProfessorVo professorVo = getServiceFactory().getProfessorsService().read(entityManager, professorId);
+			if (isNotNull(professorVo)) {
+				professorVoFull = new ProfessorVoFull(professorVo,
+						getServiceFactory().getProfessorRatingsService().
+						getSummary(entityManager, professorId));
+			}
+		} catch (Exception exception) {
+			getServiceFactory().getLogService().error(exception.getMessage(), exception);
+			throw new RuntimeException(exception);
+		} finally {
+			FacadesHelperImplementation.closeEntityManager(entityManager);
+		}
+		return professorVoFull;
+	}
+
+	public RatingSummaryVo getProfessorRatingSummary(long professorId) {
+		EntityManager entityManager = null;
+		RatingSummaryVo ratingSummaryVo = null;
+		try {
+			entityManager = getEntityManagerFactory().createEntityManager();
+			ratingSummaryVo = getServiceFactory().getProfessorRatingsService().getSummary(entityManager, professorId);
+
+		} catch (Exception exception) {
+			getServiceFactory().getLogService().error(exception.getMessage(), exception);
+			throw new RuntimeException(exception);
+		} finally {
+			FacadesHelperImplementation.closeEntityManager(entityManager);
+		}
+		return ratingSummaryVo;
+	}
+
+	private boolean isNotNull(Object object) {
+		return object != null;
+	}
 }

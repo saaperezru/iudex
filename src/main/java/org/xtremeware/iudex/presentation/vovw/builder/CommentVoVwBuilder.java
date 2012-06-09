@@ -52,7 +52,7 @@ public final class CommentVoVwBuilder {
     private <T extends CommentVoVwMedium> List<T> getListOfCommentVoVwMedium(
             List<CommentVo> source, List<T> destination) {
         HashMap<Long, UserVoVwSmall> users = new HashMap<Long, UserVoVwSmall>();
-        UserVoVwSmall anonymousUser = UserVoVwBuilder.anonymousUser;
+        UserVoVwSmall anonymousUser = UserVoVwBuilder.ANONYMOUS_USER;
         CommentsFacade commentsFacade = facadeFactory.getCommentsFacade();
 
         UserVoVwSmall commentUser;

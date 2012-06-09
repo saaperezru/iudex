@@ -41,9 +41,7 @@ public class ViewCourse implements Serializable {
 	@ManagedProperty(value = "#{user}")
 	private User user;
 
-    public List<CommentVoVwMedium> getComments() {
-        return comments;
-    }
+
 
 	public List<CommentVoVwMedium> getComments() {
 		return comments;
@@ -83,17 +81,6 @@ public class ViewCourse implements Serializable {
         }
         return userCommentVoteValue;
     }
-
-	public int parseUserCommentVote(long commentId) {
-		int userCommentVoteValue = 0;
-		if (user != null && user.isLoggedIn()) {
-			BinaryRatingVo commentRatingByUserId = Config.getInstance().getFacadeFactory().getCommentsFacade().getCommentRatingByUserId(commentId, user.getId());
-			if (commentRatingByUserId != null) {
-				userCommentVoteValue = commentRatingByUserId.getValue();
-			}
-		}
-		return userCommentVoteValue;
-	}
 
 	public Integer getCourseRating() {
 		if (user != null && user.isLoggedIn()) {

@@ -9,6 +9,7 @@ import javax.faces.application.*;
 import javax.faces.bean.*;
 import javax.faces.context.FacesContext;
 import org.primefaces.event.RateEvent;
+import org.xtremeware.iudex.businesslogic.facade.FacadeFactory;
 import org.xtremeware.iudex.helper.*;
 import org.xtremeware.iudex.presentation.vovw.*;
 import org.xtremeware.iudex.presentation.vovw.builder.*;
@@ -111,6 +112,7 @@ public class ViewCourse implements Serializable {
 
     public void preRenderView() {
         if (id != null) {
+            FacadeFactory facadeFactory = Config.getInstance().getFacadeFactory();
             try {
                 course = CourseVoVwBuilder.getInstance().getCourseVoVwLarge(id);
                 if (course == null) {

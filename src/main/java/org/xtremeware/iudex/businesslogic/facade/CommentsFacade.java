@@ -11,10 +11,10 @@ import org.xtremeware.iudex.vo.*;
 
 public class CommentsFacade extends AbstractFacade {
 
-	public CommentsFacade(ServiceBuilder serviceFactory,
-			EntityManagerFactory emFactory) {
-		super(serviceFactory, emFactory);
-	}
+    public CommentsFacade(ServiceBuilder serviceFactory,
+            EntityManagerFactory emFactory) {
+        super(serviceFactory, emFactory);
+    }
 
     public CommentVo createComment(CommentVo vo) throws
             MultipleMessagesException, MaxCommentsLimitReachedException,
@@ -46,7 +46,7 @@ public class CommentsFacade extends AbstractFacade {
         }
         return createdVo;
 
-	}
+    }
 
     public void deleteComment(long commentId) throws DataBaseException {
         EntityManager entityManager = null;

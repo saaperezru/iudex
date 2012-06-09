@@ -41,7 +41,9 @@
 				</div>
 				<div class="row">
 					<div class="professor-photo thumbnail" >
-						<a href=""><img src="#{viewCourse.professor.imageUrl}"/></a>
+						<a href="">
+                                                    <h:graphicImage value="#{viewCourse.course.professor.imageUrl}" alt="#{viewCourse.course.professor.fullName}" />
+                                                </a>
 						<div id="professor-photo-caption"><h5><a href="#{viewCourse.course.professor.website}">#{viewCourse.course.professor.fullName}</a></h5></div>
 						<ul class="actions">
 							<li class="upvote-prof"><a href="#" class="icon-thumbs-up"></a></li>

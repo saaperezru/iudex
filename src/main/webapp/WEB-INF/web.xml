@@ -29,6 +29,10 @@
         <param-value>6Ldw09ESAAAAALrWMB44DbbT97SJKcsX4dWY1MDh</param-value>
     </context-param>
 
+    <context-param>
+        <param-name>javax.faces.STATE_SAVING_METHOD</param-name>
+        <param-value>client</param-value>
+    </context-param>
 
     <session-config>
         <session-timeout>

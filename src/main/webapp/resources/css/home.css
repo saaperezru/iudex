@@ -7,6 +7,48 @@ h1 {
     padding: 10px !important;
 }
 
+.comment blockquote {
+    margin: 0.25em 0;
+    padding: 0.25em 40px;
+    position: relative;
+    color: #383838;
+    border-width: 0;
+}
+
+.comment blockquote:before {
+    display: block;
+    content: "\201C";
+    font-family: Georgia, serif;
+    font-size: 50px;
+    font-style: italic;
+    position: absolute;
+    left: 0;
+    top: -5px;
+    color: #999999;
+}
+
+.comment blockquote:after {
+    display: block;
+    content: "\201D";
+    font-family: Georgia, serif;
+    font-size: 50px;
+    font-style: italic;
+    position: absolute;
+    right: 20px;
+    bottom: -20px;
+    color: #999999;
+}
+
+.comment blockquote cite {
+    color: #999999;
+    font-size: 14px;
+    display: block;
+    margin-top: 5px;
+}
+.comment blockquote cite:before {
+    content: "\2014 \2009";
+}
+
 .comment-photo {
     text-align: center;
 }

@@ -13,6 +13,7 @@ import org.xtremeware.iudex.businesslogic.DuplicityException;
 import org.xtremeware.iudex.businesslogic.service.MaxCommentsLimitReachedException;
 import org.xtremeware.iudex.helper.Config;
 import org.xtremeware.iudex.helper.MultipleMessagesException;
+import org.xtremeware.iudex.vo.BinaryRatingVo;
 import org.xtremeware.iudex.vo.CommentVo;
 
 /**

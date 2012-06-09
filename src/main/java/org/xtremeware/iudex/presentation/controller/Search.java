@@ -20,6 +20,7 @@ public class Search implements Serializable {
 
     private String query;
     private List<CourseListVoVwSmall> courses;
+    private static final int itemsPerPage = 10;
 
     public List<CourseListVoVwSmall> getCourses() {
         return courses;
@@ -57,7 +58,7 @@ public class Search implements Serializable {
 
     public void preRenderView() {
         try {
-            this.courses = CourseVoVwBuilder.getInstance().getSearchResults(query);
+            this.courses = CourseVoVwBuilder.getInstance().getSearchResults(query,itemsPerPage);
         } catch (Exception ex) {
             FacesContext.getCurrentInstance().addMessage("searchForm", new FacesMessage(ex.getMessage()));
         }

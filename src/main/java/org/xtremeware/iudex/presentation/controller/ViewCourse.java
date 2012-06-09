@@ -32,9 +32,9 @@ public class ViewCourse implements Serializable {
     @ManagedProperty(value = "#{user}")
     private User user;
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public List<CommentVoVwMedium> getComments() {
         return comments;
@@ -56,13 +56,13 @@ public class ViewCourse implements Serializable {
         return course.getProfessor();
     }
 
-	public SubjectVoVwSmall getSubject() {
-		return course.getSubject();
-	}
+    public SubjectVoVwSmall getSubject() {
+        return course.getSubject();
+    }
 
-	public User getUser() {
-		return user;
-	}
+    public User getUser() {
+        return user;
+    }
 
     public void setUser(User user) {
         this.user = user;
@@ -79,37 +79,40 @@ public class ViewCourse implements Serializable {
         return userCommentVoteValue;
     }
 
-	public int parseUserCommentVote(long commentId) {
-		int userCommentVoteValue = 0;
-		if (user != null && user.isLoggedIn()) {
-			BinaryRatingVo commentRatingByUserId = Config.getInstance().getFacadeFactory().getCommentsFacade().getCommentRatingByUserId(commentId, user.getId());
-			if (commentRatingByUserId!=null) userCommentVoteValue = commentRatingByUserId.getValue();
-		}
-		return userCommentVoteValue;
-	}
+    public double getCourseRating() {
+        if (user != null && user.isLoggedIn()) {
+            courseRating = Config.getInstance().getFacadeFactory().getCoursesFacade().getCourseRatingByUserId(id, user.getId());
+            if (courseRating == null) {
+                courseRating = new CourseRatingVo();
+                courseRating.setCourseId(id);
+                courseRating.setUserId(user.getId());
+            }
+        }
+        return courseRating.getValue();
+    }
 
-	public double getCourseRating() {
-		if (user != null && user.isLoggedIn()) {
-			courseRating = Config.getInstance().getFacadeFactory().getCoursesFacade().getCourseRatingByUserId(id, user.getId());
-			if (courseRating == null) {
-				courseRating = new CourseRatingVo();
-				courseRating.setCourseId(id);
-				courseRating.setUserId(user.getId());
-			}
-		}
-		return courseRating.getValue();
-	}
+    public void setCourseRating(double rating) {
+        float value = (float) rating;
+        this.courseRating.setValue(value);
+        try {
+            Config.getInstance().getFacadeFactory().getCoursesFacade().rateCourse(id, user.getId(), value);
+        } catch (MultipleMessagesException ex) {
+            Logger.getLogger(CourseRatingVo.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(CourseRatingVo.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
     public void handleRate(RateEvent rateEvent) {
         FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Calificación exitosa", "Has calificado esta materia con un : " + ((Double) rateEvent.getRating()).intValue() + ". ¡Agradecemos tu opinión!");
 
-		FacesContext.getCurrentInstance().addMessage(null, message);
-	}
+        FacesContext.getCurrentInstance().addMessage(null, message);
+    }
 
     public void preRenderView() {
         if (id != null) {
             try {
-                course = CourseVoVwBuilder.getInstance().getCourseVoVwFull(id);
+                course = CourseVoVwBuilder.getInstance().getCourseVoVwLarge(id);
                 if (course == null) {
                     ((ConfigurableNavigationHandler) FacesContext.getCurrentInstance().getApplication().getNavigationHandler()).performNavigation("notfound");
                 }

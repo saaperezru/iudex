@@ -100,7 +100,7 @@ public class CommentVoVwBuilder {
             List<CommentVoVwLarge> listOfVwLarge) {
         CourseVoVwBuilder courseVoVwBuilder = CourseVoVwBuilder.getInstance();
         for (CommentVoVwLarge commentVoVwLarge : listOfVwLarge) {
-            commentVoVwLarge.setCourse(courseVoVwBuilder.getCourseVoVwFull(
+            commentVoVwLarge.setCourse(courseVoVwBuilder.getCourseVoVwLarge(
                     commentVoVwLarge.getVo().getCourseId()));
         }
         return listOfVwLarge;

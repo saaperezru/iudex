@@ -27,7 +27,7 @@ public class ProfessorsService extends CrudService<ProfessorVo, ProfessorEntity>
     public List<Long> getByNameLike(EntityManager entityManager, String professorName)
             throws DataBaseException {
         professorName = SecurityHelper.sanitizeHTML(professorName);
-        return getDaoFactory().getProfessorDao().getByNameLike(entityManager, professorName.toUpperCase());
+        return getDaoFactory().getProfessorDao().getByNameLike(entityManager, SecurityHelper.sanitizeHTML(professorName).toUpperCase());
     }
 
     public List<ProfessorVo> getBySubjectId(EntityManager entityManager, long subjectId)
@@ -137,6 +137,7 @@ public class ProfessorsService extends CrudService<ProfessorVo, ProfessorEntity>
             String imageUrl) {
         String preFixHttp = "http://";
         String preFixHttps = "https://";
+
         if (imageUrl == null) {
             multipleMessagesException.addMessage(
                     "professor.imageUrl.null");
@@ -144,12 +145,17 @@ public class ProfessorsService extends CrudService<ProfessorVo, ProfessorEntity>
 
             if (!imageUrl.substring(preFixHttp.length()).equalsIgnoreCase(preFixHttp)
                     && !imageUrl.substring(preFixHttps.length()).equalsIgnoreCase(preFixHttps)) {
-                imageUrl = preFixHttp + imageUrl;
+                if (!ValidityHelper.isValidUrl(preFixHttp + imageUrl)) {
+                    multipleMessagesException.addMessage(
+                            "professor.imageUrl.invalidImage");
+                }
+            } else {
+                if (!ValidityHelper.isValidUrl(imageUrl)) {
+                    multipleMessagesException.addMessage(
+                            "professor.imageUrl.invalidImage");
+                }
             }
-            if (!ValidityHelper.isValidUrl(imageUrl)) {
-                multipleMessagesException.addMessage(
-                        "professor.imageUrl.invalidImage");
-            }
+
         }
     }
 
@@ -166,11 +172,15 @@ public class ProfessorsService extends CrudService<ProfessorVo, ProfessorEntity>
         } else {
             if (!webSide.substring(preFixHttp.length()).equalsIgnoreCase(preFixHttp)
                     && !webSide.substring(preFixHttps.length()).equalsIgnoreCase(preFixHttps)) {
-                webSide = preFixHttp + webSide;
-            }
-            if (!ValidityHelper.isValidUrl(webSide)) {
-                multipleMessagesException.addMessage(
-                        "professor.website.invalidWebsite");
+                if (!ValidityHelper.isValidUrl(preFixHttp + webSide)) {
+                    multipleMessagesException.addMessage(
+                            "professor.website.invalidWebsite");
+                }
+            } else {
+                if (!ValidityHelper.isValidUrl(webSide)) {
+                    multipleMessagesException.addMessage(
+                            "professor.website.invalidWebsite");
+                }
             }
         }
     }

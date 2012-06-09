@@ -47,7 +47,7 @@ public final class Config {
     
     private void createIndex() {
         if( ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.CREATE_LUCENE_INDEX).equals("true")){
-            ConfigLucine.indexDataBase(persistenceUnit.createEntityManager());
+            ConfigLucene.indexDataBase(persistenceUnit.createEntityManager());
         }
     }
 

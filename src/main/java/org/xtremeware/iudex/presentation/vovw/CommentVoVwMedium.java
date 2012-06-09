@@ -11,9 +11,9 @@ import org.xtremeware.iudex.vo.ValueObject;
 @ViewScoped
 public class CommentVoVwMedium implements ValueObject {
 
-    protected CommentVo vo;
-    protected UserVoVwSmall user;
-    protected RatingSummaryVo rating;
+    private CommentVo vo;
+    private UserVoVwSmall user;
+    private RatingSummaryVo rating;
 
     public CommentVoVwMedium() {
     }

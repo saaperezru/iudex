@@ -20,7 +20,10 @@ import org.xtremeware.iudex.vo.BinaryRatingVo;
 @RequestScoped
 public class Rating implements Serializable {
 
-	private static enum ratingState{NO_CHANGE,FROM_NEUTRAL,FROM_OPPOSED,TO_NEUTRAL};
+    private static enum ratingState {
+
+        NO_CHANGE, FROM_NEUTRAL, FROM_OPPOSED, TO_NEUTRAL
+    };
     @ManagedProperty(value = "#{user}")
     private User user;
 
@@ -62,7 +65,7 @@ public class Rating implements Serializable {
      * @throws DataBaseException
      */
     private ratingState rateComment(CommentVoVwMedium comment, int value) {
-		CommentsFacade commentsFacade = Config.getInstance().getFacadeFactory().getCommentsFacade();
+        CommentsFacade commentsFacade = Config.getInstance().getFacadeFactory().getCommentsFacade();
         Long commentId = comment.getId();
         ratingState returnValue = ratingState.NO_CHANGE;
         if (user != null && user.isLoggedIn()) {
@@ -82,10 +85,10 @@ public class Rating implements Serializable {
                         finalValue = value;
                         returnValue = ratingState.FROM_OPPOSED;
                     }
-                }else{
-					finalValue = value;
-					returnValue = ratingState.FROM_NEUTRAL;
-				}
+                } else {
+                    finalValue = value;
+                    returnValue = ratingState.FROM_NEUTRAL;
+                }
                 Config.getInstance().getFacadeFactory().getCommentsFacade().rateComment(commentId, userId, finalValue);
             } catch (Exception ex) {
                 Logger.getLogger(ViewCourse.class.getName()).log(Level.SEVERE, null, ex);

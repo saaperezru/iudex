@@ -11,7 +11,7 @@ import org.xtremeware.iudex.presentation.vovw.CommentVoVwMedium;
 import org.xtremeware.iudex.presentation.vovw.UserVoVwSmall;
 import org.xtremeware.iudex.vo.CommentVo;
 
-public class CommentVoVwBuilder {
+public final class CommentVoVwBuilder {
 
     private static CommentVoVwBuilder instance;
     private FacadeFactory facadeFactory;
@@ -49,7 +49,7 @@ public class CommentVoVwBuilder {
     private <T extends CommentVoVwMedium> List<T> getListOfCommentVoVwMedium(
             List<CommentVo> source, List<T> destination) {
         HashMap<Long, UserVoVwSmall> users = new HashMap<Long, UserVoVwSmall>();
-        UserVoVwSmall anonymousUser = UserVoVwBuilder.anonymousUser;
+        UserVoVwSmall anonymousUser = UserVoVwBuilder.ANONYMOUS_USER;
         CommentsFacade commentsFacade = facadeFactory.getCommentsFacade();
 
         UserVoVwSmall commentUser;

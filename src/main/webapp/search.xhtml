@@ -48,14 +48,20 @@
                             <f:facet name="header">
                                 <h:outputText value="Periodo" />  
                             </f:facet>
-                            <h:panelGrid columns="2">
+                            <table class="table-condensed" id="Periodfor#{course.hashCode()}" style="border-width: 30px;">
                                 <ui:repeat  value="#{course.coursesVoVwSmall}" var="coursePeriod">
-                                    <h:link value="#{coursePeriod.Period}" outcome="courses/view.xhtml">
-                                        <f:param name ="id" value ="#{coursePeriod.courseId}"/>
-                                    </h:link>
-                                    <h:outputText value="#{coursePeriod.average}" />
+                                    <tr style="border-width: 30;">
+                                        <td>
+                                            <h:link value="#{coursePeriod.period}" outcome="courses/view.xhtml" class="btn btn-mini btn-success">
+                                                <f:param name ="id" value ="#{coursePeriod.courseId}"/>
+                                            </h:link>
+                                        </td>
+                                        <td>
+                                            <img style="vertical-align: bottom ;margin-bottom: 2px; "  src="#{request.contextPath}/resources/images/star.png" height="20"/> <h:outputText value=" x #{coursePeriod.average}" />
+                                        </td>
+                                   </tr>
                                 </ui:repeat>
-                            </h:panelGrid>
+                            </table>
                         </p:column>
                     </p:dataTable>  
                 </h:form> 

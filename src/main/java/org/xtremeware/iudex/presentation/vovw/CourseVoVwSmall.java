@@ -8,14 +8,14 @@ import java.io.Serializable;
  */
 public class CourseVoVwSmall implements Serializable {
     
-    Long courseId;
-    String Period;
-    double average;
-    Long ratingcount;
+    private Long courseId;
+    private String period;
+    private double average;
+    private Long ratingcount;
 
-    public CourseVoVwSmall(Long courseId, String Period, double average, Long ratingcount) {
+    public CourseVoVwSmall(Long courseId, String period, double average, Long ratingcount) {
         this.courseId = courseId;
-        this.Period = Period;
+        this.period = period;
         this.average = average;
         this.ratingcount = ratingcount;
     }
@@ -44,17 +44,17 @@ public class CourseVoVwSmall implements Serializable {
 
     @Override
     public String toString() {
-        return "CourseVoVwSmall{" + "courseId=" + courseId + ", Period=" + Period + ", average=" + average + ", ratingcount=" + ratingcount + '}';
+        return "CourseVoVwSmall{" + "courseId=" + courseId + ", Period=" + period + ", average=" + average + ", ratingcount=" + ratingcount + '}';
     }
 
 
 
     public String getPeriod() {
-        return Period;
+        return period;
     }
 
-    public void setPeriod(String Period) {
-        this.Period = Period;
+    public void setPeriod(String period) {
+        this.period = period;
     }
 
     public double getAverage() {

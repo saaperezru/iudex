@@ -10,9 +10,6 @@ public class UserVoVwSmall implements ValueObject {
     private String mainProgram;
     private String imageUrl;
 
-    public UserVoVwSmall(Long id, String name, String username) {
-    }
-
     public UserVoVwSmall(long userId, String name, String userName, String mainProgram, String image) {
         this.id = userId;
         this.name = name;

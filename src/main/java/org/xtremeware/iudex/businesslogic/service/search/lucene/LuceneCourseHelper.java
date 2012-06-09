@@ -28,11 +28,11 @@ import org.xtremeware.iudex.vo.CourseVo;
  *
  * @author josebermeo
  */
-public class LuceneCourseHelper extends LuceneHelper<Long, CourseVo> {
+public final class LuceneCourseHelper extends LuceneHelper<Long, CourseVo> {
 
     private static LuceneCourseHelper instance;
     private AbstractDaoBuilder abstractDaoBuilder;
-    private static final String fuzzySearch = "~";
+    private static final String FUZZY_SEARCH = "~";
 
     private LuceneCourseHelper(AbstractDaoBuilder abstractDaoBuilder,
             OpenMode openMode, Version version, Directory directory,
@@ -69,7 +69,7 @@ public class LuceneCourseHelper extends LuceneHelper<Long, CourseVo> {
     }
 
     public List<Long> fussySearch(String query, int totalHints) {
-        return search(query + fuzzySearch, totalHints);
+        return search(query + FUZZY_SEARCH, totalHints);
     }
 
     @Override

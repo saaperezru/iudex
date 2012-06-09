@@ -65,7 +65,7 @@ public final class ConfigLucene {
         }
     }
 
-    public static Set<String> getSpanishStopWords() {
+    public static synchronized Set<String> getSpanishStopWords() {
         if (stopWords == null) {
             try {
                 String file =

@@ -77,8 +77,4 @@ public final class ConfigurationVariablesHelper {
 	private PropertiesConfiguration getConfig() {
 		return config;
 	}
-
-	private void setConfig(PropertiesConfiguration config) {
-		this.config = config;
-	}
 }

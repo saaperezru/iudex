@@ -24,8 +24,8 @@ public final class MailingService {
     private Properties props;
     private MailingConfigVo config;
     private Configuration templates;
-    private final int MAX_SMTPSERVERPORT = 65535;
-    private final int MIN_SMTPSERVERPORT = 0;
+    private static final int MAX_SMTPSERVERPORT = 65535;
+    private static final int MIN_SMTPSERVERPORT = 0;
 
     public MailingService(MailingConfigVo config) {
         setConfig(config);

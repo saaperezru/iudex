@@ -6,7 +6,6 @@ import javax.faces.bean.ViewScoped;
 import org.xtremeware.iudex.helper.Config;
 import org.xtremeware.iudex.helper.MultipleMessagesException;
 import org.xtremeware.iudex.presentation.helper.ViewHelper;
-import org.xtremeware.iudex.vo.UserVo;
 
 /**
  *
@@ -18,7 +17,6 @@ public class RecoverPassword implements Serializable {
 
     private String key;
     private boolean validKey = false;
-    private UserVo user;
     private String password;
     private boolean passwordChanged = false;
 
@@ -28,9 +26,8 @@ public class RecoverPassword implements Serializable {
 
     public void setKey(String key) {
         this.key = key;
-        user = Config.getInstance().getFacadeFactory().getUsersFacade().
-                validateForgottenPasswordKey(key);
-        validKey = user != null;
+        validKey = Config.getInstance().getFacadeFactory().getUsersFacade().
+                validateForgottenPasswordKey(key) != null;
     }
 
     public String getPassword() {

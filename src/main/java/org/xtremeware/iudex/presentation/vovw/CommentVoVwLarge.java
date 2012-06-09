@@ -17,9 +17,9 @@ public class CommentVoVwLarge extends CommentVoVwMedium {
 
     @Override
     public String toString() {
-        return "CommentVoVwMedium{" + "vo=" + vo + ", user=" + user +
+        return "CommentVoVwMedium{" + "vo=" + getVo() + ", user=" + getUser() +
                 ", rating=" +
-                rating + ", course=" + course + '}';
+                getRating() + ", course=" + course + '}';
     }
 
     public CourseVoVwLarge getCourse() {

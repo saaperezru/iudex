@@ -1,6 +1,7 @@
 package org.xtremeware.iudex.presentation.controller;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import javax.faces.application.FacesMessage;
@@ -19,19 +20,32 @@ import org.xtremeware.iudex.presentation.vovw.builder.CourseVoVwBuilder;
 public class Search implements Serializable {
 
     private String query;
-    private List<CourseListVoVwSmall> courses;
-    //TODO: Change itemsPerPage = 10 when finish the pagination
-    private static final int itemsPerPage = 100;
+    private List<CourseListVoVwSmall> courses = new ArrayList<CourseListVoVwSmall>();
+    ;
+    private List<Integer> pages = new ArrayList<Integer>();
+    private Integer currentPage;
+    private static final int itemsPerPage = 10;
+    private static final int maxItemsPerPage = 100;
 
     public List<CourseListVoVwSmall> getCourses() {
+        if (courses.isEmpty()) {
+            loadCourses();
+        }
         return courses;
     }
 
-    public String getQuery() {
-        FacesContext fc = FacesContext.getCurrentInstance();
-        Map<String, String> params = fc.getExternalContext().getRequestParameterMap();
-        this.query = params.get("query");
-        return query;
+    public void loadCourses() {
+
+        for (int count = 1; count <= Math.ceil(CourseVoVwBuilder.getInstance().getSearchCount(query, maxItemsPerPage) / itemsPerPage); count++) {
+            this.pages.add(count);
+        }
+        loadCourses(1);
+    }
+
+    public void loadCourses(int page) {
+        this.courses.clear();
+        this.courses.addAll(CourseVoVwBuilder.getInstance().getSearchResults(query, itemsPerPage, itemsPerPage * page));
+        currentPage = page;
     }
 
     public void setCourses(List<CourseListVoVwSmall> courses) {
@@ -42,8 +56,31 @@ public class Search implements Serializable {
         this.query = query;
     }
 
+    public List<Integer> getPages() {
+        return pages;
+    }
+
+    public void setPages(List<Integer> pages) {
+        this.pages = pages;
+    }
+
+    public Integer getCurrentPage() {
+        return currentPage;
+    }
+
+    public void setCurrentPage(Integer currentPage) {
+        this.currentPage = currentPage;
+    }
+
     public boolean isCoursesEmpty() {
         return (this.getCourses() == null || this.getCourses().isEmpty());
+    }
+
+    public String getQuery() {
+        FacesContext fc = FacesContext.getCurrentInstance();
+        Map<String, String> params = fc.getExternalContext().getRequestParameterMap();
+        this.query = params.get("query");
+        return query;
     }
 
     public boolean isQueryEmpty() {
@@ -58,11 +95,13 @@ public class Search implements Serializable {
     }
 
     public void preRenderView() {
-        try {
-            this.courses = CourseVoVwBuilder.getInstance().getSearchResults(query,itemsPerPage);
-        } catch (Exception ex) {
-            FacesContext.getCurrentInstance().addMessage("searchForm", new FacesMessage(ex.getMessage()));
-        }
+//        FacesContext fc = FacesContext.getCurrentInstance();
+//        Map<String, String> params = fc.getExternalContext().getRequestParameterMap();
+//        this.query = params.get("query");
+//        try {
+//            this.courses = CourseVoVwBuilder.getInstance().getSearchResults(query,itemsPerPage, itemsPerPage);
+//        } catch (Exception ex) {
+//            FacesContext.getCurrentInstance().addMessage("searchForm", new FacesMessage(ex.getMessage()));
+//        }
     }
-
 }

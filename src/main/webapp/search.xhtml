@@ -26,45 +26,68 @@
             </div>
 
             <div>
-                <h:form prependId="false">  
-                    <p:dataTable id="DataSearch" var="course" value="#{search.courses}"  
-                                 paginator="true" rows="10"  
-                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">  
-                        <p:column>  
-                            <f:facet name="header">  
-                                <h:outputText value="Profesor" />  
-                            </f:facet>  
-                            <h:outputText value="#{course.professorName}" />  
-                        </p:column>
+                <h:panelGroup id="coursesList">
+                    <h:form prependId="false">  
+                        <p:dataTable id="DataSearch" var="course" value="#{search.courses}" >
+                            <p:column>  
+                                <f:facet name="header">  
+                                    <h:outputText value="Profesor" />  
+                                </f:facet>  
+                                <h:outputText value="#{course.professorName}" />  
+                            </p:column>
 
-                        <p:column>  
-                            <f:facet name="header">  
-                                <h:outputText value="Materia" />  
-                            </f:facet>  
-                            <h:outputText value="#{course.subjectName}" />  
-                        </p:column>
+                            <p:column>  
+                                <f:facet name="header">  
+                                    <h:outputText value="Materia" />  
+                                </f:facet>  
+                                <h:outputText value="#{course.subjectName}" />  
+                            </p:column>
 
-                        <p:column>
-                            <f:facet name="header">
-                                <h:outputText value="Periodo" />  
-                            </f:facet>
-                            <table class="table-condensed" id="Periodfor#{course.hashCode()}" style="border-width: 30px;">
-                                <ui:repeat  value="#{course.coursesVoVwSmall}" var="coursePeriod">
-                                    <tr style="border-width: 30;">
-                                        <td>
-                                            <h:link value="#{coursePeriod.period}" outcome="courses/view.xhtml" class="btn btn-mini btn-success">
-                                                <f:param name ="id" value ="#{coursePeriod.courseId}"/>
-                                            </h:link>
-                                        </td>
-                                        <td>
-                                            <img style="vertical-align: bottom ;margin-bottom: 2px; "  src="#{request.contextPath}/resources/images/star.png" height="20"/> <h:outputText value=" x #{coursePeriod.average}" />
-                                        </td>
-                                   </tr>
-                                </ui:repeat>
-                            </table>
-                        </p:column>
-                    </p:dataTable>  
-                </h:form> 
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Periodo" />  
+                                </f:facet>
+                                <table class="table-condensed" id="Periodfor#{course.hashCode()}" style="border-width: 30px;">
+                                    <ui:repeat  value="#{course.coursesVoVwSmall}" var="coursePeriod">
+                                        <tr style="border-width: 30;">
+                                            <td>
+                                                <h:link value="#{coursePeriod.period}" outcome="courses/view.xhtml" class="btn btn-mini btn-success">
+                                                    <f:param name ="id" value ="#{coursePeriod.courseId}"/>
+                                                </h:link>
+                                            </td>
+                                            <td>
+                                                <img style="vertical-align: bottom ;margin-bottom: 2px; "  src="#{request.contextPath}/resources/images/star.png" height="20"/> <h:outputText value=" x #{coursePeriod.average}" />
+                                            </td>
+                                        </tr>
+                                    </ui:repeat>
+                                </table>
+                            </p:column>
+                            
+                        </p:dataTable>
+                        
+                        <h:form>
+                            <div class="pagination">
+                                <ul>
+                                    <ui:repeat value="#{search.pages}" var="page">
+                                        <ui:fragment rendered="#{page != search.currentPage}">
+                                            <li>
+                                                <h:commandLink action="#{search.loadCourses(page)}" value="#{page}">
+                                                    <f:ajax render="coursesList" />
+                                                </h:commandLink>
+                                            </li>
+                                        </ui:fragment>
+                                        <ui:fragment rendered="#{page == search.currentPage}">
+                                            <li class="active">
+                                                <h:commandLink action="#{search.loadCourses(page)}" value="#{page}" />
+                                            </li>
+                                        </ui:fragment>
+                                    </ui:repeat>
+                                </ul>
+                            </div>
+                        </h:form>
+
+                    </h:form> 
+                </h:panelGroup>
             </div>
 
         </div>

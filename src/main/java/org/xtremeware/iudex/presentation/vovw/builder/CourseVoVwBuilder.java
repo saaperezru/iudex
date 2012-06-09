@@ -56,10 +56,16 @@ public class CourseVoVwBuilder {
         return new CourseVoVwLarge(course.getVo(), subject, professor, periodString);
     }
 
-    public List<CourseListVoVwSmall> getSearchResults(String query, int totalHints) {
+    public List<CourseListVoVwSmall> getSearchResults(String query, int itemsByPage, int totalHints) {
 
         Date beforeSearch = new Date();
         List<Long> search = facadeFactory.getCoursesFacade().search(query, totalHints);
+        if(totalHints <= search.size()){
+            search = search.subList(totalHints-itemsByPage, totalHints);
+        }
+        else{
+            search = search.subList(totalHints-itemsByPage, search.size());
+        }
         Date afterSearch = new Date();
         Config.getInstance().getServiceFactory().getLogService().info("Searching for " + query + " took : " + String.valueOf(afterSearch.getTime() - beforeSearch.getTime()));
 
@@ -98,9 +104,10 @@ public class CourseVoVwBuilder {
             //Now that the Course exist in the hastTable add the course ID
             coursesList.get(courseList.hashCode()).addCourse(getCourseVoVwSmall(courseId));
         }
-
         return results;
-
-
     }
+    
+    public int getSearchCount(String query, int maxitems) {
+        return facadeFactory.getCoursesFacade().search(query, maxitems).size();
+    } 
 }

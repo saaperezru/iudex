@@ -7,7 +7,7 @@ import org.xtremeware.iudex.presentation.vovw.ProfessorVoVwLarge;
 import org.xtremeware.iudex.vo.ProfessorVo;
 import org.xtremeware.iudex.vo.ProfessorVoFull;
 
-public class ProfessorVoVwBuilder {
+public final class ProfessorVoVwBuilder {
 
 	private static final String DEFAULT_IMAGE_URL = "/resources/images/professor.png";
 	private static ProfessorVoVwBuilder instance;

@@ -1,10 +1,8 @@
 package org.xtremeware.iudex.presentation.controller;
 
-import java.io.IOException;
 import java.io.Serializable;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.context.FacesContext;
 import org.xtremeware.iudex.helper.Role;
 
 /**
@@ -26,8 +24,8 @@ public class User implements Serializable {
     private boolean loggedIn;
     private int failedLoginAttempts = 0;
     private boolean requiresCaptcha = false;
-	//TODO : Get default user image from a centralized site
-	private static String imageUrl = "/resources/images/user.png";
+    //TODO : Get default user image from a centralized site
+    private static String imageUrl = "/resources/images/user.png";
 
     public Long getId() {
         return id;
@@ -108,17 +106,15 @@ public class User implements Serializable {
         return false;
     }
 
-	public String getImageUrl() {
-		return imageUrl;
-	}
+    public String getImageUrl() {
+        return imageUrl;
+    }
 
-	public void setImageUrl(String imageUrl) {
-		this.imageUrl = imageUrl;
-	}
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
 
-
-
-    public String logOut(){
+    public String logOut() {
         firstName = null;
         lastName = null;
         userName = null;
@@ -127,6 +123,6 @@ public class User implements Serializable {
         loggedIn = false;
         failedLoginAttempts = 0;
         requiresCaptcha = false;
-		return "home";
+        return "home";
     }
 }

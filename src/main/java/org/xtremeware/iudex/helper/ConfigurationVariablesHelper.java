@@ -42,6 +42,12 @@ public final class ConfigurationVariablesHelper {
 	public static final String ACCOUNT_MAX_DAY_TERM = "user.maxDaysTerm";
 	public static final String ANTISAMY_POLICY_FILE = "security.antiSamyPolicyFile";
 	public static final String EXCEPTIONS_BUNDLE_BASE_NAME = "exceptions.bundleBaseName";
+	public static final String LUCENE_PROFESSOR_INDEX_PATH = "luceneProfessorIndex.path";
+        public static final String LUCENE_SUBJECT_INDEX_PATH = "luceneSubjectIndex.path";
+        public static final String LUCENE_FEEDBACK_INDEX_PATH = "luceneFeedbackIndex.path";
+        public static final String CREATE_LUCENE_INDEX = "lucene.create";
+        public static final String SPANISH_STOP_WORDS_PATH = "spanishStopWords.path";
+        public static final String LUCENE_COURSE_INDEX_PATH = "luceneCourseIndex.path";
 
 	private ConfigurationVariablesHelper(String configurationFilePath)  {
 		try {
@@ -70,9 +76,5 @@ public final class ConfigurationVariablesHelper {
 
 	private PropertiesConfiguration getConfig() {
 		return config;
-	}
-
-	private void setConfig(PropertiesConfiguration config) {
-		this.config = config;
 	}
 }

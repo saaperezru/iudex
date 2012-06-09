@@ -1,20 +1,19 @@
 package org.xtremeware.iudex.presentation.vovw.builder;
 
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import org.xtremeware.iudex.businesslogic.facade.FacadeFactory;
 import org.xtremeware.iudex.helper.Config;
 import org.xtremeware.iudex.presentation.vovw.UserVoVwSmall;
 import org.xtremeware.iudex.vo.UserVo;
 
-public class UserVoVwBuilder {
+public final class UserVoVwBuilder {
 	
 	private static UserVoVwBuilder instance;
 	private FacadeFactory facadeFactory;
-	private HashMap<Long, String> programs = new HashMap<Long, String>();
-	private static final String defaultAnonymousImage = "/resources/images/anonymous3.png";
-	private static final String defaultImage = "/resources/images/user.png";
-	public static final UserVoVwSmall anonymousUser = new UserVoVwSmall(0, "Anónimo", "anónimo", "...", defaultAnonymousImage);
+	private Map<Long, String> programs = new HashMap<Long, String>();
+	private static final String DEFAULT_ANONYMOUS_IMAGE = "/resources/images/anonymous3.png";
+	private static final String DEFAULT_IMAGE = "/resources/images/user.png";
+	public static final UserVoVwSmall ANONYMOUS_USER = new UserVoVwSmall(0, "Anónimo", "anónimo", "...", DEFAULT_ANONYMOUS_IMAGE);
 	
 	private UserVoVwBuilder(FacadeFactory facadeFactory) {
 		this.facadeFactory = facadeFactory;
@@ -38,6 +37,6 @@ public class UserVoVwBuilder {
 			}
 			mainProgram = programs.get(mainProgramId);
 		}
-		return new UserVoVwSmall(userId, user.getFirstName() + " " + user.getLastName(), user.getUserName(), mainProgram,defaultImage);
+		return new UserVoVwSmall(userId, user.getFirstName() + " " + user.getLastName(), user.getUserName(), mainProgram,DEFAULT_IMAGE);
 	}
 }

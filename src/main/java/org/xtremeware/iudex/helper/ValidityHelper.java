@@ -4,7 +4,10 @@ import org.apache.commons.validator.routines.DomainValidator;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.apache.commons.validator.routines.UrlValidator;
 
-public class ValidityHelper {
+public final class ValidityHelper {
+
+    private ValidityHelper() {
+    }
 
 //	private static final String EMAIL_PATTERN =
 //		"^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@ [A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";

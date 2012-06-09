@@ -7,7 +7,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.model.SelectItem;
 import org.xtremeware.iudex.businesslogic.facade.FeedbacksFacade;
-import org.xtremeware.iudex.businesslogic.facade.ProgramsFacade;
 import org.xtremeware.iudex.helper.Config;
 import org.xtremeware.iudex.vo.FeedbackTypeVo;
 import org.xtremeware.iudex.vo.ProgramVo;
@@ -26,9 +25,8 @@ public class Lists implements Serializable {
 	public List<SelectItem> getPrograms() {
 		if (programs == null) {
 			programs = new ArrayList<SelectItem>();
-			ProgramsFacade programsFacade = Config.getInstance().
-					getFacadeFactory().getProgramsFacade();
-			List<ProgramVo> programsList = programsFacade.listPrograms();
+			List<ProgramVo> programsList = Config.getInstance().
+					getFacadeFactory().getProgramsFacade().listPrograms();
 			if (programsList != null) {
 				for (ProgramVo program : programsList) {
 					programs.add(new SelectItem(program.getId(),

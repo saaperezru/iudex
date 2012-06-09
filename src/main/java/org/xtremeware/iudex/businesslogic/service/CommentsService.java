@@ -81,57 +81,74 @@ public class CommentsService extends CrudService<CommentVo, CommentEntity> {
     public void validateVoForCreation(EntityManager entityManager, CommentVo commentVo)
             throws MultipleMessagesException, DataBaseException {
 
-        MultipleMessagesException multipleMessageException = new MultipleMessagesException();
+        MultipleMessagesException multipleMessagesException = new MultipleMessagesException();
 
         if (commentVo == null) {
-            multipleMessageException.addMessage(
+            multipleMessagesException.addMessage(
                     "comment.null");
-            throw multipleMessageException;
+            throw multipleMessagesException;
         }
 
-        if (commentVo.getContent() == null) {
-            multipleMessageException.addMessage(
+        checkContent(multipleMessagesException, commentVo.getContent());
+        checkCourseId(multipleMessagesException, commentVo.getCourseId(), entityManager);
+
+        if (commentVo.getDate() == null) {
+            multipleMessagesException.addMessage(
+                    "comment.date.null");
+        }
+        
+        checkUserId(multipleMessagesException, commentVo.getUserId(), entityManager);
+        checkRating(multipleMessagesException, commentVo.getRating());
+
+        if (!multipleMessagesException.getMessages().isEmpty()) {
+            throw multipleMessagesException;
+        }
+        commentVo.setContent(SecurityHelper.sanitizeHTML(commentVo.getContent()));
+    }
+
+    private void checkContent(MultipleMessagesException multipleMessagesException,
+            String content) {
+        if (content == null) {
+            multipleMessagesException.addMessage(
                     "comment.content.null");
         } else {
-            commentVo.setContent(SecurityHelper.sanitizeHTML(commentVo.getContent()));
-            if (commentVo.getContent().length() < 1 || commentVo.getContent().length() > MAX_COMMENT_LENGTH) {
-                multipleMessageException.addMessage(
+            if (content.isEmpty() || content.length() > MAX_COMMENT_LENGTH) {
+                multipleMessagesException.addMessage(
                         "comment.content.invalidSize");
             }
         }
-
-        if (commentVo.getCourseId() == null) {
-            multipleMessageException.addMessage(
+    }
+    
+    private void checkCourseId(MultipleMessagesException multipleMessagesException,
+            Long courseid, EntityManager entityManager) throws DataBaseException {
+        if (courseid == null) {
+            multipleMessagesException.addMessage(
                     "comment.courseId.null");
-        } else if (getDaoFactory().getCourseDao().read(entityManager, commentVo.getCourseId()) == null) {
-            multipleMessageException.addMessage(
+        } else if (getDaoFactory().getCourseDao().read(entityManager, courseid) == null) {
+            multipleMessagesException.addMessage(
                     "comment.courseId.element.notFound");
         }
-
-        if (commentVo.getDate() == null) {
-            multipleMessageException.addMessage(
-                    "comment.date.null");
-        }
-
-        if (commentVo.getUserId() == null) {
-            multipleMessageException.addMessage(
+    }
+    
+    private void checkUserId(MultipleMessagesException multipleMessagesException,
+            Long userid, EntityManager entityManager) throws DataBaseException {
+        if (userid == null) {
+            multipleMessagesException.addMessage(
                     "comment.userId.null");
-        } else if (getDaoFactory().getUserDao().read(entityManager, commentVo.getUserId()) == null) {
-            multipleMessageException.addMessage(
+        } else if (getDaoFactory().getUserDao().read(entityManager, userid) == null) {
+            multipleMessagesException.addMessage(
                     "comment.userId.element.notFound");
         }
-
-
-        if (commentVo.getRating() == null) {
-            multipleMessageException.addMessage(
+    }
+    
+    private void checkRating(MultipleMessagesException multipleMessagesException,
+            Float rating) {
+        if (rating == null) {
+            multipleMessagesException.addMessage(
                     "comment.rating.null");
-        } else if (commentVo.getRating() < MIN_RATE || commentVo.getRating() > MAX_RATE) {
-            multipleMessageException.addMessage(
+        } else if (rating < MIN_RATE || rating > MAX_RATE) {
+            multipleMessagesException.addMessage(
                     "comment.rating.invalidRating");
-        }
-
-        if (!multipleMessageException.getMessages().isEmpty()) {
-            throw multipleMessageException;
         }
     }
 
@@ -161,7 +178,7 @@ public class CommentsService extends CrudService<CommentVo, CommentEntity> {
     }
 
     @Override
-    protected void validateVoForUpdate(EntityManager entityManager, CommentVo valueObject) 
+    protected void validateVoForUpdate(EntityManager entityManager, CommentVo valueObject)
             throws MultipleMessagesException, DataBaseException {
         validateVoForCreation(entityManager, valueObject);
         MultipleMessagesException multipleMessageException = new MultipleMessagesException();

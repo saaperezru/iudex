@@ -14,7 +14,7 @@ import org.xtremeware.iudex.presentation.vovw.CommentVoVwMedium;
 import org.xtremeware.iudex.presentation.vovw.UserVoVwSmall;
 import org.xtremeware.iudex.vo.CommentVo;
 
-public class CommentVoVwBuilder {
+public final class CommentVoVwBuilder {
 
     private static CommentVoVwBuilder instance;
     private FacadeFactory facadeFactory;

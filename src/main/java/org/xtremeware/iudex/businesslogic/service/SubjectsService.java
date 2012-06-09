@@ -1,18 +1,11 @@
 package org.xtremeware.iudex.businesslogic.service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import javax.persistence.EntityManager;
-import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Create;
-import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Delete;
-import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Read;
-import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Update;
+import org.xtremeware.iudex.businesslogic.service.crudinterfaces.*;
 import org.xtremeware.iudex.dao.AbstractDaoBuilder;
 import org.xtremeware.iudex.entity.SubjectEntity;
-import org.xtremeware.iudex.helper.ConfigurationVariablesHelper;
-import org.xtremeware.iudex.helper.DataBaseException;
-import org.xtremeware.iudex.helper.MultipleMessagesException;
-import org.xtremeware.iudex.helper.SecurityHelper;
+import org.xtremeware.iudex.helper.*;
 import org.xtremeware.iudex.vo.SubjectVo;
 
 /**
@@ -23,7 +16,6 @@ public class SubjectsService extends CrudService<SubjectVo, SubjectEntity> {
 
     private final int MAX_SUBJECT_NAME_LENGTH;
     private final int MAX_SUBJECT_DESCRIPTION_LENGTH;
-
     /**
      * SubjectsService constructor
      *
@@ -70,7 +62,7 @@ public class SubjectsService extends CrudService<SubjectVo, SubjectEntity> {
             multipleMessageException.addMessage("subject.name.null");
         } else {
             subjectVo.setName(SecurityHelper.sanitizeHTML(subjectVo.getName()));
-            if(subjectVo.getName().equals("")){
+            if (subjectVo.getName().equals("")) {
                 multipleMessageException.addMessage("subject.name.null");
             }
             if (subjectVo.getName().length() > MAX_SUBJECT_NAME_LENGTH) {
@@ -84,7 +76,7 @@ public class SubjectsService extends CrudService<SubjectVo, SubjectEntity> {
     }
 
     @Override
-    public void validateVoForUpdate(EntityManager entityManager, SubjectVo valueObject) 
+    public void validateVoForUpdate(EntityManager entityManager, SubjectVo valueObject)
             throws MultipleMessagesException, DataBaseException {
 
         validateVoForCreation(entityManager, valueObject);
@@ -117,48 +109,17 @@ public class SubjectsService extends CrudService<SubjectVo, SubjectEntity> {
     }
 
     /**
-     * Returns a list of SubjectVo according with the search query
-     *
-     * @param entityManager EntityManager
-     * @param query String with the search parameter
-     * @return A list of SubjectVo
-     */
-    public List<SubjectVo> search(EntityManager entityManager, String query)
-            throws DataBaseException {
-
-        List<SubjectEntity> subjectEntitys = getDaoFactory().getSubjectDao().
-                getByName(entityManager,
-                SecurityHelper.sanitizeHTML(query).toUpperCase());
-        if (subjectEntitys.isEmpty()) {
-            return null;
-        }
-        ArrayList<SubjectVo> arrayList = new ArrayList<SubjectVo>();
-        for (SubjectEntity subjectEntity : subjectEntitys) {
-            arrayList.add(subjectEntity.toVo());
-        }
-        return arrayList;
-    }
-
-    /**
      * Returns a list of SubjectVo according with the search name
      *
      * @param em EntityManager
      * @param name String with the name of the SubjectVo
      * @return A list if SubjectVo
      */
-    public List<SubjectVo> getByNameLike(EntityManager em, String name)
+    public List<Long> getByNameLike(EntityManager entityManager, String name)
             throws DataBaseException {
-        name = SecurityHelper.sanitizeHTML(name);
-        List<SubjectEntity> subjectEntitys;
-        ArrayList<SubjectVo> arrayList = new ArrayList<SubjectVo>();
-        if (!name.isEmpty()) {
-            subjectEntitys = getDaoFactory().getSubjectDao().
-                    getByName(em, name.toUpperCase());
-            for (SubjectEntity subjectEntity : subjectEntitys) {
-                arrayList.add(subjectEntity.toVo());
-            }
-        }
-        return arrayList;
+        return getDaoFactory().getSubjectDao().
+                getByName(entityManager,
+                SecurityHelper.sanitizeHTML(name).toUpperCase());
     }
 
     /**

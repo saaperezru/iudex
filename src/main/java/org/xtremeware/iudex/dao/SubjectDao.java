@@ -19,7 +19,7 @@ public interface SubjectDao extends CrudDao<SubjectEntity> {
      * @param name the subject's name
      * @return a list of matched subject entities
      */
-    List<SubjectEntity> getByName(EntityManager entityManager, String name)
+    List<Long> getByName(EntityManager entityManager, String name)
             throws DataBaseException;
 
     /**

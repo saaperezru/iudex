@@ -1,7 +1,6 @@
 package org.xtremeware.iudex.businesslogic.service.createimplementations;
 
 import javax.persistence.EntityManager;
-import org.xtremeware.iudex.businesslogic.DuplicityException;
 import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Create;
 import org.xtremeware.iudex.dao.AbstractDaoBuilder;
 import org.xtremeware.iudex.dao.CourseDao;

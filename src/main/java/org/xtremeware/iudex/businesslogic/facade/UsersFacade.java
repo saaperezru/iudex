@@ -3,7 +3,7 @@ package org.xtremeware.iudex.businesslogic.facade;
 import java.util.*;
 import javax.persistence.*;
 import org.xtremeware.iudex.businesslogic.DuplicityException;
-import org.xtremeware.iudex.businesslogic.helper.FacadesHelperImplementation;
+import org.xtremeware.iudex.businesslogic.helper.FacadesHelper;
 import org.xtremeware.iudex.businesslogic.service.*;
 import org.xtremeware.iudex.helper.*;
 import org.xtremeware.iudex.vo.*;
@@ -35,9 +35,9 @@ public class UsersFacade extends AbstractFacade {
             transaction.commit();
         } catch (Exception exception) {
             getServiceFactory().getLogService().error(exception.getMessage(), exception);
-            FacadesHelperImplementation.rollbackTransaction(entityManager, transaction, exception);
+            FacadesHelper.rollbackTransaction(entityManager, transaction, exception);
         } finally {
-            FacadesHelperImplementation.closeEntityManager(entityManager);
+            FacadesHelper.closeEntityManager(entityManager);
         }
         return userVo;
     }
@@ -50,8 +50,8 @@ public class UsersFacade extends AbstractFacade {
      * @return the added user
      * @throws MultipleMessagesException if there are validation problems
      */
-    public UserVo createUser(UserVo user) 
-            throws MultipleMessagesException,DuplicityException {
+    public UserVo createUser(UserVo user)
+            throws MultipleMessagesException, DuplicityException {
         EntityManager entityManager = null;
         EntityTransaction transaction = null;
         UserVo newUser = null;
@@ -79,12 +79,12 @@ public class UsersFacade extends AbstractFacade {
             transaction.commit();
         } catch (Exception exception) {
             getServiceFactory().getLogService().error(exception.getMessage(), exception);
-            FacadesHelperImplementation.checkDuplicityViolation(entityManager, transaction, exception);
-            FacadesHelperImplementation.checkExceptionAndRollback(entityManager, transaction, exception,
+            FacadesHelper.checkDuplicityViolation(entityManager, transaction, exception);
+            FacadesHelper.checkExceptionAndRollback(entityManager, transaction, exception,
                     MultipleMessagesException.class);
-            FacadesHelperImplementation.rollbackTransaction(entityManager, transaction, exception);
+            FacadesHelper.rollbackTransaction(entityManager, transaction, exception);
         } finally {
-            FacadesHelperImplementation.closeEntityManager(entityManager);
+            FacadesHelper.closeEntityManager(entityManager);
         }
         return newUser;
     }
@@ -98,7 +98,7 @@ public class UsersFacade extends AbstractFacade {
      * @throws InactiveUserException if the user is still inactive
      * @throws MultipleMessagesException if there are validation problems
      */
-    public UserVo logIn(String username, String password) 
+    public UserVo logIn(String username, String password)
             throws InactiveUserException, MultipleMessagesException {
         EntityManager entityManager = null;
         UserVo userVo = null;
@@ -108,11 +108,11 @@ public class UsersFacade extends AbstractFacade {
                     username, password);
         } catch (Exception exception) {
             getServiceFactory().getLogService().error(exception.getMessage(), exception);
-            FacadesHelperImplementation.checkException(exception, InactiveUserException.class);
-            FacadesHelperImplementation.checkException(exception, MultipleMessagesException.class);
+            FacadesHelper.checkException(exception, InactiveUserException.class);
+            FacadesHelper.checkException(exception, MultipleMessagesException.class);
             throw new RuntimeException(exception);
         } finally {
-            FacadesHelperImplementation.closeEntityManager(entityManager);
+            FacadesHelper.closeEntityManager(entityManager);
         }
         return userVo;
     }
@@ -137,12 +137,12 @@ public class UsersFacade extends AbstractFacade {
             transaction.commit();
         } catch (Exception exception) {
             getServiceFactory().getLogService().error(exception.getMessage(), exception);
-            FacadesHelperImplementation.checkDuplicityViolation(entityManager, transaction, exception);
-            FacadesHelperImplementation.checkExceptionAndRollback(entityManager, transaction, exception,
+            FacadesHelper.checkDuplicityViolation(entityManager, transaction, exception);
+            FacadesHelper.checkExceptionAndRollback(entityManager, transaction, exception,
                     MultipleMessagesException.class);
-            FacadesHelperImplementation.rollbackTransaction(entityManager, transaction, exception);
+            FacadesHelper.rollbackTransaction(entityManager, transaction, exception);
         } finally {
-            FacadesHelperImplementation.closeEntityManager(entityManager);
+            FacadesHelper.closeEntityManager(entityManager);
         }
         return updatedUserVo;
     }
@@ -178,9 +178,9 @@ public class UsersFacade extends AbstractFacade {
             tx.commit();
         } catch (Exception ex) {
             getServiceFactory().getLogService().error(ex.getMessage(), ex);
-            FacadesHelperImplementation.rollbackTransaction(em, tx, ex);
+            FacadesHelper.rollbackTransaction(em, tx, ex);
         } finally {
-            FacadesHelperImplementation.closeEntityManager(em);
+            FacadesHelper.closeEntityManager(em);
         }
     }
 
@@ -196,7 +196,7 @@ public class UsersFacade extends AbstractFacade {
             getServiceFactory().getLogService().error(ex.getMessage(), ex);
             throw new RuntimeException(ex);
         } finally {
-            FacadesHelperImplementation.closeEntityManager(em);
+            FacadesHelper.closeEntityManager(em);
         }
         return vo;
     }
@@ -216,14 +216,14 @@ public class UsersFacade extends AbstractFacade {
             transaction.commit();
         } catch (Exception exception) {
             getServiceFactory().getLogService().error(exception.getMessage(), exception);
-            FacadesHelperImplementation.checkExceptionAndRollback(entityManager, transaction, exception,
+            FacadesHelper.checkExceptionAndRollback(entityManager, transaction, exception,
                     MultipleMessagesException.class);
-            FacadesHelperImplementation.rollbackTransaction(entityManager, transaction, exception);
+            FacadesHelper.rollbackTransaction(entityManager, transaction, exception);
         } finally {
-            FacadesHelperImplementation.closeEntityManager(entityManager);
+            FacadesHelper.closeEntityManager(entityManager);
         }
     }
-    
+
     public void deleteUser(long userId) throws DataBaseException {
         EntityManager entityManager = null;
         EntityTransaction transaction = null;
@@ -235,30 +235,30 @@ public class UsersFacade extends AbstractFacade {
             transaction.commit();
         } catch (Exception exception) {
             getServiceFactory().getLogService().error(exception.getMessage(), exception);
-            FacadesHelperImplementation.checkExceptionAndRollback(entityManager, transaction, exception, DataBaseException.class);
-            FacadesHelperImplementation.rollbackTransaction(entityManager, transaction, exception);
+            FacadesHelper.checkExceptionAndRollback(entityManager, transaction, exception, DataBaseException.class);
+            FacadesHelper.rollbackTransaction(entityManager, transaction, exception);
         } finally {
-            FacadesHelperImplementation.closeEntityManager(entityManager);
+            FacadesHelper.closeEntityManager(entityManager);
         }
     }
-	
-	/**
-	 * 	Searches for a user with the specified id. If noting found returns null.
-	 * @param userId
-	 * @return Found user. If nothing was found return null.
-	 */
-	public UserVo getUser(long userId){
+
+    /**
+     * Searches for a user with the specified id. If noting found returns null.
+     *
+     * @param userId
+     * @return Found user. If nothing was found return null.
+     */
+    public UserVo getUser(long userId) {
         EntityManager entityManager = null;
-        EntityTransaction transaction = null;
-		UserVo user = null;
+        UserVo user = null;
         try {
             entityManager = getEntityManagerFactory().createEntityManager();
-			user = getServiceFactory().getUsersService().read(entityManager, userId);
+            user = getServiceFactory().getUsersService().read(entityManager, userId);
         } catch (Exception exception) {
             getServiceFactory().getLogService().error(exception.getMessage(), exception);
         } finally {
-            FacadesHelperImplementation.closeEntityManager(entityManager);
+            FacadesHelper.closeEntityManager(entityManager);
         }
-		return user;
-	}
+        return user;
+    }
 }

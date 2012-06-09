@@ -27,12 +27,12 @@ public class SqlProfessorDao extends SqlCrudDao<ProfessorEntity> implements Prof
      * specified
      */
     @Override
-    public List<ProfessorEntity> getByNameLike(EntityManager entityManager, String professorName)
+    public List<Long> getByNameLike(EntityManager entityManager, String professorName)
             throws DataBaseException {
         checkEntityManager(entityManager);
         try {
             return entityManager.createNamedQuery("getProfessorByNameLike",
-                    ProfessorEntity.class).setParameter("name", "%" + professorName + "%").getResultList();
+                    Long.class).setParameter("name", "%" + professorName + "%").getResultList();
         } catch (Exception e) {
             throw new DataBaseException(e.getMessage(), e.getCause());
         }

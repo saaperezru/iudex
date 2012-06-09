@@ -10,7 +10,6 @@ import org.xtremeware.iudex.entity.*;
 import org.xtremeware.iudex.helper.*;
 import org.xtremeware.iudex.vo.*;
 
-
 /**
  *
  * @author josebermeo
@@ -53,48 +52,77 @@ public class UsersService extends CrudService<UserVo, UserEntity> {
             throw multipleMessagesException;
         }
 
-        if (userVo.getFirstName() == null) {
+        checkFirstName(multipleMessagesException, userVo.getFirstName());
+        checkLastName(multipleMessagesException, userVo.getLastName());
+        checkUserName(multipleMessagesException, userVo.getUserName());
+        checkPassword(multipleMessagesException, userVo.getPassword());
+        checkPrograms(multipleMessagesException, userVo.getProgramsId(), entityManager);
+
+        if (userVo.getRole() == null) {
+            multipleMessagesException.addMessage("user.role.null");
+        }
+
+        if (!multipleMessagesException.getMessages().isEmpty()) {
+            throw multipleMessagesException;
+        }
+        userVo.setFirstName(SecurityHelper.sanitizeHTML(userVo.getFirstName()));
+        userVo.setLastName(SecurityHelper.sanitizeHTML(userVo.getLastName()));
+        userVo.setUserName(SecurityHelper.sanitizeHTML(userVo.getUserName()));
+        userVo.setPassword(SecurityHelper.sanitizeHTML(userVo.getPassword()));
+    }
+
+    private void checkFirstName(MultipleMessagesException multipleMessagesException,
+            String firstName) {
+        if (firstName == null) {
             multipleMessagesException.addMessage(
                     "user.firstName.null");
         } else {
-            userVo.setFirstName(SecurityHelper.sanitizeHTML(userVo.getFirstName()));
-            if (userVo.getFirstName().isEmpty()) {
+            if (firstName.isEmpty()) {
                 multipleMessagesException.addMessage(
                         "user.firstName.empty");
             }
         }
-        if (userVo.getLastName() == null) {
+    }
+
+    private void checkLastName(MultipleMessagesException multipleMessagesException,
+            String lastName) {
+        if (lastName == null) {
             multipleMessagesException.addMessage(
                     "user.lastName.null");
         } else {
-            userVo.setLastName(SecurityHelper.sanitizeHTML(userVo.getLastName()));
-            if (userVo.getLastName().isEmpty()) {
+            if (lastName.isEmpty()) {
                 multipleMessagesException.addMessage(
                         "user.lastName.empty");
             }
         }
-        if (userVo.getUserName() == null) {
+    }
+
+    private void checkUserName(MultipleMessagesException multipleMessagesException,
+            String userName) {
+        if (userName == null) {
             multipleMessagesException.addMessage(
                     "user.userName.null");
         } else {
-            userVo.setUserName(SecurityHelper.sanitizeHTML(userVo.getUserName()));
-            if (userVo.getUserName().length() < MIN_USERNAME_LENGTH) {
+            if (userName.length() < MIN_USERNAME_LENGTH) {
                 multipleMessagesException.addMessage(
                         "user.userName.tooShort");
-            } else if (userVo.getUserName().length() > MAX_USERNAME_LENGTH) {
+            } else if (userName.length() > MAX_USERNAME_LENGTH) {
                 multipleMessagesException.addMessage(
                         "user.userName.tooLong");
             }
         }
-        validatePassword(userVo.getPassword(), multipleMessagesException);
-        if (userVo.getProgramsId() == null) {
+    }
+
+    private void checkPrograms(MultipleMessagesException multipleMessagesException,
+            List<Long> programsId, EntityManager entityManager) throws DataBaseException {
+        if (programsId == null) {
             multipleMessagesException.addMessage(
                     "user.programsId.null");
-        } else if (userVo.getProgramsId().isEmpty()) {
+        } else if (programsId.isEmpty()) {
             multipleMessagesException.addMessage(
                     "user.programsId.empty");
         } else {
-            for (Long programId : userVo.getProgramsId()) {
+            for (Long programId : programsId) {
                 if (programId == null) {
                     multipleMessagesException.addMessage(
                             "user.programsId.element.null");
@@ -104,18 +132,27 @@ public class UsersService extends CrudService<UserVo, UserEntity> {
                 }
             }
         }
-        if (userVo.getRole() == null) {
-            multipleMessagesException.addMessage("user.role.null");
-        }
-
-        if (!multipleMessagesException.getMessages().isEmpty()) {
-            throw multipleMessagesException;
+    }
+    
+    private void checkPassword(MultipleMessagesException multipleMessagesException,
+            String password) {
+        if (password == null) {
+            multipleMessagesException.addMessage(
+                    "user.password.null");
+        } else {
+            if (password.length() < MIN_USER_PASSWORD_LENGTH) {
+                multipleMessagesException.addMessage(
+                        "user.password.tooShort");
+            } else if (password.length() > MAX_USER_PASSWORD_LENGTH) {
+                multipleMessagesException.addMessage(
+                        "user.password.tooLong");
+            }
         }
     }
 
     @Override
     public void validateVoForUpdate(EntityManager entityManager, UserVo userVo)
-            throws MultipleMessagesException,DataBaseException {
+            throws MultipleMessagesException, DataBaseException {
         validateVoForCreation(entityManager, userVo);
         MultipleMessagesException multipleMessagesException =
                 new MultipleMessagesException();
@@ -153,35 +190,19 @@ public class UsersService extends CrudService<UserVo, UserEntity> {
 
     public UserVo authenticate(EntityManager entityManager, String userName,
             String password)
-            throws InactiveUserException,DataBaseException, MultipleMessagesException {
+            throws InactiveUserException, DataBaseException, MultipleMessagesException {
 
         MultipleMessagesException exceptions = new MultipleMessagesException();
 
-        if (userName == null) {
-            exceptions.addMessage("user.userName.null");
-        } else if (userName.length() < MIN_USERNAME_LENGTH) {
-            exceptions.addMessage(
-                    "user.userName.tooShort");
-        } else if (userName.length() > MAX_USERNAME_LENGTH) {
-            exceptions.addMessage(
-                    "user.userName.tooLong");
-        }
-        if (password == null) {
-            exceptions.addMessage("user.password.null");
-        } else if (password.length() < MIN_USER_PASSWORD_LENGTH) {
-            exceptions.addMessage("user.password.tooShort");
-        } else if (password.length() > MAX_USER_PASSWORD_LENGTH) {
-            exceptions.addMessage(
-                    "user.password.tooLong");
-        }
-
+        checkUserName(exceptions, userName);
+        checkPassword(exceptions, password);
         if (!exceptions.getMessages().isEmpty()) {
             throw exceptions;
         }
 
         UserEntity user = getDaoFactory().getUserDao().getByUsernameAndPassword(
-                entityManager, 
-                SecurityHelper.sanitizeHTML(userName), 
+                entityManager,
+                SecurityHelper.sanitizeHTML(userName),
                 SecurityHelper.hashPassword(SecurityHelper.sanitizeHTML(password)));
         if (user == null) {
             return null;
@@ -277,30 +298,13 @@ public class UsersService extends CrudService<UserVo, UserEntity> {
 
         MultipleMessagesException multipleMessagesException =
                 new MultipleMessagesException();
-        validatePassword(password, multipleMessagesException);
+        checkPassword(multipleMessagesException, password);
 
         if (!multipleMessagesException.getMessages().isEmpty()) {
             throw multipleMessagesException;
         }
 
-        forgottenPasswordKey.getUser().setPassword(SecurityHelper.hashPassword(
-                password));
+        forgottenPasswordKey.getUser().setPassword(SecurityHelper.hashPassword(SecurityHelper.sanitizeHTML(password)));
         dao.delete(em, forgottenPasswordKey.getId());
-    }
-
-    private void validatePassword(String password,
-            MultipleMessagesException multipleMessagesException) {
-        if (password == null) {
-            multipleMessagesException.addMessage(
-                    "user.password.null");
-        } else {
-            if (password.length() < MIN_USER_PASSWORD_LENGTH) {
-                multipleMessagesException.addMessage(
-                        "user.password.tooShort");
-            } else if (password.length() > MAX_USER_PASSWORD_LENGTH) {
-                multipleMessagesException.addMessage(
-                        "user.password.tooLong");
-            }
-        }
     }
 }

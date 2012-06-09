@@ -9,7 +9,7 @@ import org.xtremeware.iudex.vo.FeedbackVo;
  *
  * @author healarconr
  */
-public class FeedbackVoVwBuilder {
+public final class FeedbackVoVwBuilder {
 
     private static FeedbackVoVwBuilder instance;
     private FacadeFactory facadeFactory;

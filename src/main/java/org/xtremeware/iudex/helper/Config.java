@@ -40,8 +40,15 @@ public final class Config {
         mailingConf.setSmtpServerPort(Integer.parseInt(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAILING_SMTP_PORT)));
         mailingConf.setSmtpUser(ConfigurationVariablesHelper.getVariable(
                 ConfigurationVariablesHelper.MAILING_SMTP_USER));
+        createIndex();
         this.serviceFactory = new ServiceBuilder(daoFactory, mailingConf);
         facadeFactory = new FacadeFactory(serviceFactory, this.persistenceUnit);
+    }
+    
+    private void createIndex() {
+        if( ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.CREATE_LUCENE_INDEX).equals("true")){
+            ConfigLucene.indexDataBase(persistenceUnit.createEntityManager());
+        }
     }
 
     public static synchronized Config getInstance() {

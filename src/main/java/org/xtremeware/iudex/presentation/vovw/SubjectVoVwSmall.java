@@ -29,15 +29,6 @@ public class SubjectVoVwSmall implements ValueObject{
         if (this.id != other.id) {
             return false;
         }
-        if ((this.name == null) ? (other.name != null) : !this.name.equals(other.name)) {
-            return false;
-        }
-        if (this.code != other.code) {
-            return false;
-        }
-        if (this.ratingSummary != other.ratingSummary && (this.ratingSummary == null || !this.ratingSummary.equals(other.ratingSummary))) {
-            return false;
-        }
         return true;
     }
 

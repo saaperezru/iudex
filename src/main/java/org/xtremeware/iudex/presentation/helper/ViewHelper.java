@@ -57,10 +57,8 @@ public class ViewHelper {
         String id;
         while (it.hasNext()) {
             id = it.next();
-            if (id != null) {
-                if (id.startsWith(clientId)) {
-                    return true;
-                }
+            if (id != null && id.startsWith(clientId)) {
+                return true;
             }
         }
         return false;

@@ -7,13 +7,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.faces.application.ConfigurableNavigationHandler;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import java.util.logging.*;
+import javax.faces.application.*;
+import javax.faces.bean.*;
 import javax.faces.context.FacesContext;
 import org.primefaces.event.RateEvent;
 import org.xtremeware.iudex.businesslogic.facade.FacadeFactory;
@@ -45,9 +41,9 @@ public class ViewCourse implements Serializable {
 	@ManagedProperty(value = "#{user}")
 	private User user;
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public List<CommentVoVwMedium> getComments() {
+        return comments;
+    }
 
 	public List<CommentVoVwMedium> getComments() {
 		return comments;
@@ -69,17 +65,24 @@ public class ViewCourse implements Serializable {
 		return course.getProfessor();
 	}
 
-	public SubjectVoVwSmall getSubject() {
-		return course.getSubject();
-	}
+    public User getUser() {
+        return user;
+    }
 
-	public User getUser() {
-		return user;
-	}
+    public void setUser(User user) {
+        this.user = user;
+    }
 
-	public void setUser(User user) {
-		this.user = user;
-	}
+    public int parseUserCommentVote(long commentId) {
+        int userCommentVoteValue = 0;
+        if (user != null && user.isLoggedIn()) {
+            BinaryRatingVo commentRatingByUserId = Config.getInstance().getFacadeFactory().getCommentsFacade().getCommentRatingByUserId(commentId, user.getId());
+            if (commentRatingByUserId != null) {
+                userCommentVoteValue = commentRatingByUserId.getValue();
+            }
+        }
+        return userCommentVoteValue;
+    }
 
 	public int parseUserCommentVote(long commentId) {
 		int userCommentVoteValue = 0;

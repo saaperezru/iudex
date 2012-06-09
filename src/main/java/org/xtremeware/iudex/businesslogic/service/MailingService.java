@@ -24,6 +24,8 @@ public final class MailingService {
     private Properties props;
     private MailingConfigVo config;
     private Configuration templates;
+    private static final int MAX_SMTPSERVERPORT = 65535;
+    private static final int MIN_SMTPSERVERPORT = 0;
 
     public MailingService(MailingConfigVo config) {
         setConfig(config);
@@ -59,9 +61,9 @@ public final class MailingService {
             throw new IllegalArgumentException(
                     "String sender in the MailingConfigVo provided must be a valid email address");
         }
-        if (config.getSmtpServerPort() > 65535 || config.getSmtpServerPort() < 0) {
+        if (config.getSmtpServerPort() > MAX_SMTPSERVERPORT || config.getSmtpServerPort() < MIN_SMTPSERVERPORT) {
             throw new IllegalArgumentException(
-                    "int smtpServerPort in the MailingConfigVo provided must be in between 0 and 65535");
+                    "int smtpServerPort in the MailingConfigVo provided must be in between "+MIN_SMTPSERVERPORT+" and "+MAX_SMTPSERVERPORT);
         }
         if (config.getSmtpUser() == null) {
             throw new IllegalArgumentException(

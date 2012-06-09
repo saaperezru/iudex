@@ -1,5 +1,3 @@
-/*
- */
 package org.xtremeware.iudex.businesslogic.facade;
 
 import java.util.HashSet;
@@ -127,46 +125,46 @@ public class CoursesFacadeIT {
         //TODO: As long as we are still not giving a precise order to the results, i'm not testing the order, just the presence, of the results.
         //First lets look by a subject's name
         String query = "SOFTWARE";
-        List<CourseVoFull> search = facade.search(query);
+        List<Long> search = facade.search(query,10);
         assertNotNull(search);
         assertNotSame(search.size(), 0);
-        Set<CourseVoFull> expected = new HashSet<CourseVoFull>();
-        expected.add(new CourseVoFull(marioIs2, is2.getVo(), mario.getVo()));
-        expected.add(new CourseVoFull(marioIsa, isa.getVo(), mario.getVo()));
-        expected.add(new CourseVoFull(fabioIsa, isa.getVo(), fabio.getVo()));
-        for (CourseVoFull result : search) {
+        Set<Long> expected = new HashSet<Long>();
+        expected.add(marioIs2.getId());
+        expected.add(marioIsa.getId());
+        expected.add(fabioIsa.getId());
+        for (Long result : search) {
             if (!expected.contains(result)) {
                 fail("The following course was not expected for query " + query + ": " + result.toString());
             }
         }
         query = "sOFTWArE";
-        search = facade.search(query);
+        search = facade.search(query,10);
         assertNotNull(search);
         assertNotSame(search.size(), 0);
-        for (CourseVoFull result : search) {
+        for (Long result : search) {
             if (!expected.contains(result)) {
                 fail("The following course was not expected for query " + query + ": " + result.toString());
             }
         }
         //Now lets look by a professor's name
         query = "maRio";
-        search = facade.search(query);
+        search = facade.search(query,10);
         assertNotNull(search);
         assertNotSame(search.size(), 0);
-        expected = new HashSet<CourseVoFull>();
-        expected.add(new CourseVoFull(marioIs2, is2.getVo(), mario.getVo()));
-        expected.add(new CourseVoFull(marioIsa, isa.getVo(), mario.getVo()));
-        expected.add(new CourseVoFull(marioAfi, afi.getVo(), mario.getVo()));
-        for (CourseVoFull result : search) {
+        expected = new HashSet<Long>();
+        expected.add(marioIs2.getId());
+        expected.add(marioIsa.getId());
+        expected.add(marioAfi.getId());
+        for (Long result : search) {
             if (!expected.contains(result)) {
                 fail("The following course was not expected for query " + query + ": " + result.toString());
             }
         }
         query = "linares";
-        search = facade.search(query);
+        search = facade.search(query,10);
         assertNotNull(search);
         assertNotSame(search.size(), 0);
-        for (CourseVoFull result : search) {
+        for (Long result : search) {
             if (!expected.contains(result)) {
                 fail("The following course was not expected for query " + query + ": " + result.toString());
             }
@@ -176,23 +174,24 @@ public class CoursesFacadeIT {
     /**
      * Test of search method when the query has no results
      */
+	//icial releases are usually created when the developers feel there are sufficient changes, improvements an
     @Test
     public void test_BL_1_2() {
         CoursesFacade facade = Config.getInstance().getFacadeFactory().getCoursesFacade();
 
         String query = "' OR 1=1--'";
-        List<CourseVoFull> search = facade.search(query);
+        List<Long> search = facade.search(query,10);
         assertNotNull(search);
         assertEquals(search.size(), 0);
         query = "# DROP DATABASE TEST";
-        search = facade.search(query);
+        search = facade.search(query,10);
         assertNotNull(search);
         assertEquals(search.size(), 0);
         query = "Marios";
-        search = facade.search(query);
+        search = facade.search(query,10);
         assertNotNull(search);
-        assertEquals(search.size(), 0);
-        search = facade.search(null);
+        assertEquals(search.size(), 3);
+        search = facade.search(null,10);
         assertNotNull(search);
         assertEquals(search.size(), 0);
     }
@@ -204,7 +203,7 @@ public class CoursesFacadeIT {
     public void test_BL_1_3() {
         CoursesFacade facade = Config.getInstance().getFacadeFactory().getCoursesFacade();
         String query = "";
-        List<CourseVoFull> search = facade.search(query);
+        List<Long> search = facade.search(query,10);
         assertNotNull(search);
         assertEquals(search.size(), 0);
     }

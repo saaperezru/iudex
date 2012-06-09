@@ -16,7 +16,6 @@ public class ProfessorsService extends CrudService<ProfessorVo, ProfessorEntity>
     public ProfessorsService(AbstractDaoBuilder daoFactory,
             Create create, Read read, Update update, Delete delete) {
         super(daoFactory, create, read, update, delete);
-
         MAX_PROFESSOR_NAME_LENGTH =
                 Integer.parseInt(ConfigurationVariablesHelper.getVariable(
                 ConfigurationVariablesHelper.MAX_PROFESSOR_NAME_LENGTH));
@@ -25,17 +24,10 @@ public class ProfessorsService extends CrudService<ProfessorVo, ProfessorEntity>
                 ConfigurationVariablesHelper.MAX_PROFESSOR_DECRIPTION_LENGTH));
     }
 
-    public List<ProfessorVo> getByNameLike(EntityManager entityManager, String professorName)
+    public List<Long> getByNameLike(EntityManager entityManager, String professorName)
             throws DataBaseException {
         professorName = SecurityHelper.sanitizeHTML(professorName);
-        ArrayList<ProfessorVo> list = new ArrayList<ProfessorVo>();
-        if (!professorName.isEmpty()) {
-            for (ProfessorEntity professor : getDaoFactory().getProfessorDao().
-                    getByNameLike(entityManager, professorName.toUpperCase())) {
-                list.add(professor.toVo());
-            }
-        }
-        return list;
+        return getDaoFactory().getProfessorDao().getByNameLike(entityManager, SecurityHelper.sanitizeHTML(professorName).toUpperCase());
     }
 
     public List<ProfessorVo> getBySubjectId(EntityManager entityManager, long subjectId)
@@ -51,104 +43,145 @@ public class ProfessorsService extends CrudService<ProfessorVo, ProfessorEntity>
     }
 
     @Override
-    public void validateVoForCreation(EntityManager em, ProfessorVo vo)
+    public void validateVoForCreation(EntityManager em, ProfessorVo professorVo)
             throws MultipleMessagesException {
-        
-        String preFixHttp = "http://";
-        String preFixHttps = "https://";
-        MultipleMessagesException multipleMessageException =
+
+
+        MultipleMessagesException multipleMessagesException =
                 new MultipleMessagesException();
-        if (vo == null) {
-            multipleMessageException.addMessage("professor.null");
-            throw multipleMessageException;
+        if (professorVo == null) {
+            multipleMessagesException.addMessage("professor.null");
+            throw multipleMessagesException;
         }
-        if (vo.getFirstName() == null) {
-            multipleMessageException.addMessage(
+        checkFirstName(multipleMessagesException, professorVo.getFirstName());
+        checkLastName(multipleMessagesException, professorVo.getLastName());
+        checkDescription(multipleMessagesException, professorVo.getDescription());
+        checkEmail(multipleMessagesException, professorVo.getEmail());
+        checkImageUrl(multipleMessagesException, professorVo.getImageUrl());
+        checkWebSide(multipleMessagesException, professorVo.getWebsite());
+
+        if (!multipleMessagesException.getMessages().isEmpty()) {
+            throw multipleMessagesException;
+        }
+        professorVo.setFirstName(SecurityHelper.sanitizeHTML(professorVo.getFirstName()));
+        professorVo.setLastName(SecurityHelper.sanitizeHTML(professorVo.getLastName()));
+        professorVo.setDescription(SecurityHelper.sanitizeHTML(professorVo.getDescription()));
+    }
+
+    private void checkFirstName(MultipleMessagesException multipleMessagesException,
+            String firstName) {
+        if (firstName == null) {
+            multipleMessagesException.addMessage(
                     "professor.firstName.null");
         } else {
-            vo.setFirstName(SecurityHelper.sanitizeHTML(vo.getFirstName()));
-            if (vo.getFirstName().length() > MAX_PROFESSOR_NAME_LENGTH) {
-                multipleMessageException.addMessage(
+            if (firstName.length() > MAX_PROFESSOR_NAME_LENGTH) {
+                multipleMessagesException.addMessage(
                         "professor.firstName.tooLong");
             }
-            if (vo.getFirstName().isEmpty()) {
-                multipleMessageException.addMessage(
+            if (firstName.isEmpty()) {
+                multipleMessagesException.addMessage(
                         "professor.firstName.empty");
             }
         }
-        if (vo.getLastName() == null) {
-            multipleMessageException.addMessage(
+    }
+
+    private void checkLastName(MultipleMessagesException multipleMessagesException,
+            String lastName) {
+        if (lastName == null) {
+            multipleMessagesException.addMessage(
                     "professor.lastName.null");
         } else {
-            vo.setLastName(SecurityHelper.sanitizeHTML(vo.getLastName()));
-            if (vo.getLastName().length() > MAX_PROFESSOR_NAME_LENGTH) {
-                multipleMessageException.addMessage(
+            if (lastName.length() > MAX_PROFESSOR_NAME_LENGTH) {
+                multipleMessagesException.addMessage(
                         "professor.lastName.tooLong");
             }
-            if (vo.getLastName().isEmpty()) {
-                multipleMessageException.addMessage(
+            if (lastName.isEmpty()) {
+                multipleMessagesException.addMessage(
                         "professor.lastName.empty");
             }
         }
-        if (vo.getDescription() == null) {
-            multipleMessageException.addMessage(
+    }
+
+    private void checkDescription(MultipleMessagesException multipleMessagesException,
+            String description) {
+        if (description == null) {
+            multipleMessagesException.addMessage(
                     "professor.description.null");
         } else {
-            vo.setDescription(SecurityHelper.sanitizeHTML(vo.getDescription()));
-            if (vo.getDescription().length() > MAX_PROFESSOR_DECRIPTION_LENGTH) {
-                multipleMessageException.addMessage(
+            if (description.length() > MAX_PROFESSOR_DECRIPTION_LENGTH) {
+                multipleMessagesException.addMessage(
                         "professor.description.tooLong");
             }
-            if (vo.getDescription().isEmpty()) {
-                multipleMessageException.addMessage(
+            if (description.isEmpty()) {
+                multipleMessagesException.addMessage(
                         "professor.description.empty");
             }
         }
+    }
 
-        if (vo.getEmail() == null) {
-            multipleMessageException.addMessage(
+    private void checkEmail(MultipleMessagesException multipleMessagesException,
+            String email) {
+        if (email == null) {
+            multipleMessagesException.addMessage(
                     "professor.email.null");
-        } else if (vo.getEmail().isEmpty()) {
-            multipleMessageException.addMessage(
+        } else if (email.isEmpty()) {
+            multipleMessagesException.addMessage(
                     "professor.email.empty");
-        } else if (!ValidityHelper.isValidEmail(vo.getEmail())) {
-            multipleMessageException.addMessage(
+        } else if (!ValidityHelper.isValidEmail(email)) {
+            multipleMessagesException.addMessage(
                     "professor.email.invalidEmail");
         }
-        if (vo.getImageUrl() == null) {
-            multipleMessageException.addMessage(
+    }
+
+    private void checkImageUrl(MultipleMessagesException multipleMessagesException,
+            String imageUrl) {
+        String preFixHttp = "http://";
+        String preFixHttps = "https://";
+
+        if (imageUrl == null) {
+            multipleMessagesException.addMessage(
                     "professor.imageUrl.null");
-        } else if (!vo.getImageUrl().isEmpty()) {
-            String imageUrl = vo.getImageUrl();
-            if (!vo.getImageUrl().substring(preFixHttp.length()).equalsIgnoreCase(preFixHttp)
-                    && !vo.getImageUrl().substring(preFixHttps.length()).equalsIgnoreCase(preFixHttps)) {
-                imageUrl = preFixHttp + imageUrl;
+        } else if (!imageUrl.isEmpty()) {
+
+            if (!imageUrl.substring(preFixHttp.length()).equalsIgnoreCase(preFixHttp)
+                    && !imageUrl.substring(preFixHttps.length()).equalsIgnoreCase(preFixHttps)) {
+                if (!ValidityHelper.isValidUrl(preFixHttp + imageUrl)) {
+                    multipleMessagesException.addMessage(
+                            "professor.imageUrl.invalidImage");
+                }
+            } else {
+                if (!ValidityHelper.isValidUrl(imageUrl)) {
+                    multipleMessagesException.addMessage(
+                            "professor.imageUrl.invalidImage");
+                }
             }
-            if (!ValidityHelper.isValidUrl(imageUrl)) {
-                multipleMessageException.addMessage(
-                        "professor.imageUrl.invalidImage");
-            }
+
         }
-        if (vo.getWebsite() == null) {
-            multipleMessageException.addMessage(
+    }
+
+    private void checkWebSide(MultipleMessagesException multipleMessagesException,
+            String webSide) {
+        String preFixHttp = "http://";
+        String preFixHttps = "https://";
+        if (webSide == null) {
+            multipleMessagesException.addMessage(
                     "professor.website.null");
-        } else if (vo.getWebsite().isEmpty()) {
-            multipleMessageException.addMessage(
+        } else if (webSide.isEmpty()) {
+            multipleMessagesException.addMessage(
                     "professor.website.empty");
         } else {
-            String website = vo.getWebsite();
-            if (!vo.getWebsite().substring(preFixHttp.length()).equalsIgnoreCase(preFixHttp)
-                    && !vo.getWebsite().substring(preFixHttps.length()).equalsIgnoreCase(preFixHttps)) {
-                website = preFixHttp + website;
+            if (!webSide.substring(preFixHttp.length()).equalsIgnoreCase(preFixHttp)
+                    && !webSide.substring(preFixHttps.length()).equalsIgnoreCase(preFixHttps)) {
+                if (!ValidityHelper.isValidUrl(preFixHttp + webSide)) {
+                    multipleMessagesException.addMessage(
+                            "professor.website.invalidWebsite");
+                }
+            } else {
+                if (!ValidityHelper.isValidUrl(webSide)) {
+                    multipleMessagesException.addMessage(
+                            "professor.website.invalidWebsite");
+                }
             }
-            if (!ValidityHelper.isValidUrl(website)) {
-                multipleMessageException.addMessage(
-                        "professor.website.invalidWebsite");
-            }
-        }
-
-        if (!multipleMessageException.getMessages().isEmpty()) {
-            throw multipleMessageException;
         }
     }
 

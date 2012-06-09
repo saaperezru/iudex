@@ -81,8 +81,6 @@ public abstract class CrudService<E extends ValueObject, F extends Entity<E>> {
             DataBaseException,
             DuplicityException {
         validateVoForUpdate(entityManager, valueObject);
-
-
         F entity = getUpdateInterface().update(entityManager, voToEntity(entityManager, valueObject));
         if (entity != null) {
             return entity.toVo();

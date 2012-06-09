@@ -25,4 +25,29 @@
       <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>
     </properties>
   </persistence-unit>
+  <persistence-unit name="org.xtremeware.iudex_jelastic" transaction-type="RESOURCE_LOCAL">
+    <provider>org.hibernate.ejb.HibernatePersistence</provider>
+    <class>org.xtremeware.iudex.entity.CommentEntity</class>
+    <class>org.xtremeware.iudex.entity.CommentRatingEntity</class>
+    <class>org.xtremeware.iudex.entity.ConfirmationKeyEntity</class>
+    <class>org.xtremeware.iudex.entity.CourseEntity</class>
+    <class>org.xtremeware.iudex.entity.CourseRatingEntity</class>
+    <class>org.xtremeware.iudex.entity.FeedbackEntity</class>
+    <class>org.xtremeware.iudex.entity.FeedbackTypeEntity</class>
+    <class>org.xtremeware.iudex.entity.PeriodEntity</class>
+    <class>org.xtremeware.iudex.entity.ProfessorEntity</class>
+    <class>org.xtremeware.iudex.entity.ProfessorRatingEntity</class>
+    <class>org.xtremeware.iudex.entity.ProgramEntity</class>
+    <class>org.xtremeware.iudex.entity.SubjectEntity</class>
+    <class>org.xtremeware.iudex.entity.SubjectRatingEntity</class>
+    <class>org.xtremeware.iudex.entity.UserEntity</class>
+    <properties>
+      <property name="javax.persistence.jdbc.url" value="jdbc:mysql://mysql-iudex.jelastic.tsukaeru.net:3306/IUDEX"/>
+      <property name="javax.persistence.jdbc.password" value="WHQ6q9LEMH"/>
+      <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
+      <property name="javax.persistence.jdbc.user" value="iudex"/>
+      <property name="hibernate.cache.provider_class" value="org.hibernate.cache.NoCacheProvider"/>
+      <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>
+    </properties>
+  </persistence-unit>
 </persistence>

@@ -2,6 +2,8 @@ package org.xtremeware.iudex.helper;
 
 import java.io.*;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.*;
@@ -26,14 +28,15 @@ public final class ConfigLucene {
     }
 
     private static void createCourseIndex(EntityManager entityManager) {
+        Directory directory = null;
+        IndexWriter indexWriter = null;
         try {
             File file =
-                    new File(ConfigLucene.class.getResource(ConfigurationVariablesHelper.
-                    getVariable(
+                    new File(ConfigLucene.class.getResource(ConfigurationVariablesHelper.getVariable(
                     ConfigurationVariablesHelper.LUCENE_COURSE_INDEX_PATH)).
                     getFile());
-            Directory directory = FSDirectory.open(file);
-            IndexWriter indexWriter = new IndexWriter(directory,
+            directory = FSDirectory.open(file);
+            indexWriter = new IndexWriter(directory,
                     new IndexWriterConfig(
                     Version.LUCENE_36,
                     new StandardAnalyzer(Version.LUCENE_36,
@@ -50,8 +53,8 @@ public final class ConfigLucene {
                 document.add(new Field("id", courseEntity.getId().toString(),
                         Field.Store.YES, Field.Index.NOT_ANALYZED));
 
-                String name = courseEntity.getProfessor().getFirstName() + " " +
-                        courseEntity.getProfessor().getLastName();
+                String name = courseEntity.getProfessor().getFirstName() + " "
+                        + courseEntity.getProfessor().getLastName();
                 name = name + " " + courseEntity.getSubject().getName();
 
                 document.add(new Field("name",
@@ -59,18 +62,33 @@ public final class ConfigLucene {
                 indexWriter.addDocument(document);
             }
             indexWriter.close();
+            directory.close();
         } catch (Exception exception) {
-            throw new RuntimeException(exception.getMessage(), exception.
-                    getCause());
+            if (indexWriter != null) {
+                try {
+                    indexWriter.close();
+                } catch (Exception ex) {
+                    throw new RuntimeException(ex.getMessage(), ex.getCause());
+                }
+                if (indexWriter != null) {
+                    try {
+                        directory.close();
+                    } catch (Exception ex) {
+                        throw new RuntimeException(ex.getMessage(), ex.getCause());
+                    }
+                    throw new RuntimeException(exception.getMessage(), exception.getCause());
+                }
+            }
         }
     }
+
+    
 
     public static synchronized Set<String> getSpanishStopWords() {
         if (stopWords == null) {
             try {
                 String file =
-                        ConfigLucene.class.getResource(ConfigurationVariablesHelper.
-                        getVariable(
+                        ConfigLucene.class.getResource(ConfigurationVariablesHelper.getVariable(
                         ConfigurationVariablesHelper.SPANISH_STOP_WORDS_PATH)).
                         getFile();
                 FileInputStream fstream = new FileInputStream(file);
@@ -85,8 +103,7 @@ public final class ConfigLucene {
                 }
                 in.close();
             } catch (Exception exception) {
-                throw new RuntimeException(exception.getMessage(), exception.
-                        getCause());
+                throw new RuntimeException(exception.getMessage(), exception.getCause());
             }
         }
         return stopWords;

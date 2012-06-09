@@ -5,6 +5,7 @@
 	height: 86%;
 	bottom : 55px;
 	margin-left: 0 !important;
+        overflow :   hidden;
 	/*left: -10%;*/
 }
 
@@ -242,7 +243,7 @@ div.professor-photo ul.actions li a {
 	border : #bbb 1px solid;
 }
 #rate-and-comment{
-	width : 274px;
+	width : 290px;
 	height: 33px;
 	margin: 20px 0;
 	opacity: 0.3;
@@ -255,6 +256,7 @@ div.professor-photo ul.actions li a {
 	width: 45px;
 	height: 53px;
 	opacity: 0.3;
+        margin-left: -10px;
 }
 .ui-growl{
 	font :  "Dosis", "Helvetica Neue", Helvetica, Arial, sans-serif;

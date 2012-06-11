@@ -11,6 +11,9 @@
 		<f:event type="preRenderView" listener="#{viewCourse.preRenderView()}" />
 	</f:metadata>
 	<ui:define name="content">
+		<h:outputScript library="js" name="spin.min.js"/>
+		<h:outputScript library="js" name="jquery.spin.js"/>
+		<h:outputScript library="js" name="courses.js"/>
 		<h:outputStylesheet library="css" name="style_courses.css" />
 		<div class="container comments-container">
 
@@ -31,7 +34,7 @@
 								<h:outputText id="fittext-rating" class="fittext" value="#{viewCourse.course.ratingAverage}"/>
 							</div>
 							<div class="span6">
-								<img style="vertical-align: middle;" src="#{request.contextPath}/resources/images/star.png" />
+								<h:graphicImage style="vertical-align: middle;" value="/resources/images/star.png" />
 							</div>
 						</div>
 						<div class="row-fluid">
@@ -39,19 +42,31 @@
 						</div>
 					</div>
 				</div>
-				<div class="row">
-					<div class="professor-photo thumbnail" >
-						<a href="">
-                                                    <h:graphicImage value="#{viewCourse.course.professor.imageUrl}" alt="#{viewCourse.course.professor.fullName}" />
-                                                </a>
-						<div id="professor-photo-caption"><h5><a href="#{viewCourse.course.professor.website}">#{viewCourse.course.professor.fullName}</a></h5></div>
-						<ul class="actions">
-							<li class="upvote-prof"><a href="#" class="icon-thumbs-up"></a></li>
-							<li class="downvote-prof"><a href="#" class="icon-thumbs-down"></a></li>
-						</ul>
-						<div>
+				<div class="row" style="text-align:center">
+
+					<span style="display: inline-block;margin: 0 auto;">
+						<div id="professor-photo-controls-left">
+							<div><a href="mailto:#{viewCourse.course.professor.email}" class="icon-envelope"/></div>
+							<div><a href="#{viewCourse.course.professor.website}" class="icon-globe"/></div>
 						</div>
-					</div>
+						<div class=" thumbnail professor-photo" style="display:inline-block;" >
+							<h:graphicImage value="#{viewCourse.course.professor.imageUrl}" alt="#{viewCourse.course.professor.fullName}" />
+							<h:panelGroup layout="block" id="professor-rating" >
+								<h:outputText class="badge badge-success" value="#{viewCourse.course.professor.ratingSummary.positive-viewCourse.course.professor.ratingSummary.negative}"/>
+							</h:panelGroup>
+							<div id="professor-photo-caption"><h5><a href="#{viewCourse.course.professor.website}">#{viewCourse.course.professor.fullName}</a></h5></div>
+						</div>
+						<div id="professor-photo-controls-right">
+							<h:form id="professor-rating-form">
+								<div class="vote-count-control">
+									<div class="#{(viewCourse.parseUserProfessorVote(viewCourse.course.professor.id)==1?'':'vote-wrapper')}"><h:commandLink action="#{rating.votePositiveProfessor(viewCourse.course.professor)}" class="icon-thumbs-up upvote-professor #{user.loggedIn?'':'not-registered'}" disabled="#{!user.loggedIn}"><f:ajax event="action" execute="@form" onevent="voteProfessor" render="professor-rating professor-rating-form"/></h:commandLink> </div>
+									<div class="#{(viewCourse.parseUserProfessorVote(viewCourse.course.professor.id)==-1?'':'vote-wrapper')}"><h:commandLink action="#{rating.voteNegativeProfessor(viewCourse.course.professor)}" class="icon-thumbs-down downvote-professor #{user.loggedIn?'':'not-registered'}" disabled="#{!user.loggedIn}"><f:ajax event="action" execute="@form" onevent="voteProfessor" render="professor-rating professor-rating-form"/>                            
+										</h:commandLink>
+									</div>
+								</div>
+							</h:form>
+						</div>
+					</span>
 				</div>
 				<hr/>
 				<div class="row comments-control">
@@ -68,96 +83,72 @@
 			</div><!--/.well -->
 
 			<!--End of Professor bar --> 
-			<ui:fragment rendered="#{!user.loggedIn}">
-				<div class="row ">
-					<div class="offset5 span7 ">
-						<div class="row-fluid">
-							<form id="courseRatingForm" name="courseRatingForm" method="post" action="/iudex/courses/view.xhtml" class="well" enctype="application/x-www-form-urlencoded"><span class="span6 fittext-rateInput" >Califica el curso </span>  
-								<div class="span6">
-									<span class="star-rating-control">
-										<div class="ui-rating-star"><a class="not-registered" rel="popover" data-content="Debes estar registrado para poder calificar." data-original-title="Da click para registrarte o iniciar sesión" href="#{request.contextPath}/logIn.xhtml">1</a></div>
-										<div class="ui-rating-star"><a class="not-registered" rel="popover" data-content="Debes estar registrado para poder calificar." data-original-title="Da click para registrarte o iniciar sesión" href="#{request.contextPath}/logIn.xhtml">2</a></div>
-										<div class="ui-rating-star"><a class="not-registered" rel="popover" data-content="Debes estar registrado para poder calificar." data-original-title="Da click para registrarte o iniciar sesión" href="#{request.contextPath}/logIn.xhtml">3</a></div>
-										<div class="ui-rating-star"><a class="not-registered" rel="popover" data-content="Debes estar registrado para poder calificar." data-original-title="Da click para registrarte o iniciar sesión" href="#{request.contextPath}/logIn.xhtml">4</a></div>
-										<div class="ui-rating-star"><a class="not-registered" rel="popover" data-content="Debes estar registrado para poder calificar." data-original-title="Da click para registrarte o iniciar sesión" href="#{request.contextPath}/logIn.xhtml">5</a></div>
-									</span>
-									<span id="courseRatingForm:messages"></span>
-								</div>
-							</form>
-						</div>
-						<div class="row-fluid" id="rate-and-comment-info">
-							<div  id="rate-and-comment" class="fittext-rateInput span6"> Para comentar debes calificar</div><div id="rate-and-comment-img" class="span3"/>
-						</div>
-					</div>
-				</div>
-
-			</ui:fragment>
-			<ui:fragment  rendered="#{user.loggedIn}">
-				<div class="row ">
-					<div class="offset5 span7 ">
-						<div class="row-fluid">
-							<h:form id="courseRatingForm" class="well">
-								<h:outputText value="Califica el curso " class="span6 fittext-rateInput"/>  
-								<div class="span6">
-									<p:rating value="#{viewCourse.courseRating}" onRate="" >  
+			<div class="row ">
+				<div class="offset5 span7 ">
+					<div class="row-fluid">
+						<h:form id="courseRatingForm" class="well">
+							<h:outputText value="Califica el curso " class="span6 fittext-rateInput"/>  
+							<div class="span6" id="courseRatingControl">
+								<div id="courseRatingStars">
+									<p:rating value="#{viewCourse.courseRating}" onRate="loadingCourseRating()" disabled="#{!user.loggedIn}">  
 										<p:ajax event="rate" listener="#{viewCourse.onRate}"  update="messages,:fittext-rating,:fittext-rating-info,:courseCommentForm:new-comment-rating" oncomplete="updatedRating(),showCommentInput()"/>
 										<p:ajax event="cancel" listener="#{viewCourse.oncancel}" update="messages,:fittext-rating,:fittext-rating-info,:courseCommentForm:new-comment-rating" oncomplete="updatedRating(),hideCommentBox()"/>  
 									</p:rating>  
 								</div>
-								<p:growl id="messages" showDetail="true"/> 
-							</h:form>
-						</div>
-						<div class="row-fluid" id="rate-and-comment-info">
-							<div  id="rate-and-comment" class="fittext-rateInput span6"> Para comentar debes calificar</div><div id="rate-and-comment-img" class="span3"/>
-						</div>
-						<div class="row-fluid hidden" id="commentInput">
-							<!-- Beginning of comment -->
-							<h:form id="courseCommentForm">
-								<div class="row-fluid">
-									<div class="comment span12">
-										<div class="comment-container span12">
-											<h:panelGroup layout="block" class="comment-rating" id="new-comment-rating">
-												<span>Calificación del curso :</span>
-												<ui:repeat var="i" value="#{utils.buildArrayCeil(viewCourse.courseRating)}">
-													<span class="star"/>
-												</ui:repeat>
+							</div>
+							<p:growl id="messages" showDetail="true"/> 
+						</h:form>
+					</div>
+					<div class="row-fluid" id="rate-and-comment-info">
+						<div  id="rate-and-comment" class="fittext-rateInput span6"> Para comentar debes calificar</div><div id="rate-and-comment-img" class="span3"/>
+					</div>
+					<div class="row-fluid hidden" id="commentInput">
+						<!-- Beginning of comment -->
+						<h:form id="courseCommentForm" rendered="#{user.loggedIn}">
+							<div class="row-fluid">
+								<div class="comment span12">
+									<div class="comment-container span12">
+										<h:panelGroup layout="block" class="comment-rating" id="new-comment-rating">
+											<span>Calificación del curso :</span>
+											<ui:repeat var="i" value="#{utils.buildArrayCeil(viewCourse.courseRating)}">
+												<span class="star"/>
+											</ui:repeat>
 
-											</h:panelGroup>
-											<div class="comment-photo thumbnail">
-												<img id="comment-image" src="#{request.contextPath}#{user.imageUrl}"/>
-												<h4 id="comment-username">#{user.firstName} #{user.lastName}</h4>
-												<span id="comment-programName" class="fittext fittext-coment-program">#{utils.parseProgramName(user.programId)}</span>
-											</div>
-											<p>
-												<h:inputTextarea class="comment-content" value="#{createComment.content}"/>
-											</p>
+										</h:panelGroup>
+										<div class="comment-photo thumbnail">
+											<h:graphicImage id="comment-image" value="#{user.imageUrl}"/>
+											<h4 id="comment-username">#{user.firstName} #{user.lastName}</h4>
+											<span id="comment-programName" class="fittext fittext-coment-program">#{utils.parseProgramName(user.programId)}</span>
 										</div>
-										<div class="span12">
-											<div id="anonymous-control" class="span6">
-												<span>Comentario anónimo : </span>
-												<p:selectBooleanButton value="#{createComment.anonymous}" onLabel="Sí" offLabel="No" style="font-size:12px;" onchange="toggleAnonymous(this.checked)"/>
+										<p>
+											<h:inputTextarea class="comment-content" value="#{createComment.content}"/>
+										</p>
+									</div>
+									<div class="span12">
+										<div id="anonymous-control" class="span6">
+											<span>Comentario anónimo : </span>
+											<p:selectBooleanButton value="#{createComment.anonymous}" onLabel="Sí" offLabel="No" style="font-size:12px;" onchange="toggleAnonymous(this.checked)"/>
+										</div>
+										<div class="span6" id="comment-controls">
+											<div class="span6">
+												<a class="btn " onclick="hideCommentBox()"><i class="icon-remove"/> No comentar</a>
 											</div>
-											<div class="span6" id="comment-controls">
-												<div class="span6">
-													<a class="btn " onclick="hideCommentBox()"><i class="icon-remove"/> No comentar</a>
-												</div>
-												<div class="span6">
-													<h:commandLink action="#{createComment.createComment()}" class="btn btn-success" value="Comentar">
-														<i class="icon-comment"></i>
-														<f:ajax onevent="hideCommentBox()" execute="@form"/>
-													</h:commandLink>
-												</div>
+											<div class="span6">
+												<h:commandLink action="#{createComment.createComment()}" class="btn btn-success" value="Comentar">
+													<i class="icon-comment"></i>
+													<f:ajax onevent="hideCommentBox()" execute="@form"/>
+												</h:commandLink>
 											</div>
 										</div>
 									</div>
+								</div>
 
-								</div><!--/row-->
-								<!-- Ending of comment -->
-							</h:form>
-						</div>
+							</div><!--/row-->
+							<!-- Ending of comment -->
+						</h:form>
 					</div>
 				</div>
-			</ui:fragment>
+			</div>
 			<ui:fragment rendered="#{viewCourse.comments.size() lt 1}">
 				<div class="row">
 					<div class="offset5 span7 fittext-no-messages" id="no-messages-info">NO HAY COMENTARIOS DE ESTE CURSO AÚN.<br/> <br/>AYUDA A OTROS COMPARTIENDO TU OPINIÓN.</div>
@@ -165,10 +156,10 @@
 			</ui:fragment>
 			<div class="row">
 				<div class="offset5 span7">
-					<h:form id="voteForm">
-						<ui:repeat var="comment" value="#{viewCourse.comments}" varStatus="status">
+					<ui:repeat var="comment" value="#{viewCourse.comments}" varStatus="status">
+						<h:form id="voteForm">
 							<!-- Beginning of comment -->
-							<div class="row-fluid comment-star#{utils.ceil(comment.courseRating)}">
+							<div class="row-fluid comment-star#{utils.ceil(comment.courseRating)}" id="comment-#{comment.id}">
 								<div class="comment span12">
 									<div class="comment-container span12">
 										<div class="comment-rating">
@@ -176,7 +167,9 @@
 											<ui:repeat var="i" value="#{utils.buildArrayCeil(comment.courseRating)}">
 												<span class="star"/>
 											</ui:repeat>
-											<span style="float: right; opacity: 0.2">#{comment.date}</span>
+											<h:outputText style="float: right; opacity: 0.2" value="#{comment.date}">
+												<f:convertDateTime pattern="MM/dd/yyyy" type="date" />
+											</h:outputText>
 										</div>
 										<div class="comment-photo thumbnail">
 											<img src="#{request.contextPath}#{comment.user.imageUrl}" alt="profesor x" />
@@ -188,25 +181,18 @@
 										</p>
 
 										<!-- Begin voting form for registered users -->
-										<h:panelGroup id="voteCount" class="vote" rendered="#{user.loggedIn}">
-											<div class="#{(viewCourse.parseUserCommentVote(comment.id)==1?'':'vote-wrapper')}"><h:commandLink action="#{rating.votePositiveComment(comment)}" class="upvote"><f:ajax event="action" execute="@form" render="voteCount" onevent="onVote"/></h:commandLink> </div>
-											<div class="#{(viewCourse.parseUserCommentVote(comment.id)!=0?'':'vote-wrapper')}">
-												<span class="vote-count" rel="popover" data-content="#{comment.rating.positive+comment.rating.negative} personas han votado" data-original-title="Votos">#{comment.rating.positive-comment.rating.negative}</span>
-											</div>
-											<div class="#{(viewCourse.parseUserCommentVote(comment.id)==-1?'':'vote-wrapper')}"><h:commandLink action="#{rating.voteNegativeComment(comment)}" class="downvote"><f:ajax event="action" execute="@form" render="voteCount" onevent="onVote"/>                            
-												</h:commandLink>
+										<h:panelGroup layout="block" id="voteCount" class="vote" >
+											<div class="vote-count-control">
+												<div class="#{(viewCourse.parseUserCommentVote(comment.id)==1?'':'vote-wrapper')}"><h:commandLink action="#{rating.votePositiveComment(comment)}" class="upvote #{user.loggedIn?'':'not-registered'}" disabled="#{!user.loggedIn}"><f:ajax event="action" execute="@form" onevent="upVote"/></h:commandLink> </div>
+												<div class="#{(viewCourse.parseUserCommentVote(comment.id)!=0?'':'vote-wrapper')}">
+													<span class="vote-count" rel="popover" data-content="#{comment.rating.positive+comment.rating.negative} personas han votado" data-original-title="Votos">#{comment.rating.positive-comment.rating.negative}</span>
+												</div>
+												<div class="#{(viewCourse.parseUserCommentVote(comment.id)==-1?'':'vote-wrapper')}"><h:commandLink action="#{rating.voteNegativeComment(comment)}" class="downvote #{user.loggedIn?'':'not-registered'}" disabled="#{!user.loggedIn}"><f:ajax event="action" execute="@form" onevent="downVote"/>                            
+													</h:commandLink>
+												</div>
 											</div>
 										</h:panelGroup>
 										<!-- End voting form for registered users -->
-										<!-- Begin voting form for NOT registered users -->
-										<h:panelGroup class="vote" rendered="#{!user.loggedIn}">
-											<div class="vote-wrapper"><a class="upvote not-registered" rel="popover" data-content="Debes estar registrado para poder votar por los comentarios." data-original-title="Da click para registrarte o iniciar sesión" href="#{request.contextPath}/logIn.xhtml"/></div>
-											<div class="vote-wrapper">
-												<span class="vote-count" rel="popover" data-content="#{comment.rating.positive+comment.rating.negative} han votado por este comentario" data-original-title="Votos">#{comment.rating.positive-comment.rating.negative}</span>
-											</div>
-											<div class="vote-wrapper"><a class="downvote not-registered" rel="popover" data-content="Debes estar registrado para poder votar por los comentarios." data-original-title="Da click para registrarte o iniciar sesión" href="#{request.contextPath}/logIn.xhtml"/></div>
-										</h:panelGroup>
-										<!-- End voting form for NOT registered users -->
 									</div>
 									<div class="comment-report">
 										<span class=""><a href="#">Reportar comentario</a></span>
@@ -216,8 +202,8 @@
 
 							</div><!--/row-->
 							<!-- Ending of comment -->
-						</ui:repeat>
-					</h:form>
+						</h:form>
+					</ui:repeat>
 				</div><!--/span-->
 			</div><!--/row-->
 
@@ -225,94 +211,15 @@
 
 
 		</div>
-		<script type="text/javascript">
-			//Beginning of fittext code
-			$(".fittext-subject").fitText(0.7);
-			$(".fittext-period").fitText(0.9);
-			$(".fittext-rateInput").fitText(1.2);
-			$(".fittext-coment-program").fitText(1.1);
-			$('.fittext-no-messages').fitText(1.3)
-			//End of fittext code
+		<script language="javascript">
 			var userName = "#{user.firstName}"+"#{user.lastName}";
 			var userProgram = "#{utils.parseProgramName(user.programId)}";
-			function showCommentInput(){
-				//If it was hidden from the begining, it was using the hidden class
-				// but before removing the class hide it with jquery.
-				$("#commentInput").hide();
-				$("#commentInput").removeClass("hidden");
-				//Now show it
-				$("#commentInput").show("slow");
-				$("#rate-and-comment-info").hide();
-			}
-			function hideCommentBox(){
-				$('#commentInput').hide('slow');
-				$('.fittext-no-messages').hide('slow');
-			}
-			$('.not-registered').popover({placement : 'bottom'});
-			$('.vote-count').popover({placement : 'bottom'});
-			function onVote(e){
-				$('.vote-count').popover({placement : 'bottom'});
-			}
-			function toggleAnonymous(e){
-				console.log(e);
-				if(e){
-					$('#comment-username').text("Anónimo");
-					$('#comment-programName').text("...");
-					$('#comment-image').attr('src','/iudex/resources/images/anonymous3.png')
-				}else{
-					$('#comment-username').text(userName);
-					$('#comment-programName').text(userProgram);
-					$('#comment-image').attr('src','/iudex/resources/images/user.png')
-
-				}	
-			}
-			function updatedRating(){
-				$("#fittext-rating").fitText(0.15);
-				$("#fittext-rating-title").fitText(0.4);
-				$("#fittext-rating-info").fitText(0.6);
-
-			}
-			function initCommentFilterControls(){
-				var numItems;
-				for (i=5;i>0;i--){
-					numItems = $('.comment-star'+i).length;
-					if(numItems == 0){
-						$('#comment-filter-star'+i).addClass('disabled');
-					}
-				}
-			}
-			function moveScroller() {
-				var a = function() {
-					var distanceToBottomOfPage = 20;
-					var bottomOfViewingPage = $(window).scrollTop()+ $(window).height()-distanceToBottomOfPage;
-					var referencePoint = $("#footer-top").offset().top;
-					var c=$("#fixed-navbar");
-					var newHeight;
-					if (bottomOfViewingPage>referencePoint) {
-						//It's time to resize
-						newHeight = $("#footer-top").offset().top-$(window).scrollTop()-$('#navbar-top').height()-40 // 40 just normalizes the size for the rest of blank spaces not taken into account
-					} else {
-						// Go back to normal
-						if (bottomOfViewingPage!=referencePoint) {
-							newHeight = $(window).height()-$('#navbar-top').height()-40-distanceToBottomOfPage;// 40 just normalizes the size for the rest of blank spaces not taken into account
-						}
-					}
-					c.css({height: ""+newHeight+"px"});
-				};
-				$(window).scroll(a);a()
-			}
-			updatedRating();
-			initCommentFilterControls();
-			$(function() {
-				moveScroller();
-			});
-			//This snippet allows multiple JSF forms to work at a time in the same page
-			window.myfaces = window.myfaces || {};
-			myfaces.config = myfaces.config || {};
-			//set the config part
-			myfaces.config.no_portlet_env = true; 
-			//End of snippet. Source : http://www.irian.at/en/blog/-/blogs/jsf-ajax-and-multiple-forms
+			var loggedIn = #{user.loggedIn};
+			var anonymousImagePath  = '#{request.contextPath}/resources/images/anonymous3.png';
+			var userImagePath = '#{request.contextPath}/resources/images/user.png';
+			var loginPath = '#{request.contextPath}/logIn.xhtml';
 		</script>
+
 	</ui:define>
 
 

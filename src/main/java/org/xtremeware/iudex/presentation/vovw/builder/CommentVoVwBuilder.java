@@ -73,10 +73,9 @@ public final class CommentVoVwBuilder {
             }
             commentVoVwMedium = destination.get(i);
 			SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MMM-dd HH:mm:ss");
-			SimpleDateFormat visibleFormat = new SimpleDateFormat("yyyy-mm");
 			dateFormatGmt.setTimeZone(TimeZone.getTimeZone("GMT - 5"));
 			try {
-				commentVo.setDate(visibleFormat.parse(dateFormatGmt.format(commentVo.getDate())));
+				commentVo.setDate(dateFormatGmt.parse(dateFormatGmt.format(commentVo.getDate())));
 			} catch (ParseException ex) {
 				Config.getInstance().getServiceFactory().getLogService().error("Error while parsing date in CommentVoVwMedium building process.",ex);
 			}

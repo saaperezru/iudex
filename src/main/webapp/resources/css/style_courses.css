@@ -5,7 +5,7 @@
 	height: 86%;
 	bottom : 55px;
 	margin-left: 0 !important;
-        overflow :   hidden;
+	overflow :   hidden;
 	/*left: -10%;*/
 }
 
@@ -71,20 +71,29 @@ a.thumb-down {
 }
 
 .professor-photo {
-    margin: 20px auto;
-    display: block;
+    margin: 20px 0;
+    display: inline-block; 
     width: 120px;
 
     position: relative;
     text-decoration: none;
-    -webkit-transition: all .15s linear;
-    -moz-transition: all .15s linear;
-    -ms-transition: all .15s linear;
-    -o-transition: all .15s linear;
-    transition: all .15s linear;
     color: #333; 
     left: 0px;
     top: 0px;
+}
+#professor-photo-controls-left{
+	display: inline-block;
+	margin-left: auto;
+}
+#professor-photo-controls-right{
+	display: inline-block;
+	margin-right: auto;
+}
+#professor-rating{
+	position: absolute;
+	right : 0px;
+	bottom: 20px;
+	z-index: 30;
 }
 #professor-photo-caption{
 	padding-top: 5px;
@@ -113,23 +122,12 @@ div.professor-photo ul.actions {
     position: absolute;
     width: 60px;
     border-radius: 3px;
-    left: 35px;
+    left:auto;
     top: 0px;
     height: 114px;
     z-index: 20;
-    -webkit-transition: all .25s linear;
-    -moz-transition: all .25s linear;
-    -ms-transition: all .25s linear;
-    -o-transition: all .25s linear;
-    transition: all .25s linear;
 }
-div.professor-photo:hover ul.actions {
-    -webkit-transform: translateX(60px);
-    -moz-transform: translateX(60px);
-    -ms-transform: translateX(60px);
-    -o-transform: translateX(60px);
-    transform: translateX(60px);
-}
+
 
 div.professor-photo ul.actions li {
     display: block;
@@ -256,7 +254,7 @@ div.professor-photo ul.actions li a {
 	width: 45px;
 	height: 53px;
 	opacity: 0.3;
-        margin-left: -10px;
+	margin-left: -10px;
 }
 .ui-growl{
 	font :  "Dosis", "Helvetica Neue", Helvetica, Arial, sans-serif;

@@ -55,7 +55,7 @@ public class CommentsFacadeIT {
         CommentVo commentVo = new CommentVo();
         commentVo.setAnonymous(false);
         commentVo.setContent("bueno");
-        commentVo.setCourseId(4L);
+        commentVo.setCourseId(5L);
         commentVo.setDate(new Date(100L));
         commentVo.setRating(3F);
         commentVo.setUserId(2L);
@@ -150,24 +150,24 @@ public class CommentsFacadeIT {
         CommentVo commentVo = new CommentVo();
         commentVo.setAnonymous(true);
         commentVo.setContent("bueno");
-        commentVo.setCourseId(4L);
+        commentVo.setCourseId(5L);
         Calendar calendar = Calendar.getInstance();
         commentVo.setDate(calendar.getTime());
         commentVo.setRating(3F);
         commentVo.setUserId(1L);
         CommentsFacade commentsFacade = Config.getInstance().getFacadeFactory().
                 getCommentsFacade();
-        CommentVo result = commentsFacade.createComment(commentVo);
+        commentsFacade.createComment(commentVo);
 
 
         commentVo.setAnonymous(false);
         commentVo.setContent("bueno");
-        commentVo.setCourseId(3L);
+        commentVo.setCourseId(5L);
         commentVo.setDate(calendar.getTime());
         commentVo.setRating(2F);
         commentVo.setUserId(1L);
         try {
-            result = commentsFacade.createComment(commentVo);
+            commentsFacade.createComment(commentVo);
         } catch (MaxCommentsLimitReachedException e) {
             assertEquals("Maximum comments per day reached", e.getMessage());
         }

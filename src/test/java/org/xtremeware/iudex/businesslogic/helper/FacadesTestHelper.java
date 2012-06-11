@@ -10,6 +10,7 @@ import java.util.Properties;
 import java.util.Random;
 import javax.persistence.EntityManagerFactory;
 import org.h2.tools.RunScript;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import org.xtremeware.iudex.helper.MultipleMessagesException;
 
@@ -37,7 +38,7 @@ public class FacadesTestHelper {
         for (String expectedMessage : expectedMessages) {
             assertTrue("not message "+expectedMessage, messages.contains(expectedMessage));
         }
-        assertTrue("Size not equals", messages.size() == expectedMessages.length);
+        assertEquals("Size not equal", messages.size(), expectedMessages.length);
     }
     
     public static String randomString(int length){

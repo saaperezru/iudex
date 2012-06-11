@@ -94,7 +94,7 @@ public final class LuceneCourseHelper extends LuceneHelper<Long, CourseVo> {
     }
 
     public static synchronized LuceneCourseHelper getInstance() {
-        while (instance == null) {
+        if (instance == null) {
             Directory directory = null;
             try {
                 directory = FSDirectory.open(new File(LuceneCourseHelper.class.

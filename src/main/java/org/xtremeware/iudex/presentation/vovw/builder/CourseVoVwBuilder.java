@@ -4,6 +4,7 @@ import java.util.*;
 import org.xtremeware.iudex.businesslogic.facade.FacadeFactory;
 import org.xtremeware.iudex.businesslogic.facade.SubjectsFacade;
 import org.xtremeware.iudex.helper.Config;
+import org.xtremeware.iudex.helper.ExternalServiceException;
 import org.xtremeware.iudex.presentation.vovw.*;
 import org.xtremeware.iudex.vo.*;
 
@@ -54,7 +55,7 @@ public final class CourseVoVwBuilder {
     public List<CourseListVoVwSmall> getSearchResults(String query, int itemsByPage, int totalHints) {
 
         Date beforeSearch = new Date();
-        List<Long> search = facadeFactory.getCoursesFacade().search(query, totalHints);
+        List<Long> search = getSearchCourses(query, totalHints);
         if (totalHints <= search.size()) {
             search = search.subList(totalHints - itemsByPage, totalHints);
         } else {
@@ -101,7 +102,17 @@ public final class CourseVoVwBuilder {
         return results;
     }
 
+    private List getSearchCourses(String query, int totalHints) {
+        List<Long> search = null;
+        try {
+            search = facadeFactory.getCoursesFacade().search(query, totalHints);
+        } catch (ExternalServiceException exception) {
+            search = new ArrayList<Long>();
+        }
+        return search;
+    }
+
     public int getSearchCount(String query, int maxitems) {
-        return facadeFactory.getCoursesFacade().search(query, maxitems).size();
+        return getSearchCourses(query, maxitems).size();
     }
 }

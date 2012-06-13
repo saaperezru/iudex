@@ -27,8 +27,9 @@
                             <div class="control-group #{viewHelper.addErrorClass('loginForm:userName')}">
                                 <label class="control-label" for="userName">Usuario</label>
                                 <div class="controls">
-                                    <h:inputText id="userName" value="#{login.userName}" required="true" maxlength="20">
-                                        <f:validateLength maximum="20" />
+                                    <h:inputText id="userName" value="#{login.userName}" required="true" maxlength="32">
+                                        <f:event type="preValidate" listener="#{login.removeDomainPart}" />
+                                        <f:validateLength maximum="20" /> 
                                     </h:inputText>
                                     <iudex:inlineError key="loginForm:userName" />
                                 </div>

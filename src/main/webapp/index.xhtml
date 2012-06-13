@@ -30,8 +30,9 @@
                             <div class="control-group #{viewHelper.addErrorClass('loginForm:userName')}">
                                 <label class="control-label " for="userName">Usuario</label>
                                 <div class="controls ">
-                                    <h:inputText id="userName" value="#{login.userName}" required="true" maxlength="20">
-                                        <f:validateLength maximum="20" />
+                                    <h:inputText id="userName" value="#{login.userName}" required="true" maxlength="32">
+                                        <f:event type="preValidate" listener="#{login.removeDomainPart}" />
+                                        <f:validateLength maximum="20" /> 
                                     </h:inputText>
                                     <iudex:inlineError key="loginForm:userName" />
                                 </div>
@@ -168,7 +169,7 @@
                             </script>
                         </ui:fragment>
                     </div>
-                    
+
                 </ui:fragment>
                 <ui:fragment rendered="#{user.loggedIn}">
                     <div class="span12">
@@ -228,7 +229,7 @@
                                     <div class="clearfix" />
                                 </div>
                                 <blockquote>
-                                    <h:outputText value="#{comment.content}" />
+                                    <h:outputText value="#{comment.content}" escape="false" />
                                     <cite><h:outputText value="#{comment.user.username}"/></cite>
                                 </blockquote>
                             </div>

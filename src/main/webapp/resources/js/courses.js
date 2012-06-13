@@ -9,6 +9,21 @@ function showCommentInput(){
 	$("#commentInput").show("slow");
 	$("#rate-and-comment-info").hide();
 }
+function commentDeletionStarted(){
+	$("#comments").parent().spin("large");
+}
+function commentDeletionCompleted(){
+	$("#comments").parent().spin(false);
+}
+function commentStarted(){
+	$("#comments").parent().spin("large");
+}
+function commentCompleted(){
+	hideCommentBox();
+	$("#comments").parent().spin(false);
+		window.location.href="#top-footer";
+	
+}
 function hideCommentBox(){
 	$('#commentInput').hide('slow');
 	$('.fittext-no-messages').hide('slow');
@@ -17,11 +32,11 @@ function toggleAnonymous(e){
 	if(e){
 		$('#comment-username').text("Anónimo");
 		$('#comment-programName').text("...");
-		$('.comment-photo>img').attr('src',anonymousImagePath);
+		$('#new-comment-photo>img').attr('src',anonymousImagePath);
 	}else{
 		$('#comment-username').text(userName);
 		$('#comment-programName').text(userProgram);
-		$('.comment-photo>img').attr('src',userImagePath);
+		$('#new-comment-photo>img').attr('src',userImagePath);
 
 	}	
 }
@@ -185,7 +200,7 @@ function voteProfessor(data){
 	switch (ajaxstatus) {
 		case "begin": // This is called right before ajax request is been sent.
 			voteControl.hide();
-			voteControl.parent().spin("small");
+			voteControl.parent().spin("tiny");
 			voteCount.spin("tiny");
 			break;
 

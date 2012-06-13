@@ -83,17 +83,23 @@ a.thumb-down {
 }
 #professor-photo-controls-left{
 	display: inline-block;
-	margin-left: auto;
+	margin-bottom: 30%;
 }
 #professor-photo-controls-right{
 	display: inline-block;
-	margin-right: auto;
+	margin-bottom: 30%;
+}
+#professor-photo-controls-right>form{
+	margin-bottom: 0px;
 }
 #professor-rating{
 	position: absolute;
 	right : 0px;
 	bottom: 20px;
 	z-index: 30;
+}
+#professor-rating>span{
+	float:right;
 }
 #professor-photo-caption{
 	padding-top: 5px;
@@ -191,6 +197,16 @@ div.professor-photo ul.actions li a {
     width:110px;
 }
 
+.vote-professor-wrapper{
+    opacity : 0.4;
+    filter: alpha(opacity=40); 
+    background-color: #FFF;
+}
+.vote-professor-wrapper:hover{
+    opacity : 1;
+    filter: alpha(opacity=100); 
+    background-color: #FFF;
+}
 .vote-wrapper{
     opacity : 0.4;
     filter: alpha(opacity=40); 

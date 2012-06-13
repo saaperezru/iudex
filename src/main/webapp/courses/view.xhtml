@@ -17,6 +17,7 @@
 		<h:outputStylesheet library="css" name="style_courses.css" />
 		<div class="container comments-container">
 
+			<p:growl id="messages" showDetail="true"/> 
 
 			<!--Professor bar --> 
 			<div class="well span4 container-fluid " id="fixed-navbar" >
@@ -31,7 +32,9 @@
 						</div>
 						<div class="row-fluid" >
 							<div class="span6" style="margin-top: 10%;">
-								<h:outputText id="fittext-rating" class="fittext" value="#{viewCourse.course.ratingAverage}"/>
+								<h:outputText id="fittext-rating" class="fittext" value="#{viewCourse.course.ratingAverage}">
+									<f:convertNumber maxFractionDigits="1" groupingUsed="false" />
+								</h:outputText>
 							</div>
 							<div class="span6">
 								<h:graphicImage style="vertical-align: middle;" value="/resources/images/star.png" />
@@ -46,8 +49,8 @@
 
 					<span style="display: inline-block;margin: 0 auto;">
 						<div id="professor-photo-controls-left">
-							<div><a href="mailto:#{viewCourse.course.professor.email}" class="icon-envelope"/></div>
-							<div><a href="#{viewCourse.course.professor.website}" class="icon-globe"/></div>
+							<div class="vote-professor-wrapper"><a href="mailto:#{viewCourse.course.professor.email}" class="icon-envelope"/></div>
+							<div class="vote-professor-wrapper"><a href="#{viewCourse.course.professor.website}" class="icon-globe"/></div>
 						</div>
 						<div class=" thumbnail professor-photo" style="display:inline-block;" >
 							<h:graphicImage value="#{viewCourse.course.professor.imageUrl}" alt="#{viewCourse.course.professor.fullName}" />
@@ -57,10 +60,10 @@
 							<div id="professor-photo-caption"><h5><a href="#{viewCourse.course.professor.website}">#{viewCourse.course.professor.fullName}</a></h5></div>
 						</div>
 						<div id="professor-photo-controls-right">
-							<h:form id="professor-rating-form">
+							<h:form id="professor-rating-form" class="clear">
 								<div class="vote-count-control">
-									<div class="#{(viewCourse.parseUserProfessorVote(viewCourse.course.professor.id)==1?'':'vote-wrapper')}"><h:commandLink action="#{rating.votePositiveProfessor(viewCourse.course.professor)}" class="icon-thumbs-up upvote-professor #{user.loggedIn?'':'not-registered'}" disabled="#{!user.loggedIn}"><f:ajax event="action" execute="@form" onevent="voteProfessor" render="professor-rating professor-rating-form"/></h:commandLink> </div>
-									<div class="#{(viewCourse.parseUserProfessorVote(viewCourse.course.professor.id)==-1?'':'vote-wrapper')}"><h:commandLink action="#{rating.voteNegativeProfessor(viewCourse.course.professor)}" class="icon-thumbs-down downvote-professor #{user.loggedIn?'':'not-registered'}" disabled="#{!user.loggedIn}"><f:ajax event="action" execute="@form" onevent="voteProfessor" render="professor-rating professor-rating-form"/>                            
+									<div class="#{(viewCourse.parseUserProfessorVote(viewCourse.course.professor.id)==1?'':'vote-professor-wrapper')}"><h:commandLink action="#{rating.votePositiveProfessor(viewCourse.course.professor)}" class="icon-thumbs-up upvote-professor #{user.loggedIn?'':'not-registered'}" disabled="#{!user.loggedIn}"><f:ajax event="action" execute="@form" onevent="voteProfessor" render="professor-rating professor-rating-form"/></h:commandLink> </div>
+									<div class="#{(viewCourse.parseUserProfessorVote(viewCourse.course.professor.id)==-1?'':'vote-professor-wrapper')}"><h:commandLink action="#{rating.voteNegativeProfessor(viewCourse.course.professor)}" class="icon-thumbs-down downvote-professor #{user.loggedIn?'':'not-registered'}" disabled="#{!user.loggedIn}"><f:ajax event="action" execute="@form" onevent="voteProfessor" render="professor-rating professor-rating-form"/>                            
 										</h:commandLink>
 									</div>
 								</div>
@@ -91,12 +94,11 @@
 							<div class="span6" id="courseRatingControl">
 								<div id="courseRatingStars">
 									<p:rating value="#{viewCourse.courseRating}" onRate="loadingCourseRating()" disabled="#{!user.loggedIn}">  
-										<p:ajax event="rate" listener="#{viewCourse.onRate}"  update="messages,:fittext-rating,:fittext-rating-info,:courseCommentForm:new-comment-rating" oncomplete="updatedRating(),showCommentInput()"/>
-										<p:ajax event="cancel" listener="#{viewCourse.oncancel}" update="messages,:fittext-rating,:fittext-rating-info,:courseCommentForm:new-comment-rating" oncomplete="updatedRating(),hideCommentBox()"/>  
+										<p:ajax event="rate" listener="#{viewCourse.onRate}"  update=":messages,:fittext-rating,:fittext-rating-info,:courseCommentForm:new-comment-rating" oncomplete="updatedRating(),showCommentInput()"/>
+										<p:ajax event="cancel" listener="#{viewCourse.oncancel}" update=":messages,:fittext-rating,:fittext-rating-info,:courseCommentForm:new-comment-rating" oncomplete="updatedRating(),hideCommentBox()"/>  
 									</p:rating>  
 								</div>
 							</div>
-							<p:growl id="messages" showDetail="true"/> 
 						</h:form>
 					</div>
 					<div class="row-fluid" id="rate-and-comment-info">
@@ -115,28 +117,28 @@
 											</ui:repeat>
 
 										</h:panelGroup>
-										<div class="comment-photo thumbnail">
+										<div id="new-comment-photo" class="comment-photo thumbnail">
 											<h:graphicImage id="comment-image" value="#{user.imageUrl}"/>
 											<h4 id="comment-username">#{user.firstName} #{user.lastName}</h4>
 											<span id="comment-programName" class="fittext fittext-coment-program">#{utils.parseProgramName(user.programId)}</span>
 										</div>
 										<p>
-											<h:inputTextarea class="comment-content" value="#{createComment.content}"/>
+											<h:inputTextarea class="comment-content" value="#{manageComments.content}"/>
 										</p>
 									</div>
 									<div class="span12">
 										<div id="anonymous-control" class="span6">
 											<span>Comentario anónimo : </span>
-											<p:selectBooleanButton value="#{createComment.anonymous}" onLabel="Sí" offLabel="No" style="font-size:12px;" onchange="toggleAnonymous(this.checked)"/>
+											<p:selectBooleanButton value="#{manageComments.anonymous}" onLabel="Sí" offLabel="No" style="font-size:12px;" onchange="toggleAnonymous(this.checked)"/>
 										</div>
 										<div class="span6" id="comment-controls">
 											<div class="span6">
 												<a class="btn " onclick="hideCommentBox()"><i class="icon-remove"/> No comentar</a>
 											</div>
 											<div class="span6">
-												<h:commandLink action="#{createComment.createComment()}" class="btn btn-success" value="Comentar">
+												<h:commandLink action="#{manageComments.createComment()}" class="btn btn-success" value="Comentar">
 													<i class="icon-comment"></i>
-													<f:ajax onevent="hideCommentBox()" execute="@form"/>
+													<p:ajax onstart="commentStarted()" oncomplete="commentCompleted()" process="@form" update=":comments,:messages"/>
 												</h:commandLink>
 											</div>
 										</div>
@@ -156,8 +158,8 @@
 			</ui:fragment>
 			<div class="row">
 				<div class="offset5 span7">
-					<ui:repeat var="comment" value="#{viewCourse.comments}" varStatus="status">
-						<h:form id="voteForm">
+					<h:panelGroup layout="block" id ="comments">
+						<ui:repeat var="comment" value="#{viewCourse.comments}" varStatus="status">
 							<!-- Beginning of comment -->
 							<div class="row-fluid comment-star#{utils.ceil(comment.courseRating)}" id="comment-#{comment.id}">
 								<div class="comment span12">
@@ -180,30 +182,38 @@
 											#{comment.content}
 										</p>
 
-										<!-- Begin voting form for registered users -->
-										<h:panelGroup layout="block" id="voteCount" class="vote" >
-											<div class="vote-count-control">
-												<div class="#{(viewCourse.parseUserCommentVote(comment.id)==1?'':'vote-wrapper')}"><h:commandLink action="#{rating.votePositiveComment(comment)}" class="upvote #{user.loggedIn?'':'not-registered'}" disabled="#{!user.loggedIn}"><f:ajax event="action" execute="@form" onevent="upVote"/></h:commandLink> </div>
-												<div class="#{(viewCourse.parseUserCommentVote(comment.id)!=0?'':'vote-wrapper')}">
-													<span class="vote-count" rel="popover" data-content="#{comment.rating.positive+comment.rating.negative} personas han votado" data-original-title="Votos">#{comment.rating.positive-comment.rating.negative}</span>
+										<h:form id="voteForm">
+											<!-- Begin voting form for registered users -->
+											<h:panelGroup layout="block" id="voteCount" class="vote" >
+												<div class="vote-count-control">
+													<div class="#{(viewCourse.parseUserCommentVote(comment.id)==1?'':'vote-wrapper')}"><h:commandLink action="#{rating.votePositiveComment(comment)}" class="upvote #{user.loggedIn?'':'not-registered'}" disabled="#{!user.loggedIn}"><f:ajax event="action" execute="@form" onevent="upVote"/></h:commandLink> </div>
+													<div class="#{(viewCourse.parseUserCommentVote(comment.id)!=0?'':'vote-wrapper')}">
+														<span class="vote-count" rel="popover" data-content="#{comment.rating.positive+comment.rating.negative} personas han votado" data-original-title="Votos">#{comment.rating.positive-comment.rating.negative}</span>
+													</div>
+													<div class="#{(viewCourse.parseUserCommentVote(comment.id)==-1?'':'vote-wrapper')}"><h:commandLink action="#{rating.voteNegativeComment(comment)}" class="downvote #{user.loggedIn?'':'not-registered'}" disabled="#{!user.loggedIn}"><f:ajax event="action" execute="@form" onevent="downVote"/>                            
+														</h:commandLink>
+													</div>
 												</div>
-												<div class="#{(viewCourse.parseUserCommentVote(comment.id)==-1?'':'vote-wrapper')}"><h:commandLink action="#{rating.voteNegativeComment(comment)}" class="downvote #{user.loggedIn?'':'not-registered'}" disabled="#{!user.loggedIn}"><f:ajax event="action" execute="@form" onevent="downVote"/>                            
-													</h:commandLink>
-												</div>
-											</div>
-										</h:panelGroup>
-										<!-- End voting form for registered users -->
+											</h:panelGroup>
+											<!-- End voting form for registered users -->
+										</h:form>
 									</div>
 									<div class="comment-report">
-										<span class=""><a href="#">Reportar comentario</a></span>
+										<h:form style="margin-bottom:0px;">
+										<div class="btn-toolbar">
+											<div class="btn-group" style="padding-top:5px;padding-left: 14px;">
+												<h:commandLink action="#{manageComments.deleteComment(comment)}" class="btn" rendered="#{user.id == comment.user.id}"><i class="icon-remove"/> Eliminar<p:ajax event="action" process="@form" update=":comments" onstart="commentDeletionStarted()" oncomplete="commentDeletionCompleted()"/></h:commandLink>
+											</div>
+										</div>
+										</h:form>
 									</div>
 
 								</div>
 
 							</div><!--/row-->
 							<!-- Ending of comment -->
-						</h:form>
-					</ui:repeat>
+						</ui:repeat>
+					</h:panelGroup>
 				</div><!--/span-->
 			</div><!--/row-->
 

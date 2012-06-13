@@ -62,6 +62,7 @@ public final class CommentVoVwBuilder {
         for (int i = 0; i < listSize; i++) {
             commentVo = source.get(i);
             if (commentVo.isAnonymous()) {
+				anonymousUser.setId(commentVo.getUserId());
                 commentUser = anonymousUser;
             } else {
                 long userId = commentVo.getUserId();

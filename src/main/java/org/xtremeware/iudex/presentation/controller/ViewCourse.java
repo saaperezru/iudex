@@ -24,7 +24,14 @@ import org.xtremeware.iudex.vo.*;
 public class ViewCourse implements Serializable {
 
 	public ViewCourse() {
-		id = Long.valueOf(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id"));
+		String getId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id");
+		if (getId == null) {
+			id = null;
+		} else {
+			id = Long.valueOf(getId);
+			reRenderComments = false;
+			latestUserComment = 0;
+		}
 	}
 	private CourseVoVwLarge course;
 	private List<CommentVoVwMedium> comments;
@@ -32,6 +39,8 @@ public class ViewCourse implements Serializable {
 	private CourseRatingVo courseRating;
 	@ManagedProperty(value = "#{user}")
 	private User user;
+	private boolean reRenderComments;
+	private long latestUserComment;
 
 	public List<CommentVoVwMedium> getComments() {
 		return comments;
@@ -110,6 +119,22 @@ public class ViewCourse implements Serializable {
 		}
 	}
 
+	public boolean isReRenderComments() {
+		return reRenderComments;
+	}
+
+	public void setReRenderComments(boolean reRenderComments) {
+		this.reRenderComments = reRenderComments;
+	}
+
+	public long getLatestUserComment() {
+		return latestUserComment;
+	}
+
+	public void setLatestUserComment(long latestUserComment) {
+		this.latestUserComment = latestUserComment;
+	}
+   
 	public void onRate(RateEvent rateEvent) {
 		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Calificación exitosa", "Has calificado esta materia con un : " + (rateEvent.getRating()) + ". ¡Agradecemos tu opinión!");
 
@@ -123,18 +148,19 @@ public class ViewCourse implements Serializable {
 
 	}
 
+	public void redirectNotFound() {
+		((ConfigurableNavigationHandler) FacesContext.getCurrentInstance().getApplication().getNavigationHandler()).performNavigation("notfound");
+	}
+
 	public void preRenderView() {
 		Config.getInstance().getServiceFactory().getLogService().info("viewCourses preRenderView method called");
 		if (id != null) {
 			try {
+				course = CourseVoVwBuilder.getInstance().getCourseVoVwFull(id);
 				if (course == null) {
-					course = CourseVoVwBuilder.getInstance().getCourseVoVwFull(id);
-					if (course == null) {
-						((ConfigurableNavigationHandler) FacesContext.getCurrentInstance().getApplication().getNavigationHandler()).performNavigation("notfound");
-					}
+					redirectNotFound();
 				}
-				if (comments == null) {
-					Config.getInstance().getServiceFactory().getLogService().info("viewCourses preRenderView method called and comments WAS null");
+				if (comments == null || isReRenderComments()) {
 					comments = CommentVoVwBuilder.getInstance().getCommentsByCourseId(id);
 					Collections.sort(comments, new Comparator<CommentVoVwMedium>() {
 
@@ -145,11 +171,14 @@ public class ViewCourse implements Serializable {
 							return (o1Rating > o2Rating ? -1 : (o1Rating == o2Rating ? 0 : 1));
 						}
 					});
+					setReRenderComments(false);
 				}
 			} catch (Exception ex) {
 				Config.getInstance().getServiceFactory().getLogService().error(ex.getMessage(), ex);
-				((ConfigurableNavigationHandler) FacesContext.getCurrentInstance().getApplication().getNavigationHandler()).performNavigation("notfound");
+				redirectNotFound();
 			}
+		} else {
+			redirectNotFound();
 		}
 	}
 }

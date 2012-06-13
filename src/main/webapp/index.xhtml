@@ -197,6 +197,7 @@
             </div>
 
             <ui:repeat value="#{home.lastComments}" var="comment">
+			<a href="#{request.contextPath}/courses/view.xhtml?id=#{comment.course.id}#comment-#{comment.id}">
                 <div class="row">
                     <div class="span12 thumbnail comment">
                         <div class="row">
@@ -235,6 +236,7 @@
                         </div>
                     </div>
                 </div>
+			</a>
             </ui:repeat>
         </div>
     </ui:define>

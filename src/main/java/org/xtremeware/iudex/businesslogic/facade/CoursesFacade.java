@@ -9,6 +9,7 @@ import org.xtremeware.iudex.businesslogic.helper.FacadesHelper;
 import org.xtremeware.iudex.businesslogic.service.ServiceBuilder;
 import org.xtremeware.iudex.businesslogic.service.search.SearchBehaviorFactory;
 import org.xtremeware.iudex.helper.DataBaseException;
+import org.xtremeware.iudex.helper.ExternalServiceException;
 import org.xtremeware.iudex.helper.MultipleMessagesException;
 import org.xtremeware.iudex.vo.*;
 
@@ -43,9 +44,10 @@ public class CoursesFacade extends AbstractFacade {
                 getServiceFactory().getCoursesService().setSearch(
                         SearchBehaviorFactory.getFuzzyCourseSearch());
                 return getServiceFactory().getCoursesService().search(query,totalHints);
-            } catch (Exception e) {
-                getServiceFactory().getLogService().error(e.getMessage(), e);
-                throw new RuntimeException(e);
+            } catch (Exception exception) {
+                getServiceFactory().getLogService().error(exception.getMessage(), exception);
+                FacadesHelper.checkException(exception, ExternalServiceException.class);
+                throw new RuntimeException(exception);
             }
         }
         return resultList;

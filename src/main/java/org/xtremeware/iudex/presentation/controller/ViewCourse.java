@@ -8,7 +8,6 @@ import javax.faces.application.*;
 import javax.faces.bean.*;
 import javax.faces.context.FacesContext;
 import org.primefaces.event.RateEvent;
-import org.xtremeware.iudex.businesslogic.facade.FacadeFactory;
 import org.xtremeware.iudex.helper.Config;
 import org.xtremeware.iudex.helper.MultipleMessagesException;
 import org.xtremeware.iudex.presentation.vovw.*;

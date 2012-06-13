@@ -14,6 +14,9 @@
     </f:metadata>
 
     <ui:define name="content">
+		<h:outputScript library="js" name="spin.min.js"/>
+		<h:outputScript library="js" name="jquery.spin.js"/>
+		<h:outputScript library="js" name="search.js"/>
         <div class="container">
             <div class="row">
                 <div class="span12">
@@ -56,7 +59,7 @@
                                                 </h:link>
                                             </td>
                                             <td>
-                                                <img style="vertical-align: bottom ;margin-bottom: 2px; "  src="#{request.contextPath}/resources/images/star.png" height="20"/> <h:outputText value=" x #{coursePeriod.average}" />
+                                                <img style="vertical-align: bottom ;margin-bottom: 2px; "  src="#{request.contextPath}/resources/images/star.png" height="20"/> x<h:outputText value="#{coursePeriod.average}" > <f:convertNumber maxFractionDigits="1" groupingUsed="false" /></h:outputText>
                                             </td>
                                         </tr>
                                     </ui:repeat>
@@ -72,7 +75,7 @@
                                         <ui:fragment rendered="#{page != search.currentPage}">
                                             <li>
                                                 <h:commandLink action="#{search.loadCourses(page)}" value="#{page}">
-                                                    <f:ajax render="coursesList" />
+                                                    <f:ajax render="coursesList" onevent="search"/>
                                                 </h:commandLink>
                                             </li>
                                         </ui:fragment>

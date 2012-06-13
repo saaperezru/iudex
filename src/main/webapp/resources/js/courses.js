@@ -207,7 +207,7 @@ function voteProfessor(data){
 		case "success": // This is called when ajax response is successfully processed.
 			voteControl.show();
 			voteControl.parent().spin(false);
-			//voteCount.spin(false);
+			voteCount.spin(false);
 			break;
 
 		case "complete": // This is called right after ajax response is received.

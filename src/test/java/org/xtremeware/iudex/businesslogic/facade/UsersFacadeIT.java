@@ -89,6 +89,13 @@ public class UsersFacadeIT {
     private static void createUsers(EntityManager entityManager) {
         users = new ArrayList<UserEntity>();
 
+        createExistingActiveUser(entityManager);
+        createExistingInactiveUser(entityManager);
+        createToActivateUser(entityManager);
+        createToDeleteUser(entityManager);
+    }
+
+    private static void createExistingActiveUser(EntityManager entityManager) {
         existingActiveUser = new UserEntity();
         existingActiveUser.setFirstName("Existing");
         existingActiveUser.setLastName("Active User");
@@ -101,7 +108,9 @@ public class UsersFacadeIT {
         entityManager.persist(existingActiveUser);
 
         users.add(existingActiveUser);
+    }
 
+    private static void createExistingInactiveUser(EntityManager entityManager) {
         existingInactiveUser = new UserEntity();
         existingInactiveUser.setFirstName("Existing");
         existingInactiveUser.setLastName("Inactive User");
@@ -114,7 +123,10 @@ public class UsersFacadeIT {
         entityManager.persist(existingInactiveUser);
 
         users.add(existingInactiveUser);
+    }
 
+    private static void createToActivateUser(EntityManager entityManager) throws
+            NumberFormatException {
         toActivateUser = new UserEntity();
         toActivateUser.setFirstName("Existing");
         toActivateUser.setLastName("Inactive User");
@@ -128,17 +140,30 @@ public class UsersFacadeIT {
 
         users.add(toActivateUser);
 
+        createConfirmationKey(entityManager);
+    }
+
+    private static void createConfirmationKey(EntityManager entityManager)
+            throws NumberFormatException {
         ConfirmationKeyEntity confirmationKeyEntity =
                 new ConfirmationKeyEntity();
         confirmationKeyEntity.setUser(toActivateUser);
+        Date expirationDate = getConfirmationKeyExpirationDate();
+        confirmationKeyEntity.setExpirationDate(expirationDate);
+        confirmationKeyEntity.setConfirmationKey(validConfirmationKey);
+        entityManager.persist(confirmationKeyEntity);
+    }
+
+    private static Date getConfirmationKeyExpirationDate() throws
+            NumberFormatException {
         Calendar expirationDate = new GregorianCalendar();
         expirationDate.add(Calendar.DAY_OF_MONTH,
                 Integer.parseInt(ConfigurationVariablesHelper.getVariable(
                 ConfigurationVariablesHelper.MAILING_KEYS_EXPIRATION)));
-        confirmationKeyEntity.setExpirationDate(expirationDate.getTime());
-        confirmationKeyEntity.setConfirmationKey(validConfirmationKey);
-        entityManager.persist(confirmationKeyEntity);
+        return expirationDate.getTime();
+    }
 
+    private static void createToDeleteUser(EntityManager entityManager) {
         toDeleteUser = new UserEntity();
         toDeleteUser.setFirstName("Existing");
         toDeleteUser.setLastName("To Delete User");
@@ -481,11 +506,7 @@ public class UsersFacadeIT {
             "user.role.null"
         };
 
-        try {
-            usersFacade.createUser(user);
-        } catch (MultipleMessagesException ex) {
-            FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
-        }
+        checkCreateUser(user, expectedMessages);
 
         user.setFirstName("");
         user.setLastName("");
@@ -503,11 +524,7 @@ public class UsersFacadeIT {
             "user.programsId.empty"
         };
 
-        try {
-            usersFacade.createUser(user);
-        } catch (MultipleMessagesException ex) {
-            FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
-        }
+        checkCreateUser(user, expectedMessages);
 
         user.setFirstName(FacadesTestHelper.randomString(10));
         user.setLastName(FacadesTestHelper.randomString(10));
@@ -524,11 +541,7 @@ public class UsersFacadeIT {
             "user.programsId.element.null"
         };
 
-        try {
-            usersFacade.createUser(user);
-        } catch (MultipleMessagesException ex) {
-            FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
-        }
+        checkCreateUser(user, expectedMessages);
 
         user.setUserName(FacadesTestHelper.randomString(MIN_USERNAME_LENGTH));
         user.setPassword(
@@ -539,6 +552,12 @@ public class UsersFacadeIT {
             "user.programsId.element.notFound"
         };
 
+        checkCreateUser(user, expectedMessages);
+    }
+
+    private void checkCreateUser(UserVo user, String[] expectedMessages)
+            throws
+            DuplicityException {
         try {
             usersFacade.createUser(user);
         } catch (MultipleMessagesException ex) {
@@ -569,26 +588,34 @@ public class UsersFacadeIT {
 
     @Test
     public void logIn_invalidLogin_null() throws Exception {
-        String userName;
-        String password;
+        checkWrongUserNameAndRightPassword();
+        checkRightUserNameAndWrongPassword();
+        checkWrongUserNameAndWrongPassword();
+    }
 
-        // Wrong username, right password
-        userName = "Invalid!";
-        password = existingActiveUserPassword;
+    private void checkRightUserNameAndWrongPassword() throws Exception {
+        String userName = existingActiveUser.getUserName();
+        String password = "Invalid!";
+        checkLogIn(userName, password);
+    }
+
+    private void checkLogIn(String userName, String password) throws
+            InactiveUserException,
+            MultipleMessagesException {
         UserVo user = usersFacade.logIn(userName, password);
         assertNull(user);
+    }
 
-        // Right username, wrong password
-        userName = existingActiveUser.getUserName();
-        password = "Invalid!";
-        user = usersFacade.logIn(userName, password);
-        assertNull(user);
+    private void checkWrongUserNameAndRightPassword() throws Exception {
+        String userName = "Invalid!";
+        String password = existingActiveUserPassword;
+        checkLogIn(userName, password);
+    }
 
-        // Wrong username, wrong password
-        userName = "Invalid!";
-        password = "Invalid!";
-        user = usersFacade.logIn(userName, password);
-        assertNull(user);
+    private void checkWrongUserNameAndWrongPassword() throws Exception {
+        String userName = "Invalid!";
+        String password = "Invalid!";
+        checkLogIn(userName, password);
     }
 
     @Test(expected = InactiveUserException.class)
@@ -600,12 +627,21 @@ public class UsersFacadeIT {
 
     @Test
     public void activateUser_validConfirmationKey_success() throws Exception {
-        UserVo user = usersFacade.activateUser(validConfirmationKey);
-        Long userId = user.getId();
-        assertTrue(user.isActive());
+        UserVo user = checkFirstActivation();
+        checkActivationInDb(user);
+        checkSecondActivation();
+    }
 
+    private UserVo checkFirstActivation() {
+        UserVo user = usersFacade.activateUser(validConfirmationKey);
+        assertTrue(user.isActive());
+        return user;
+    }
+
+    private void checkActivationInDb(UserVo user) {
         EntityManager localEntityManager = entityManagerFactory.
                 createEntityManager();
+        Long userId = user.getId();
         UserEntity userEntity =
                 (UserEntity) localEntityManager.createQuery("SELECT u" +
                 " FROM User u" +
@@ -613,7 +649,10 @@ public class UsersFacadeIT {
                 getSingleResult();
         assertTrue(userEntity.isActive());
         assertNull(userEntity.getConfirmationKey());
+    }
 
+    private void checkSecondActivation() {
+        UserVo user;
         user = usersFacade.activateUser(validConfirmationKey);
         assertNull(user);
     }
@@ -628,35 +667,55 @@ public class UsersFacadeIT {
     @Test
     public void updateUser_validUserVo_success() throws
             MultipleMessagesException, Exception {
+        final String userNameWhichShouldNotChange = "newUserName";
+        final Role roleWhichShouldNotChange = Role.ADMINISTRATOR;
+
         UserVo userVo = new UserVo();
         userVo.setId(existingActiveUser.getId());
         userVo.setFirstName("New name");
         userVo.setLastName("New last name");
-        userVo.setUserName("newUserName");
+        userVo.setUserName(userNameWhichShouldNotChange);
         userVo.setPassword("New password");
-        List<Long> expectedProgramsIds = new ArrayList<Long>(1);
-        expectedProgramsIds.add(programs.get(0).getId());
-        userVo.setProgramsId(expectedProgramsIds);
-        userVo.setRole(Role.ADMINISTRATOR);
+        List<Long> programsIds = new ArrayList<Long>(1);
+        programsIds.add(programs.get(0).getId());
+        userVo.setProgramsId(programsIds);
+        userVo.setRole(roleWhichShouldNotChange);
 
-        UserVo expectedUserVo = new UserVo();
-        expectedUserVo.setId(existingActiveUser.getId());
-        expectedUserVo.setFirstName("New name");
-        expectedUserVo.setLastName("New last name");
-        expectedUserVo.setPassword(SecurityHelper.hashPassword("New password"));
-        expectedUserVo.setProgramsId(expectedProgramsIds);
-        expectedUserVo.setRole(Role.STUDENT); // Shouldn't change
-        expectedUserVo.setUserName(existingActiveUser.getUserName()); // Shouldn't change
+        UserVo expectedUserVo = getExpectedUserVoForUpdateUserTest(userVo);
 
         userVo = usersFacade.updateUser(userVo);
         assertEquals(expectedUserVo, userVo);
 
         existsUserInDb(entityManager, expectedUserVo);
 
-        List<Long> programsIds = getUserProgramsIdsFromDb(entityManager,
+        List<Long> programsIdsInDb = getUserProgramsIdsFromDb(entityManager,
                 expectedUserVo.getId());
 
-        assertEquals(expectedProgramsIds, programsIds);
+        assertEquals(programsIds, programsIdsInDb);
+    }
+
+    private UserVo getExpectedUserVoForUpdateUserTest(UserVo userVo) {
+        UserVo expectedUserVo = new UserVo();
+
+        final Long originalId = existingActiveUser.getId();
+        expectedUserVo.setId(originalId);
+
+        expectedUserVo.setFirstName(userVo.getFirstName());
+        expectedUserVo.setLastName(userVo.getLastName());
+
+        String hashedPassword =
+                SecurityHelper.hashPassword(userVo.getPassword());
+        expectedUserVo.setPassword(hashedPassword);
+
+        final String originalUserName = existingActiveUser.getUserName();
+        expectedUserVo.setUserName(originalUserName);
+
+        expectedUserVo.setProgramsId(userVo.getProgramsId());
+
+        final Role originalRole = existingActiveUser.getRole();
+        expectedUserVo.setRole(originalRole);
+
+        return expectedUserVo;
     }
 
     @Test
@@ -685,11 +744,7 @@ public class UsersFacadeIT {
             "user.null"
         };
 
-        try {
-            usersFacade.updateUser(null);
-        } catch (MultipleMessagesException ex) {
-            FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
-        }
+        checkUpdateUser(null, expectedMessages);
 
         UserVo user = new UserVo();
 
@@ -710,11 +765,7 @@ public class UsersFacadeIT {
             "user.role.null"
         };
 
-        try {
-            usersFacade.updateUser(user);
-        } catch (MultipleMessagesException ex) {
-            FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
-        }
+        checkUpdateUser(user, expectedMessages);
 
         user.setFirstName("");
         user.setLastName("");
@@ -732,11 +783,7 @@ public class UsersFacadeIT {
             "user.programsId.empty"
         };
 
-        try {
-            usersFacade.updateUser(user);
-        } catch (MultipleMessagesException ex) {
-            FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
-        }
+        checkUpdateUser(user, expectedMessages);
 
         user.setFirstName(FacadesTestHelper.randomString(10));
         user.setLastName(FacadesTestHelper.randomString(10));
@@ -753,11 +800,7 @@ public class UsersFacadeIT {
             "user.programsId.element.null"
         };
 
-        try {
-            usersFacade.updateUser(user);
-        } catch (MultipleMessagesException ex) {
-            FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
-        }
+        checkUpdateUser(user, expectedMessages);
 
         user.setUserName(FacadesTestHelper.randomString(MIN_USERNAME_LENGTH));
         user.setPassword(
@@ -768,6 +811,11 @@ public class UsersFacadeIT {
             "user.programsId.element.notFound"
         };
 
+        checkUpdateUser(user, expectedMessages);
+    }
+
+    private void checkUpdateUser(UserVo user, String[] expectedMessages) throws
+            DuplicityException {
         try {
             usersFacade.updateUser(user);
         } catch (MultipleMessagesException ex) {

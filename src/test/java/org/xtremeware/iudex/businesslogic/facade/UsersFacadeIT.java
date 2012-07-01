@@ -32,6 +32,7 @@ public class UsersFacadeIT {
     private static final UsersFacade usersFacade;
     private static EntityManager entityManager;
     private static List<ProgramEntity> programs;
+    private static UserEntity existingUser;
 
     static {
         entityManagerFactory = FacadesTestHelper.createEntityManagerFactory();
@@ -45,6 +46,7 @@ public class UsersFacadeIT {
         transaction.begin();
 
         insertPrograms(entityManager);
+        insertUsers(entityManager);
 
         transaction.commit();
     }
@@ -65,6 +67,17 @@ public class UsersFacadeIT {
             entityManager.persist(program);
             programs.add(program);
         }
+    }
+
+    private static void insertUsers(EntityManager entityManager) {
+        existingUser = new UserEntity();
+        existingUser.setFirstName("Existing");
+        existingUser.setLastName("User");
+        existingUser.setUserName("existingUser");
+        existingUser.setPassword("123456789");
+        existingUser.setPrograms(programs);
+        existingUser.setRole(Role.STUDENT);
+        entityManager.persist(existingUser);
     }
 
     @AfterClass
@@ -185,14 +198,19 @@ public class UsersFacadeIT {
         userVo.setUserName("johndoe");
         userVo.setPassword("123456789");
 
-        List<Long> programsId = new ArrayList<Long>(programs.size());
-        for (ProgramEntity program : programs) {
-            programsId.add(program.getId());
-        }
+        List<Long> programsId = getProgramsIds();
 
         userVo.setProgramsId(programsId);
         userVo.setRole(Role.STUDENT);
         return userVo;
+    }
+
+    private List<Long> getProgramsIds() {
+        List<Long> programsIds = new ArrayList<Long>(programs.size());
+        for (ProgramEntity program : programs) {
+            programsIds.add(program.getId());
+        }
+        return programsIds;
     }
 
     private UserVo getExpectedUserVoForCreateUserTest(UserVo userVo) {
@@ -238,25 +256,22 @@ public class UsersFacadeIT {
                 setParameter("id", userId).getResultList();
         return programsIds;
     }
-//    /**
-//     * Test of an attempt to register a user which already exists
-//     */
-//    @Test(expected = DuplicityException.class)
-//    public void test_BL_2_2() throws MultipleMessagesException, Exception {
-//        final String userName = "student5";
-//
-//        UserVo user = new UserVo();
-//        user.setFirstName("John");
-//        user.setLastName("Doe");
-//        user.setUserName(userName); // Already exists
-//        user.setPassword("123456789");
-//        user.setProgramsId(Arrays.asList(new Long[]{2537L, 2556L}));
-//        user.setRole(Role.STUDENT);
-//        user.setActive(true);
-//        UsersFacade usersFacade = Config.getInstance().getFacadeFactory().
-//                getUsersFacade();
-//        usersFacade.createUser(user);
-//    }
+
+    @Test(expected = DuplicityException.class)
+    public void createUser_existingUser_duplicityException() throws
+            MultipleMessagesException, Exception {
+        final String existingUserName = existingUser.getUserName();
+
+        UserVo user = new UserVo();
+        user.setFirstName("John");
+        user.setLastName("Doe");
+        user.setUserName(existingUserName);
+        user.setPassword("123456789");
+        user.setProgramsId(getProgramsIds());
+        user.setRole(Role.STUDENT);
+        user.setActive(true);
+        usersFacade.createUser(user);
+    }
 //
 //    /**
 //     * Test of a registration attempt with invalid data

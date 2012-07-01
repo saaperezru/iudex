@@ -23,6 +23,8 @@ import org.xtremeware.iudex.helper.SecurityHelper;
 import org.xtremeware.iudex.vo.ConfirmationKeyVo;
 import org.xtremeware.iudex.vo.ForgottenPasswordKeyVo;
 import org.xtremeware.iudex.vo.UserVo;
+import static org.xtremeware.iudex.helper.SecurityHelper.sanitizeHTML;
+import static org.xtremeware.iudex.helper.SecurityHelper.hashPassword;
 
 public class UsersService extends CrudService<UserVo, UserEntity> {
 
@@ -76,10 +78,10 @@ public class UsersService extends CrudService<UserVo, UserEntity> {
         if (!multipleMessagesException.getMessages().isEmpty()) {
             throw multipleMessagesException;
         }
-        userVo.setFirstName(SecurityHelper.sanitizeHTML(userVo.getFirstName()));
-        userVo.setLastName(SecurityHelper.sanitizeHTML(userVo.getLastName()));
-        userVo.setUserName(SecurityHelper.sanitizeHTML(userVo.getUserName()));
-        userVo.setPassword(SecurityHelper.sanitizeHTML(userVo.getPassword()));
+        userVo.setFirstName(sanitizeHTML(userVo.getFirstName()));
+        userVo.setLastName(sanitizeHTML(userVo.getLastName()));
+        userVo.setUserName(sanitizeHTML(userVo.getUserName()));
+        userVo.setPassword(sanitizeHTML(userVo.getPassword()));
     }
 
     private void checkFirstName(
@@ -219,11 +221,11 @@ public class UsersService extends CrudService<UserVo, UserEntity> {
             throw exceptions;
         }
 
+        String sanitizedUserName = sanitizeHTML(userName);
+        String sanitizedPassword = sanitizeHTML(password);
+        String hashedPassword = hashPassword(sanitizedPassword);
         UserEntity user = getDaoFactory().getUserDao().getByUsernameAndPassword(
-                entityManager,
-                SecurityHelper.sanitizeHTML(userName),
-                SecurityHelper.hashPassword(
-                SecurityHelper.sanitizeHTML(password)));
+                entityManager, sanitizedUserName, hashedPassword);
         if (user == null) {
             return null;
         } else {
@@ -243,7 +245,7 @@ public class UsersService extends CrudService<UserVo, UserEntity> {
                 getDaoFactory().getConfirmationKeyDao();
         ConfirmationKeyEntity confirmationKeyEntity =
                 dao.getByConfirmationKey(entityManager,
-                SecurityHelper.sanitizeHTML(confirmationKey));
+                sanitizeHTML(confirmationKey));
         if (confirmationKeyEntity != null) {
             UserEntity userEntity = confirmationKeyEntity.getUser();
             if (!userEntity.isActive()) {
@@ -325,7 +327,7 @@ public class UsersService extends CrudService<UserVo, UserEntity> {
             throw multipleMessagesException;
         }
 
-        forgottenPasswordKey.getUser().setPassword(SecurityHelper.hashPassword(SecurityHelper.
+        forgottenPasswordKey.getUser().setPassword(hashPassword(SecurityHelper.
                 sanitizeHTML(password)));
         dao.delete(em, forgottenPasswordKey.getId());
     }

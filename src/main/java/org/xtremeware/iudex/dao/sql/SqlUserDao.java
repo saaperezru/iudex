@@ -22,17 +22,17 @@ public class SqlUserDao extends SqlCrudDao<UserEntity> implements UserDao {
      * password are like the specified ones
      *
      * @param em the entity manager
-     * @param username String containing the username
+     * @param userName String containing the username
      * @param password String containing the password
      * @return Value object with required user information
      */
     @Override
     public UserEntity getByUsernameAndPassword(EntityManager entityManager,
-            String username, String password) throws DataBaseException {
+            String userName, String password) throws DataBaseException {
         checkEntityManager(entityManager);
         try {
-            return entityManager.createNamedQuery("getUserByUsernameAndPassword", UserEntity.class).
-                    setParameter("userName", username).setParameter("password", password).getSingleResult();
+            return entityManager.createNamedQuery("getUserByUserNameAndPassword", UserEntity.class).
+                    setParameter("userName", userName).setParameter("password", password).getSingleResult();
         } catch (NoResultException e) {
             return null;
         } catch (Exception e) {

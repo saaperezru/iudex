@@ -28,11 +28,13 @@ public class UsersFacadeIT {
     private static final UsersFacade usersFacade;
     private static EntityManager entityManager;
     private static List<ProgramEntity> programs;
-    private static UserEntity existingUser;
+    private static UserEntity existingActiveUser;
+    private static String existingActiveUserPassword;
 
     static {
         entityManagerFactory = FacadesTestHelper.createEntityManagerFactory();
         usersFacade = Config.getInstance().getFacadeFactory().getUsersFacade();
+        existingActiveUserPassword = "123456789";
     }
 
     @BeforeClass
@@ -66,14 +68,16 @@ public class UsersFacadeIT {
     }
 
     private static void insertUsers(EntityManager entityManager) {
-        existingUser = new UserEntity();
-        existingUser.setFirstName("Existing");
-        existingUser.setLastName("User");
-        existingUser.setUserName("existingUser");
-        existingUser.setPassword("123456789");
-        existingUser.setPrograms(programs);
-        existingUser.setRole(Role.STUDENT);
-        entityManager.persist(existingUser);
+        existingActiveUser = new UserEntity();
+        existingActiveUser.setFirstName("Existing");
+        existingActiveUser.setLastName("User");
+        existingActiveUser.setUserName("existingUser");
+        existingActiveUser.setPassword(SecurityHelper.hashPassword(
+                existingActiveUserPassword));
+        existingActiveUser.setPrograms(programs);
+        existingActiveUser.setRole(Role.STUDENT);
+        existingActiveUser.setActive(true);
+        entityManager.persist(existingActiveUser);
     }
 
     @AfterClass
@@ -256,7 +260,7 @@ public class UsersFacadeIT {
     @Test(expected = DuplicityException.class)
     public void createUser_existingUser_duplicityException() throws
             MultipleMessagesException, Exception {
-        final String existingUserName = existingUser.getUserName();
+        final String existingUserName = existingActiveUser.getUserName();
 
         UserVo user = new UserVo();
         user.setFirstName("John");
@@ -365,139 +369,22 @@ public class UsersFacadeIT {
             FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
         }
     }
-//    /**
-//     * Test of a failed registration due to email problems
-//     */
-//    @Test
-//    public void test_BL_2_4() throws MultipleMessagesException,
-//            DuplicityException,
-//            Exception {
-//        UserVo user = new UserVo();
-//        user.setFirstName("Diane");
-//        user.setLastName("Doe");
-//        user.setUserName("someone");
-//        user.setPassword("123456789");
-//        user.setProgramsId(Arrays.asList(new Long[]{2537L, 2556L}));
-//        user.setRole(Role.STUDENT);
-//
-//        UsersFacade usersFacade = Config.getInstance().getFacadeFactory().
-//                getUsersFacade();
-//        MailingService mailingService = Config.getInstance().getServiceFactory().
-//                getMailingService();
-//
-//        MailingConfigVo originalMailingConfig = new MailingConfigVo();
-//        originalMailingConfig.setSender(ConfigurationVariablesHelper.getVariable(
-//                ConfigurationVariablesHelper.MAILING_SENDER_EMAIL_ADDRESS));
-//        originalMailingConfig.setSmtpPassword(ConfigurationVariablesHelper.
-//                getVariable(
-//                ConfigurationVariablesHelper.MAILING_SMTP_PASSWORD));
-//        originalMailingConfig.setSmtpServer(ConfigurationVariablesHelper.
-//                getVariable(
-//                ConfigurationVariablesHelper.MAILING_SMTP_SERVER));
-//        originalMailingConfig.setSmtpServerPort(Integer.parseInt(ConfigurationVariablesHelper.
-//                getVariable(ConfigurationVariablesHelper.MAILING_SMTP_PORT)));
-//        originalMailingConfig.setSmtpUser(ConfigurationVariablesHelper.
-//                getVariable(
-//                ConfigurationVariablesHelper.MAILING_SMTP_USER));
-//
-//        try {
-//            MailingConfigVo mailingConfig = new MailingConfigVo();
-//            mailingConfig.setSender("Invalid!");
-//            mailingConfig.setSmtpPassword(
-//                    originalMailingConfig.getSmtpPassword());
-//            mailingConfig.setSmtpUser(originalMailingConfig.getSmtpUser());
-//            mailingConfig.setSmtpServer(originalMailingConfig.getSmtpServer());
-//            mailingConfig.setSmtpServerPort(
-//                    originalMailingConfig.getSmtpServerPort());
-//            testMailingConfig(mailingService, mailingConfig);
-//
-//            mailingConfig.setSender(originalMailingConfig.getSender());
-//            mailingConfig.setSmtpPassword(null);
-//            testMailingConfig(mailingService, mailingConfig);
-//
-//            mailingConfig.setSmtpPassword(
-//                    originalMailingConfig.getSmtpPassword());
-//            mailingConfig.setSmtpUser(null);
-//            testMailingConfig(mailingService, mailingConfig);
-//
-//            mailingConfig.setSmtpUser(originalMailingConfig.getSmtpUser());
-//            mailingConfig.setSmtpServer("Invalid!");
-//            testMailingConfig(mailingService, mailingConfig);
-//
-//            mailingConfig.setSmtpServer(originalMailingConfig.getSmtpServer());
-//            mailingConfig.setSmtpServerPort(-1);
-//            testMailingConfig(mailingService, mailingConfig);
-//
-//            mailingConfig.setSmtpServerPort(65536);
-//            testMailingConfig(mailingService, mailingConfig);
-//
-//            mailingConfig.setSmtpServerPort(
-//                    originalMailingConfig.getSmtpServerPort());
-//            mailingConfig.setSmtpUser("someone@example.com");
-//            testMailingConnection(usersFacade, user, mailingService,
-//                    mailingConfig);
-//
-//            mailingConfig.setSmtpUser(originalMailingConfig.getSmtpUser());
-//            mailingConfig.setSmtpPassword("Invalid!");
-//            testMailingConnection(usersFacade, user, mailingService,
-//                    mailingConfig);
-//        } catch (RuntimeException ex) {
-//            mailingService.setConfig(originalMailingConfig);
-//            throw ex;
-//        }
-//    }
-//
-//    private void testMailingConfig(MailingService mailingService,
-//            MailingConfigVo mailingConfig) {
-//        boolean exception = false;
-//        try {
-//            mailingService.setConfig(mailingConfig);
-//        } catch (IllegalArgumentException ex) {
-//            exception = true;
-//        }
-//        assertTrue(exception);
-//    }
-//
-//    private void testMailingConnection(UsersFacade usersFacade, UserVo user,
-//            MailingService mailingService, MailingConfigVo mailingConfig) throws
-//            MultipleMessagesException, DuplicityException, Exception {
-//        mailingService.setConfig(mailingConfig);
-//        RuntimeException exception = null;
-//        boolean externalServiceConnectionException = false;
-//        try {
-//            usersFacade.createUser(user);
-//        } catch (RuntimeException ex) {
-//            exception = ex;
-//            if (ex.getCause() instanceof ExternalServiceConnectionException) {
-//                externalServiceConnectionException = true;
-//            }
-//        }
-//        assertTrue("Expecting an ExternalServiceConnectionException, got " +
-//                exception == null ? "no exception" : exception.getMessage(),
-//                externalServiceConnectionException);
-//    }
-//
-//    /**
-//     * Test of a successful login
-//     */
-//    @Test
-//    public void test_BL_3_1() throws Exception {
-//        String userName = "student1";
-//        String password = "123456789";
-//        UsersFacade usersFacade = Config.getInstance().getFacadeFactory().
-//                getUsersFacade();
-//        UserVo user = usersFacade.logIn(userName, password);
-//        assertNotNull(user);
-//
-//        EntityManager em = entityManagerFactory.createEntityManager();
-//        em.createQuery("SELECT u" +
-//                " FROM User u" +
-//                " WHERE u.userName = :userName" +
-//                " AND u.password = :password" +
-//                " AND active = true").setParameter("userName", userName).
-//                setParameter("password", SecurityHelper.hashPassword(password)).
-//                getSingleResult();
-//    }
+
+    @Test
+    public void logIn_validLogin_success() throws Exception {
+        String userName = existingActiveUser.getUserName();
+        String password = existingActiveUserPassword;
+        UserVo user = usersFacade.logIn(userName, password);
+        assertNotNull(user);
+
+        entityManager.createQuery("SELECT u" +
+                " FROM User u" +
+                " WHERE u.userName = :userName" +
+                " AND u.password = :password" +
+                " AND active = true").setParameter("userName", userName).
+                setParameter("password", SecurityHelper.hashPassword(password)).
+                getSingleResult();
+    }
 //
 //    /**
 //     * Test of an invalid login

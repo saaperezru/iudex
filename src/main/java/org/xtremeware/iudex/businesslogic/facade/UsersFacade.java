@@ -92,20 +92,20 @@ public class UsersFacade extends AbstractFacade {
     /**
      * Authenticates a user
      *
-     * @param username the user name
+     * @param userName the user name
      * @param password the password
      * @return the authenticated user
      * @throws InactiveUserException if the user is still inactive
      * @throws MultipleMessagesException if there are validation problems
      */
-    public UserVo logIn(String username, String password)
+    public UserVo logIn(String userName, String password)
             throws InactiveUserException, MultipleMessagesException {
         EntityManager entityManager = null;
         UserVo userVo = null;
         try {
             entityManager = getEntityManagerFactory().createEntityManager();
             userVo = getServiceFactory().getUsersService().authenticate(entityManager,
-                    username, password);
+                    userName, password);
         } catch (Exception exception) {
             getServiceFactory().getLogService().error(exception.getMessage(), exception);
             FacadesHelper.checkException(entityManager, exception, InactiveUserException.class);

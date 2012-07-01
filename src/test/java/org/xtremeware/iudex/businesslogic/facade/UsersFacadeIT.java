@@ -1,10 +1,7 @@
 package org.xtremeware.iudex.businesslogic.facade;
 
 import com.dumbster.smtp.SimpleSmtpServer;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.List;
+import java.util.*;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
@@ -16,9 +13,7 @@ import org.xtremeware.iudex.businesslogic.DuplicityException;
 import org.xtremeware.iudex.businesslogic.helper.FacadesHelper;
 import org.xtremeware.iudex.businesslogic.helper.FacadesTestHelper;
 import org.xtremeware.iudex.businesslogic.service.InactiveUserException;
-import org.xtremeware.iudex.entity.ConfirmationKeyEntity;
-import org.xtremeware.iudex.entity.ProgramEntity;
-import org.xtremeware.iudex.entity.UserEntity;
+import org.xtremeware.iudex.entity.*;
 import org.xtremeware.iudex.helper.*;
 import org.xtremeware.iudex.vo.UserVo;
 
@@ -33,9 +28,16 @@ public class UsersFacadeIT {
     private static EntityManager entityManager;
     private static List<UserEntity> users;
     private static List<ProgramEntity> programs;
+    private static PeriodEntity period;
+    private static SubjectEntity subject;
+    private static ProfessorEntity professor;
+    private static CourseEntity course;
+    private static CommentEntity comment;
+    private static CommentRatingEntity commentRating;
     private static UserEntity existingActiveUser;
     private static UserEntity existingInactiveUser;
     private static UserEntity toActivateUser;
+    private static UserEntity toDeleteUser;
     private static final String existingActiveUserPassword;
     private static final String existingInactiveUserPassword;
     private static final String validConfirmationKey;
@@ -54,15 +56,21 @@ public class UsersFacadeIT {
         EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();
 
-        insertPrograms(entityManager);
-        insertUsers(entityManager);
+        createPrograms(entityManager);
+        createUsers(entityManager);
+        createPeriod(entityManager);
+        createSubject(entityManager);
+        createProfessor(entityManager);
+        createCourse(entityManager);
+        createComment(entityManager);
+        createCommentRating(entityManager);
 
         transaction.commit();
     }
 
-    private static void insertPrograms(EntityManager entityManager) {
+    private static void createPrograms(EntityManager entityManager) {
         final int programCount = 2;
-        final int programCodeFactor = 10000000;
+        final int programCodeLength = 4;
         final int programNameLength = 20;
 
         programs = new ArrayList<ProgramEntity>(programCount);
@@ -70,15 +78,15 @@ public class UsersFacadeIT {
         ProgramEntity program;
         for (int i = 1; i <= programCount; i++) {
             program = new ProgramEntity();
-            program.setCode(
-                    Math.round((float) Math.random() * programCodeFactor));
+
+            program.setCode(FacadesTestHelper.randomInt(programCodeLength));
             program.setName(FacadesTestHelper.randomString(programNameLength));
             entityManager.persist(program);
             programs.add(program);
         }
     }
 
-    private static void insertUsers(EntityManager entityManager) {
+    private static void createUsers(EntityManager entityManager) {
         users = new ArrayList<UserEntity>();
 
         existingActiveUser = new UserEntity();
@@ -130,6 +138,100 @@ public class UsersFacadeIT {
         confirmationKeyEntity.setExpirationDate(expirationDate.getTime());
         confirmationKeyEntity.setConfirmationKey(validConfirmationKey);
         entityManager.persist(confirmationKeyEntity);
+
+        toDeleteUser = new UserEntity();
+        toDeleteUser.setFirstName("Existing");
+        toDeleteUser.setLastName("To Delete User");
+        toDeleteUser.setUserName("toDeleteUser");
+        toDeleteUser.setPassword(SecurityHelper.hashPassword(
+                "123456789"));
+        toDeleteUser.setPrograms(programs);
+        toDeleteUser.setRole(Role.STUDENT);
+        toDeleteUser.setActive(true);
+        entityManager.persist(toDeleteUser);
+    }
+
+    private static void createPeriod(EntityManager entityManager) {
+        final int semester = 1;
+
+        period = new PeriodEntity();
+        period.setSemester(semester);
+
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        period.setYear(year);
+
+        entityManager.persist(period);
+    }
+
+    private static void createSubject(EntityManager entityManager) {
+        final int codeLength = 7;
+        final int nameLength = 35;
+        final int descriptionLength = 400;
+
+        subject = new SubjectEntity();
+
+        int code = FacadesTestHelper.randomInt(codeLength);
+        subject.setCode(code);
+
+        String description = FacadesTestHelper.randomString(descriptionLength);
+        subject.setDescription(description);
+
+        String name = FacadesTestHelper.randomString(nameLength);
+        subject.setName(name);
+
+        entityManager.persist(subject);
+    }
+
+    private static void createProfessor(EntityManager entityManager) {
+        professor = new ProfessorEntity();
+        professor.setFirstName("Diane");
+        professor.setLastName("Doe");
+        entityManager.persist(professor);
+    }
+
+    private static void createCourse(EntityManager entityManager) {
+        final double ratingAverage = 0;
+        final long ratingCount = 0;
+
+        course = new CourseEntity();
+        course.setPeriod(period);
+        course.setSubject(subject);
+        course.setProfessor(professor);
+        course.setRatingAverage(ratingAverage);
+        course.setRatingCount(ratingCount);
+        entityManager.persist(course);
+    }
+
+    private static void createComment(EntityManager entityManager) {
+        final int contentLength = 500;
+        final float rating = 1F;
+
+        comment = new CommentEntity();
+
+        String content = FacadesTestHelper.randomString(contentLength);
+        comment.setContent(content);
+
+        Date now = new Date();
+        comment.setDate(now);
+
+        comment.setUser(toDeleteUser);
+        comment.setCourse(course);
+        comment.setAnonymous(false);
+        comment.setRating(rating);
+
+        entityManager.persist(comment);
+    }
+
+    private static void createCommentRating(EntityManager entityManager) {
+        commentRating = new CommentRatingEntity();
+        commentRating.setUser(toDeleteUser);
+        commentRating.setComment(comment);
+
+        int rating = (int) comment.getRating().floatValue();
+        commentRating.setValue(rating);
+
+        entityManager.persist(commentRating);
     }
 
     @AfterClass
@@ -137,15 +239,35 @@ public class UsersFacadeIT {
         EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();
 
-        deleteUsers(entityManager);
-        deletePrograms(entityManager);
+        removeCourse(entityManager);
+        removeProfessor(entityManager);
+        removeSubject(entityManager);
+        removePeriod(entityManager);
+        removeUsers(entityManager);
+        removePrograms(entityManager);
 
         transaction.commit();
 
         FacadesHelper.closeEntityManager(entityManager);
     }
 
-    private static void deleteUsers(EntityManager entityManager) {
+    private static void removeCourse(EntityManager entityManager) {
+        entityManager.remove(course);
+    }
+
+    private static void removeProfessor(EntityManager entityManager) {
+        entityManager.remove(professor);
+    }
+
+    private static void removeSubject(EntityManager entityManager) {
+        entityManager.remove(subject);
+    }
+
+    private static void removePeriod(EntityManager entityManager) {
+        entityManager.remove(period);
+    }
+
+    private static void removeUsers(EntityManager entityManager) {
         EntityTransaction transaction = entityManager.getTransaction();
         deleteConfirmationKeys(entityManager);
         deleteUserPrograms();
@@ -166,7 +288,7 @@ public class UsersFacadeIT {
         }
     }
 
-    private static void deletePrograms(EntityManager entityManager) {
+    private static void removePrograms(EntityManager entityManager) {
         for (ProgramEntity program : programs) {
             entityManager.remove(program);
         }
@@ -537,8 +659,9 @@ public class UsersFacadeIT {
         assertEquals(expectedProgramsIds, programsIds);
     }
 
-    @Test 
-    public void updateUser_nonexistentUser_null() throws MultipleMessagesException, Exception {
+    @Test
+    public void updateUser_nonexistentUser_null() throws
+            MultipleMessagesException, Exception {
         UserVo user = new UserVo();
         user.setId(-1L);
         user.setFirstName("Non-existent");
@@ -549,123 +672,126 @@ public class UsersFacadeIT {
         user.setProgramsId(programsIds);
         user.setRole(Role.STUDENT);
         user.setUserName("nonexistent");
-        user = Config.getInstance().getFacadeFactory().getUsersFacade().updateUser(
+        user = Config.getInstance().getFacadeFactory().getUsersFacade().
+                updateUser(
                 user);
         assertNull(user);
     }
-//
-//    /**
-//     * Test an attempt to edit a user with invalid data
-//     */
-//    @Test 
-//    public void test_BL_11_3() throws Exception {
-//        String[] expectedMessages = new String[]{
-//            "user.null"
-//        };
-//
-//        UsersFacade usersFacade = Config.getInstance().getFacadeFactory().
-//                getUsersFacade();
-//        try {
-//            usersFacade.updateUser(null);
-//        } catch (MultipleMessagesException ex) {
-//            FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
-//        }
-//
-//        UserVo user = new UserVo();
-//
-//        user.setFirstName(null);
-//        user.setLastName(null);
-//        user.setUserName(null);
-//        user.setPassword(null);
-//        user.setProgramsId(null);
-//        user.setRole(null);
-//        user.setActive(true);
-//
-//        expectedMessages = new String[]{
-//            "user.firstName.null",
-//            "user.lastName.null",
-//            "user.userName.null",
-//            "user.password.null",
-//            "user.programsId.null",
-//            "user.role.null"
-//        };
-//
-//        try {
-//            usersFacade.updateUser(user);
-//        } catch (MultipleMessagesException ex) {
-//            FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
-//        }
-//
-//        user.setFirstName("");
-//        user.setLastName("");
-//        user.setUserName(FacadesTestHelper.randomString(MIN_USERNAME_LENGTH - 1));
-//        user.setPassword(FacadesTestHelper.randomString(MIN_USER_PASSWORD_LENGTH -
-//                1));
-//        user.setProgramsId(new ArrayList<Long>());
-//        user.setRole(Role.STUDENT);
-//
-//        expectedMessages = new String[]{
-//            "user.firstName.empty",
-//            "user.lastName.empty",
-//            "user.userName.tooShort",
-//            "user.password.tooShort",
-//            "user.programsId.empty"
-//        };
-//
-//        try {
-//            usersFacade.updateUser(user);
-//        } catch (MultipleMessagesException ex) {
-//            FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
-//        }
-//
-//        user.setFirstName(FacadesTestHelper.randomString(10));
-//        user.setLastName(FacadesTestHelper.randomString(10));
-//        user.setUserName(FacadesTestHelper.randomString(MAX_USERNAME_LENGTH + 10));
-//        user.setPassword(FacadesTestHelper.randomString(MAX_USER_PASSWORD_LENGTH +10));
-//        List<Long> programsId = user.getProgramsId();
-//        programsId.add(null);
-//
-//        expectedMessages = new String[]{
-//            "user.userName.tooLong",
-//            "user.password.tooLong",
-//            "user.programsId.element.null"
-//        };
-//
-//        try {
-//            usersFacade.updateUser(user);
-//        } catch (MultipleMessagesException ex) {
-//            FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
-//        }
-//
-//        user.setUserName(FacadesTestHelper.randomString(MIN_USERNAME_LENGTH));
-//        user.setPassword(
-//                FacadesTestHelper.randomString(MIN_USER_PASSWORD_LENGTH));
-//        programsId.set(0, -1L);
-//
-//        expectedMessages = new String[]{
-//            "user.programsId.element.notFound"
-//        };
-//
-//        try {
-//            usersFacade.updateUser(user);
-//        } catch (MultipleMessagesException ex) {
-//            FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
-//        }
-//    }
-//    
-//    @Test 
-//    public void testDoubleRaitingCommentDeleted() throws MultipleMessagesException, Exception {
-//        CommentVo commentVo = new CommentVo();
-//        commentVo.setAnonymous(false);
-//        commentVo.setContent("MUY MAL CURSO");
-//        commentVo.setCourseId(5L);
-//        commentVo.setDate(new Date());
-//        commentVo.setRating(1F);
-//        commentVo.setUserId(6L);
-//        CommentVo addComment = Config.getInstance().getFacadeFactory().getCommentsFacade().createComment(commentVo);
-//        
-//        Config.getInstance().getFacadeFactory().getCommentsFacade().rateComment(addComment.getId(), 6L, 1);
-//        
-//        Config.getInstance().getFacadeFactory().getUsersFacade().deleteUser(6L);
-//    }
+
+    @Test
+    public void updateUser_invalidData_multipleMessagesException() throws
+            Exception {
+        String[] expectedMessages = new String[]{
+            "user.null"
+        };
+
+        try {
+            usersFacade.updateUser(null);
+        } catch (MultipleMessagesException ex) {
+            FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
+        }
+
+        UserVo user = new UserVo();
+
+        user.setFirstName(null);
+        user.setLastName(null);
+        user.setUserName(null);
+        user.setPassword(null);
+        user.setProgramsId(null);
+        user.setRole(null);
+        user.setActive(true);
+
+        expectedMessages = new String[]{
+            "user.firstName.null",
+            "user.lastName.null",
+            "user.userName.null",
+            "user.password.null",
+            "user.programsId.null",
+            "user.role.null"
+        };
+
+        try {
+            usersFacade.updateUser(user);
+        } catch (MultipleMessagesException ex) {
+            FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
+        }
+
+        user.setFirstName("");
+        user.setLastName("");
+        user.setUserName(FacadesTestHelper.randomString(MIN_USERNAME_LENGTH - 1));
+        user.setPassword(FacadesTestHelper.randomString(MIN_USER_PASSWORD_LENGTH -
+                1));
+        user.setProgramsId(new ArrayList<Long>());
+        user.setRole(Role.STUDENT);
+
+        expectedMessages = new String[]{
+            "user.firstName.empty",
+            "user.lastName.empty",
+            "user.userName.tooShort",
+            "user.password.tooShort",
+            "user.programsId.empty"
+        };
+
+        try {
+            usersFacade.updateUser(user);
+        } catch (MultipleMessagesException ex) {
+            FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
+        }
+
+        user.setFirstName(FacadesTestHelper.randomString(10));
+        user.setLastName(FacadesTestHelper.randomString(10));
+        user.setUserName(
+                FacadesTestHelper.randomString(MAX_USERNAME_LENGTH + 10));
+        user.setPassword(FacadesTestHelper.randomString(MAX_USER_PASSWORD_LENGTH +
+                10));
+        List<Long> programsId = user.getProgramsId();
+        programsId.add(null);
+
+        expectedMessages = new String[]{
+            "user.userName.tooLong",
+            "user.password.tooLong",
+            "user.programsId.element.null"
+        };
+
+        try {
+            usersFacade.updateUser(user);
+        } catch (MultipleMessagesException ex) {
+            FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
+        }
+
+        user.setUserName(FacadesTestHelper.randomString(MIN_USERNAME_LENGTH));
+        user.setPassword(
+                FacadesTestHelper.randomString(MIN_USER_PASSWORD_LENGTH));
+        programsId.set(0, -1L);
+
+        expectedMessages = new String[]{
+            "user.programsId.element.notFound"
+        };
+
+        try {
+            usersFacade.updateUser(user);
+        } catch (MultipleMessagesException ex) {
+            FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
+        }
+    }
+
+    @Test
+    public void deleteUser_autoRatedComment_success() throws
+            MultipleMessagesException, Exception {
+        long userId = toDeleteUser.getId();
+        usersFacade.deleteUser(userId);
+
+        EntityManager localEntityManager = entityManagerFactory.
+                createEntityManager();
+
+        long id = commentRating.getId();
+        CommentRatingEntity foundCommentRating =
+                localEntityManager.find(CommentRatingEntity.class, id);
+        assertNull(foundCommentRating);
+
+        id = comment.getId();
+        CommentEntity foundComment = localEntityManager.find(CommentEntity.class,
+                id);
+        assertNull(foundComment);
+    }
 }

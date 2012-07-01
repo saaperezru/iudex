@@ -119,10 +119,11 @@ public class UsersService extends CrudService<UserVo, UserEntity> {
             multipleMessagesException.addMessage(
                     "user.userName.null");
         } else {
-            if (userName.length() < MIN_USERNAME_LENGTH) {
+            int userNameLength = userName.length();
+            if (userNameLength < MIN_USERNAME_LENGTH) {
                 multipleMessagesException.addMessage(
                         "user.userName.tooShort");
-            } else if (userName.length() > MAX_USERNAME_LENGTH) {
+            } else if (userNameLength > MAX_USERNAME_LENGTH) {
                 multipleMessagesException.addMessage(
                         "user.userName.tooLong");
             }

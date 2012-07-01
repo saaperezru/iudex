@@ -38,7 +38,7 @@ public class FacadesTestHelper {
             MultipleMessagesException exception, String[] expectedMessages) {
         List<String> messages = exception.getMessages();
         for (String expectedMessage : expectedMessages) {
-            assertTrue("not message " + expectedMessage, messages.contains(
+            assertTrue("Not message " + expectedMessage, messages.contains(
                     expectedMessage));
         }
         assertEquals("Size not equal", messages.size(), expectedMessages.length);

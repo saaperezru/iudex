@@ -2,6 +2,8 @@ package org.xtremeware.iudex.businesslogic.facade;
 
 import com.dumbster.smtp.SimpleSmtpServer;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -14,6 +16,7 @@ import org.xtremeware.iudex.businesslogic.DuplicityException;
 import org.xtremeware.iudex.businesslogic.helper.FacadesHelper;
 import org.xtremeware.iudex.businesslogic.helper.FacadesTestHelper;
 import org.xtremeware.iudex.businesslogic.service.InactiveUserException;
+import org.xtremeware.iudex.entity.ConfirmationKeyEntity;
 import org.xtremeware.iudex.entity.ProgramEntity;
 import org.xtremeware.iudex.entity.UserEntity;
 import org.xtremeware.iudex.helper.*;
@@ -28,17 +31,21 @@ public class UsersFacadeIT {
     private static final EntityManagerFactory entityManagerFactory;
     private static final UsersFacade usersFacade;
     private static EntityManager entityManager;
+    private static List<UserEntity> users;
     private static List<ProgramEntity> programs;
     private static UserEntity existingActiveUser;
     private static UserEntity existingInactiveUser;
+    private static UserEntity toActivateUser;
     private static final String existingActiveUserPassword;
     private static final String existingInactiveUserPassword;
+    private static final String confirmationKey;
 
     static {
         entityManagerFactory = FacadesTestHelper.createEntityManagerFactory();
         usersFacade = Config.getInstance().getFacadeFactory().getUsersFacade();
         existingActiveUserPassword = "123456789";
         existingInactiveUserPassword = existingActiveUserPassword;
+        confirmationKey = SecurityHelper.generateMailingKey();
     }
 
     @BeforeClass
@@ -72,6 +79,8 @@ public class UsersFacadeIT {
     }
 
     private static void insertUsers(EntityManager entityManager) {
+        users = new ArrayList<UserEntity>();
+
         existingActiveUser = new UserEntity();
         existingActiveUser.setFirstName("Existing");
         existingActiveUser.setLastName("Active User");
@@ -83,6 +92,8 @@ public class UsersFacadeIT {
         existingActiveUser.setActive(true);
         entityManager.persist(existingActiveUser);
 
+        users.add(existingActiveUser);
+
         existingInactiveUser = new UserEntity();
         existingInactiveUser.setFirstName("Existing");
         existingInactiveUser.setLastName("Inactive User");
@@ -93,6 +104,32 @@ public class UsersFacadeIT {
         existingInactiveUser.setRole(Role.STUDENT);
         existingInactiveUser.setActive(false);
         entityManager.persist(existingInactiveUser);
+
+        users.add(existingInactiveUser);
+
+        toActivateUser = new UserEntity();
+        toActivateUser.setFirstName("Existing");
+        toActivateUser.setLastName("Inactive User");
+        toActivateUser.setUserName("toActivateUser");
+        toActivateUser.setPassword(SecurityHelper.hashPassword(
+                "123456789"));
+        toActivateUser.setPrograms(programs);
+        toActivateUser.setRole(Role.STUDENT);
+        toActivateUser.setActive(false);
+        entityManager.persist(toActivateUser);
+
+        users.add(toActivateUser);
+
+        ConfirmationKeyEntity confirmationKeyEntity =
+                new ConfirmationKeyEntity();
+        confirmationKeyEntity.setUser(toActivateUser);
+        Calendar expirationDate = new GregorianCalendar();
+        expirationDate.add(Calendar.DAY_OF_MONTH,
+                Integer.parseInt(ConfigurationVariablesHelper.getVariable(
+                ConfigurationVariablesHelper.MAILING_KEYS_EXPIRATION)));
+        confirmationKeyEntity.setExpirationDate(expirationDate.getTime());
+        confirmationKeyEntity.setConfirmationKey(confirmationKey);
+        entityManager.persist(confirmationKeyEntity);
     }
 
     @AfterClass
@@ -109,21 +146,21 @@ public class UsersFacadeIT {
     }
 
     private static void deleteUsers(EntityManager entityManager) {
-        deleteConfirmationKeys(entityManager);
         EntityTransaction transaction = entityManager.getTransaction();
-        deleteUserPrograms(entityManager);
+        deleteConfirmationKeys(entityManager);
+        deleteUserPrograms();
         transaction.commit();
         transaction.begin();
-        entityManager.createQuery("DELETE FROM User").executeUpdate();
+        for (UserEntity user : users) {
+            entityManager.remove(user);
+        }
     }
 
     private static void deleteConfirmationKeys(EntityManager entityManager) {
         entityManager.createQuery("DELETE FROM ConfirmationKey").executeUpdate();
     }
 
-    private static void deleteUserPrograms(EntityManager entityManager) {
-        List<UserEntity> users = (List<UserEntity>) entityManager.createQuery(
-                "SELECT u FROM User u").getResultList();
+    private static void deleteUserPrograms() {
         for (UserEntity user : users) {
             user.setPrograms(null);
         }
@@ -188,6 +225,8 @@ public class UsersFacadeIT {
         List<Long> expectedProgramsIds = expectedUser.getProgramsId();
 
         assertEquals(expectedProgramsIds, userProgramsIdsInDb);
+
+        users.add(entityManager.find(UserEntity.class, outputUserVo.getId()));
 
         assertEquals(1, smtpServer.getReceivedEmailSize());
     }
@@ -436,35 +475,31 @@ public class UsersFacadeIT {
         final String password = existingInactiveUserPassword;
         usersFacade.logIn(userName, password);
     }
-//    /**
-//     * Test of a successful user activation
-//     */
-//    @Test
-//    public void test_BL_10_1() throws Exception {
-//        final String confirmationKey =
-//                "1d141671f909bb21d3658372a7dbb87af521bc8d8a92088fbdada64604bf1cf1";
-//
-//        UsersFacade usersFacade = Config.getInstance().getFacadeFactory().
-//                getUsersFacade();
-//        UserVo user = usersFacade.activateUser(confirmationKey);
-//        Long id = user.getId();
-//        assertTrue(user.isActive());
-//        user = usersFacade.activateUser(confirmationKey);
-//        assertNull(user);
-//
-//        EntityManager em = entityManagerFactory.createEntityManager();
-//        UserEntity userEntity = (UserEntity) em.createQuery("SELECT u" +
-//                " FROM User u" +
-//                " WHERE u.id = :id").setParameter("id", id).
-//                getSingleResult();
-//        assertTrue(userEntity.isActive());
-//        assertNull(userEntity.getConfirmationKey());
-//    }
+
+    @Test
+    public void activateUser_validConfirmationKey_success() throws Exception {
+        UserVo user = usersFacade.activateUser(confirmationKey);
+        Long userId = user.getId();
+        assertTrue(user.isActive());
+
+        EntityManager localEntityManager = entityManagerFactory.
+                createEntityManager();
+        UserEntity userEntity =
+                (UserEntity) localEntityManager.createQuery("SELECT u" +
+                " FROM User u" +
+                " WHERE u.id = :id").setParameter("id", userId).
+                getSingleResult();
+        assertTrue(userEntity.isActive());
+        assertNull(userEntity.getConfirmationKey());
+
+        user = usersFacade.activateUser(confirmationKey);
+        assertNull(user);
+    }
 //
 //    /**
 //     * Test of an invalid confirmation key
 //     */
-//    @Test
+//    @Test 
 //    public void test_BL_10_2() throws Exception {
 //        String confirmationKey = "Invalid!";
 //        UsersFacade usersFacade = Config.getInstance().getFacadeFactory().
@@ -476,7 +511,7 @@ public class UsersFacadeIT {
 //    /**
 //     * Test a successful user account update
 //     */
-//    @Test
+//    @Test 
 //    public void test_BL_11_1() throws MultipleMessagesException, Exception {
 //        UserVo user = new UserVo();
 //        user.setId(5L);
@@ -528,7 +563,7 @@ public class UsersFacadeIT {
 //    /**
 //     * Test an attempt to edit an inexistent user
 //     */
-//    @Test
+//    @Test 
 //    public void test_BL_11_2() throws MultipleMessagesException, Exception {
 //        UserVo user = new UserVo();
 //        user.setId(-1L);
@@ -546,7 +581,7 @@ public class UsersFacadeIT {
 //    /**
 //     * Test an attempt to edit a user with invalid data
 //     */
-//    @Test
+//    @Test 
 //    public void test_BL_11_3() throws Exception {
 //        String[] expectedMessages = new String[]{
 //            "user.null"
@@ -642,7 +677,7 @@ public class UsersFacadeIT {
 //        }
 //    }
 //    
-//    @Test
+//    @Test 
 //    public void testDoubleRaitingCommentDeleted() throws MultipleMessagesException, Exception {
 //        CommentVo commentVo = new CommentVo();
 //        commentVo.setAnonymous(false);

@@ -38,14 +38,14 @@ public class UsersFacadeIT {
     private static UserEntity toActivateUser;
     private static final String existingActiveUserPassword;
     private static final String existingInactiveUserPassword;
-    private static final String confirmationKey;
+    private static final String validConfirmationKey;
 
     static {
         entityManagerFactory = FacadesTestHelper.createEntityManagerFactory();
         usersFacade = Config.getInstance().getFacadeFactory().getUsersFacade();
         existingActiveUserPassword = "123456789";
         existingInactiveUserPassword = existingActiveUserPassword;
-        confirmationKey = SecurityHelper.generateMailingKey();
+        validConfirmationKey = SecurityHelper.generateMailingKey();
     }
 
     @BeforeClass
@@ -128,7 +128,7 @@ public class UsersFacadeIT {
                 Integer.parseInt(ConfigurationVariablesHelper.getVariable(
                 ConfigurationVariablesHelper.MAILING_KEYS_EXPIRATION)));
         confirmationKeyEntity.setExpirationDate(expirationDate.getTime());
-        confirmationKeyEntity.setConfirmationKey(confirmationKey);
+        confirmationKeyEntity.setConfirmationKey(validConfirmationKey);
         entityManager.persist(confirmationKeyEntity);
     }
 
@@ -478,7 +478,7 @@ public class UsersFacadeIT {
 
     @Test
     public void activateUser_validConfirmationKey_success() throws Exception {
-        UserVo user = usersFacade.activateUser(confirmationKey);
+        UserVo user = usersFacade.activateUser(validConfirmationKey);
         Long userId = user.getId();
         assertTrue(user.isActive());
 
@@ -492,21 +492,16 @@ public class UsersFacadeIT {
         assertTrue(userEntity.isActive());
         assertNull(userEntity.getConfirmationKey());
 
-        user = usersFacade.activateUser(confirmationKey);
+        user = usersFacade.activateUser(validConfirmationKey);
         assertNull(user);
     }
-//
-//    /**
-//     * Test of an invalid confirmation key
-//     */
-//    @Test 
-//    public void test_BL_10_2() throws Exception {
-//        String confirmationKey = "Invalid!";
-//        UsersFacade usersFacade = Config.getInstance().getFacadeFactory().
-//                getUsersFacade();
-//        UserVo user = usersFacade.activateUser(confirmationKey);
-//        assertNull(user);
-//    }
+
+    @Test 
+    public void activateUser_invalidConfirmationKey_null() throws Exception {
+        String invalidConfirmationKey = "Invalid!";
+        UserVo user = usersFacade.activateUser(invalidConfirmationKey);
+        assertNull(user);
+    }
 //
 //    /**
 //     * Test a successful user account update

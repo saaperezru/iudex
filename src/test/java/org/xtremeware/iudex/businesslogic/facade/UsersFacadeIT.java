@@ -13,6 +13,7 @@ import org.junit.Test;
 import org.xtremeware.iudex.businesslogic.DuplicityException;
 import org.xtremeware.iudex.businesslogic.helper.FacadesHelper;
 import org.xtremeware.iudex.businesslogic.helper.FacadesTestHelper;
+import org.xtremeware.iudex.businesslogic.service.InactiveUserException;
 import org.xtremeware.iudex.entity.ProgramEntity;
 import org.xtremeware.iudex.entity.UserEntity;
 import org.xtremeware.iudex.helper.*;
@@ -29,12 +30,15 @@ public class UsersFacadeIT {
     private static EntityManager entityManager;
     private static List<ProgramEntity> programs;
     private static UserEntity existingActiveUser;
-    private static String existingActiveUserPassword;
+    private static UserEntity existingInactiveUser;
+    private static final String existingActiveUserPassword;
+    private static final String existingInactiveUserPassword;
 
     static {
         entityManagerFactory = FacadesTestHelper.createEntityManagerFactory();
         usersFacade = Config.getInstance().getFacadeFactory().getUsersFacade();
         existingActiveUserPassword = "123456789";
+        existingInactiveUserPassword = existingActiveUserPassword;
     }
 
     @BeforeClass
@@ -70,14 +74,25 @@ public class UsersFacadeIT {
     private static void insertUsers(EntityManager entityManager) {
         existingActiveUser = new UserEntity();
         existingActiveUser.setFirstName("Existing");
-        existingActiveUser.setLastName("User");
-        existingActiveUser.setUserName("existingUser");
+        existingActiveUser.setLastName("Active User");
+        existingActiveUser.setUserName("existingActiveUser");
         existingActiveUser.setPassword(SecurityHelper.hashPassword(
                 existingActiveUserPassword));
         existingActiveUser.setPrograms(programs);
         existingActiveUser.setRole(Role.STUDENT);
         existingActiveUser.setActive(true);
         entityManager.persist(existingActiveUser);
+
+        existingInactiveUser = new UserEntity();
+        existingInactiveUser.setFirstName("Existing");
+        existingInactiveUser.setLastName("Inactive User");
+        existingInactiveUser.setUserName("existingInactiveUser");
+        existingInactiveUser.setPassword(SecurityHelper.hashPassword(
+                existingInactiveUserPassword));
+        existingInactiveUser.setPrograms(programs);
+        existingInactiveUser.setRole(Role.STUDENT);
+        existingInactiveUser.setActive(false);
+        entityManager.persist(existingInactiveUser);
     }
 
     @AfterClass
@@ -414,18 +429,13 @@ public class UsersFacadeIT {
         user = usersFacade.logIn(userName, password);
         assertNull(user);
     }
-//    /**
-//     * Test of a login attempt with an inactive account
-//     */
-//    @Test(expected = InactiveUserException.class)
-//    public void test_BL_3_3() throws Exception {
-//        final String userName = "student3";
-//        final String password = "123456789";
-//        UsersFacade usersFacade = Config.getInstance().getFacadeFactory().
-//                getUsersFacade();
-//        usersFacade.logIn(userName, password);
-//    }
-//
+
+    @Test(expected = InactiveUserException.class)
+    public void logIn_inactiveUser_inactiveUserException() throws Exception {
+        final String userName = existingInactiveUser.getUserName();
+        final String password = existingInactiveUserPassword;
+        usersFacade.logIn(userName, password);
+    }
 //    /**
 //     * Test of a successful user activation
 //     */

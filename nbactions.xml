@@ -48,17 +48,7 @@
                 <maven.test.skip>true</maven.test.skip>
             </properties>
         </action>
-        <action>
-            <actionName>test.single</actionName>
-            <goals>
-                <goal>test-compile</goal>
-                <goal>failsafe:integration-test</goal>
-            </goals>
-            <properties>
-                <it.test>${className}</it.test>
-                
-            </properties>
-        </action>
+        
         
         
         

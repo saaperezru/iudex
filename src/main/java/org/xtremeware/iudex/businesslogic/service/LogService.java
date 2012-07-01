@@ -1,126 +1,101 @@
 package org.xtremeware.iudex.businesslogic.service;
 
 import java.io.IOException;
-import org.apache.log4j.DailyRollingFileAppender;
-import org.apache.log4j.EnhancedPatternLayout;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
+import org.apache.log4j.*;
+import org.xtremeware.iudex.helper.ConfigurationVariablesHelper;
 
-/**
- * Logs different levels of messages and exceptions in a central dailly rolling
- * log file
- *
- * @author healarconr
- */
 @SuppressWarnings("CallToThreadDumpStack")
 public class LogService {
 
-    private static final Logger LOGGER = Logger.getLogger("org.xtremeware.iudex");
+    private static Logger LOGGER;
 
     static {
         try {
-            // TODO: Use the configuration helper to obtain the log configuration
-            LOGGER.setLevel(Level.ALL);
-            LOGGER.addAppender(new DailyRollingFileAppender(
-                    new EnhancedPatternLayout("[%d] - " + EnhancedPatternLayout.TTCC_CONVERSION_PATTERN),
-                    "log/iudex.log", "'.'yyyy-MM-dd"));
+            String loggerName = getLoggerName();
+            LOGGER = Logger.getLogger(loggerName);
+
+            Level level = getLevel();
+            LOGGER.setLevel(level);
+
+            Appender appender = getAppender();
+            LOGGER.addAppender(appender);
         } catch (IOException ex) {
             ex.printStackTrace();
         }
     }
 
-    /**
-     * Logs a message with debug level
-     *
-     * @param message the message to log
-     */
+    private static String getLoggerName() {
+        return ConfigurationVariablesHelper.getVariable(
+                ConfigurationVariablesHelper.LOGGER_NAME);
+    }
+
+    private static Level getLevel() {
+        String levelName = ConfigurationVariablesHelper.getVariable(
+                ConfigurationVariablesHelper.LOGGER_LEVEL);
+        Level level = Level.toLevel(levelName);
+        return level;
+    }
+
+    private static Appender getAppender() throws IOException {
+        final String pattern = getAppenderPattern();
+        Layout layout = new EnhancedPatternLayout(pattern);
+        final String fileName = getLogFileName();
+        final String datePattern = "'.'yyyy-MM-dd";
+        Appender appender = new DailyRollingFileAppender(layout, fileName,
+                datePattern);
+        return appender;
+    }
+
+    private static String getLogFileName() {
+        String classesRoot = LogService.class.getResource("/").getFile();
+        String logFileName = ConfigurationVariablesHelper.getVariable(
+                ConfigurationVariablesHelper.LOGGER_LOG_FILE);
+
+        return classesRoot + logFileName;
+    }
+
+    private static String getAppenderPattern() {
+        return "[%d] - " +
+                EnhancedPatternLayout.TTCC_CONVERSION_PATTERN;
+    }
+
     public void debug(Object message) {
         LOGGER.debug(message);
     }
 
-    /**
-     * Logs a message and a throwable with debug level
-     *
-     * @param message the message to log
-     * @param t the throwable to log
-     */
-    public void debug(Object message, Throwable t) {
-        LOGGER.debug(message, t);
+    public void debug(Object message, Throwable throwable) {
+        LOGGER.debug(message, throwable);
     }
 
-    /**
-     * Logs a message with error level
-     *
-     * @param message the message to log
-     */
     public void error(Object message) {
         LOGGER.error(message);
     }
 
-    /**
-     * Logs a message and a throwable with error level
-     *
-     * @param message the message to log
-     * @param t the throwable to log
-     */
-    public void error(Object message, Throwable t) {
-        LOGGER.error(message, t);
+    public void error(Object message, Throwable throwable) {
+        LOGGER.error(message, throwable);
     }
 
-    /**
-     * Logs a message with fatal level
-     *
-     * @param message the message to log
-     */
     public void fatal(Object message) {
         LOGGER.fatal(message);
     }
 
-    /**
-     * Logs a message and a throwable with fatal level
-     *
-     * @param message the message to log
-     * @param t the throwable to log
-     */
-    public void fatal(Object message, Throwable t) {
-        LOGGER.fatal(message, t);
+    public void fatal(Object message, Throwable throwable) {
+        LOGGER.fatal(message, throwable);
     }
 
-    /**
-     * Logs a message with info level
-     *
-     * @param message the message to log
-     */
     public void info(Object message) {
         LOGGER.info(message);
     }
 
-    /**
-     * Logs a message and a throwable with info level
-     *
-     * @param message the message to log
-     * @param t the throwable to log
-     */
-    public void info(Object message, Throwable t) {
-        LOGGER.info(message, t);
+    public void info(Object message, Throwable throwable) {
+        LOGGER.info(message, throwable);
     }
 
-    /**
-     * Logs a message with warn level
-     *
-     * @param message the message to log
-     */
     public void warn(Object message) {
         LOGGER.warn(message);
     }
 
-    /**
-     * Logs a message and a throwable with warn level
-     *
-     * @param message the message to log
-     * @param t the throwable to log
-     */
-    public void warn(Object message, Throwable t) {
-        LOGGER.warn(message, t);
+    public void warn(Object message, Throwable throwable) {
+        LOGGER.warn(message, throwable);
     }
 }

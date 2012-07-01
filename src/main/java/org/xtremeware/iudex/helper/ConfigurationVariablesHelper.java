@@ -24,6 +24,7 @@ public final class ConfigurationVariablesHelper {
 	public static final String MAX_PROFESSOR_DECRIPTION_LENGTH = "professor.maxProfessorDescriptionLength";
 	public static final String MAX_SUBJECT_NAME_LENGTH = "subject.maxNameLength";
 	public static final String MAX_SUBJECT_DESCRIPTION_LENGTH = "subject.maxDescriptionLength";
+        public static final String MAILING_SESSION_FACTORY = "mailing.session.factory";
 	public static final String MAILING_SMTP_SERVER = "mailing.smtpServer";
 	public static final String MAILING_SENDER_EMAIL_ADDRESS = "mailing.senderEMailAddress";
 	public static final String MAILING_SMTP_USER = "mailing.smtpServerUser";

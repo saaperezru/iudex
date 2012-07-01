@@ -3,14 +3,10 @@ package org.xtremeware.iudex.helper;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import org.xtremeware.iudex.businesslogic.facade.FacadeFactory;
+import org.xtremeware.iudex.businesslogic.helper.MailingSessionFactory;
 import org.xtremeware.iudex.businesslogic.service.ServiceBuilder;
 import org.xtremeware.iudex.dao.AbstractDaoBuilder;
-import org.xtremeware.iudex.vo.MailingConfigVo;
 
-/**
- *
- * @author saaperezru
- */
 public final class Config {
 
     public static final String CONFIGURATION_VARIABLES_PATH =
@@ -26,44 +22,77 @@ public final class Config {
 
             this.persistenceUnit = Persistence.createEntityManagerFactory(
                     persistenceUnit);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
         }
         this.daoFactory = daoFactory;
-        MailingConfigVo mailingConf = new MailingConfigVo();
-        mailingConf.setSender(ConfigurationVariablesHelper.getVariable(
-                ConfigurationVariablesHelper.MAILING_SENDER_EMAIL_ADDRESS));
-        mailingConf.setSmtpPassword(ConfigurationVariablesHelper.getVariable(
-                ConfigurationVariablesHelper.MAILING_SMTP_PASSWORD));
-        mailingConf.setSmtpServer(ConfigurationVariablesHelper.getVariable(
-                ConfigurationVariablesHelper.MAILING_SMTP_SERVER));
-        mailingConf.setSmtpServerPort(Integer.parseInt(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.MAILING_SMTP_PORT)));
-        mailingConf.setSmtpUser(ConfigurationVariablesHelper.getVariable(
-                ConfigurationVariablesHelper.MAILING_SMTP_USER));
+
         createIndex();
-        this.serviceFactory = new ServiceBuilder(daoFactory, mailingConf);
+        MailingSessionFactory mailingSessionFactory = getMailingSessionFactory();
+        serviceFactory = new ServiceBuilder(daoFactory, mailingSessionFactory);
         facadeFactory = new FacadeFactory(serviceFactory, this.persistenceUnit);
     }
-    
+
     private void createIndex() {
-        if( ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.CREATE_LUCENE_INDEX).equals("true")){
+        if (ConfigurationVariablesHelper.getVariable(
+                ConfigurationVariablesHelper.CREATE_LUCENE_INDEX).equals("true")) {
             ConfigLucene.indexDataBase(persistenceUnit.createEntityManager());
+        }
+    }
+
+    private MailingSessionFactory getMailingSessionFactory() {
+        Class mailingSessionFactoryClass = getMailingSessionFactoryClass();
+        return getMailingSessionInstance(mailingSessionFactoryClass);
+    }
+
+    private Class<MailingSessionFactory> getMailingSessionFactoryClass() {
+        String sessionFactoryClassName = ConfigurationVariablesHelper.
+                getVariable(
+                ConfigurationVariablesHelper.MAILING_SESSION_FACTORY);
+        try {
+            return (Class<MailingSessionFactory>) Class.forName(
+                    sessionFactoryClassName);
+        } catch (ClassNotFoundException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    private MailingSessionFactory getMailingSessionInstance(
+            Class<MailingSessionFactory> mailingSessionFactoryClass) {
+        try {
+            return mailingSessionFactoryClass.newInstance();
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
         }
     }
 
     public static synchronized Config getInstance() {
         while (instance == null) {
             try {
-                instance = new Config(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.APP_PERSISTENCE_UNIT),
-                        (AbstractDaoBuilder) Class.forName(ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.APP_DAO_BUILDER)).newInstance());
+                instance =
+                        new Config(ConfigurationVariablesHelper.getVariable(
+                        ConfigurationVariablesHelper.APP_PERSISTENCE_UNIT),
+                        (AbstractDaoBuilder) Class.forName(
+                        ConfigurationVariablesHelper.getVariable(
+                        ConfigurationVariablesHelper.APP_DAO_BUILDER)).
+                        newInstance());
             } catch (ExternalServiceConnectionException exception) {
-                throw new RuntimeException("[FATAL ERROR] Configuration Variables file could not be found, without this file the application won't work ", exception.getCause());
+                throw new RuntimeException(
+                        "[FATAL ERROR] Configuration Variables file could not be found, without this file the application won't work ",
+                        exception.getCause());
             } catch (ClassNotFoundException exception) {
-                throw new RuntimeException("[FATAL ERROR] DaoBuilder specified : " + ConfigurationVariablesHelper.getVariable(ConfigurationVariablesHelper.APP_DAO_BUILDER) + " class could not be found ", exception.getCause());
+                throw new RuntimeException("[FATAL ERROR] DaoBuilder specified : " +
+                        ConfigurationVariablesHelper.getVariable(
+                        ConfigurationVariablesHelper.APP_DAO_BUILDER) +
+                        " class could not be found ", exception.getCause());
             } catch (InstantiationException exception) {
-                throw new RuntimeException("[FATAL ERROR] DaoBuilder could not be instantiated", exception.getCause());
+                throw new RuntimeException(
+                        "[FATAL ERROR] DaoBuilder could not be instantiated",
+                        exception.getCause());
             } catch (IllegalAccessException exception) {
-                throw new RuntimeException("[FATAL ERROR] Illegal Access Exception while initializing application Configuration", exception.getCause());
+                throw new RuntimeException(
+                        "[FATAL ERROR] Illegal Access Exception while initializing application Configuration",
+                        exception.getCause());
             }
         }
         return instance;

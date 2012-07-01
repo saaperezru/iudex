@@ -496,65 +496,46 @@ public class UsersFacadeIT {
         assertNull(user);
     }
 
-    @Test 
+    @Test
     public void activateUser_invalidConfirmationKey_null() throws Exception {
         String invalidConfirmationKey = "Invalid!";
         UserVo user = usersFacade.activateUser(invalidConfirmationKey);
         assertNull(user);
     }
-//
-//    /**
-//     * Test a successful user account update
-//     */
-//    @Test 
-//    public void test_BL_11_1() throws MultipleMessagesException, Exception {
-//        UserVo user = new UserVo();
-//        user.setId(5L);
-//        user.setFirstName("New name");
-//        user.setLastName("New last name");
-//        user.setUserName("newUserName");
-//        user.setPassword("New password");
-//        user.setProgramsId(Arrays.asList(new Long[]{2537L, 2556L}));
-//        user.setRole(Role.ADMINISTRATOR);
-//        
-//        UserVo expectedUser = new UserVo();
-//        expectedUser.setId(5L);
-//        expectedUser.setFirstName("New name");
-//        expectedUser.setLastName("New last name");
-//        expectedUser.setPassword(SecurityHelper.hashPassword("New password"));
-//        expectedUser.setProgramsId(Arrays.asList(new Long[]{2537L, 2556L}));
-//        expectedUser.setRole(Role.STUDENT); // Shouldn't change
-//        expectedUser.setUserName("student4"); // Shouldn't change
-//        
-//        UsersFacade usersFacade = Config.getInstance().getFacadeFactory().
-//                getUsersFacade();
-//        user = usersFacade.updateUser(user);
-//        assertEquals(expectedUser, user);
-//
-//        EntityManager em = entityManagerFactory.createEntityManager();
-//        em.createQuery("SELECT u" +
-//                " FROM User u" +
-//                " WHERE u.id = :id" +
-//                " AND u.firstName = :firstName" +
-//                " AND u.lastName = :lastName" +
-//                " AND u.userName = :userName" +
-//                " AND u.password = :password" +
-//                " AND u.role = :role").setParameter("id", expectedUser.getId()).
-//                setParameter("firstName", expectedUser.getFirstName()).
-//                setParameter("lastName",
-//                expectedUser.getLastName()).setParameter("userName",
-//                expectedUser.getUserName()).setParameter("password",
-//                expectedUser.getPassword()).
-//                setParameter("role", expectedUser.getRole()).getSingleResult();
-//
-//        List<Long> programsId = em.createQuery(
-//                "SELECT p.id FROM User u JOIN u.programs p WHERE u.id = :id").
-//                setParameter("id", expectedUser.getId()).getResultList();
-//        List<Long> expectedProgramsId = expectedUser.getProgramsId();
-//
-//        assertEquals(expectedProgramsId, programsId);
-//    }
-//
+
+    @Test
+    public void updateUser_validUserVo_success() throws
+            MultipleMessagesException, Exception {
+        UserVo userVo = new UserVo();
+        userVo.setId(existingActiveUser.getId());
+        userVo.setFirstName("New name");
+        userVo.setLastName("New last name");
+        userVo.setUserName("newUserName");
+        userVo.setPassword("New password");
+        List<Long> expectedProgramsIds = new ArrayList<Long>(1);
+        expectedProgramsIds.add(programs.get(0).getId());
+        userVo.setProgramsId(expectedProgramsIds);
+        userVo.setRole(Role.ADMINISTRATOR);
+
+        UserVo expectedUserVo = new UserVo();
+        expectedUserVo.setId(existingActiveUser.getId());
+        expectedUserVo.setFirstName("New name");
+        expectedUserVo.setLastName("New last name");
+        expectedUserVo.setPassword(SecurityHelper.hashPassword("New password"));
+        expectedUserVo.setProgramsId(expectedProgramsIds);
+        expectedUserVo.setRole(Role.STUDENT); // Shouldn't change
+        expectedUserVo.setUserName(existingActiveUser.getUserName()); // Shouldn't change
+
+        userVo = usersFacade.updateUser(userVo);
+        assertEquals(expectedUserVo, userVo);
+
+        existsUserInDb(entityManager, expectedUserVo);
+
+        List<Long> programsIds = getUserProgramsIdsFromDb(entityManager,
+                expectedUserVo.getId());
+
+        assertEquals(expectedProgramsIds, programsIds);
+    }
 //    /**
 //     * Test an attempt to edit an inexistent user
 //     */

@@ -536,23 +536,23 @@ public class UsersFacadeIT {
 
         assertEquals(expectedProgramsIds, programsIds);
     }
-//    /**
-//     * Test an attempt to edit an inexistent user
-//     */
-//    @Test 
-//    public void test_BL_11_2() throws MultipleMessagesException, Exception {
-//        UserVo user = new UserVo();
-//        user.setId(-1L);
-//        user.setFirstName("John");
-//        user.setLastName("Doe");
-//        user.setPassword("123456789");
-//        user.setProgramsId(Arrays.asList(new Long[]{2537L, 2556L}));
-//        user.setRole(Role.STUDENT);
-//        user.setUserName("healarconr");
-//        user = Config.getInstance().getFacadeFactory().getUsersFacade().updateUser(
-//                user);
-//        assertNull(user);
-//    }
+
+    @Test 
+    public void updateUser_nonexistentUser_null() throws MultipleMessagesException, Exception {
+        UserVo user = new UserVo();
+        user.setId(-1L);
+        user.setFirstName("Non-existent");
+        user.setLastName("User");
+        user.setPassword("123456789");
+        List<Long> programsIds = new ArrayList<Long>(1);
+        programsIds.add(programs.get(0).getId());
+        user.setProgramsId(programsIds);
+        user.setRole(Role.STUDENT);
+        user.setUserName("nonexistent");
+        user = Config.getInstance().getFacadeFactory().getUsersFacade().updateUser(
+                user);
+        assertNull(user);
+    }
 //
 //    /**
 //     * Test an attempt to edit a user with invalid data

@@ -15,19 +15,15 @@ import org.xtremeware.iudex.businesslogic.helper.FacadesHelper;
 import org.xtremeware.iudex.businesslogic.helper.FacadesTestHelper;
 import org.xtremeware.iudex.entity.ProgramEntity;
 import org.xtremeware.iudex.entity.UserEntity;
-import org.xtremeware.iudex.helper.Config;
-import org.xtremeware.iudex.helper.MultipleMessagesException;
-import org.xtremeware.iudex.helper.Role;
-import org.xtremeware.iudex.helper.SecurityHelper;
+import org.xtremeware.iudex.helper.*;
 import org.xtremeware.iudex.vo.UserVo;
 
 public class UsersFacadeIT {
 
-    /*
-     * private final int MIN_USERNAME_LENGTH; private final int
-     * MAX_USERNAME_LENGTH; private final int MAX_USER_PASSWORD_LENGTH; private
-     * final int MIN_USER_PASSWORD_LENGTH;
-     */
+    private final int MIN_USERNAME_LENGTH;
+    private final int MAX_USERNAME_LENGTH;
+    private final int MAX_USER_PASSWORD_LENGTH;
+    private final int MIN_USER_PASSWORD_LENGTH;
     private static final EntityManagerFactory entityManagerFactory;
     private static final UsersFacade usersFacade;
     private static EntityManager entityManager;
@@ -120,19 +116,19 @@ public class UsersFacadeIT {
         }
     }
 
-    /*
-     * public UsersFacadeIT() throws ExternalServiceConnectionException {
-     * MIN_USERNAME_LENGTH = Integer.parseInt(ConfigurationVariablesHelper.
-     * getVariable(ConfigurationVariablesHelper.MIN_USERNAME_LENGTH));
-     * MAX_USERNAME_LENGTH = Integer.parseInt(ConfigurationVariablesHelper.
-     * getVariable(ConfigurationVariablesHelper.MAX_USERNAME_LENGTH));
-     * MAX_USER_PASSWORD_LENGTH =
-     * Integer.parseInt(ConfigurationVariablesHelper.getVariable(
-     * ConfigurationVariablesHelper.MAX_USER_PASSWORD_LENGTH));
-     * MIN_USER_PASSWORD_LENGTH =
-     * Integer.parseInt(ConfigurationVariablesHelper.getVariable(
-     * ConfigurationVariablesHelper.MIN_USER_PASSWORD_LENGTH)); }
-     */
+    public UsersFacadeIT() throws ExternalServiceConnectionException {
+        MIN_USERNAME_LENGTH = Integer.parseInt(ConfigurationVariablesHelper.
+                getVariable(ConfigurationVariablesHelper.MIN_USERNAME_LENGTH));
+        MAX_USERNAME_LENGTH = Integer.parseInt(ConfigurationVariablesHelper.
+                getVariable(ConfigurationVariablesHelper.MAX_USERNAME_LENGTH));
+        MAX_USER_PASSWORD_LENGTH =
+                Integer.parseInt(ConfigurationVariablesHelper.getVariable(
+                ConfigurationVariablesHelper.MAX_USER_PASSWORD_LENGTH));
+        MIN_USER_PASSWORD_LENGTH =
+                Integer.parseInt(ConfigurationVariablesHelper.getVariable(
+                ConfigurationVariablesHelper.MIN_USER_PASSWORD_LENGTH));
+    }
+
     @Test
     public void createUser_validInactiveUserVo_success() throws
             MultipleMessagesException, DuplicityException {
@@ -272,106 +268,103 @@ public class UsersFacadeIT {
         user.setActive(true);
         usersFacade.createUser(user);
     }
-//
-//    /**
-//     * Test of a registration attempt with invalid data
-//     */
-//    @Test
-//    public void test_BL_2_3() throws Exception {
-//        String[] expectedMessages = new String[]{
-//            "user.null"
-//        };
-//
-//        UsersFacade usersFacade = Config.getInstance().getFacadeFactory().
-//                getUsersFacade();
-//        try {
-//            usersFacade.createUser(null);
-//        } catch (MultipleMessagesException ex) {
-//            FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
-//        }
-//
-//        UserVo user = new UserVo();
-//
-//        user.setFirstName(null);
-//        user.setLastName(null);
-//        user.setUserName(null);
-//        user.setPassword(null);
-//        user.setProgramsId(null);
-//        user.setRole(null);
-//        user.setActive(true);
-//
-//        expectedMessages = new String[]{
-//            "user.firstName.null",
-//            "user.lastName.null",
-//            "user.userName.null",
-//            "user.password.null",
-//            "user.programsId.null",
-//            "user.role.null"
-//        };
-//
-//        try {
-//            usersFacade.createUser(user);
-//        } catch (MultipleMessagesException ex) {
-//            FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
-//        }
-//
-//        user.setFirstName("");
-//        user.setLastName("");
-//        user.setUserName(FacadesTestHelper.randomString(MIN_USERNAME_LENGTH - 1));
-//        user.setPassword(FacadesTestHelper.randomString(MIN_USER_PASSWORD_LENGTH -
-//                1));
-//        user.setProgramsId(new ArrayList<Long>());
-//        user.setRole(Role.STUDENT);
-//
-//        expectedMessages = new String[]{
-//            "user.firstName.empty",
-//            "user.lastName.empty",
-//            "user.userName.tooShort",
-//            "user.password.tooShort",
-//            "user.programsId.empty"
-//        };
-//
-//        try {
-//            usersFacade.createUser(user);
-//        } catch (MultipleMessagesException ex) {
-//            FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
-//        }
-//
-//        user.setFirstName(FacadesTestHelper.randomString(10));
-//        user.setLastName(FacadesTestHelper.randomString(10));
-//        user.setUserName(FacadesTestHelper.randomString(MAX_USERNAME_LENGTH + 10));
-//        user.setPassword(FacadesTestHelper.randomString(MAX_USER_PASSWORD_LENGTH +10));
-//        List<Long> programsId = user.getProgramsId();
-//        programsId.add(null);
-//
-//        expectedMessages = new String[]{
-//            "user.userName.tooLong",
-//            "user.password.tooLong",
-//            "user.programsId.element.null"
-//        };
-//
-//        try {
-//            usersFacade.createUser(user);
-//        } catch (MultipleMessagesException ex) {
-//            FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
-//        }
-//
-//        user.setUserName(FacadesTestHelper.randomString(MIN_USERNAME_LENGTH));
-//        user.setPassword(
-//                FacadesTestHelper.randomString(MIN_USER_PASSWORD_LENGTH));
-//        programsId.set(0, -1L);
-//
-//        expectedMessages = new String[]{
-//            "user.programsId.element.notFound"
-//        };
-//
-//        try {
-//            usersFacade.createUser(user);
-//        } catch (MultipleMessagesException ex) {
-//            FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
-//        }
-//    }
-//
+
+    @Test
+    public void createUser_validationConstraints_multipleMessagesException()
+            throws Exception {
+        String[] expectedMessages = new String[]{
+            "user.null"
+        };
+
+        try {
+            usersFacade.createUser(null);
+        } catch (MultipleMessagesException ex) {
+            FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
+        }
+
+        UserVo user = new UserVo();
+
+        user.setFirstName(null);
+        user.setLastName(null);
+        user.setUserName(null);
+        user.setPassword(null);
+        user.setProgramsId(null);
+        user.setRole(null);
+        user.setActive(true);
+
+        expectedMessages = new String[]{
+            "user.firstName.null",
+            "user.lastName.null",
+            "user.userName.null",
+            "user.password.null",
+            "user.programsId.null",
+            "user.role.null"
+        };
+
+        try {
+            usersFacade.createUser(user);
+        } catch (MultipleMessagesException ex) {
+            FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
+        }
+
+        user.setFirstName("");
+        user.setLastName("");
+        user.setUserName(FacadesTestHelper.randomString(MIN_USERNAME_LENGTH - 1));
+        user.setPassword(FacadesTestHelper.randomString(MIN_USER_PASSWORD_LENGTH -
+                1));
+        user.setProgramsId(new ArrayList<Long>());
+        user.setRole(Role.STUDENT);
+
+        expectedMessages = new String[]{
+            "user.firstName.empty",
+            "user.lastName.empty",
+            "user.userName.tooShort",
+            "user.password.tooShort",
+            "user.programsId.empty"
+        };
+
+        try {
+            usersFacade.createUser(user);
+        } catch (MultipleMessagesException ex) {
+            FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
+        }
+
+        user.setFirstName(FacadesTestHelper.randomString(10));
+        user.setLastName(FacadesTestHelper.randomString(10));
+        user.setUserName(
+                FacadesTestHelper.randomString(MAX_USERNAME_LENGTH + 1));
+        user.setPassword(FacadesTestHelper.randomString(MAX_USER_PASSWORD_LENGTH +
+                1));
+        List<Long> programsId = user.getProgramsId();
+        programsId.add(null);
+
+        expectedMessages = new String[]{
+            "user.userName.tooLong",
+            "user.password.tooLong",
+            "user.programsId.element.null"
+        };
+
+        try {
+            usersFacade.createUser(user);
+        } catch (MultipleMessagesException ex) {
+            FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
+        }
+
+        user.setUserName(FacadesTestHelper.randomString(MIN_USERNAME_LENGTH));
+        user.setPassword(
+                FacadesTestHelper.randomString(MIN_USER_PASSWORD_LENGTH));
+        programsId.set(0, -1L);
+
+        expectedMessages = new String[]{
+            "user.programsId.element.notFound"
+        };
+
+        try {
+            usersFacade.createUser(user);
+        } catch (MultipleMessagesException ex) {
+            FacadesTestHelper.checkExceptionMessages(ex, expectedMessages);
+        }
+    }
 //    /**
 //     * Test of a failed registration due to email problems
 //     */

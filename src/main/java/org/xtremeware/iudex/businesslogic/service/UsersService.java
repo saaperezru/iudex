@@ -1,19 +1,29 @@
 package org.xtremeware.iudex.businesslogic.service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.List;
 import javax.persistence.EntityManager;
-import org.xtremeware.iudex.businesslogic.service.crudinterfaces.*;
+import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Create;
+import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Delete;
+import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Read;
+import org.xtremeware.iudex.businesslogic.service.crudinterfaces.Update;
 import org.xtremeware.iudex.dao.AbstractDaoBuilder;
 import org.xtremeware.iudex.dao.ConfirmationKeyDao;
 import org.xtremeware.iudex.dao.ForgottenPasswordKeyDao;
-import org.xtremeware.iudex.entity.*;
-import org.xtremeware.iudex.helper.*;
-import org.xtremeware.iudex.vo.*;
+import org.xtremeware.iudex.entity.ConfirmationKeyEntity;
+import org.xtremeware.iudex.entity.ForgottenPasswordKeyEntity;
+import org.xtremeware.iudex.entity.ProgramEntity;
+import org.xtremeware.iudex.entity.UserEntity;
+import org.xtremeware.iudex.helper.ConfigurationVariablesHelper;
+import org.xtremeware.iudex.helper.DataBaseException;
+import org.xtremeware.iudex.helper.MultipleMessagesException;
+import org.xtremeware.iudex.helper.SecurityHelper;
+import org.xtremeware.iudex.vo.ConfirmationKeyVo;
+import org.xtremeware.iudex.vo.ForgottenPasswordKeyVo;
+import org.xtremeware.iudex.vo.UserVo;
 
-/**
- *
- * @author josebermeo
- */
 public class UsersService extends CrudService<UserVo, UserEntity> {
 
     private final int MIN_USERNAME_LENGTH;
@@ -56,7 +66,8 @@ public class UsersService extends CrudService<UserVo, UserEntity> {
         checkLastName(multipleMessagesException, userVo.getLastName());
         checkUserName(multipleMessagesException, userVo.getUserName());
         checkPassword(multipleMessagesException, userVo.getPassword());
-        checkPrograms(multipleMessagesException, userVo.getProgramsId(), entityManager);
+        checkPrograms(multipleMessagesException, userVo.getProgramsId(),
+                entityManager);
 
         if (userVo.getRole() == null) {
             multipleMessagesException.addMessage("user.role.null");
@@ -71,7 +82,8 @@ public class UsersService extends CrudService<UserVo, UserEntity> {
         userVo.setPassword(SecurityHelper.sanitizeHTML(userVo.getPassword()));
     }
 
-    private void checkFirstName(MultipleMessagesException multipleMessagesException,
+    private void checkFirstName(
+            MultipleMessagesException multipleMessagesException,
             String firstName) {
         if (firstName == null) {
             multipleMessagesException.addMessage(
@@ -84,7 +96,8 @@ public class UsersService extends CrudService<UserVo, UserEntity> {
         }
     }
 
-    private void checkLastName(MultipleMessagesException multipleMessagesException,
+    private void checkLastName(
+            MultipleMessagesException multipleMessagesException,
             String lastName) {
         if (lastName == null) {
             multipleMessagesException.addMessage(
@@ -97,7 +110,8 @@ public class UsersService extends CrudService<UserVo, UserEntity> {
         }
     }
 
-    private void checkUserName(MultipleMessagesException multipleMessagesException,
+    private void checkUserName(
+            MultipleMessagesException multipleMessagesException,
             String userName) {
         if (userName == null) {
             multipleMessagesException.addMessage(
@@ -113,8 +127,10 @@ public class UsersService extends CrudService<UserVo, UserEntity> {
         }
     }
 
-    private void checkPrograms(MultipleMessagesException multipleMessagesException,
-            List<Long> programsId, EntityManager entityManager) throws DataBaseException {
+    private void checkPrograms(
+            MultipleMessagesException multipleMessagesException,
+            List<Long> programsId, EntityManager entityManager) throws
+            DataBaseException {
         if (programsId == null) {
             multipleMessagesException.addMessage(
                     "user.programsId.null");
@@ -126,15 +142,17 @@ public class UsersService extends CrudService<UserVo, UserEntity> {
                 if (programId == null) {
                     multipleMessagesException.addMessage(
                             "user.programsId.element.null");
-                } else if (getDaoFactory().getProgramDao().read(entityManager, programId) == null) {
+                } else if (getDaoFactory().getProgramDao().read(entityManager,
+                        programId) == null) {
                     multipleMessagesException.addMessage(
                             "user.programsId.element.notFound");
                 }
             }
         }
     }
-    
-    private void checkPassword(MultipleMessagesException multipleMessagesException,
+
+    private void checkPassword(
+            MultipleMessagesException multipleMessagesException,
             String password) {
         if (password == null) {
             multipleMessagesException.addMessage(
@@ -190,7 +208,8 @@ public class UsersService extends CrudService<UserVo, UserEntity> {
 
     public UserVo authenticate(EntityManager entityManager, String userName,
             String password)
-            throws InactiveUserException, DataBaseException, MultipleMessagesException {
+            throws InactiveUserException, DataBaseException,
+            MultipleMessagesException {
 
         MultipleMessagesException exceptions = new MultipleMessagesException();
 
@@ -203,7 +222,8 @@ public class UsersService extends CrudService<UserVo, UserEntity> {
         UserEntity user = getDaoFactory().getUserDao().getByUsernameAndPassword(
                 entityManager,
                 SecurityHelper.sanitizeHTML(userName),
-                SecurityHelper.hashPassword(SecurityHelper.sanitizeHTML(password)));
+                SecurityHelper.hashPassword(
+                SecurityHelper.sanitizeHTML(password)));
         if (user == null) {
             return null;
         } else {
@@ -215,7 +235,8 @@ public class UsersService extends CrudService<UserVo, UserEntity> {
         }
     }
 
-    public UserVo activateAccount(EntityManager entityManager, String confirmationKey)
+    public UserVo activateAccount(EntityManager entityManager,
+            String confirmationKey)
             throws DataBaseException {
 
         ConfirmationKeyDao dao =
@@ -304,7 +325,8 @@ public class UsersService extends CrudService<UserVo, UserEntity> {
             throw multipleMessagesException;
         }
 
-        forgottenPasswordKey.getUser().setPassword(SecurityHelper.hashPassword(SecurityHelper.sanitizeHTML(password)));
+        forgottenPasswordKey.getUser().setPassword(SecurityHelper.hashPassword(SecurityHelper.
+                sanitizeHTML(password)));
         dao.delete(em, forgottenPasswordKey.getId());
     }
 }
